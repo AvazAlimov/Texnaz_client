@@ -5,7 +5,7 @@ import 'vuetify/src/stylus/app.styl';
 
 Vue.use(Vuetify, {
   theme: {
-    primary: '#707070',
+    primary: localStorage.getItem('primary') || '#707070',
   },
   iconfont: 'md',
 });

@@ -89,9 +89,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-  .border {
-     border: 1px solid rgba(0,0,0,0.12) !important;
-  }
-</style>

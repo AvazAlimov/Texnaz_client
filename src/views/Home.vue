@@ -8,14 +8,14 @@
               img(:src="require('../assets/logo.svg')")
             v-list-tile-content
               v-list-tile-title DIGMAN
-      v-list.pt-0(dense)
+      v-list.pt-0(two-line)
         v-divider
         v-list-tile(to="/")
           v-list-tile-action
             v-icon cloud
           v-list-tile-content
             v-list-tile-title База данных
-        v-list-tile(to="/")
+        v-list-tile(to="/calculator")
           v-list-tile-action
             v-icon exposure
           v-list-tile-content
@@ -33,7 +33,7 @@
               v-icon supervisor_account
             v-list-tile-content
               v-list-tile-title Менеджер
-          v-list-tile(to="/login")
+          v-list-tile(to="/logout")
             v-list-tile-action
               v-icon exit_to_app
             v-list-tile-content
@@ -44,15 +44,24 @@
 </template>
 
 <script>
+import { AXIOS } from '../services/Api';
+import Auth from '../services/Auth';
+
 export default {
   name: 'Home',
+  mounted() {
+    AXIOS.interceptors.response.use(undefined, (error) => {
+      if (error.response && error.response.status === 401) { this.$router.push('/logout'); }
+    });
+    Auth.details();
+  },
 };
 </script>
 <style scoped>
-  .toolbar__border {
-     border-bottom: 1px solid rgba(0,0,0,0.12) !important;
-  }
-  .v-list-tile-height {
+.toolbar__border {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+.v-list-tile-height {
     min-height: 120px;
-  }
+}
 </style>
