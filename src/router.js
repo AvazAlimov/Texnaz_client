@@ -70,6 +70,22 @@ const router = new Router({
       name: 'tag_update',
       component: () => import('./views/Tag.vue'),
     },
+    // TYPES
+    {
+      path: '/types',
+      name: 'types',
+      component: () => import('./views/Types.vue'),
+    },
+    {
+      path: '/type',
+      name: 'type_create',
+      component: () => import('./views/Type.vue'),
+    },
+    {
+      path: '/type/:id',
+      name: 'type_update',
+      component: () => import('./views/Type.vue'),
+    },
     ],
   },
   {

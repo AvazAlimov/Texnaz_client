@@ -2,29 +2,29 @@
     v-layout(row wrap align-center)
         v-btn(icon to="/")
             v-icon arrow_back
-        .title ТЕГИ
+        .title ТИПЫ ПРОДУКТОВ
         v-flex(xs12).mt-3
             .border.white
-                v-data-table(:headers="headers" :items="tags" hide-actions :loading="loading")
+                v-data-table(:headers="headers" :items="types" hide-actions :loading="loading")
                     template(v-slot:items="props")
                         td {{ props.item.name }}
                         td
                             v-layout
-                                v-btn(icon :to="'/tag/' + props.item.id").mx-0
+                                v-btn(icon :to="'/type/' + props.item.id").mx-0
                                     v-icon(color="primary" small) edit
                                 v-btn(icon @click="remove(props.item.id)").mx-0
                                     v-icon(color="primary" small) delete
                 v-divider
                 v-layout
                     v-spacer
-                    v-btn.ma-2(flat color="primary" to="/tag") Добавить
+                    v-btn.ma-2(flat color="primary" to="/type") Добавить
 </template>
 
 <script>
-import Tag from '../services/Tag';
+import Type from '../services/Type';
 
 export default {
-  name: 'Tags',
+  name: 'Types',
   data() {
     return {
       headers: [
@@ -37,23 +37,23 @@ export default {
           width: 100,
         },
       ],
-      tags: [],
+      types: [],
       loading: false,
     };
   },
   methods: {
     getAll() {
       this.loading = true;
-      this.tags = [];
-      Tag.getAll()
-        .then((tags) => { this.tags = tags; })
+      this.types = [];
+      Type.getAll()
+        .then((types) => { this.types = types; })
         .catch(() => this.getAll())
         .finally(() => { this.loading = false; });
     },
     remove(id) {
       // eslint-disable-next-line no-alert, no-restricted-globals
       if (confirm('Это действие удалит элемент навсегда, вы уверены?')) {
-        Tag.delete(id)
+        Type.delete(id)
           .then(() => { this.getAll(); })
           .catch((error) => {
             this.$store.commit('setMessage', error.message);
