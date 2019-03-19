@@ -22,6 +22,7 @@ const router = new Router({
       name: 'calculator',
       component: () => import('./views/Database.vue'),
     },
+    // PURPOSES
     {
       path: '/purposes',
       name: 'purposes',
@@ -36,6 +37,22 @@ const router = new Router({
       path: '/purpose/:id',
       name: 'purpose_update',
       component: () => import('./views/Purpose.vue'),
+    },
+    // UNITS
+    {
+      path: '/units',
+      name: 'units',
+      component: () => import('./views/Units.vue'),
+    },
+    {
+      path: '/unit',
+      name: 'unit_create',
+      component: () => import('./views/Unit.vue'),
+    },
+    {
+      path: '/unit/:id',
+      name: 'unit_update',
+      component: () => import('./views/Unit.vue'),
     },
     ],
   },

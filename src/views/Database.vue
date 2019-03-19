@@ -50,7 +50,7 @@ export default {
         },
         {
           to: '/units',
-          title: 'ЕДИНИЦА ИЗМЕРЕНИЯ',
+          title: 'ЕДИНИЦЫ ИЗМЕРЕНИЯ',
           count: 3,
           icon: 'extension',
         },
