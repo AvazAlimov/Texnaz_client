@@ -54,6 +54,22 @@ const router = new Router({
       name: 'unit_update',
       component: () => import('./views/Unit.vue'),
     },
+    // TAGS
+    {
+      path: '/tags',
+      name: 'tags',
+      component: () => import('./views/Tags.vue'),
+    },
+    {
+      path: '/tag',
+      name: 'tag_create',
+      component: () => import('./views/Tag.vue'),
+    },
+    {
+      path: '/tag/:id',
+      name: 'tag_update',
+      component: () => import('./views/Tag.vue'),
+    },
     ],
   },
   {
