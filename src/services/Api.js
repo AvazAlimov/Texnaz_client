@@ -21,8 +21,7 @@ export const AXIOS = axios.create({
   baseURL: 'http://erp.texnaz.uz/api/',
   headers: {
     Authorization: `Bearer ${localStorage.getItem('token')}`,
-    'Content-Type': 'application/json',
   },
 });
 
-export default () => AXIOS;
+export default AXIOS;

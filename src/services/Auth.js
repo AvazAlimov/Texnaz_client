@@ -3,7 +3,7 @@ import Api from './Api';
 export default {
   login({ username, password }) {
     return new Promise((resolve, reject) => {
-      Api()
+      Api
         .post('auth/login/', { username, password })
         .then((response) => {
           resolve(response.data.token);
@@ -22,7 +22,7 @@ export default {
 
   details() {
     return new Promise((resolve, reject) => {
-      Api()
+      Api
         .get('auth/details/')
         .then((response) => {
           resolve(response.data);

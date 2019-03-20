@@ -86,6 +86,22 @@ const router = new Router({
       name: 'type_update',
       component: () => import('./views/Type.vue'),
     },
+    // PRODUCTS
+    {
+      path: '/products',
+      name: 'products',
+      component: () => import('./views/Products.vue'),
+    },
+    {
+      path: '/product',
+      name: 'product_create',
+      component: () => import('./views/Product.vue'),
+    },
+    {
+      path: '/product/:id',
+      name: 'product_update',
+      component: () => import('./views/Product.vue'),
+    },
     ],
   },
   {
