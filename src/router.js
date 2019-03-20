@@ -102,6 +102,22 @@ const router = new Router({
       name: 'product_update',
       component: () => import('./views/Product.vue'),
     },
+    // USERS
+    {
+      path: '/users',
+      name: 'users',
+      component: () => import('./views/Users.vue'),
+    },
+    {
+      path: '/user',
+      name: 'user_create',
+      component: () => import('./views/User.vue'),
+    },
+    {
+      path: '/user/:id',
+      name: 'user_update',
+      component: () => import('./views/User.vue'),
+    },
     ],
   },
   {

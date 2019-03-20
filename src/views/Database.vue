@@ -76,7 +76,7 @@ export default {
         {
           key: 'suppliers',
           to: '/suppliers',
-          title: 'ПОСТАВЩИК',
+          title: 'ПОСТАВЩИКИ',
           count: 0,
           icon: 'drive_eta',
         },
