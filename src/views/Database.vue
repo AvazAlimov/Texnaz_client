@@ -13,79 +13,125 @@
 </template>
 
 <script>
+import Product from '../services/Product';
+import Unit from '../services/Unit';
+import Tag from '../services/Tag';
+import Type from '../services/Type';
+import Purpose from '../services/Purpose';
+
 export default {
   name: 'Database',
   data() {
     return {
       cards: [
         {
+          key: 'products',
           to: '/products',
           title: 'ТОВАРЫ',
-          count: 3024,
+          count: 0,
           icon: 'local_mall',
         },
         {
+          key: 'users',
           to: '/users',
           title: 'ПОЛЬЗОВАТЕЛИ',
-          count: 12,
+          count: 0,
           icon: 'group',
         },
         {
+          key: 'warehouses',
           to: '/warehouses',
           title: 'СКЛАДЫ',
-          count: 4,
+          count: 0,
           icon: 'store_mall_directory',
         },
         {
+          key: 'tags',
           to: '/tags',
           title: 'ТЕГИ',
-          count: 48,
+          count: 0,
           icon: 'style',
         },
         {
+          key: 'types',
           to: '/types',
           title: 'ТИПЫ ПРОДУКТОВ',
-          count: 8,
+          count: 0,
           icon: 'turned_in',
         },
         {
+          key: 'units',
           to: '/units',
           title: 'ЕДИНИЦЫ ИЗМЕРЕНИЯ',
-          count: 3,
+          count: 0,
           icon: 'extension',
         },
         {
+          key: 'purposes',
           to: '/purposes',
           title: 'НАЗНАЧЕНИЕ',
-          count: 9,
+          count: 0,
           icon: 'label',
         },
         {
-          to: '/supplier',
+          key: 'suppliers',
+          to: '/suppliers',
           title: 'ПОСТАВЩИК',
-          count: 32,
+          count: 0,
           icon: 'drive_eta',
         },
         {
+          key: 'supply_types',
           to: '/supply_types',
           title: 'ТИП ПОСТАВКИ',
-          count: 2,
+          count: 0,
           icon: 'merge_type',
         },
         {
+          key: 'expenses',
           to: '/expenses',
           title: 'РАСХОДЫ',
-          count: 18,
+          count: 0,
           icon: 'attach_money',
         },
         {
+          key: 'configurations',
           to: '/configurations',
           title: 'КОНФИГУРАЦИИ',
-          count: 24,
+          count: 0,
           icon: 'settings',
         },
       ],
     };
+  },
+  methods: {
+    getCount(Service, key) {
+      return new Promise((resolve) => {
+        Service.getAll().then((items) => {
+          resolve({
+            key,
+            count: items.length,
+          });
+        });
+      });
+    },
+    getAllCounts() {
+      Promise.all([
+        this.getCount(Product, 'products'),
+        this.getCount(Unit, 'units'),
+        this.getCount(Type, 'types'),
+        this.getCount(Tag, 'tags'),
+        this.getCount(Purpose, 'purposes'),
+      ]).then((results) => {
+        results.forEach((element) => {
+          const card = this.cards.find(item => item.key === element.key);
+          if (card) card.count = element.count;
+        });
+      });
+    },
+  },
+  created() {
+    this.getAllCounts();
   },
 };
 </script>
