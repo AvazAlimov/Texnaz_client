@@ -134,22 +134,28 @@ const router = new Router({
       name: 'warehouse_update',
       component: () => import('./views/Warehouse.vue'),
     },
+    // WAREHOUSES
+    {
+      path: '/suppliers',
+      name: 'suppliers',
+      component: () => import('./views/Suppliers.vue'),
+    },
+    {
+      path: '/supplier',
+      name: 'supplier_create',
+      component: () => import('./views/Supplier.vue'),
+    },
+    {
+      path: '/supplier/:id',
+      name: 'supplier_update',
+      component: () => import('./views/Supplier.vue'),
+    },
     // CONFIGURATIONS
     {
       path: '/configurations',
       name: 'configurations',
       component: () => import('./views/Configurations.vue'),
     },
-    // {
-    //   path: '/warehouse',
-    //   name: 'warehouse_create',
-    //   component: () => import('./views/Warehouse.vue'),
-    // },
-    // {
-    //   path: '/warehouse/:id',
-    //   name: 'warehouse_update',
-    //   component: () => import('./views/Warehouse.vue'),
-    // },
     ],
   },
   {

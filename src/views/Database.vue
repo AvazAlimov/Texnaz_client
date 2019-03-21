@@ -21,6 +21,7 @@ import Purpose from '../services/Purpose';
 import User from '../services/User';
 import Warehouse from '../services/Warehouse';
 import Configuration from '../services/Configuration';
+import Supplier from '../services/Supplier';
 
 export default {
   name: 'Database',
@@ -91,8 +92,8 @@ export default {
         //   icon: 'merge_type',
         // },
         {
-          key: 'expenses',
-          to: '/expenses',
+          key: 'expanses',
+          to: '/expanses',
           title: 'РАСХОДЫ',
           count: 0,
           icon: 'attach_money',
@@ -128,6 +129,7 @@ export default {
         this.getCount(User, 'users'),
         this.getCount(Warehouse, 'warehouses'),
         this.getCount(Configuration, 'configurations'),
+        this.getCount(Supplier, 'suppliers'),
       ]).then((results) => {
         results.forEach((element) => {
           const card = this.cards.find(item => item.key === element.key);
