@@ -134,6 +134,22 @@ const router = new Router({
       name: 'warehouse_update',
       component: () => import('./views/Warehouse.vue'),
     },
+    // CONFIGURATIONS
+    {
+      path: '/configurations',
+      name: 'configurations',
+      component: () => import('./views/Configurations.vue'),
+    },
+    // {
+    //   path: '/warehouse',
+    //   name: 'warehouse_create',
+    //   component: () => import('./views/Warehouse.vue'),
+    // },
+    // {
+    //   path: '/warehouse/:id',
+    //   name: 'warehouse_update',
+    //   component: () => import('./views/Warehouse.vue'),
+    // },
     ],
   },
   {
