@@ -18,6 +18,8 @@ import Unit from '../services/Unit';
 import Tag from '../services/Tag';
 import Type from '../services/Type';
 import Purpose from '../services/Purpose';
+import User from '../services/User';
+import Warehouse from '../services/Warehouse';
 
 export default {
   name: 'Database',
@@ -80,13 +82,13 @@ export default {
           count: 0,
           icon: 'drive_eta',
         },
-        {
-          key: 'supply_types',
-          to: '/supply_types',
-          title: 'ТИП ПОСТАВКИ',
-          count: 0,
-          icon: 'merge_type',
-        },
+        // {
+        //   key: 'supply_types',
+        //   to: '/supply_types',
+        //   title: 'ТИП ПОСТАВКИ',
+        //   count: 0,
+        //   icon: 'merge_type',
+        // },
         {
           key: 'expenses',
           to: '/expenses',
@@ -122,6 +124,8 @@ export default {
         this.getCount(Type, 'types'),
         this.getCount(Tag, 'tags'),
         this.getCount(Purpose, 'purposes'),
+        this.getCount(User, 'users'),
+        this.getCount(Warehouse, 'warehouses'),
       ]).then((results) => {
         results.forEach((element) => {
           const card = this.cards.find(item => item.key === element.key);

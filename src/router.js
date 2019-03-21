@@ -118,6 +118,22 @@ const router = new Router({
       name: 'user_update',
       component: () => import('./views/User.vue'),
     },
+    // WAREHOUSES
+    {
+      path: '/warehouses',
+      name: 'warehouses',
+      component: () => import('./views/Warehouses.vue'),
+    },
+    {
+      path: '/warehouse',
+      name: 'warehouse_create',
+      component: () => import('./views/Warehouse.vue'),
+    },
+    {
+      path: '/warehouse/:id',
+      name: 'warehouse_update',
+      component: () => import('./views/Warehouse.vue'),
+    },
     ],
   },
   {
