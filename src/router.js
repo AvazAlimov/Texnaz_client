@@ -156,6 +156,22 @@ const router = new Router({
       name: 'configurations',
       component: () => import('./views/Configurations.vue'),
     },
+    // EXPANSES
+    {
+      path: '/expanses',
+      name: 'expanses',
+      component: () => import('./views/Expanses.vue'),
+    },
+    {
+      path: '/expanse',
+      name: 'expanse_create',
+      component: () => import('./views/Expanse.vue'),
+    },
+    {
+      path: '/expanse/:id',
+      name: 'expanse_update',
+      component: () => import('./views/Expanse.vue'),
+    },
     ],
   },
   {

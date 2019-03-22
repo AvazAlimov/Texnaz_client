@@ -22,6 +22,7 @@ import User from '../services/User';
 import Warehouse from '../services/Warehouse';
 import Configuration from '../services/Configuration';
 import Supplier from '../services/Supplier';
+import Expanse from '../services/Expanse';
 
 export default {
   name: 'Database',
@@ -130,6 +131,7 @@ export default {
         this.getCount(Warehouse, 'warehouses'),
         this.getCount(Configuration, 'configurations'),
         this.getCount(Supplier, 'suppliers'),
+        this.getCount(Expanse, 'expanses'),
       ]).then((results) => {
         results.forEach((element) => {
           const card = this.cards.find(item => item.key === element.key);
