@@ -1,5 +1,5 @@
 import Api, { execute } from './Api';
 
 export default {
-  getAll: () => execute(Api.get('supplies/')),
+  getAll: () => execute(Api().get('supplies/')),
 };

@@ -19,9 +19,9 @@ export function execute(promise) {
 
 export const AXIOS = axios.create({
   baseURL: 'http://erp.texnaz.uz/api/',
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem('token')}`,
-  },
 });
 
-export default AXIOS;
+export default () => {
+  axios.defaults.headers.common.Authorization = `Bearer ${localStorage.getItem('token')}`;
+  return AXIOS;
+};

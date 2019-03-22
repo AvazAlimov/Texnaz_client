@@ -1,7 +1,7 @@
 import Api, { execute } from './Api';
 
 export default {
-  getAll: () => execute(Api.get('configurations/')),
+  getAll: () => execute(Api().get('configurations/')),
 
-  update: (id, value) => execute(Api.post(`configurations/${id}`, { value })),
+  update: (id, value) => execute(Api().post(`configurations/${id}`, { value })),
 };
