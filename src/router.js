@@ -20,7 +20,7 @@ const router = new Router({
     {
       path: '/calculator',
       name: 'calculator',
-      component: () => import('./views/Database.vue'),
+      component: () => import('./views/Calculator.vue'),
     },
     // PURPOSES
     {

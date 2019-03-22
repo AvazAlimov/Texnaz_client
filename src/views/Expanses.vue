@@ -39,11 +39,13 @@ export default {
         {
           text: 'Для транспорта',
           value: 'is_transport',
+          width: 150,
           sortable: false,
         },
         {
           text: 'Наличные',
           value: 'is_cash',
+          width: 100,
           sortable: false,
         },
         {
