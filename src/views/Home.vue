@@ -7,7 +7,7 @@
             v-list-tile-avatar
               img(:src="require('../assets/logo.svg')")
             v-list-tile-content
-              v-list-tile-title DIGMAN
+              v-list-tile-title TEXNAZ
       v-list.pt-0(two-line)
         v-divider
         v-list-tile(to="/")
@@ -20,6 +20,11 @@
             v-icon exposure
           v-list-tile-content
             v-list-tile-title Калькулятор
+        v-list-tile(to="/stocks")
+          v-list-tile-action
+            v-icon house
+          v-list-tile-content
+            v-list-tile-title Склад
     v-toolbar.white.elevation-0.toolbar__border(app)
       v-spacer
       v-spacer

@@ -12,7 +12,7 @@
                     v-divider
                     v-layout
                         v-spacer
-                        v-btn.ma-2(flat color="primary" to="/expanse") Добавить
+                        v-btn.ma-2(flat color="primary" to="/batch") Добавить
 </template>
 
 <script>

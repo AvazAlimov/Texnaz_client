@@ -22,6 +22,11 @@ const router = new Router({
       name: 'calculator',
       component: () => import('./views/Calculator.vue'),
     },
+    {
+      path: '/batch',
+      name: 'batch',
+      component: () => import('./views/Batch.vue'),
+    },
     // PURPOSES
     {
       path: '/purposes',

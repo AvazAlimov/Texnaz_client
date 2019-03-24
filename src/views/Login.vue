@@ -5,7 +5,7 @@
                 v-layout(align-center justify-center)
                     v-flex(xs12).width-300
                         v-img.my-3(:src="require('../assets/logo.svg')" contain height="96")
-                        .headline.font-weight-bold DIGMAN
+                        .headline.font-weight-bold TEXNAZ
                         .sub-heading.font-weight-light Это больше, чем просто управление
                         v-text-field(v-model="username" label="имя пользователя"
                           @keyup.enter="login")

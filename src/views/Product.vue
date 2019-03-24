@@ -6,7 +6,7 @@
         v-flex(xs12).mt-3
             .border.white.pa-4
                 v-layout(row wrap)
-                    v-flex(xs6)
+                    v-flex(xs4)
                         v-text-field(
                             v-model="product.name"
                             label="Наименование"
@@ -14,23 +14,18 @@
                             v-validate="'required'")
                         v-text-field(
                             v-model="product.code"
-                            label="Код"
-                            name="code"
-                            v-validate="'required'")
+                            label="Код")
                         v-text-field(
                             v-model="product.packing"
                             label="Фасовка"
                             name="packing"
-                            mask="########"
-                            v-validate="'required|numeric'")
+                            v-validate="'required|decimal'")
                         v-text-field(
                             v-model="product.color"
                             label="Цвет"
                             name="color"
                             v-validate="'required'")
-                        v-text-field(
-                            v-model="product.ratio"
-                            label="Соотношения к химическому составу")
+                    v-flex(xs4)
                         v-select(
                             v-model="product.unit"
                             :items="units"
@@ -47,7 +42,6 @@
                             label="Тип"
                             name="type"
                             v-validate="'required'")
-                    v-flex(xs6)
                         v-select(
                             v-model="product.purpose"
                             :items="purposes"
@@ -62,11 +56,7 @@
                             item-value="id"
                             label="Тег"
                             clearable)
-                        v-text-field(
-                            v-model="product.profit"
-                            label="Прибыль %"
-                            name="profit"
-                            v-validate="'required|decimal|min:0|max:100'")
+                    v-flex(xs4)
                         v-text-field(
                             v-model="product.cleaning"
                             label="Очистка %"
@@ -116,12 +106,10 @@ export default {
         code: '',
         packing: 0,
         color: '',
-        ration: '',
         unit: null,
         type: null,
         purpose: null,
         tag: null,
-        profit: '',
         cleaning: '',
         tax: '',
         vat: '',

@@ -11,12 +11,10 @@
                         td {{ props.item.code }}
                         td {{ props.item.packing }}
                         td {{ props.item.color }}
-                        td {{ props.item.ratio }}
                         td {{ getUnitName(props.item.unit) }}
                         td {{ getTypeName(props.item.type) }}
                         td {{ getPurposeName(props.item.purpose) }}
                         td {{ getTagName(props.item.tag) }}
-                        td {{ props.item.profit }}%
                         td {{ props.item.cleaning }}%
                         td {{ props.item.vat }}%
                         td {{ props.item.tax }}%
@@ -64,11 +62,6 @@ export default {
           sortable: false,
         },
         {
-          text: 'Соотношения к химическому составу',
-          value: 'ratio',
-          sortable: false,
-        },
-        {
           text: 'Единица',
           value: 'unit',
           sortable: false,
@@ -86,11 +79,6 @@ export default {
         {
           text: 'Тег',
           value: 'tag',
-          sortable: false,
-        },
-        {
-          text: 'Прибыль',
-          value: 'profit',
           sortable: false,
         },
         {
