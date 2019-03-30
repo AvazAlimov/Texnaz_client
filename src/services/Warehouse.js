@@ -6,15 +6,15 @@ export default {
   get: id => execute(Api().get(`warehouses/${id}`)),
 
   create: ({
-    name, owner, address, company, supply,
+    name, ownerId, company, type,
   }) => execute(Api().post('warehouses/', {
-    name, owner, address, company, supply,
+    name, ownerId, company, type,
   })),
 
   update: (id, {
-    name, owner, address, company, supply,
+    name, ownerId, company, type,
   }) => execute(Api().post(`warehouses/${id}`, {
-    name, owner, address, company, supply,
+    name, ownerId, company, type,
   })),
 
   delete: id => Api().delete(`warehouses/${id}`),

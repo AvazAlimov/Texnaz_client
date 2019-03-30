@@ -11,19 +11,25 @@
                     name="name"
                     v-validate="'required'")
                 v-text-field(
-                    v-model="warehouse.owner"
-                    label="Владелец"
-                    name="owner"
-                    v-validate="'required'")
-                v-text-field(
-                    v-model="warehouse.address"
-                    label="Адрес"
-                    name="address"
-                    v-validate="'required'")
-                v-text-field(
                     v-model="warehouse.company"
                     label="Компания"
                     name="company"
+                    v-validate="'required'")
+                v-select(
+                    v-model="warehouse.type"
+                    :items="types"
+                    label="Тип"
+                    item-text="name"
+                    item-value="id"
+                    name="type"
+                    v-validate="'required'")
+                v-select(
+                    v-model="warehouse.ownerId"
+                    :items="users"
+                    label="Владелец"
+                    item-text="name"
+                    item-value="id"
+                    name="ownerId"
                     v-validate="'required'")
                 v-layout
                     v-spacer
@@ -36,6 +42,8 @@
 
 <script>
 import Warehouse from '@/services/Warehouse';
+import User from '@/services/User';
+import Info from '@/services/Info';
 
 export default {
   name: 'Warehouse',
@@ -47,14 +55,30 @@ export default {
       id: null,
       warehouse: {
         name: '',
-        owner: '',
-        address: '',
         company: '',
+        ownerId: null,
+        type: null,
       },
+      users: [],
+      types: [],
       loading: false,
     };
   },
   methods: {
+    getAll() {
+      this.loading = true;
+      Promise.all([
+        User.getAll(),
+        Info.getWarehouseTypes(),
+      ])
+        .then((result) => {
+          [this.users, this.types] = result;
+        })
+        .catch((error) => {
+          this.$store.commit('setMessage', error.message);
+        })
+        .finally(() => { this.loading = false; });
+    },
     submit() {
       if (!this.id) this.create();
       else this.update();
@@ -76,6 +100,7 @@ export default {
     },
   },
   created() {
+    this.getAll();
     if (this.$route.params.id) {
       this.id = this.$route.params.id;
       Warehouse.get(this.$route.params.id)
