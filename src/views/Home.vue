@@ -1,6 +1,6 @@
 <template lang="pug">
   v-app
-    v-navigation-drawer(app permanent)
+    v-navigation-drawer(app v-model="drawer")
       v-toolbar.transparent(flat)
         v-list.pa-0
           v-list-tile(avatar)
@@ -9,40 +9,20 @@
             v-list-tile-content
               v-list-tile-title TEXNAZ
       v-list.pt-0(two-line)
-        v-divider
-        v-list-tile(to="/")
-          v-list-tile-action
-            v-icon cloud
-          v-list-tile-content
-            v-list-tile-title База данных
-        v-list-tile(to="/calculator")
-          v-list-tile-action
-            v-icon exposure
-          v-list-tile-content
-            v-list-tile-title Калькулятор
-        v-list-tile(to="/stocks")
-          v-list-tile-action
-            v-icon house
-          v-list-tile-content
-            v-list-tile-title Склад
+        template(v-for="(item, index) in items")
+          v-divider(v-if="item.divider")
+          v-list-tile(
+            :to="item.to"
+            active-class="bordered"
+            :class="item.path === $route.path ? 'bordered' : ''"
+          )
+            v-list-tile-action
+              v-icon {{item.icon}}
+            v-list-tile-content
+              v-list-tile-title {{item.title}}
     v-toolbar.white.elevation-0.toolbar__border(app)
-      v-spacer
-      v-spacer
-      v-menu(offset-y left close-on-click)
-        template(v-slot:activator="{ on }")
-          v-btn(icon v-on="on")
-            v-icon(color="primary") perm_identity
-        v-list
-          v-list-tile
-            v-list-tile-action
-              v-icon supervisor_account
-            v-list-tile-content
-              v-list-tile-title Менеджер
-          v-list-tile(to="/logout")
-            v-list-tile-action
-              v-icon exit_to_app
-            v-list-tile-content
-              v-list-tile-title Выйти
+      v-toolbar-side-icon(@click.stop="drawer = !drawer")
+      v-toolbar-title {{ user.name }}
     v-content
       v-container(grid-list-md)
         router-view
@@ -54,11 +34,56 @@ import Auth from '../services/Auth';
 
 export default {
   name: 'Home',
+  data() {
+    return {
+      drawer: true,
+      user: {},
+      items: [
+        {
+          divider: true,
+          icon: 'home',
+          title: 'Главный',
+          to: '/',
+        },
+        {
+          icon: 'money',
+          title: 'Калькулятор',
+          to: '/calculator',
+        },
+        {
+          icon: 'store_mall_directory',
+          title: 'Склады',
+          to: '/warehouses',
+        },
+        {
+          icon: 'how_to_reg',
+          title: 'Менеджеры',
+          to: '/managers',
+        },
+        {
+          icon: 'perm_identity',
+          title: 'Клиенты',
+          to: '/clients',
+        },
+        {
+          icon: 'settings',
+          title: 'Настройки',
+          to: '/settings',
+        },
+        {
+          divider: true,
+          icon: 'exit_to_app',
+          title: 'Выйти',
+          to: '/logout',
+        },
+      ],
+    };
+  },
   mounted() {
     AXIOS.interceptors.response.use(undefined, (error) => {
       if (error.response && error.response.status === 401) { this.$router.push('/logout'); }
     });
-    Auth.details();
+    Auth.details().then((user) => { this.user = user; });
   },
 };
 </script>

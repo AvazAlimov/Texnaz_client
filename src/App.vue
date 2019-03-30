@@ -29,4 +29,7 @@ export default {
   .border {
      border: 1px solid rgba(0,0,0,0.12) !important;
   }
+  .bordered {
+    border-left: 4px solid #707070;
+  }
 </style>

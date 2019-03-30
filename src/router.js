@@ -13,8 +13,8 @@ const router = new Router({
     },
     component: () => import('./views/Home.vue'),
     children: [{
-      path: '/',
-      name: 'database',
+      path: '/settings',
+      name: 'settings',
       component: () => import('./views/Database.vue'),
     },
     {
