@@ -8,9 +8,9 @@
                 v-data-table(:headers="headers" :items="warehouses" hide-actions :loading="loading")
                     template(v-slot:items="props")
                         td {{ props.item.name }}
-                        td {{ props.item.owner }}
+                        td {{ props.item.owner.name }}
                         td {{ props.item.company }}
-                        td {{ props.item.type }}
+                        td {{ getTypeName(props.item.type) }}
                         td
                             v-layout
                                 v-btn(icon
@@ -29,6 +29,7 @@
 
 <script>
 import Warehouse from '@/services/Warehouse';
+import Info from '@/services/Info';
 
 export default {
   name: 'Warehouses',
@@ -56,6 +57,7 @@ export default {
           width: 100,
         },
       ],
+      types: [],
       warehouses: [],
       loading: false,
     };
@@ -64,9 +66,12 @@ export default {
     getAll() {
       this.loading = true;
       this.warehouses = [];
-      Warehouse.getAll()
-        .then((warehouses) => {
-          this.warehouses = warehouses;
+      Promise.all([
+        Warehouse.getAll(),
+        Info.getWarehouseTypes(),
+      ])
+        .then((reslut) => {
+          [this.warehouses, this.types] = reslut;
         })
         .finally(() => { this.loading = false; });
     },
@@ -79,6 +84,9 @@ export default {
             this.$store.commit('setMessage', error.message);
           });
       }
+    },
+    getTypeName(id) {
+      return (this.types.find(item => id === item.id) || { name: '-' }).name;
     },
   },
   created() {

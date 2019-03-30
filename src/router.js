@@ -210,6 +210,12 @@ const router = new Router({
           name: 'batch',
           component: () => import('./views/Batch.vue'),
         },
+
+        {
+          path: '/warehouses',
+          name: 'warehouses',
+          component: () => import('./views/Warehouses.vue'),
+        },
       ],
     },
     {

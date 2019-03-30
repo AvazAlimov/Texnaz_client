@@ -1,5 +1,5 @@
 <template lang="pug">
-    v-layout(row wrap )
+    v-layout(row wrap)
         v-flex(xs12).mb-3
             .title КАЛЬКУЛЯТОР
             v-flex(xs12).mt-3
