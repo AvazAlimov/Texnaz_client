@@ -4,86 +4,105 @@
             v-icon arrow_back
         .title {{ id == null ? 'Добавить' : 'Редактировать' }} товар
         v-flex(xs12).mt-3
-            .border.white.pa-4
-                v-layout(row wrap)
-                    v-flex(xs4)
-                        v-text-field(
-                            v-model="product.name"
-                            label="Наименование"
-                            name="name"
-                            v-validate="'required'")
-                        v-text-field(
-                            v-model="product.code"
-                            label="Код")
-                        v-text-field(
-                            v-model="product.packing"
-                            label="Фасовка"
-                            name="packing"
-                            v-validate="'required|decimal'")
-                        v-text-field(
-                            v-model="product.color"
-                            label="Цвет"
-                            name="color"
-                            v-validate="'required'")
-                    v-flex(xs4)
-                        v-select(
-                            v-model="product.unit"
-                            :items="units"
-                            item-text="name"
-                            item-value="id"
-                            label="Единица"
-                            name="unit"
-                            v-validate="'required'")
-                        v-select(
-                            v-model="product.type"
-                            :items="types"
-                            item-text="name"
-                            item-value="id"
-                            label="Тип"
-                            name="type"
-                            v-validate="'required'")
-                        v-select(
-                            v-model="product.purpose"
-                            :items="purposes"
-                            item-text="number"
-                            item-value="id"
-                            label="Назначение"
-                            clearable)
-                        v-select(
-                            v-model="product.tag"
-                            :items="tags"
-                            item-text="name"
-                            item-value="id"
-                            label="Тег"
-                            clearable)
-                    v-flex(xs4)
-                        v-text-field(
-                            v-model="product.cleaning"
-                            label="Очистка %"
-                            name="cleaning"
-                            v-validate="'required|decimal|min:0|max:100'")
-                        v-text-field(
-                            v-model="product.vat"
-                            label="НДС %"
-                            name="vat"
-                            v-validate="'required|decimal|min:0|max:100'")
-                        v-text-field(
-                            v-model="product.tax"
-                            label="Налог %"
-                            name="tax"
-                            v-validate="'required|decimal|min:0|max:100'")
-                        v-text-field(
-                            v-model="product.excise"
-                            label="Акциз %"
-                            name="excise"
-                            v-validate="'required|decimal|min:0|max:100'")
-                v-layout
-                    v-spacer
-                    v-btn(
-                        :loading="loading"
-                        :disabled="errors.items.length > 0"
-                        flat color="primary"
-                        @click="submit") {{ id == null ? 'Добавить' : 'Редактировать' }}
+          .border.white.pa-4
+            v-layout(row wrap)
+              v-flex(xs12 d-flex)
+                v-text-field(
+                  v-model="product.name"
+                  label="Наименование"
+                  name="name"
+                  v-validate="'required'")
+              v-flex(xs4 d-flex)
+                .border.pa-4
+                  .subheading.mb-2 Основные характеристики
+                  v-text-field(
+                    v-model="product.packing"
+                    label="Фасовка"
+                    name="packing"
+                    v-validate="'required|decimal'")
+                  v-combobox(
+                    v-model="product.color"
+                    :items="colors"
+                    label="Цвет"
+                    name="color"
+                    v-validate="'required'")
+                  v-select(
+                    v-model="product.brand"
+                    :items="brands"
+                    item-value="id"
+                    label="Бренд"
+                    name="brand"
+                    v-validate="'required'")
+                    template(slot="item" slot-scope="data")
+                      | {{ data.item.name }} / {{ data.item.country }}
+                    template(slot="selection" slot-scope="data")
+                      | {{ data.item.name }} / {{ data.item.country }}
+                  v-select(
+                    v-model="product.unit"
+                    :items="units"
+                    item-text="name"
+                    item-value="id"
+                    label="Единица"
+                    name="unit"
+                    v-validate="'required'")
+                  v-select(
+                    v-model="product.type"
+                    :items="types"
+                    item-text="name"
+                    item-value="id"
+                    label="Тип"
+                    name="type"
+                    v-validate="'required'")
+              v-flex(xs4 d-flex)
+                .border.pa-4
+                  .subheading.mb-2 Дополнительные характеристики
+                  v-text-field(
+                    v-model="product.code"
+                    label="Код")
+                  v-select(
+                    v-model="product.purpose"
+                    :items="purposes"
+                    item-text="number"
+                    item-value="id"
+                    label="Назначение"
+                    clearable)
+                  v-combobox(
+                    v-model="product.tags"
+                    :items="tags"
+                    small-chips
+                    deletable-chips
+                    multiple
+                    label="Теги"
+                    clearable)
+              v-flex(xs4 d-flex)
+                .border.pa-4
+                  .subheading.mb-2 Финансовые показатели
+                  v-text-field(
+                    v-model="product.cleaning"
+                    label="Очистка %"
+                    name="cleaning"
+                    v-validate="'required|decimal|min:0|max:100'")
+                  v-text-field(
+                    v-model="product.vat"
+                    label="НДС %"
+                    name="vat"
+                    v-validate="'required|decimal|min:0|max:100'")
+                  v-text-field(
+                    v-model="product.tax"
+                    label="Налог %"
+                    name="tax"
+                    v-validate="'required|decimal|min:0|max:100'")
+                  v-text-field(
+                    v-model="product.excise"
+                    label="Акциз %"
+                    name="excise"
+                    v-validate="'required|decimal|min:0|max:100'")
+              v-layout
+                v-spacer
+                v-btn(:loading="loading"
+                  :disabled="errors.items.length > 0"
+                  flat color="primary"
+                  @click="submit") {{ id == null ? 'Добавить' : 'Редактировать' }}
 </template>
 
 <script>
@@ -92,6 +111,8 @@ import Unit from '@/services/Unit';
 import ProductType from '@/services/ProductType';
 import Purpose from '@/services/Purpose';
 import Tag from '@/services/Tag';
+import Brand from '@/services/Brand';
+import Info from '@/services/Info';
 
 export default {
   name: 'Product',
@@ -106,15 +127,18 @@ export default {
         code: '',
         packing: 0,
         color: '',
+        brand: null,
         unit: null,
         type: null,
         purpose: null,
-        tag: null,
-        cleaning: '',
-        tax: '',
-        vat: '',
-        excise: '',
+        tags: [],
+        cleaning: 0,
+        tax: 0,
+        vat: 0,
+        excise: 0,
       },
+      colors: [],
+      brands: [],
       units: [],
       purposes: [],
       tags: [],
@@ -126,13 +150,19 @@ export default {
     getAll() {
       this.loading = true;
       Promise.all([
+        Info.getColors(),
         Unit.getAll(),
         ProductType.getAll(),
         Purpose.getAll(),
         Tag.getAll(),
+        Brand.getAll(),
       ])
         .then((result) => {
-          [this.units, this.types, this.purposes, this.tags] = result;
+          let tags = [];
+          [this.colors, this.units, this.types, this.purposes, tags, this.brands] = result;
+          tags.forEach((tag) => {
+            this.tags.push(tag.name);
+          });
         })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
@@ -166,6 +196,7 @@ export default {
       Product.get(this.$route.params.id)
         .then((product) => {
           this.product = product;
+          this.product.tags = product.tags.map(tag => tag.name);
         });
     }
   },
