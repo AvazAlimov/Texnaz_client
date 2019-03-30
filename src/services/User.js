@@ -5,9 +5,17 @@ export default {
 
   get: id => execute(Api().get(`users/${id}`)),
 
-  create: ({ username, password, roles }) => execute(Api().post('users/', { username, password, roles })),
+  create: ({
+    name, username, password, roles,
+  }) => execute(Api().post('users/', {
+    name, username, password, roles,
+  })),
 
-  update: (id, { username, password, roles }) => execute(Api().post(`users/${id}`, { username, password, roles })),
+  update: (id, {
+    name, username, password, roles,
+  }) => execute(Api().post(`users/${id}`, {
+    name, username, password, roles,
+  })),
 
   delete: id => Api().delete(`users/${id}`),
 };

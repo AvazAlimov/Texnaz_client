@@ -75,21 +75,21 @@ const router = new Router({
       name: 'tag_update',
       component: () => import('./views/Tag.vue'),
     },
-    // TYPES
+    // PRODUCT TYPES
     {
-      path: '/types',
-      name: 'types',
-      component: () => import('./views/Types.vue'),
+      path: '/product_types',
+      name: 'product_types',
+      component: () => import('./views/ProductTypes.vue'),
     },
     {
-      path: '/type',
-      name: 'type_create',
-      component: () => import('./views/Type.vue'),
+      path: '/product_type',
+      name: 'product_type_create',
+      component: () => import('./views/ProductType.vue'),
     },
     {
-      path: '/type/:id',
-      name: 'type_update',
-      component: () => import('./views/Type.vue'),
+      path: '/product_type/:id',
+      name: 'product_types_update',
+      component: () => import('./views/ProductType.vue'),
     },
     // PRODUCTS
     {
@@ -139,21 +139,21 @@ const router = new Router({
       name: 'warehouse_update',
       component: () => import('./views/Warehouse.vue'),
     },
-    // WAREHOUSES
+    // BRANDS
     {
-      path: '/suppliers',
-      name: 'suppliers',
-      component: () => import('./views/Suppliers.vue'),
+      path: '/brands',
+      name: 'brands',
+      component: () => import('./views/Brands.vue'),
     },
     {
-      path: '/supplier',
-      name: 'supplier_create',
-      component: () => import('./views/Supplier.vue'),
+      path: '/brand',
+      name: 'brand_create',
+      component: () => import('./views/Brand.vue'),
     },
     {
-      path: '/supplier/:id',
-      name: 'supplier_update',
-      component: () => import('./views/Supplier.vue'),
+      path: '/brand/:id',
+      name: 'brand_update',
+      component: () => import('./views/Brand.vue'),
     },
     // CONFIGURATIONS
     {

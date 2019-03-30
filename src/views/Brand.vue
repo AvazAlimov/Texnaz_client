@@ -1,8 +1,8 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon to="/suppliers")
+        v-btn(icon to="/brands")
             v-icon arrow_back
-        .title {{ id == null ? 'Добавить' : 'Редактировать' }} поставщика
+        .title {{ id == null ? 'Добавить' : 'Редактировать' }} бренд
         v-flex(xs12).mt-3
             .border.white.pa-4
                 v-text-field(
@@ -25,10 +25,10 @@
 </template>
 
 <script>
-import Supplier from '../services/Supplier';
+import Brand from '../services/Brand';
 
 export default {
-  name: 'Supplier',
+  name: 'Brand',
   $_veeValidate: {
     validator: 'new',
   },
@@ -48,20 +48,20 @@ export default {
     execute(promise) {
       this.loading = true;
       promise
-        .then(() => this.$router.push('/suppliers'))
+        .then(() => this.$router.push('/brands'))
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
         })
         .finally(() => { this.loading = false; });
     },
     create() {
-      this.execute(Supplier.create({
+      this.execute(Brand.create({
         name: this.name,
         country: this.country,
       }));
     },
     update() {
-      this.execute(Supplier.update(this.id, {
+      this.execute(Brand.update(this.id, {
         name: this.name,
         country: this.country,
       }));
@@ -70,7 +70,7 @@ export default {
   created() {
     if (this.$route.params.id) {
       this.id = this.$route.params.id;
-      Supplier.get(this.$route.params.id)
+      Brand.get(this.$route.params.id)
         .then(({ name, country }) => {
           this.name = name;
           this.country = country;

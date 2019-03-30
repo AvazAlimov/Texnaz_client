@@ -89,7 +89,7 @@
 <script>
 import Product from '../services/Product';
 import Unit from '../services/Unit';
-import Type from '../services/Type';
+import ProductType from '../services/ProductType';
 import Purpose from '../services/Purpose';
 import Tag from '../services/Tag';
 
@@ -127,7 +127,7 @@ export default {
       this.loading = true;
       Promise.all([
         Unit.getAll(),
-        Type.getAll(),
+        ProductType.getAll(),
         Purpose.getAll(),
         Tag.getAll(),
       ])

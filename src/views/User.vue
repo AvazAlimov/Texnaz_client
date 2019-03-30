@@ -6,17 +6,22 @@
         v-flex(xs12).mt-3
             .border.white.pa-4
                 v-text-field(
-                    v-model="username"
+                    v-model="user.name"
+                    label="Имя"
+                    name="name"
+                    v-validate="'required'")
+                v-text-field(
+                    v-model="user.username"
                     label="Имя пользователя"
                     name="username"
                     v-validate="'required'")
                 v-text-field(
-                    v-model="password"
+                    v-model="user.password"
                     label="Пароль"
                     name="password"
                     v-validate="'required'")
                 v-select(
-                    v-model="roles"
+                    v-model="user.roles"
                     :items="fixedRoles"
                     label="Роли"
                     item-text="name"
@@ -45,9 +50,12 @@ export default {
   data() {
     return {
       id: null,
-      username: '',
-      password: '',
-      roles: [],
+      user: {
+        name: '',
+        username: '',
+        password: '',
+        roles: [],
+      },
       fixedRoles: [],
       loading: false,
     };
@@ -67,18 +75,10 @@ export default {
         .finally(() => { this.loading = false; });
     },
     create() {
-      this.execute(User.create({
-        username: this.username,
-        password: this.password,
-        roles: this.roles,
-      }));
+      this.execute(User.create(this.user));
     },
     update() {
-      this.execute(User.update(this.id, {
-        username: this.username,
-        password: this.password,
-        roles: this.roles,
-      }));
+      this.execute(User.update(this.id, this.user));
     },
   },
   created() {
@@ -86,9 +86,10 @@ export default {
     if (this.$route.params.id) {
       this.id = this.$route.params.id;
       User.get(this.$route.params.id)
-        .then(({ username, roles }) => {
-          this.username = username;
-          this.roles = roles.map(role => role.id);
+        .then(({ name, username, roles }) => {
+          this.user.name = name;
+          this.user.username = username;
+          this.user.roles = roles.map(role => role.id);
         });
     }
   },

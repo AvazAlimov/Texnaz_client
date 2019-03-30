@@ -16,12 +16,12 @@
 import Product from '../services/Product';
 import Unit from '../services/Unit';
 import Tag from '../services/Tag';
-import Type from '../services/Type';
+import ProductType from '../services/ProductType';
 import Purpose from '../services/Purpose';
 import User from '../services/User';
 import Warehouse from '../services/Warehouse';
 import Configuration from '../services/Configuration';
-import Supplier from '../services/Supplier';
+import Brand from '../services/Brand';
 import Expanse from '../services/Expanse';
 
 export default {
@@ -58,8 +58,8 @@ export default {
           icon: 'style',
         },
         {
-          key: 'types',
-          to: '/types',
+          key: 'product_types',
+          to: '/product_types',
           title: 'ТИПЫ ПРОДУКТОВ',
           count: 0,
           icon: 'turned_in',
@@ -79,19 +79,12 @@ export default {
           icon: 'label',
         },
         {
-          key: 'suppliers',
-          to: '/suppliers',
-          title: 'ПОСТАВЩИКИ',
+          key: 'brands',
+          to: '/brands',
+          title: 'Бренды',
           count: 0,
           icon: 'drive_eta',
         },
-        // {
-        //   key: 'supply_types',
-        //   to: '/supply_types',
-        //   title: 'ТИП ПОСТАВКИ',
-        //   count: 0,
-        //   icon: 'merge_type',
-        // },
         {
           key: 'expanses',
           to: '/expanses',
@@ -124,13 +117,13 @@ export default {
       Promise.all([
         this.getCount(Product, 'products'),
         this.getCount(Unit, 'units'),
-        this.getCount(Type, 'types'),
+        this.getCount(ProductType, 'product_types'),
         this.getCount(Tag, 'tags'),
         this.getCount(Purpose, 'purposes'),
         this.getCount(User, 'users'),
         this.getCount(Warehouse, 'warehouses'),
         this.getCount(Configuration, 'configurations'),
-        this.getCount(Supplier, 'suppliers'),
+        this.getCount(Brand, 'brands'),
         this.getCount(Expanse, 'expanses'),
       ]).then((results) => {
         results.forEach((element) => {

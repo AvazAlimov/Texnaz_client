@@ -9,9 +9,8 @@
                     template(v-slot:items="props")
                         td {{ props.item.name }}
                         td {{ props.item.owner }}
-                        td {{ props.item.address }}
                         td {{ props.item.company }}
-                        td {{ getSupplyName(props.item.supply) }}
+                        td {{ props.item.type }}
                         td
                             v-layout
                                 v-btn(icon :to="'/warehouse/' + props.item.id").mx-0
@@ -26,7 +25,6 @@
 
 <script>
 import Warehouse from '../services/Warehouse';
-import Supply from '../services/Supply';
 
 export default {
   name: 'Warehouses',
@@ -42,16 +40,12 @@ export default {
           value: 'owner',
         },
         {
-          text: 'Адрес',
-          value: 'address',
-        },
-        {
           text: 'Компания',
           value: 'company',
         },
         {
           text: 'Тип',
-          value: 'supply',
+          value: 'local',
         },
         {
           sortable: false,
@@ -59,7 +53,6 @@ export default {
         },
       ],
       warehouses: [],
-      supplies: [],
       loading: false,
     };
   },
@@ -67,12 +60,10 @@ export default {
     getAll() {
       this.loading = true;
       this.warehouses = [];
-      Promise.all([
-        Supply.getAll(),
-        Warehouse.getAll(),
-      ]).then((results) => {
-        [this.supplies, this.warehouses] = results;
-      })
+      Warehouse.getAll()
+        .then((warehouses) => {
+          this.warehouses = warehouses;
+        })
         .finally(() => { this.loading = false; });
     },
     remove(id) {
@@ -84,9 +75,6 @@ export default {
             this.$store.commit('setMessage', error.message);
           });
       }
-    },
-    getSupplyName(id) {
-      return (this.supplies.find(item => id === item.id) || { name: '-' }).name;
     },
   },
   created() {

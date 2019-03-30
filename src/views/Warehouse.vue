@@ -25,14 +25,6 @@
                     label="Компания"
                     name="company"
                     v-validate="'required'")
-                v-select(
-                    v-model="warehouse.supply"
-                    :items="supplies"
-                    label="Тип"
-                    item-text="name"
-                    item-value="id"
-                    name="supply"
-                    v-validate="'required'")
                 v-layout
                     v-spacer
                     v-btn(
@@ -44,7 +36,6 @@
 
 <script>
 import Warehouse from '../services/Warehouse';
-import Supply from '../services/Supply';
 
 export default {
   name: 'Warehouse',
@@ -59,9 +50,7 @@ export default {
         owner: '',
         address: '',
         company: '',
-        supply: null,
       },
-      supplies: [],
       loading: false,
     };
   },
@@ -80,26 +69,13 @@ export default {
         .finally(() => { this.loading = false; });
     },
     create() {
-      this.execute(Warehouse.create({
-        name: this.warehouse.name,
-        owner: this.warehouse.owner,
-        address: this.warehouse.address,
-        company: this.warehouse.company,
-        supply: this.warehouse.supply,
-      }));
+      this.execute(Warehouse.create(this.warehouse));
     },
     update() {
-      this.execute(Warehouse.update(this.id, {
-        name: this.warehouse.name,
-        owner: this.warehouse.owner,
-        address: this.warehouse.address,
-        company: this.warehouse.company,
-        supply: this.warehouse.supply,
-      }));
+      this.execute(Warehouse.update(this.id, this.warehouse));
     },
   },
   created() {
-    Supply.getAll().then((supplies) => { this.supplies = supplies; });
     if (this.$route.params.id) {
       this.id = this.$route.params.id;
       Warehouse.get(this.$route.params.id)

@@ -20,10 +20,10 @@
 </template>
 
 <script>
-import Type from '../services/Type';
+import ProductType from '../services/ProductType';
 
 export default {
-  name: 'Type',
+  name: 'ProductType',
   $_veeValidate: {
     validator: 'new',
   },
@@ -42,19 +42,19 @@ export default {
     execute(promise) {
       this.loading = true;
       promise
-        .then(() => this.$router.push('/types'))
+        .then(() => this.$router.push('/product_types'))
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
         })
         .finally(() => { this.loading = false; });
     },
     create() {
-      this.execute(Type.create({
+      this.execute(ProductType.create({
         name: this.name,
       }));
     },
     update() {
-      this.execute(Type.update(this.id, {
+      this.execute(ProductType.update(this.id, {
         name: this.name,
       }));
     },
@@ -62,7 +62,7 @@ export default {
   created() {
     if (this.$route.params.id) {
       this.id = this.$route.params.id;
-      Type.get(this.$route.params.id)
+      ProductType.get(this.$route.params.id)
         .then(({ name }) => {
           this.name = name;
         });

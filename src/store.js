@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { AXIOS } from './services/Api';
 import Auth from './services/Auth';
+import batch from './modules/batch';
 
 Vue.use(Vuex);
 
@@ -36,5 +37,8 @@ export default new Vuex.Store({
           resolve();
         }).catch(error => reject(error));
     }),
+  },
+  modules: {
+    batch,
   },
 });

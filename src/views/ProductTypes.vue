@@ -10,21 +10,21 @@
                         td {{ props.item.name }}
                         td
                             v-layout
-                                v-btn(icon :to="'/type/' + props.item.id").mx-0
+                                v-btn(icon :to="'/product_type/' + props.item.id").mx-0
                                     v-icon(color="primary" small) edit
                                 v-btn(icon @click="remove(props.item.id)").mx-0
                                     v-icon(color="primary" small) delete
                 v-divider
                 v-layout
                     v-spacer
-                    v-btn.ma-2(flat color="primary" to="/type") Добавить
+                    v-btn.ma-2(flat color="primary" to="/product_type") Добавить
 </template>
 
 <script>
-import Type from '../services/Type';
+import ProductType from '../services/ProductType';
 
 export default {
-  name: 'Types',
+  name: 'ProductTypes',
   data() {
     return {
       headers: [
@@ -45,7 +45,7 @@ export default {
     getAll() {
       this.loading = true;
       this.types = [];
-      Type.getAll()
+      ProductType.getAll()
         .then((types) => { this.types = types; })
         .catch(() => this.getAll())
         .finally(() => { this.loading = false; });
@@ -53,7 +53,7 @@ export default {
     remove(id) {
       // eslint-disable-next-line no-alert, no-restricted-globals
       if (confirm('Это действие удалит элемент навсегда, вы уверены?')) {
-        Type.delete(id)
+        ProductType.delete(id)
           .then(() => { this.getAll(); })
           .catch((error) => {
             this.$store.commit('setMessage', error.message);

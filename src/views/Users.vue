@@ -7,6 +7,7 @@
             .border.white
                 v-data-table(:headers="headers" :items="users" hide-actions :loading="loading")
                     template(v-slot:items="props")
+                        td {{ props.item.name }}
                         td {{ props.item.username }}
                         td
                           v-chip(
@@ -38,6 +39,10 @@ export default {
   data() {
     return {
       headers: [
+        {
+          text: 'Имя',
+          value: 'name',
+        },
         {
           text: 'Имя пользователя',
           value: 'username',

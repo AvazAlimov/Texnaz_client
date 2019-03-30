@@ -18,7 +18,8 @@ export function execute(promise) {
 }
 
 export const AXIOS = axios.create({
-  baseURL: 'http://erp.texnaz.uz/api/',
+  // baseURL: 'http://erp.texnaz.uz/api/',
+  baseURL: 'http://localhost:3030/api/',
 });
 
 export default () => {

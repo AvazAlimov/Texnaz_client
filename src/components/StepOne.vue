@@ -23,7 +23,10 @@
                 v-divider
                 v-btn(block flat).ma-0 Добавить
                 v-divider
-                .subheading.ma-4 Всего: {{totalCash}}
+                .ma-4
+                  .subheading Всего: {{totalCash}}
+                  .subheading Коэффициент:
+                    |  {{ (totalCash / total) > 2 ? (totalCash / total).toFixed(2) : 2}}%
 
         v-flex(xs6)
             .border
@@ -36,13 +39,10 @@
                 v-divider
                 v-btn(block flat).ma-0 Добавить
                 v-divider
-                .subheading.ma-4 Всего: {{totalNonCash}}
-        v-flex(xs12)
-            .border.pa-4
-                .headline Расходы периода БН:
-                    |  {{ (totalNonCash / total) > 4 ? (totalNonCash / total).toFixed(2) : 4}}%
-                .headline Расходы периода Н:
-                    |  {{ (totalCash / total) > 2 ? (totalCash / total).toFixed(2) : 2}}%
+                .ma-4
+                  .subheading Всего: {{totalNonCash}}
+                  .subheading Коэффициент:
+                      |  {{ (totalNonCash / total) > 4 ? (totalNonCash / total).toFixed(2) : 4}}%
 </template>
 
 <script>
@@ -91,7 +91,6 @@ export default {
         const [expanses] = results;
         expanses.forEach((expanse) => {
           if (!expanse.is_transport) {
-            expanse.value = 0;
             if (expanse.is_cash) this.cash.push(expanse);
             else this.non_cash.push(expanse);
           }
