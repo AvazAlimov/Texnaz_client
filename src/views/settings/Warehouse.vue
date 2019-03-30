@@ -1,6 +1,6 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon to="/warehouses")
+        v-btn(icon :to="{ name: 'settings_warehouses' }")
             v-icon arrow_back
         .title {{ id == null ? 'Добавить' : 'Редактировать' }} склад
         v-flex(xs12).mt-3
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import Warehouse from '../services/Warehouse';
+import Warehouse from '@/services/Warehouse';
 
 export default {
   name: 'Warehouse',
@@ -62,7 +62,7 @@ export default {
     execute(promise) {
       this.loading = true;
       promise
-        .then(() => this.$router.push('/warehouses'))
+        .then(() => this.$router.push({ name: 'settings_warehouses' }))
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
         })

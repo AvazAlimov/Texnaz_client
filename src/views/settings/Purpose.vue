@@ -1,19 +1,20 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon to="/brands")
+        v-btn(icon :to="{ name: 'purposes' }")
             v-icon arrow_back
-        .title {{ id == null ? 'Добавить' : 'Редактировать' }} бренд
+        .title {{ id == null ? 'Добавить' : 'Редактировать' }} назначение
         v-flex(xs12).mt-3
             .border.white.pa-4
                 v-text-field(
-                    v-model="name"
-                    label="Название"
-                    name="name"
+                    v-model="number"
+                    label="Номер"
+                    mask="########"
+                    name="number"
                     v-validate="'required'")
-                v-text-field(
-                    v-model="country"
-                    label="Страна"
-                    name="country"
+                v-textarea(
+                    v-model="description"
+                    label="Описание"
+                    name="description"
                     v-validate="'required'")
                 v-layout
                     v-spacer
@@ -25,18 +26,18 @@
 </template>
 
 <script>
-import Brand from '../services/Brand';
+import Purpose from '@/services/Purpose';
 
 export default {
-  name: 'Brand',
+  name: 'Purpose',
   $_veeValidate: {
     validator: 'new',
   },
   data() {
     return {
       id: null,
-      name: '',
-      country: '',
+      number: '',
+      description: '',
       loading: false,
     };
   },
@@ -48,32 +49,32 @@ export default {
     execute(promise) {
       this.loading = true;
       promise
-        .then(() => this.$router.push('/brands'))
+        .then(() => this.$router.push({ name: 'purposes' }))
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
         })
         .finally(() => { this.loading = false; });
     },
     create() {
-      this.execute(Brand.create({
-        name: this.name,
-        country: this.country,
+      this.execute(Purpose.create({
+        number: this.number,
+        description: this.description,
       }));
     },
     update() {
-      this.execute(Brand.update(this.id, {
-        name: this.name,
-        country: this.country,
+      this.execute(Purpose.update(this.id, {
+        number: this.number,
+        description: this.description,
       }));
     },
   },
   created() {
     if (this.$route.params.id) {
       this.id = this.$route.params.id;
-      Brand.get(this.$route.params.id)
-        .then(({ name, country }) => {
-          this.name = name;
-          this.country = country;
+      Purpose.get(this.$route.params.id)
+        .then(({ number, description }) => {
+          this.number = number;
+          this.description = description;
         });
     }
   },

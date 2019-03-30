@@ -1,6 +1,6 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon to="/")
+        v-btn(icon :to="{ name: 'settings' }")
             v-icon arrow_back
         .title ТОВАРЫ
         v-flex(xs12).mt-3
@@ -21,22 +21,26 @@
                         td {{ props.item.excise }}%
                         td
                             v-layout
-                                v-btn(icon :to="'/product/' + props.item.id").mx-0
+                                v-btn(icon
+                                  :to="{ name: 'product', params: { id: props.item.id }}"
+                                ).mx-0
                                     v-icon(color="primary" small) edit
                                 v-btn(icon @click="remove(props.item.id)").mx-0
                                     v-icon(color="primary" small) delete
                 v-divider
                 v-layout
                     v-spacer
-                    v-btn.ma-2(flat color="primary" to="/product") Добавить
+                    v-btn.ma-2(flat color="primary"
+                      :to="{ name: 'product' }"
+                    ) Добавить
 </template>
 
 <script>
-import Product from '../services/Product';
-import Unit from '../services/Unit';
-import ProductType from '../services/ProductType';
-import Purpose from '../services/Purpose';
-import Tag from '../services/Tag';
+import Product from '@/services/Product';
+import Unit from '@/services/Unit';
+import ProductType from '@/services/ProductType';
+import Purpose from '@/services/Purpose';
+import Tag from '@/services/Tag';
 
 export default {
   name: 'Products',

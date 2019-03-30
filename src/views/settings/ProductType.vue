@@ -1,20 +1,14 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon to="/purposes")
+        v-btn(icon :to="{ name: 'product_types' }")
             v-icon arrow_back
-        .title {{ id == null ? 'Добавить' : 'Редактировать' }} назначение
+        .title {{ id == null ? 'Добавить' : 'Редактировать' }} тип продукта
         v-flex(xs12).mt-3
             .border.white.pa-4
                 v-text-field(
-                    v-model="number"
-                    label="Номер"
-                    mask="########"
-                    name="number"
-                    v-validate="'required'")
-                v-textarea(
-                    v-model="description"
-                    label="Описание"
-                    name="description"
+                    v-model="name"
+                    label="Наименование"
+                    name="name"
                     v-validate="'required'")
                 v-layout
                     v-spacer
@@ -26,18 +20,17 @@
 </template>
 
 <script>
-import Purpose from '../services/Purpose';
+import ProductType from '@/services/ProductType';
 
 export default {
-  name: 'Purpose',
+  name: 'ProductType',
   $_veeValidate: {
     validator: 'new',
   },
   data() {
     return {
       id: null,
-      number: '',
-      description: '',
+      name: '',
       loading: false,
     };
   },
@@ -49,32 +42,29 @@ export default {
     execute(promise) {
       this.loading = true;
       promise
-        .then(() => this.$router.push('/purposes'))
+        .then(() => this.$router.push({ name: 'product_types' }))
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
         })
         .finally(() => { this.loading = false; });
     },
     create() {
-      this.execute(Purpose.create({
-        number: this.number,
-        description: this.description,
+      this.execute(ProductType.create({
+        name: this.name,
       }));
     },
     update() {
-      this.execute(Purpose.update(this.id, {
-        number: this.number,
-        description: this.description,
+      this.execute(ProductType.update(this.id, {
+        name: this.name,
       }));
     },
   },
   created() {
     if (this.$route.params.id) {
       this.id = this.$route.params.id;
-      Purpose.get(this.$route.params.id)
-        .then(({ number, description }) => {
-          this.number = number;
-          this.description = description;
+      ProductType.get(this.$route.params.id)
+        .then(({ name }) => {
+          this.name = name;
         });
     }
   },

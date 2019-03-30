@@ -1,34 +1,34 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon to="/")
+        v-btn(icon :to="{ name: 'settings' }")
             v-icon arrow_back
-        .title РАСХОДЫ
+        .title ЕДИНИЦЫ ИЗМЕРЕНИЯ
         v-flex(xs12).mt-3
             .border.white
-                v-data-table(:headers="headers" :items="expanses" hide-actions :loading="loading")
+                v-data-table(:headers="headers" :items="units" hide-actions :loading="loading")
                     template(v-slot:items="props")
                         td {{ props.item.name }}
-                        td.text-xs-center
-                          v-icon(small) {{ props.item.is_transport ? 'check' : 'close' }}
-                        td.text-xs-center
-                          v-icon(small) {{ props.item.is_cash ? 'check' : 'close' }}
                         td
                             v-layout
-                                v-btn(icon :to="'/expanse/' + props.item.id").mx-0
+                                v-btn.mx-0(icon
+                                  :to="{ name: 'unit', params: {id: props.item.id}}"
+                                )
                                     v-icon(color="primary" small) edit
                                 v-btn(icon @click="remove(props.item.id)").mx-0
                                     v-icon(color="primary" small) delete
                 v-divider
                 v-layout
                     v-spacer
-                    v-btn.ma-2(flat color="primary" to="/expanse") Добавить
+                    v-btn.ma-2(flat color="primary"
+                      :to="{ name: 'unit' }"
+                    ) Добавить
 </template>
 
 <script>
-import Expanse from '../services/Expanse';
+import Unit from '@/services/Unit';
 
 export default {
-  name: 'Expanse',
+  name: 'Units',
   data() {
     return {
       headers: [
@@ -37,38 +37,27 @@ export default {
           value: 'name',
         },
         {
-          text: 'Для транспорта',
-          value: 'is_transport',
-          width: 150,
-          sortable: false,
-        },
-        {
-          text: 'Наличные',
-          value: 'is_cash',
-          width: 100,
-          sortable: false,
-        },
-        {
           sortable: false,
           width: 100,
         },
       ],
-      expanses: [],
+      units: [],
       loading: false,
     };
   },
   methods: {
     getAll() {
       this.loading = true;
-      this.expanses = [];
-      Expanse.getAll()
-        .then((expanses) => { this.expanses = expanses; })
+      this.units = [];
+      Unit.getAll()
+        .then((units) => { this.units = units; })
+        .catch(() => this.getAll())
         .finally(() => { this.loading = false; });
     },
     remove(id) {
       // eslint-disable-next-line no-alert, no-restricted-globals
       if (confirm('Это действие удалит элемент навсегда, вы уверены?')) {
-        Expanse.delete(id)
+        Unit.delete(id)
           .then(() => { this.getAll(); })
           .catch((error) => {
             this.$store.commit('setMessage', error.message);

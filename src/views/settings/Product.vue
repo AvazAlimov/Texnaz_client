@@ -1,6 +1,6 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon to="/products")
+        v-btn(icon :to="{ name: 'products' }")
             v-icon arrow_back
         .title {{ id == null ? 'Добавить' : 'Редактировать' }} товар
         v-flex(xs12).mt-3
@@ -87,11 +87,11 @@
 </template>
 
 <script>
-import Product from '../services/Product';
-import Unit from '../services/Unit';
-import ProductType from '../services/ProductType';
-import Purpose from '../services/Purpose';
-import Tag from '../services/Tag';
+import Product from '@/services/Product';
+import Unit from '@/services/Unit';
+import ProductType from '@/services/ProductType';
+import Purpose from '@/services/Purpose';
+import Tag from '@/services/Tag';
 
 export default {
   name: 'Product',
@@ -146,7 +146,7 @@ export default {
     execute(promise) {
       this.loading = true;
       promise
-        .then(() => this.$router.push('/products'))
+        .then(() => this.$router.push({ name: 'products' }))
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
         })

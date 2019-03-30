@@ -1,6 +1,6 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon to="/")
+        v-btn(icon :to="{ name: 'settings' }")
             v-icon arrow_back
         .title ПОЛЬЗОВАТЕЛИ
         v-flex(xs12).mt-3
@@ -18,7 +18,9 @@
                             text-color="black") {{ role.name }}
                         td
                             v-layout
-                                v-btn(icon :to="'/user/' + props.item.id").mx-0
+                                v-btn.mx-0(icon
+                                  :to="{ name: 'user', params: {id: props.item.id }}"
+                                )
                                     v-icon(color="primary" small) edit
                                 v-btn(
                                   v-if="props.item.id > 1"
@@ -28,11 +30,13 @@
                 v-divider
                 v-layout
                     v-spacer
-                    v-btn.ma-2(flat color="primary" to="/user") Добавить
+                    v-btn.ma-2(flat color="primary"
+                      :to="{ name: 'user' }"
+                    ) Добавить
 </template>
 
 <script>
-import User from '../services/User';
+import User from '@/services/User';
 
 export default {
   name: 'Users',

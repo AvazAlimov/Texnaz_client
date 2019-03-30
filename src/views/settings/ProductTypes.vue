@@ -1,6 +1,6 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon to="/")
+        v-btn(icon :to="{ name: 'settings' }")
             v-icon arrow_back
         .title ТИПЫ ПРОДУКТОВ
         v-flex(xs12).mt-3
@@ -10,18 +10,22 @@
                         td {{ props.item.name }}
                         td
                             v-layout
-                                v-btn(icon :to="'/product_type/' + props.item.id").mx-0
+                                v-btn.mx-0(icon
+                                  :to="{ name: 'product_type', params: { id: props.item.id }}"
+                                )
                                     v-icon(color="primary" small) edit
                                 v-btn(icon @click="remove(props.item.id)").mx-0
                                     v-icon(color="primary" small) delete
                 v-divider
                 v-layout
                     v-spacer
-                    v-btn.ma-2(flat color="primary" to="/product_type") Добавить
+                    v-btn.ma-2(flat color="primary"
+                      :to="{ name: 'product_type' }"
+                    ) Добавить
 </template>
 
 <script>
-import ProductType from '../services/ProductType';
+import ProductType from '@/services/ProductType';
 
 export default {
   name: 'ProductTypes',

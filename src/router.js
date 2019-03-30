@@ -6,197 +6,225 @@ Vue.use(Router);
 
 const router = new Router({
   mode: 'history',
-  routes: [{
-    path: '/',
-    meta: {
-      requiresAuth: true,
-    },
-    component: () => import('./views/Home.vue'),
-    children: [{
-      path: '/settings',
-      name: 'settings',
-      component: () => import('./views/Database.vue'),
+  routes: [
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('./views/Login.vue'),
     },
     {
-      path: '/calculator',
-      name: 'calculator',
-      component: () => import('./views/Calculator.vue'),
+      path: '/',
+      meta: { requiresAuth: true },
+      component: () => import('./views/Home.vue'),
+      children: [
+        {
+          path: '/calculator',
+          name: 'calculator',
+          component: () => import('./views/Calculator.vue'),
+        },
+
+        {
+          path: '/settings',
+          component: () => import('./views/Settings.vue'),
+          children: [
+          // DATABASE
+            {
+              path: '',
+              name: 'settings',
+              component: () => import('./views/settings/Database.vue'),
+            },
+
+            // BRANDS
+            {
+              path: 'brands',
+              name: 'brands',
+              component: () => import('./views/settings/Brands.vue'),
+            },
+            {
+              path: 'brand',
+              name: 'brand',
+              component: () => import('./views/settings/Brand.vue'),
+              children: [
+                {
+                  path: ':id',
+                  component: () => import('./views/settings/Brand.vue'),
+                },
+              ],
+            },
+
+            // PRODUCT TYPES
+            {
+              path: 'product_types',
+              name: 'product_types',
+              component: () => import('./views/settings/ProductTypes.vue'),
+            },
+            {
+              path: 'product_type',
+              name: 'product_type',
+              component: () => import('./views/settings/ProductType.vue'),
+              children: [
+                {
+                  path: ':id',
+                  component: () => import('./views/settings/ProductType.vue'),
+                },
+              ],
+            },
+
+            // UNITS
+            {
+              path: 'units',
+              name: 'units',
+              component: () => import('./views/settings/Units.vue'),
+            },
+            {
+              path: 'unit',
+              name: 'unit',
+              component: () => import('./views/settings/Unit.vue'),
+              children: [
+                {
+                  path: ':id',
+                  component: () => import('./views/settings/Unit.vue'),
+                },
+              ],
+            },
+
+            // PURPOSES
+            {
+              path: 'purposes',
+              name: 'purposes',
+              component: () => import('./views/settings/Purposes.vue'),
+            },
+            {
+              path: 'purpose',
+              name: 'purpose',
+              component: () => import('./views/settings/Purpose.vue'),
+              children: [
+                {
+                  path: ':id',
+                  component: () => import('./views/settings/Purpose.vue'),
+                },
+              ],
+            },
+
+            // TAGS
+            {
+              path: 'tags',
+              name: 'tags',
+              component: () => import('./views/settings/Tags.vue'),
+            },
+            {
+              path: 'tag',
+              name: 'tag',
+              component: () => import('./views/settings/Tag.vue'),
+              children: [
+                {
+                  path: ':id',
+                  component: () => import('./views/settings/Tag.vue'),
+                },
+              ],
+            },
+
+            // PRODUCTS
+            {
+              path: 'products',
+              name: 'products',
+              component: () => import('./views/settings/Products.vue'),
+            },
+            {
+              path: 'product',
+              name: 'product',
+              component: () => import('./views/settings/Product.vue'),
+              children: [
+                {
+                  path: ':id',
+                  component: () => import('./views/settings/Product.vue'),
+                },
+              ],
+            },
+
+            // USERS
+            {
+              path: 'users',
+              name: 'users',
+              component: () => import('./views/settings/Users.vue'),
+            },
+            {
+              path: '/user',
+              name: 'user',
+              component: () => import('./views/settings/User.vue'),
+              children: [
+                {
+                  path: ':id',
+                  component: () => import('./views/settings/User.vue'),
+                },
+              ],
+            },
+
+            // EXPANSES
+            {
+              path: 'expanses',
+              name: 'expanses',
+              component: () => import('./views/settings/Expanses.vue'),
+            },
+            {
+              path: 'expanse',
+              name: 'expanse',
+              component: () => import('./views/settings/Expanse.vue'),
+              children: [
+                {
+                  path: ':id',
+                  component: () => import('./views/settings/Expanse.vue'),
+                },
+              ],
+            },
+
+            // CONFIGURATIONS
+            {
+              path: 'configurations',
+              name: 'configurations',
+              component: () => import('./views/settings/Configurations.vue'),
+            },
+
+            // WAREHOUSES
+            {
+              path: 'warehouses',
+              name: 'settings_warehouses',
+              component: () => import('./views/settings/Warehouses.vue'),
+            },
+            {
+              path: 'warehouse',
+              name: 'settings_warehouse',
+              component: () => import('./views/settings/Warehouse.vue'),
+              children: [
+                {
+                  path: ':id',
+                  component: () => import('./views/settings/Warehouse.vue'),
+                },
+              ],
+            },
+          ],
+        },
+
+        {
+          path: '/batch',
+          name: 'batch',
+          component: () => import('./views/Batch.vue'),
+        },
+      ],
     },
     {
-      path: '/batch',
-      name: 'batch',
-      component: () => import('./views/Batch.vue'),
+      path: '/logout',
+      name: 'logout',
+      meta: {
+        requiresAuth: true,
+      },
+      beforeEnter(to, from, next) {
+        store.commit('logout');
+        next({
+          name: 'login',
+        });
+      },
     },
-    // PURPOSES
-    {
-      path: '/purposes',
-      name: 'purposes',
-      component: () => import('./views/Purposes.vue'),
-    },
-    {
-      path: '/purpose',
-      name: 'purpose_create',
-      component: () => import('./views/Purpose.vue'),
-    },
-    {
-      path: '/purpose/:id',
-      name: 'purpose_update',
-      component: () => import('./views/Purpose.vue'),
-    },
-    // UNITS
-    {
-      path: '/units',
-      name: 'units',
-      component: () => import('./views/Units.vue'),
-    },
-    {
-      path: '/unit',
-      name: 'unit_create',
-      component: () => import('./views/Unit.vue'),
-    },
-    {
-      path: '/unit/:id',
-      name: 'unit_update',
-      component: () => import('./views/Unit.vue'),
-    },
-    // TAGS
-    {
-      path: '/tags',
-      name: 'tags',
-      component: () => import('./views/Tags.vue'),
-    },
-    {
-      path: '/tag',
-      name: 'tag_create',
-      component: () => import('./views/Tag.vue'),
-    },
-    {
-      path: '/tag/:id',
-      name: 'tag_update',
-      component: () => import('./views/Tag.vue'),
-    },
-    // PRODUCT TYPES
-    {
-      path: '/product_types',
-      name: 'product_types',
-      component: () => import('./views/ProductTypes.vue'),
-    },
-    {
-      path: '/product_type',
-      name: 'product_type_create',
-      component: () => import('./views/ProductType.vue'),
-    },
-    {
-      path: '/product_type/:id',
-      name: 'product_types_update',
-      component: () => import('./views/ProductType.vue'),
-    },
-    // PRODUCTS
-    {
-      path: '/products',
-      name: 'products',
-      component: () => import('./views/Products.vue'),
-    },
-    {
-      path: '/product',
-      name: 'product_create',
-      component: () => import('./views/Product.vue'),
-    },
-    {
-      path: '/product/:id',
-      name: 'product_update',
-      component: () => import('./views/Product.vue'),
-    },
-    // USERS
-    {
-      path: '/users',
-      name: 'users',
-      component: () => import('./views/Users.vue'),
-    },
-    {
-      path: '/user',
-      name: 'user_create',
-      component: () => import('./views/User.vue'),
-    },
-    {
-      path: '/user/:id',
-      name: 'user_update',
-      component: () => import('./views/User.vue'),
-    },
-    // WAREHOUSES
-    {
-      path: '/warehouses',
-      name: 'warehouses',
-      component: () => import('./views/Warehouses.vue'),
-    },
-    {
-      path: '/warehouse',
-      name: 'warehouse_create',
-      component: () => import('./views/Warehouse.vue'),
-    },
-    {
-      path: '/warehouse/:id',
-      name: 'warehouse_update',
-      component: () => import('./views/Warehouse.vue'),
-    },
-    // BRANDS
-    {
-      path: '/brands',
-      name: 'brands',
-      component: () => import('./views/Brands.vue'),
-    },
-    {
-      path: '/brand',
-      name: 'brand_create',
-      component: () => import('./views/Brand.vue'),
-    },
-    {
-      path: '/brand/:id',
-      name: 'brand_update',
-      component: () => import('./views/Brand.vue'),
-    },
-    // CONFIGURATIONS
-    {
-      path: '/configurations',
-      name: 'configurations',
-      component: () => import('./views/Configurations.vue'),
-    },
-    // EXPANSES
-    {
-      path: '/expanses',
-      name: 'expanses',
-      component: () => import('./views/Expanses.vue'),
-    },
-    {
-      path: '/expanse',
-      name: 'expanse_create',
-      component: () => import('./views/Expanse.vue'),
-    },
-    {
-      path: '/expanse/:id',
-      name: 'expanse_update',
-      component: () => import('./views/Expanse.vue'),
-    },
-    ],
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: () => import('./views/Login.vue'),
-  },
-  {
-    path: '/logout',
-    name: 'logout',
-    meta: {
-      requiresAuth: true,
-    },
-    beforeEnter(to, from, next) {
-      store.commit('logout');
-      next({
-        name: 'login',
-      });
-    },
-  },
   ],
 });
 

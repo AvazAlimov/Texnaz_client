@@ -1,6 +1,6 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon to="/users")
+        v-btn(icon :to="{ name: 'users' }")
             v-icon arrow_back
         .title {{ id == null ? 'Добавить' : 'Редактировать' }} пользователя
         v-flex(xs12).mt-3
@@ -39,8 +39,8 @@
 </template>
 
 <script>
-import User from '../services/User';
-import Roles from '../services/Roles';
+import User from '@/services/User';
+import Roles from '@/services/Roles';
 
 export default {
   name: 'User',
@@ -68,7 +68,7 @@ export default {
     execute(promise) {
       this.loading = true;
       promise
-        .then(() => this.$router.push('/users'))
+        .then(() => this.$router.push({ name: 'users' }))
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
         })

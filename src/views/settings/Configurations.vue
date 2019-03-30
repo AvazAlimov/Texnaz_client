@@ -1,6 +1,6 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon to="/")
+        v-btn(icon :to="{ name: 'settings' }")
             v-icon arrow_back
         .title КОНФИГУРАЦИИ
         v-flex(xs12).mt-3
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import Configuration from '../services/Configuration';
+import Configuration from '@/services/Configuration';
 
 export default {
   name: 'Configurations',

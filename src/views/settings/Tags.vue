@@ -1,66 +1,63 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon to="/")
+        v-btn(icon :to="{ name: 'settings' }")
             v-icon arrow_back
-        .title НАЗНАЧЕНИЕ
+        .title ТЕГИ
         v-flex(xs12).mt-3
             .border.white
-                v-data-table(:headers="headers" :items="purposes" hide-actions :loading="loading")
+                v-data-table(:headers="headers" :items="tags" hide-actions :loading="loading")
                     template(v-slot:items="props")
-                        td {{ props.item.number }}
-                        td {{ props.item.description }}
+                        td {{ props.item.name }}
                         td
                             v-layout
-                                v-btn(icon :to="'/purpose/' + props.item.id").mx-0
+                                v-btn.mx-0(icon
+                                  :to="{ name: 'tag', params: { id: props.item.id }}"
+                                )
                                     v-icon(color="primary" small) edit
                                 v-btn(icon @click="remove(props.item.id)").mx-0
                                     v-icon(color="primary" small) delete
                 v-divider
                 v-layout
                     v-spacer
-                    v-btn.ma-2(flat color="primary" to="/purpose") Добавить
+                    v-btn.ma-2(flat color="primary"
+                      :to="{ name: 'tag' }"
+                      ) Добавить
 </template>
 
 <script>
-import Purpose from '../services/Purpose';
+import Tag from '@/services/Tag';
 
 export default {
-  name: 'Purposes',
+  name: 'Tags',
   data() {
     return {
       headers: [
         {
-          text: 'Номер',
-          value: 'number',
-          width: 100,
-        },
-        {
-          text: 'Описание',
-          value: 'description',
-          sortable: false,
+          text: 'Название',
+          value: 'name',
         },
         {
           sortable: false,
           width: 100,
         },
       ],
-      purposes: [],
+      tags: [],
       loading: false,
     };
   },
   methods: {
     getAll() {
       this.loading = true;
-      this.purposes = [];
-      Purpose.getAll()
-        .then((purposes) => { this.purposes = purposes; })
+      this.tags = [];
+      Tag.getAll()
+        .then((tags) => { this.tags = tags; })
         .catch(() => this.getAll())
         .finally(() => { this.loading = false; });
     },
     remove(id) {
       // eslint-disable-next-line no-alert, no-restricted-globals
       if (confirm('Это действие удалит элемент навсегда, вы уверены?')) {
-        Purpose.delete(id)
+        Tag.delete(id)
           .then(() => { this.getAll(); })
           .catch((error) => {
             this.$store.commit('setMessage', error.message);

@@ -1,15 +1,22 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon to="/units")
+        v-btn(icon :to="{ name: 'expanses' }")
             v-icon arrow_back
-        .title {{ id == null ? 'Добавить' : 'Редактировать' }} единицу измерения
+        .title {{ id == null ? 'Добавить' : 'Редактировать' }} поставщика
         v-flex(xs12).mt-3
             .border.white.pa-4
                 v-text-field(
-                    v-model="name"
-                    label="Наименование"
+                    v-model="expanse.name"
+                    label="Название"
                     name="name"
                     v-validate="'required'")
+                v-text-field(
+                    v-model="expanse.value"
+                    label="Значение"
+                    name="value"
+                    v-validate="'required|decimal'")
+                v-checkbox(v-model="expanse.is_transport" label="Для транспорта")
+                v-checkbox(v-model="expanse.is_cash" label="Наличные")
                 v-layout
                     v-spacer
                     v-btn(
@@ -20,17 +27,22 @@
 </template>
 
 <script>
-import Unit from '../services/Unit';
+import Expanse from '@/services/Expanse';
 
 export default {
-  name: 'Unit',
+  name: 'Expanse',
   $_veeValidate: {
     validator: 'new',
   },
   data() {
     return {
       id: null,
-      name: '',
+      expanse: {
+        name: '',
+        value: 0,
+        is_transport: false,
+        is_cash: false,
+      },
       loading: false,
     };
   },
@@ -42,29 +54,25 @@ export default {
     execute(promise) {
       this.loading = true;
       promise
-        .then(() => this.$router.push('/units'))
+        .then(() => this.$router.push({ name: 'expanses' }))
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
         })
         .finally(() => { this.loading = false; });
     },
     create() {
-      this.execute(Unit.create({
-        name: this.name,
-      }));
+      this.execute(Expanse.create(this.expanse));
     },
     update() {
-      this.execute(Unit.update(this.id, {
-        name: this.name,
-      }));
+      this.execute(Expanse.update(this.id, this.expanse));
     },
   },
   created() {
     if (this.$route.params.id) {
       this.id = this.$route.params.id;
-      Unit.get(this.$route.params.id)
-        .then(({ name }) => {
-          this.name = name;
+      Expanse.get(this.$route.params.id)
+        .then((expanse) => {
+          this.expanse = expanse;
         });
     }
   },

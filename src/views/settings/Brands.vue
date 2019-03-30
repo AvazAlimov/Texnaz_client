@@ -1,33 +1,35 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon to="/")
+        v-btn(icon :to="{ name: 'settings' }")
             v-icon arrow_back
-        .title СКЛАДЫ
+        .title Бренды
         v-flex(xs12).mt-3
             .border.white
-                v-data-table(:headers="headers" :items="warehouses" hide-actions :loading="loading")
+                v-data-table(:headers="headers" :items="brands" hide-actions :loading="loading")
                     template(v-slot:items="props")
                         td {{ props.item.name }}
-                        td {{ props.item.owner }}
-                        td {{ props.item.company }}
-                        td {{ props.item.type }}
+                        td {{ props.item.country }}
                         td
                             v-layout
-                                v-btn(icon :to="'/warehouse/' + props.item.id").mx-0
+                                v-btn(icon
+                                  :to="{ name: 'brand', params: { id: props.item.id }}"
+                                ).mx-0
                                     v-icon(color="primary" small) edit
                                 v-btn(icon @click="remove(props.item.id)").mx-0
                                     v-icon(color="primary" small) delete
                 v-divider
                 v-layout
                     v-spacer
-                    v-btn.ma-2(flat color="primary" to="/warehouse") Добавить
+                    v-btn.ma-2(flat color="primary"
+                      :to="{ name: 'brand' }"
+                    ) Добавить
 </template>
 
 <script>
-import Warehouse from '../services/Warehouse';
+import Brand from '@/services/Brand';
 
 export default {
-  name: 'Warehouses',
+  name: 'Brand',
   data() {
     return {
       headers: [
@@ -36,40 +38,31 @@ export default {
           value: 'name',
         },
         {
-          text: 'Владелец',
-          value: 'owner',
-        },
-        {
-          text: 'Компания',
-          value: 'company',
-        },
-        {
-          text: 'Тип',
-          value: 'local',
+          text: 'Страна',
+          value: 'country',
         },
         {
           sortable: false,
           width: 100,
         },
       ],
-      warehouses: [],
+      brands: [],
       loading: false,
     };
   },
   methods: {
     getAll() {
       this.loading = true;
-      this.warehouses = [];
-      Warehouse.getAll()
-        .then((warehouses) => {
-          this.warehouses = warehouses;
-        })
+      this.brands = [];
+      Brand.getAll()
+        .then((brands) => { this.brands = brands; })
+        .catch(() => this.getAll())
         .finally(() => { this.loading = false; });
     },
     remove(id) {
       // eslint-disable-next-line no-alert, no-restricted-globals
       if (confirm('Это действие удалит элемент навсегда, вы уверены?')) {
-        Warehouse.delete(id)
+        Brand.delete(id)
           .then(() => { this.getAll(); })
           .catch((error) => {
             this.$store.commit('setMessage', error.message);

@@ -4,7 +4,7 @@
         .title НАСТРОЙКИ
       v-flex(xs4 v-for="(section, index) in cards" :key="index")
         v-list.pa-0.border.my-2(v-for="card in section" :key="card.title" two-line)
-          v-list-tile(:to="card.to")
+          v-list-tile(:to="'/settings' + card.to")
             v-list-tile-content
               v-list-tile-title {{ card.title }}
               v-list-tile-sub-title {{ card.count }}
@@ -13,16 +13,16 @@
 </template>
 
 <script>
-import Product from '../services/Product';
-import Unit from '../services/Unit';
-import Tag from '../services/Tag';
-import ProductType from '../services/ProductType';
-import Purpose from '../services/Purpose';
-import User from '../services/User';
-import Warehouse from '../services/Warehouse';
-import Configuration from '../services/Configuration';
-import Brand from '../services/Brand';
-import Expanse from '../services/Expanse';
+import Product from '@/services/Product';
+import Unit from '@/services/Unit';
+import Tag from '@/services/Tag';
+import ProductType from '@/services/ProductType';
+import Purpose from '@/services/Purpose';
+import User from '@/services/User';
+import Warehouse from '@/services/Warehouse';
+import Configuration from '@/services/Configuration';
+import Brand from '@/services/Brand';
+import Expanse from '@/services/Expanse';
 
 export default {
   name: 'Database',

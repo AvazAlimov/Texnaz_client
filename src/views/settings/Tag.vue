@@ -1,8 +1,8 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon to="/types")
+        v-btn(icon :to="{ name: 'tags' }")
             v-icon arrow_back
-        .title {{ id == null ? 'Добавить' : 'Редактировать' }} тип продукта
+        .title {{ id == null ? 'Добавить' : 'Редактировать' }} тег
         v-flex(xs12).mt-3
             .border.white.pa-4
                 v-text-field(
@@ -20,10 +20,10 @@
 </template>
 
 <script>
-import ProductType from '../services/ProductType';
+import Tag from '@/services/Tag';
 
 export default {
-  name: 'ProductType',
+  name: 'Tag',
   $_veeValidate: {
     validator: 'new',
   },
@@ -42,19 +42,19 @@ export default {
     execute(promise) {
       this.loading = true;
       promise
-        .then(() => this.$router.push('/product_types'))
+        .then(() => this.$router.push({ name: 'tags' }))
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
         })
         .finally(() => { this.loading = false; });
     },
     create() {
-      this.execute(ProductType.create({
+      this.execute(Tag.create({
         name: this.name,
       }));
     },
     update() {
-      this.execute(ProductType.update(this.id, {
+      this.execute(Tag.update(this.id, {
         name: this.name,
       }));
     },
@@ -62,7 +62,7 @@ export default {
   created() {
     if (this.$route.params.id) {
       this.id = this.$route.params.id;
-      ProductType.get(this.$route.params.id)
+      Tag.get(this.$route.params.id)
         .then(({ name }) => {
           this.name = name;
         });
