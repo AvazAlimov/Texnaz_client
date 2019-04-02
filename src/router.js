@@ -18,7 +18,7 @@ const router = new Router({
       component: () => import('./views/Home.vue'),
       children: [
         {
-          path: '/calculator',
+          path: 'calculator',
           name: 'calculator',
           component: () => import('./views/Calculator.vue'),
         },
@@ -206,15 +206,33 @@ const router = new Router({
         },
 
         {
-          path: '/batch',
+          path: 'batch',
           name: 'batch',
           component: () => import('./views/Batch.vue'),
         },
 
         {
-          path: '/warehouses',
-          name: 'warehouses',
+          path: 'warehouses',
           component: () => import('./views/Warehouses.vue'),
+          children: [
+            {
+              path: '',
+              name: 'warehouses',
+              component: () => import('./views/warehouses/Warehouses.vue'),
+            },
+            {
+              path: ':id',
+              name: 'warehouse',
+              component: () => import('./views/warehouses/Warehouse.vue'),
+              children: [
+                {
+                  path: 'stock',
+                  name: 'stock',
+                  component: () => import('./views/warehouses/Stock.vue'),
+                },
+              ],
+            },
+          ],
         },
       ],
     },
@@ -234,7 +252,7 @@ const router = new Router({
   ],
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _, next) => {
   const isAuthenticated = store.state.token;
   if (to.matched.some(route => route.meta.requiresAuth)) {
     if (isAuthenticated) {

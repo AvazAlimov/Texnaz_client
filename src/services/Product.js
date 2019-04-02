@@ -18,4 +18,6 @@ export default {
   })),
 
   delete: id => Api().delete(`products/${id}`),
+
+  search: (query, brand, type) => execute(Api().get(`products/?q=${query}&b=${brand}&t=${type}`)),
 };
