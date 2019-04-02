@@ -204,7 +204,7 @@ export default {
         expiry_date: element.expiry_date,
       }));
       Stock.createStocks(stocks)
-        .then(() => this.$router.push({ name: 'warehouse', params: { id: this.warehouse.id } }))
+        .then(() => this.$router.push({ name: 'warehouse' }))
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
         });

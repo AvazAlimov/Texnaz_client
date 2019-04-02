@@ -28,7 +28,7 @@ export default {
         {
           icon: 'info',
           title: 'Информация',
-          to: { name: 'info' },
+          to: { name: 'information' },
         },
         {
           icon: 'library_add',

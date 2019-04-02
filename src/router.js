@@ -226,6 +226,11 @@ const router = new Router({
               component: () => import('./views/warehouses/Warehouse.vue'),
               children: [
                 {
+                  path: 'information',
+                  name: 'information',
+                  component: () => import('./views/warehouses/Information.vue'),
+                },
+                {
                   path: 'stock',
                   name: 'stock',
                   component: () => import('./views/warehouses/Stock.vue'),
