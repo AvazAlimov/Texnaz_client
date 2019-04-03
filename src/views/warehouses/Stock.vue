@@ -12,7 +12,7 @@
                         .title Склад
                         .subheading {{ warehouse.name }} - {{ warehouse.company }}
                     v-flex(xs6)
-                        .title Владелец
+                        .title Ответственное лицо
                         .subheading {{ warehouse.owner.name }}
                     v-flex(xs12)
                         v-divider.my-4

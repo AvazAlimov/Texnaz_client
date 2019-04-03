@@ -2,7 +2,7 @@
     v-layout(row wrap align-center)
         v-btn(icon :to="{ name: 'products' }")
             v-icon arrow_back
-        .title {{ id == null ? 'Добавить' : 'Редактировать' }} товар
+        .title {{ id == null ? 'Добавить' : 'Сохранить' }} товар
         v-flex(xs12).mt-3
           .border.white.pa-4
             v-layout(row wrap)
@@ -102,7 +102,7 @@
                 v-btn(:loading="loading"
                   :disabled="errors.items.length > 0"
                   flat color="primary"
-                  @click="submit") {{ id == null ? 'Добавить' : 'Редактировать' }}
+                  @click="submit") {{ id == null ? 'Добавить' : 'Сохранить' }}
 </template>
 
 <script>

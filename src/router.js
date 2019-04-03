@@ -5,12 +5,25 @@ import store from '@/store';
 Vue.use(Router);
 
 const router = new Router({
-  mode: 'history',
+  // mode: 'history',
   routes: [
     {
       path: '/login',
       name: 'login',
       component: () => import('./views/Login.vue'),
+    },
+    {
+      path: '/logout',
+      name: 'logout',
+      meta: {
+        requiresAuth: true,
+      },
+      beforeEnter(_, __, next) {
+        store.commit('logout');
+        next({
+          name: 'login',
+        });
+      },
     },
     {
       path: '/',
@@ -21,6 +34,20 @@ const router = new Router({
           path: 'calculator',
           name: 'calculator',
           component: () => import('./views/Calculator.vue'),
+          children: [
+            {
+              path: ':id',
+              name: 'batch',
+              component: () => import('./views/calculator/Batch.vue'),
+              children: [
+                {
+                  path: 'approvement',
+                  name: 'approvement',
+                  component: () => import('./views/calculator/Approvement.vue'),
+                },
+              ],
+            },
+          ],
         },
 
         {
@@ -206,20 +233,10 @@ const router = new Router({
         },
 
         {
-          path: 'batch',
-          name: 'batch',
-          component: () => import('./views/Batch.vue'),
-        },
-
-        {
           path: 'warehouses',
-          component: () => import('./views/Warehouses.vue'),
+          name: 'warehouses',
+          component: () => import('./views/warehouses/Warehouses.vue'),
           children: [
-            {
-              path: '',
-              name: 'warehouses',
-              component: () => import('./views/warehouses/Warehouses.vue'),
-            },
             {
               path: ':id',
               name: 'warehouse',
@@ -240,19 +257,6 @@ const router = new Router({
           ],
         },
       ],
-    },
-    {
-      path: '/logout',
-      name: 'logout',
-      meta: {
-        requiresAuth: true,
-      },
-      beforeEnter(to, from, next) {
-        store.commit('logout');
-        next({
-          name: 'login',
-        });
-      },
     },
   ],
 });

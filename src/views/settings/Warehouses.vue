@@ -41,7 +41,7 @@ export default {
           value: 'name',
         },
         {
-          text: 'Владелец',
+          text: 'Ответственное лицо',
           value: 'owner',
         },
         {

@@ -2,7 +2,7 @@
     v-layout(row wrap align-center)
         v-btn(icon :to="{ name: 'units' }")
             v-icon arrow_back
-        .title {{ id == null ? 'Добавить' : 'Редактировать' }} единицу измерения
+        .title {{ id == null ? 'Добавить' : 'Сохранить' }} единицу измерения
         v-flex(xs12).mt-3
             .border.white.pa-4
                 v-text-field(
@@ -16,7 +16,7 @@
                         :loading="loading"
                         :disabled="errors.items.length > 0"
                         flat color="primary"
-                        @click="submit") {{ id == null ? 'Добавить' : 'Редактировать' }}
+                        @click="submit") {{ id == null ? 'Добавить' : 'Сохранить' }}
 </template>
 
 <script>

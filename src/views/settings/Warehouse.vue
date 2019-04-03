@@ -2,7 +2,7 @@
     v-layout(row wrap align-center)
         v-btn(icon :to="{ name: 'settings_warehouses' }")
             v-icon arrow_back
-        .title {{ id == null ? 'Добавить' : 'Редактировать' }} склад
+        .title {{ id == null ? 'Добавить' : 'Сохранить' }} склад
         v-flex(xs12).mt-3
             .border.white.pa-4
                 v-text-field(
@@ -26,7 +26,7 @@
                 v-select(
                     v-model="warehouse.ownerId"
                     :items="users"
-                    label="Владелец"
+                    label="Ответственное лицо"
                     item-text="name"
                     item-value="id"
                     name="ownerId"
@@ -37,7 +37,7 @@
                         :loading="loading"
                         :disabled="errors.items.length > 0"
                         flat color="primary"
-                        @click="submit") {{ id == null ? 'Добавить' : 'Редактировать' }}
+                        @click="submit") {{ id == null ? 'Добавить' : 'Сохранить' }}
 </template>
 
 <script>

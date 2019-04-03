@@ -1,5 +1,6 @@
 <template lang="pug">
-    v-layout(row wrap)
+  div
+    v-layout(row wrap v-if="path == 'warehouses'")
         v-flex(xs12).mb-3
             .title СКЛАДЫ
         v-flex(xs4 v-for="(warehouse, index) in warehouses" :key="index")
@@ -11,6 +12,7 @@
                         v-list-tile-sub-title {{ warehouse.owner.name }}
                     v-list-tile-action
                     v-icon(large) store_mall_directory
+    router-view
 </template>
 
 <script>
@@ -25,6 +27,11 @@ export default {
       warehouses: [],
       loading: false,
     };
+  },
+  computed: {
+    path() {
+      return this.$route.name;
+    },
   },
   methods: {
     getAll() {

@@ -6,11 +6,7 @@ export default {
 
   get: id => execute(Api().get(`batches/${id}`)),
 
-  create: ({
-    name, number, weight, date, transport_cash, transport_non_cash, warehouse, supply,
-  }) => execute(Api().post('batches/', {
-    name, number, weight, date, transport_cash, transport_non_cash, warehouse, supply,
-  })),
+  create: () => execute(Api().post('batches/')),
 
   //   update: (id, { name, country }) => execute(Api().post(`batches/${id}`, { name, country })),
 
