@@ -36,7 +36,7 @@ export default {
   name: 'Home',
   data() {
     return {
-      drawer: true,
+      drawer: false,
       user: {},
       items: [
         {

@@ -8,7 +8,7 @@ export default {
 
   create: () => execute(Api().post('batches/')),
 
-  //   update: (id, { name, country }) => execute(Api().post(`batches/${id}`, { name, country })),
+  update: (id, batch) => execute(Api().post(`batches/${id}`, batch)),
 
   delete: id => Api().delete(`batches/${id}`),
 };

@@ -1,10 +1,8 @@
 import Vue from 'vue';
-import StepOne from './StepOne.vue';
-import StepTwo from './StepTwo.vue';
+import Expanses from './Expanses.vue';
 
 const Components = {
-  StepOne,
-  StepTwo,
+  Expanses,
 };
 
 Object.keys(Components).forEach((name) => {

@@ -76,9 +76,10 @@ export default {
         .finally(() => { this.loading = false; });
     },
     create() {
-      Batch.create().then((batch) => {
-        this.$router.push({ name: '', params: { id: batch.id } });
-      });
+      Batch.create()
+        .then((batch) => {
+          this.$router.push({ name: 'batch', params: { id: batch.id } });
+        });
     },
     remove(id) {
       // eslint-disable-next-line no-alert, no-restricted-globals

@@ -3,99 +3,94 @@
         v-flex(xs12).mb-3
             .title УТВЕРЖДЕНИЕ
         v-flex(xs6)
-            .border.pa-4
-                v-text-field(v-model="total" label="Общий оборот")
-                v-text-field(v-model="convert" label="Конвертация")
-                v-text-field(v-model="bank_transfer" label="Банковский перевод")
+            .border.pa-4.white
+                v-text-field(v-model="batch.total" label="Общий оборот")
+                v-text-field(v-model="batch.conversion" label="Конвертация")
+                v-text-field(v-model="batch.bank_transfer" label="Банковский перевод")
         v-flex(xs6)
-            .border.pa-4
-                v-text-field(v-model="market" label="Курс доллара (рыночный)")
-                v-text-field(v-model="official" label="Курс доллара (официальный)")
-                v-text-field(v-model="exchange" label="Курс доллара (обмен)")
+            .border.pa-4.white
+                v-text-field(v-model="batch.market_rate" label="Курс доллара (рыночный)")
+                v-text-field(v-model="batch.official_rate" label="Курс доллара (официальный)")
+                v-text-field(v-model="batch.exchange_rate" label="Курс доллара (обмен)")
         v-flex(xs6)
-            .border
-                .title.ma-4 Расходы периода (н)
-                v-data-table(:headers="headers" :items="cash" hide-actions)
-                    template(v-slot:items="props")
-                            td {{ props.item.name }}
-                            td
-                                v-text-field(v-model="props.item.value")
-                v-divider
-                v-btn(block flat).ma-0 Добавить
-                v-divider
-                .ma-4
-                  .subheading Всего: {{totalCash}}
-                  .subheading Коэффициент:
-                    |  {{ (totalCash / total) > 2 ? (totalCash / total).toFixed(2) : 2}}%
+          Expanses(
+            v-model="cash_expanses"
+            title="Расходы периода (н)"
+            :total="batch.total"
+            :is_transport="false"
+            :is_cash="true"
+            :batchId="$route.params.id")
+        v-flex(xs6)
+          Expanses(
+            v-model="non_cash_expanses"
+            title="Расходы периода (бн)"
+            :total="batch.total"
+            :is_transport="false"
+            :is_cash="false"
+            :batchId="$route.params.id")
+        v-flex(xs12)
+            v-layout
+                v-spacer
+                v-btn.ma-2(flat color="primary" @click="submit") Утвердить
 
-        v-flex(xs6)
-            .border
-                .title.ma-4 Расходы периода (бн)
-                v-data-table(:headers="headers" :items="non_cash" hide-actions)
-                    template(v-slot:items="props")
-                            td {{ props.item.name }}
-                            td
-                                v-text-field(v-model="props.item.value")
-                v-divider
-                v-btn(block flat).ma-0 Добавить
-                v-divider
-                .ma-4
-                  .subheading Всего: {{totalNonCash}}
-                  .subheading Коэффициент:
-                      |  {{ (totalNonCash / total) > 4 ? (totalNonCash / total).toFixed(2) : 4}}%
 </template>
 
 <script>
-import Expanse from '@/services/Expanse';
+import Batch from '@/services/Batch';
+import BatchExpanse from '@/services/BatchExpanse';
 
 export default {
-  name: 'StepOne',
+  name: 'Approvement',
   data() {
     return {
-      headers: [{
-        text: 'Название',
-        value: 'name',
-        sortable: false,
-      }, {
-        text: 'Значение',
-        value: 'value',
-        sortable: false,
-      }],
-      cash: [],
-      non_cash: [],
-      total: 33000000,
-      convert: 0.5,
-      bank_transfer: 2,
-      market: 8453,
-      official: 8350,
-      exchange: 8380,
+      loading: false,
+      batch: {
+        total: 0,
+        conversion: 0,
+        bank_transfer: 0,
+        market_rate: 0,
+        official_rate: 0,
+        exchange_rate: 0,
+      },
+      cash_expanses: [],
+      non_cash_expanses: [],
     };
-  },
-  computed: {
-    totalCash() {
-      let total = 0;
-      this.cash.forEach((cash) => { total += parseFloat(cash.value); });
-      return total;
-    },
-    totalNonCash() {
-      let total = 0;
-      this.non_cash.forEach((cash) => { total += parseFloat(cash.value); });
-      return total;
-    },
   },
   methods: {
     getAll() {
       Promise.all([
-        Expanse.getAll(),
+        Batch.get(this.$route.params.id),
       ]).then((results) => {
-        const [expanses] = results;
-        expanses.forEach((expanse) => {
-          if (!expanse.is_transport) {
-            if (expanse.is_cash) this.cash.push(expanse);
-            else this.non_cash.push(expanse);
-          }
-        });
+        [this.batch] = results;
       });
+    },
+
+    submit() {
+      this.loading = true;
+      const tasks = [];
+      const expanseIds = [];
+      tasks.push(Batch.update(this.batch.id, this.batch));
+      this.cash_expanses.forEach((expanse) => {
+        if (expanse.id) {
+          expanseIds.push(expanse.id);
+          tasks.push(BatchExpanse.update(expanse.id, expanse));
+        } else tasks.push(BatchExpanse.create(expanse));
+      });
+      this.non_cash_expanses.forEach((expanse) => {
+        if (expanse.id) {
+          expanseIds.push(expanse.id);
+          tasks.push(BatchExpanse.update(expanse.id, expanse));
+        } else tasks.push(BatchExpanse.create(expanse));
+      });
+      this.batch.expanses.forEach((expanse) => {
+        if (!expanseIds.includes(expanse.id)) {
+          tasks.push(BatchExpanse.delete(expanse.id));
+        }
+      });
+      Promise.all(tasks)
+        .then(() => {})
+        .catch((error) => { this.$store.commit('setMessage', error.message); })
+        .finally(() => { this.loading = false; });
     },
   },
   created() {
@@ -103,7 +98,3 @@ export default {
   },
 };
 </script>
-
-<style>
-
-</style>

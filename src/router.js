@@ -38,6 +38,7 @@ const router = new Router({
             {
               path: ':id',
               name: 'batch',
+              redirect: ':id/approvement',
               component: () => import('./views/calculator/Batch.vue'),
               children: [
                 {
