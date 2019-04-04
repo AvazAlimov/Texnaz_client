@@ -17,7 +17,7 @@
             .ma-4
                 .subheading Всего: {{ sum }}
                 .subheading(v-if="!is_transport") Коэффициент:
-                    strong  {{ (sum / total) * 100 > 2 ? ((sum / total) * 100).toFixed(2) : 2}}%
+                    strong  {{ (sum / total) * 100 > min ? ((sum / total) * 100).toFixed(2) : min}}%
                 .subheading(v-if="is_transport") Результат (делить на курс):
                     strong  {{ (sum / total).toFixed(2) }}
 </template>
@@ -78,6 +78,9 @@ export default {
       let sum = 0;
       this.expanses.forEach((expanse) => { sum += parseFloat(expanse.value); });
       return sum;
+    },
+    min() {
+      return this.is_cash ? 2 : 4;
     },
   },
   methods: {

@@ -100,7 +100,7 @@ export default {
         } else tasks.push(BatchExpanse.create(expanse));
       });
       this.batch.expanses.forEach((expanse) => {
-        if (!expanseIds.includes(expanse.id)) {
+        if (!expanseIds.includes(expanse.id) && !expanse.is_transport) {
           tasks.push(BatchExpanse.delete(expanse.id));
         }
       });

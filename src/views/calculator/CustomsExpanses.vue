@@ -4,7 +4,7 @@
             v-icon arrow_back
         .title Расходы по растаможке
         v-layout.mt-2(row wrap)
-            v-flex(xs6)
+            v-flex(xs6 d-flex)
                 .border.pa-4.white
                     .subheading.mb-1
                         strong Название партии:
@@ -24,7 +24,7 @@
                     .subheading.mb-1
                         strong Склад:
                         |  {{ batch.Warehouse ? batch.Warehouse.name : '-' }}
-            v-flex(xs6)
+            v-flex(xs6 d-flex)
                 .border.pa-4.white
                     .subheading.mb-1
                         strong Общий оборот:
@@ -44,6 +44,13 @@
                     .subheading.mb-1
                         strong Курс доллара (обмен):
                         |  {{ batch.exchange_rate }}
+                    br
+                    .subheading.mb-1
+                        strong Курс доллара (обмен):
+                        |  {{ cash_expanses_rate }} %
+                    .subheading.mb-1
+                        strong Курс доллара (обмен):
+                        |  {{ non_cash_expanses_rate }} %
             v-flex(xs6)
                 Expanses(
                     v-model="cash_expanses"
@@ -75,10 +82,28 @@ export default {
   data() {
     return {
       loading: false,
-      batch: {},
+      batch: {
+        expanses: [],
+      },
       cash_expanses: [],
       non_cash_expanses: [],
     };
+  },
+  computed: {
+    cash_expanses_rate() {
+      let sum = 0;
+      this.batch.expanses.forEach((expanse) => {
+        if (!expanse.is_transport && expanse.is_cash) sum += expanse.value;
+      });
+      return (sum / this.batch.total) * 100 > 2 ? ((sum / this.batch.total) * 100).toFixed(2) : 2;
+    },
+    non_cash_expanses_rate() {
+      let sum = 0;
+      this.batch.expanses.forEach((expanse) => {
+        if (!expanse.is_transport && !expanse.is_cash) sum += expanse.value;
+      });
+      return (sum / this.batch.total) * 100 > 4 ? ((sum / this.batch.total) * 100).toFixed(2) : 4;
+    },
   },
   methods: {
     getAll() {
@@ -106,7 +131,7 @@ export default {
         } else tasks.push(BatchExpanse.create(expanse));
       });
       this.batch.expanses.forEach((expanse) => {
-        if (!expanseIds.includes(expanse.id)) {
+        if (!expanseIds.includes(expanse.id) && expanse.is_transport) {
           tasks.push(BatchExpanse.delete(expanse.id));
         }
       });
