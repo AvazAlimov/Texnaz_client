@@ -13,8 +13,8 @@
                         template(v-slot:items="props")
                           td {{ props.item.name || '-' }}
                           td {{ props.item.number || '-' }}
-                          td {{ props.item.date || '-' }}
-                          td {{ props.item.warehouse || '-' }}
+                          td {{ props.item.date ? props.item.date.substring(0, 10) : '-' }}
+                          td {{ props.item.Warehouse ? props.item.Warehouse.name : '-' }}
                           td
                             v-layout
                                 v-btn.mx-0(icon

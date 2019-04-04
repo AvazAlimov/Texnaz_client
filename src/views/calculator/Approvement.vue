@@ -1,13 +1,13 @@
 <template lang="pug">
     v-layout(row wrap)
         v-flex(xs12).mb-3
-            .title УТВЕРЖДЕНИЕ
+            .title Утверждение
         v-flex(xs6)
             .border.pa-4.white
               .title Информация о партии
               v-text-field(v-model="batch.name" label="Название партии")
               v-text-field(v-model="batch.number" label="Номер партии")
-              v-text-field(v-model="batch.date" mask="####-##-##" label="Дата прибытия")
+              v-text-field(v-model="batch.date" label="Дата прибытия")
               v-text-field(v-model="batch.transport_cash" label="Транспорт (Н)")
               v-text-field(v-model="batch.transport_non_cash" label="Транспорт (БН)")
               v-select(
@@ -78,6 +78,7 @@ export default {
         Warehouse.getAll(),
       ]).then((results) => {
         [this.batch, this.warehouses] = results;
+        this.batch.date = this.batch.date.substring(0, 10);
       });
     },
 
@@ -104,7 +105,7 @@ export default {
         }
       });
       Promise.all(tasks)
-        .then(() => {})
+        .then(() => { this.$router.push({ name: 'customs_expanses' }); })
         .catch((error) => { this.$store.commit('setMessage', error.message); })
         .finally(() => { this.loading = false; });
     },

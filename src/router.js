@@ -46,6 +46,11 @@ const router = new Router({
                   name: 'approvement',
                   component: () => import('./views/calculator/Approvement.vue'),
                 },
+                {
+                  path: 'customs_expanses',
+                  name: 'customs_expanses',
+                  component: () => import('./views/calculator/CustomsExpanses.vue'),
+                },
               ],
             },
           ],
