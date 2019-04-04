@@ -16,10 +16,12 @@
             v-divider
             .ma-4
                 .subheading Всего: {{ sum }}
-                .subheading Коэффициент:
+                .subheading(v-if="!is_transport") Коэффициент:
                     strong  {{ (sum / total) * 100 > 2 ? ((sum / total) * 100).toFixed(2) : 2}}%
+                .subheading(v-if="is_transport") Результат (делить на курс):
+                    strong  {{ (sum / total).toFixed(2) }}
 </template>
-
+1
 <script>
 import BatchExpanse from '@/services/BatchExpanse';
 
