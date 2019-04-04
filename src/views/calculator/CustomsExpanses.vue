@@ -46,10 +46,10 @@
                         |  {{ batch.exchange_rate }}
                     br
                     .subheading.mb-1
-                        strong Курс доллара (обмен):
+                        strong Коэффициент (н):
                         |  {{ cash_expanses_rate }} %
                     .subheading.mb-1
-                        strong Курс доллара (обмен):
+                        strong Коэффициент (бн):
                         |  {{ non_cash_expanses_rate }} %
             v-flex(xs6)
                 Expanses(
