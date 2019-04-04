@@ -4,11 +4,24 @@
             .title УТВЕРЖДЕНИЕ
         v-flex(xs6)
             .border.pa-4.white
+              .title Информация о партии
+              v-text-field(v-model="batch.name" label="Название партии")
+              v-text-field(v-model="batch.number" label="Номер партии")
+              v-text-field(v-model="batch.date" mask="####-##-##" label="Дата прибытия")
+              v-text-field(v-model="batch.transport_cash" label="Транспорт (Н)")
+              v-text-field(v-model="batch.transport_non_cash" label="Транспорт (БН)")
+              v-select(
+                    v-model="batch.warehouse"
+                    :items="warehouses"
+                    item-text="name"
+                    item-value="id"
+                    label="Склад")
+              v-checkbox(v-model="batch.local" label="Импорт")
+        v-flex(xs6 d-flex)
+            .border.pa-4.white
                 v-text-field(v-model="batch.total" label="Общий оборот")
                 v-text-field(v-model="batch.conversion" label="Конвертация")
                 v-text-field(v-model="batch.bank_transfer" label="Банковский перевод")
-        v-flex(xs6)
-            .border.pa-4.white
                 v-text-field(v-model="batch.market_rate" label="Курс доллара (рыночный)")
                 v-text-field(v-model="batch.official_rate" label="Курс доллара (официальный)")
                 v-text-field(v-model="batch.exchange_rate" label="Курс доллара (обмен)")
@@ -31,12 +44,13 @@
         v-flex(xs12)
             v-layout
                 v-spacer
-                v-btn.ma-2(flat color="primary" @click="submit") Утвердить
+                v-btn.ma-2(flat color="primary" :loading="loading" @click="submit") Утвердить
 
 </template>
 
 <script>
 import Batch from '@/services/Batch';
+import Warehouse from '@/services/Warehouse';
 import BatchExpanse from '@/services/BatchExpanse';
 
 export default {
@@ -52,6 +66,7 @@ export default {
         official_rate: 0,
         exchange_rate: 0,
       },
+      warehouses: [],
       cash_expanses: [],
       non_cash_expanses: [],
     };
@@ -60,8 +75,9 @@ export default {
     getAll() {
       Promise.all([
         Batch.get(this.$route.params.id),
+        Warehouse.getAll(),
       ]).then((results) => {
-        [this.batch] = results;
+        [this.batch, this.warehouses] = results;
       });
     },
 
