@@ -18,7 +18,7 @@
                           td
                             v-layout
                                 v-btn.mx-0(icon
-                                  :to="{name: 'approvement', params: {id: props.item.id}}")
+                                  :to="{name: 'batch_info', params: {id: props.item.id}}")
                                   v-icon(color="primary" small) edit
                                 v-btn.mx-0(icon @click="remove(props.item.id)")
                                   v-icon(color="primary" small) delete

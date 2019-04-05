@@ -40,6 +40,7 @@
 </template>
 
 <script>
+/* eslint-disable no-param-reassign */
 import Brand from '@/services/Brand';
 import ProductType from '@/services/ProductType';
 import Product from '@/services/Product';
@@ -97,6 +98,7 @@ export default {
     select(product) {
       const ids = this.selected.map(item => item.id);
       if (!ids.includes(product.id)) {
+        product.quantity = 0;
         this.selected.push(product);
       }
     },

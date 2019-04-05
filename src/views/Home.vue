@@ -24,7 +24,7 @@
       v-toolbar-side-icon(@click.stop="drawer = !drawer")
       v-toolbar-title {{ user.name }}
     v-content
-      v-container(grid-list-md)
+      v-container(grid-list-md fluid)
         router-view
 </template>
 

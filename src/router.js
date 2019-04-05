@@ -38,23 +38,23 @@ const router = new Router({
             {
               path: ':id',
               name: 'batch',
-              redirect: ':id/approvement',
+              redirect: ':id/batch_info',
               component: () => import('./views/calculator/Batch.vue'),
               children: [
                 {
-                  path: 'approvement',
-                  name: 'approvement',
-                  component: () => import('./views/calculator/Approvement.vue'),
+                  path: 'batch_info',
+                  name: 'batch_info',
+                  component: () => import('./views/calculator/BatchInfo.vue'),
+                },
+                {
+                  path: 'batch_expanses',
+                  name: 'batch_expanses',
+                  component: () => import('./views/calculator/BatchExpanses.vue'),
                 },
                 {
                   path: 'customs_expanses',
                   name: 'customs_expanses',
                   component: () => import('./views/calculator/CustomsExpanses.vue'),
-                },
-                {
-                  path: 'selection',
-                  name: 'selection',
-                  component: () => import('./views/calculator/Selection.vue'),
                 },
               ],
             },

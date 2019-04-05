@@ -2,7 +2,7 @@
     v-layout(row wrap align-center)
         v-btn(icon :to="{ name: 'calculator' }")
             v-icon arrow_back
-        .title Расходы по растаможке
+        .title Информация о партии
         v-layout.mt-2(row wrap)
           v-flex(xs6)
               .border.pa-4.white
@@ -56,7 +56,7 @@ import Warehouse from '@/services/Warehouse';
 import BatchExpanse from '@/services/BatchExpanse';
 
 export default {
-  name: 'Approvement',
+  name: 'BatchInfo',
   data() {
     return {
       loading: false,
@@ -107,7 +107,7 @@ export default {
         }
       });
       Promise.all(tasks)
-        .then(() => { this.$router.push({ name: 'customs_expanses' }); })
+        .then(() => { this.$router.push({ name: 'batch_expanses' }); })
         .catch((error) => { this.$store.commit('setMessage', error.message); })
         .finally(() => { this.loading = false; });
     },
