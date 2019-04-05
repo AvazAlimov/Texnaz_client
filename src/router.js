@@ -51,6 +51,11 @@ const router = new Router({
                   name: 'customs_expanses',
                   component: () => import('./views/calculator/CustomsExpanses.vue'),
                 },
+                {
+                  path: 'selection',
+                  name: 'selection',
+                  component: () => import('./views/calculator/Selection.vue'),
+                },
               ],
             },
           ],

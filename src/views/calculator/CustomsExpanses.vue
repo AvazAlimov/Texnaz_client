@@ -44,12 +44,12 @@
                     .subheading.mb-1
                         strong Курс доллара (обмен):
                         |  {{ batch.exchange_rate }}
-                    br
+                    v-divider.my-2
                     .subheading.mb-1
-                        strong Коэффициент (н):
+                        strong Расходы периода (н):
                         |  {{ cash_expanses_rate }} %
                     .subheading.mb-1
-                        strong Коэффициент (бн):
+                        strong Расходы периода (бн):
                         |  {{ non_cash_expanses_rate }} %
             v-flex(xs6)
                 Expanses(
@@ -70,7 +70,7 @@
             v-flex(xs12)
                 v-layout
                     v-spacer
-                    v-btn.ma-2(flat color="primary" :loading="loading" @click="submit") Утвердить
+                    v-btn.ma-2(flat color="primary" :loading="loading" @click="submit") Подтвердить
 </template>
 
 <script>
@@ -136,7 +136,7 @@ export default {
         }
       });
       Promise.all(tasks)
-        .then(() => { this.$router.push({ name: 'customs_expanses' }); })
+        .then(() => { this.$router.push({ name: 'selection' }); })
         .catch((error) => { this.$store.commit('setMessage', error.message); })
         .finally(() => { this.loading = false; });
     },
