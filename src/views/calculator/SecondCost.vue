@@ -3,6 +3,8 @@
         v-btn(icon :to="{ name: 'customs_expanses' }")
             v-icon arrow_back
         .title Остаточная себестоимость
+        v-spacer
+        .title 6/6
 </template>
 
 <script>

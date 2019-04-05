@@ -3,6 +3,8 @@
         v-btn(icon :to="{ name: 'batch_info' }")
             v-icon arrow_back
         .title Расходы по партии
+        v-spacer
+        .title 2/6
         v-layout.mt-2(row wrap)
             v-flex(xs6 d-flex)
                 .border.pa-4.white
@@ -136,7 +138,7 @@ export default {
         }
       });
       Promise.all(tasks)
-        .then(() => { this.$router.push({ name: 'customs_expanses' }); })
+        .then(() => { this.$router.push({ name: 'selection' }); })
         .catch((error) => { this.$store.commit('setMessage', error.message); })
         .finally(() => { this.loading = false; });
     },

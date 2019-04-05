@@ -12,15 +12,6 @@
             v-text-field(v-model="customs_price")
         td {{ contract_price / packing }}
         td {{ customs_price / packing }}
-        td
-            v-text-field(v-model="excise")
-        td
-            v-text-field(v-model="tax")
-        td
-            v-text-field(v-model="vat")
-        td
-            v-text-field(v-model="cleaning")
-        td  {{ (parseFloat(customs_price) + transport_non_cash_per_unit) * parseFloat(excise) }}
 </template>
 
 <script>
@@ -44,11 +35,6 @@ export default {
       quantity: 0,
       contract_price: 0,
       customs_price: 0,
-      excise: 0,
-      tax: 0,
-      vat: 0,
-      cleaning: 0,
-      profitability: 0,
     };
   },
   computed: {

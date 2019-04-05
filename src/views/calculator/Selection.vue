@@ -2,9 +2,9 @@
     v-layout(row wrap align-center)
         v-btn(icon :to="{ name: 'batch_expanses' }")
             v-icon arrow_back
-        .title Расходы по растаможке
+        .title Выборка
         v-spacer
-        .title 4/6
+        .title 3/6
         v-flex(xs12)
         v-layout(row wrap)
             v-flex(xs6 d-flex)
@@ -63,7 +63,6 @@
                       .subheading.mb-1
                           strong Расходы периода (бн):
                           |  {{ non_cash_expanses_rate }} %
-
             v-flex(xs12)
                 .border.white.pa-4
                     .title Выбранные товары: {{ products.length }}
@@ -73,7 +72,7 @@
                         no-data-text="Ничего не выбрано"
                         hide-actions)
                         template(v-slot:items="props")
-                            Item(:productId="props.item.id" :batch="batch")
+                            SelectionItem(:productId="props.item.productId" :batch="batch")
             v-flex(xs12)
                 SearchProduct(v-model="products")
             v-flex(xs12)
@@ -86,13 +85,14 @@
 import Batch from '@/services/Batch';
 
 export default {
-  name: 'CustomsExpanses',
+  name: 'Selection',
   data() {
     return {
       loading: false,
       batch: {
         expanses: [],
       },
+      products: [],
       headers: [
         {
           text: 'Наименование',
@@ -132,81 +132,14 @@ export default {
         {
           text: 'Цена контрактная за кг',
           value: 'contract_price_per_unit',
-          // contract_price / packaging
           sortable: false,
         },
         {
           text: 'Цена таможенная за кг',
           value: 'customs_price_per_unit',
-          // customs_price / packaging
           sortable: false,
         },
-        {
-          text: 'Акциз %',
-          value: 'excise',
-          sortable: false,
-        },
-        {
-          text: 'Пошлина %',
-          value: 'tax',
-          sortable: false,
-        },
-        {
-          text: 'НДС %',
-          value: 'vat',
-          sortable: false,
-        },
-        {
-          text: 'Очистка %',
-          value: 'cleaning',
-          sortable: false,
-        },
-        {
-          text: 'Размер Акциз %',
-          value: 'excise_value',
-          // (customs_price + transport_non_cash_per_unit) * excise
-          sortable: false,
-        },
-        {
-          text: 'Размер Пошлина %',
-          value: 'tax_value',
-          // (customs_price + transport_non_cash_per_unit) * tax
-          sortable: false,
-        },
-        {
-          text: 'Размер НДС %',
-          value: 'vat_value',
-          // (customs_price + transport_non_cash_per_unit + excise_value + tax_value) * vat
-          sortable: false,
-        },
-        {
-          text: 'Размер Очистка %',
-          value: 'cleaning_value',
-          // (customs_price + transport_non_cash_per_unit + excise_value + tax_value) * cleaning
-          sortable: false,
-        },
-        // {
-        //   text: 'Себестоимость БН',
-        //   value: 'cost_price_non_cash',
-        //   sortable: false,
-        // },
-        // {
-        //   text: 'Рентабельность %',
-        //   value: 'profitability_non_cash',
-        //   sortable: false,
-        // },
-        // {
-        //   text: 'Налог на прибыль',
-        //   value: 'income_tax',
-        //   sortable: false,
-        // },
-        // {
-        //   text: 'Цена БН для списания',
-        //   value: 'charge_price',
-        //   sortable: false,
-        // },
       ],
-      products: [],
     };
   },
   computed: {
@@ -245,6 +178,9 @@ export default {
         Batch.get(this.$route.params.id),
       ]).then((results) => {
         [this.batch] = results;
+        this.items.forEach((item) => {
+          this.products.push(item);
+        });
       });
     },
   },
