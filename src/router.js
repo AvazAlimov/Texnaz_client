@@ -71,6 +71,11 @@ const router = new Router({
                   name: 'second_cost',
                   component: () => import('./views/calculator/SecondCost.vue'),
                 },
+                {
+                  path: 'price',
+                  name: 'price',
+                  component: () => import('./views/calculator/Price.vue'),
+                },
               ],
             },
           ],

@@ -128,6 +128,7 @@ export default {
           const item = {
             product,
             cash_profitability: 0,
+            non_cash_profitability: 0,
             income_tax: 0,
             contract_price: 0,
             customs_price: 0,

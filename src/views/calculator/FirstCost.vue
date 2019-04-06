@@ -85,7 +85,7 @@ export default {
           sortable: false,
         },
         {
-          text: 'Налог на прибыль',
+          text: 'Налог на прибыль %',
           value: 'income_tax',
           sortable: false,
         },
