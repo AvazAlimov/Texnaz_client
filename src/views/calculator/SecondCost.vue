@@ -5,6 +5,7 @@
         .title Остаточная себестоимость
         v-spacer
         .title 6/6
+        v-flex(xs12)
 </template>
 
 <script>

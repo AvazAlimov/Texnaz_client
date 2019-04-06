@@ -5,7 +5,8 @@
         .title Информация о партии
         v-spacer
         .title 1/6
-        v-layout.mt-2(row wrap)
+        v-flex(xs12)
+        v-layout(row wrap)
           v-flex(xs6)
               .border.pa-4.white
                 .title Информация о партии

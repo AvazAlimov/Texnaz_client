@@ -5,7 +5,8 @@
         .title Расходы по партии
         v-spacer
         .title 2/6
-        v-layout.mt-2(row wrap)
+        v-flex(xs12)
+        v-layout(row wrap)
             v-flex(xs6 d-flex)
                 .border.pa-4.white
                     .subheading.mb-1

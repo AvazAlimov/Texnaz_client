@@ -5,6 +5,7 @@
         .title Учетная себестоимость
         v-spacer
         .title 5/6
+        v-flex(xs12)
 </template>
 
 <script>
