@@ -5,84 +5,32 @@
         .title Выборка
         v-spacer
         .title 3/6
+
+        v-flex.mt-3(xs12)
+          Info(:batch="batch" :step="3")
+
         v-flex(xs12)
-        v-layout(row wrap)
-            v-flex(xs6 d-flex)
-                .border.pa-4.white
-                    .subheading.mb-1
-                        strong Название партии:
-                        |  {{ batch.name }}
-                    .subheading.mb-1
-                        strong Номер партии:
-                        |  {{ batch.number }}
-                    .subheading.mb-1
-                        strong Дата прибытия:
-                        |  {{ batch.date ? batch.date.substring(0, 10) : '-' }}
-                    .subheading.mb-1
-                        strong Склад:
-                        |  {{ batch.Warehouse ? batch.Warehouse.name : '-' }}
-            v-flex(xs6 d-flex)
-                .border.pa-4.white
-                  v-layout(row wrap)
-                    v-flex(xs6)
-                      .subheading.mb-1
-                          strong Транспорт (Н):
-                          |  {{ batch.transport_cash }} $
-                      .subheading.mb-1
-                          strong Транспорт (БН):
-                          |  {{ batch.transport_non_cash }} $
-                    v-flex(xs6)
-                      .subheading.mb-1
-                        strong Затраты на поставку (н):
-                        |  {{ transport_cash_expanses_rate }}
-                      .subheading.mb-1
-                        strong Затраты на поставку (бн):
-                        |  {{ transport_non_cash_expanses_rate }}
-                    v-flex(xs6)
-                      .subheading.mb-1
-                          strong Конвертация:
-                          |  {{ batch.conversion }} %
-                      .subheading.mb-1
-                          strong Банковский перевод:
-                          |  {{ batch.bank_transfer }} %
-                    v-flex(xs6)
-                      .subheading.mb-1
-                          strong Курс доллара (рыночный):
-                          |  {{ batch.market_rate }}
-                      .subheading.mb-1
-                          strong Курс доллара (официальный):
-                          |  {{ batch.official_rate }}
-                    v-flex(xs12)
-                      v-divider.my-2
-                      .subheading.mb-1
-                          strong Общий оборот:
-                          |  {{ batch.total }}
-                      .subheading.mb-1
-                          strong Расходы периода (н):
-                          |  {{ cash_expanses_rate }} %
-                      .subheading.mb-1
-                          strong Расходы периода (бн):
-                          |  {{ non_cash_expanses_rate }} %
-            v-flex(xs12)
-                SearchProduct(v-model="product")
-            v-flex(xs12)
-                .border.white
-                    .title.pa-4 Выбранные товары: {{ items.length }}
-                    v-divider
-                    v-data-table(
-                        :headers="headers"
-                        :items="items"
-                        no-data-text="Ничего не выбрано"
-                        hide-actions)
-                        template(v-slot:items="props")
-                            SelectionItem(:item="props.item" :remove="remove")
-            v-flex(xs12)
-                v-layout
-                    v-spacer
-                    v-btn.ma-2(flat color="primary"
-                      :disabled="errors.items.length > 0"
-                      :loading="loading"
-                      @click="submit") Завершить
+            SearchProduct(v-model="product")
+
+        v-flex(xs12)
+            .border.white
+                .title.pa-4 Выбранные товары: {{ items.length }}
+                v-divider
+                v-data-table(
+                    :headers="headers"
+                    :items="items"
+                    no-data-text="Ничего не выбрано"
+                    hide-actions)
+                    template(v-slot:items="props")
+                        SelectionItem(:item="props.item" :remove="remove")
+
+        v-flex(xs12)
+            v-layout
+                v-spacer
+                v-btn.ma-2(flat color="primary"
+                  :disabled="errors.items.length > 0 || items.length == 0"
+                  :loading="loading"
+                  @click="submit") Завершить
 </template>
 
 <script>
@@ -99,6 +47,7 @@ export default {
       items: [],
       batch: {
         expanses: [],
+        items: [],
       },
       headers: [
         {
@@ -132,36 +81,6 @@ export default {
         },
       ],
     };
-  },
-  computed: {
-    cash_expanses_rate() {
-      let sum = 0;
-      this.batch.expanses.forEach((expanse) => {
-        if (!expanse.is_transport && expanse.is_cash) sum += expanse.value;
-      });
-      return (sum / this.batch.total) * 100 > 2 ? ((sum / this.batch.total) * 100).toFixed(2) : 2;
-    },
-    non_cash_expanses_rate() {
-      let sum = 0;
-      this.batch.expanses.forEach((expanse) => {
-        if (!expanse.is_transport && !expanse.is_cash) sum += expanse.value;
-      });
-      return (sum / this.batch.total) * 100 > 4 ? ((sum / this.batch.total) * 100).toFixed(2) : 4;
-    },
-    transport_cash_expanses_rate() {
-      let sum = 0;
-      this.batch.expanses.forEach((expanse) => {
-        if (expanse.is_transport && expanse.is_cash) sum += expanse.value;
-      });
-      return (sum / this.batch.market_rate).toFixed(2);
-    },
-    transport_non_cash_expanses_rate() {
-      let sum = 0;
-      this.batch.expanses.forEach((expanse) => {
-        if (expanse.is_transport && !expanse.is_cash) sum += expanse.value;
-      });
-      return (sum / this.batch.official_rate).toFixed(2);
-    },
   },
   methods: {
     getAll() {

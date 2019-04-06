@@ -63,17 +63,19 @@ export default {
       return sum;
     },
     exciseValue() {
-      const value = (this.item.customs_price + this.batch.transport_non_cash / this.totalWeight)
+      const value = (parseFloat(this.item.customs_price)
+                    + this.batch.transport_non_cash / this.totalWeight)
                     * (this.item.excise / 100);
       return this.roundUp(value, 2);
     },
     taxValue() {
-      const value = (this.item.customs_price + this.batch.transport_non_cash / this.totalWeight)
+      const value = (parseFloat(this.item.customs_price)
+                    + this.batch.transport_non_cash / this.totalWeight)
                     * (this.item.tax / 100);
       return this.roundUp(value, 2);
     },
     vatValue() {
-      const value = (this.item.customs_price
+      const value = (parseFloat(this.item.customs_price)
                     + this.exciseValue
                     + this.taxValue
                     + this.batch.transport_non_cash / this.totalWeight)
@@ -81,7 +83,7 @@ export default {
       return this.roundUp(value, 2);
     },
     cleaningValue() {
-      const value = (this.item.customs_price
+      const value = (parseFloat(this.item.customs_price)
                     + this.exciseValue
                     + this.taxValue
                     + this.batch.transport_non_cash / this.totalWeight)
@@ -89,12 +91,11 @@ export default {
       return this.roundUp(value, 2);
     },
     costPriceNonCash() {
-      // TODO add transport_non_cash
-      const value = (this.item.customs_price
+      const value = (this.batch.transport_non_cash / this.totalWeight
+                    + parseFloat(this.item.customs_price)
                     + this.exciseValue
                     + this.taxValue
                     + this.cleaningValue);
-      /* (this.batch.transport_non_cash / this.totalWeight) */
       return this.roundUp(value, 2);
     },
   },

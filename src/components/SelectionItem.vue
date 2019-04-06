@@ -6,7 +6,7 @@
         td
           v-text-field(v-model="item.quantity"
             name="quantity"
-            v-validate="'required|decimal'")
+            v-validate="'required|decimal|min:0'")
         td {{ weight }}
         td
           v-btn.mx-0(icon)
