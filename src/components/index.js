@@ -5,6 +5,7 @@ import Expanses from './Expanses.vue';
 import CustomsItem from './CustomsItem.vue';
 import SelectionItem from './SelectionItem.vue';
 import SearchProduct from './SearchProduct.vue';
+import FirstCostItem from './FirstCostItem.vue';
 
 const Components = {
   Item,
@@ -13,6 +14,7 @@ const Components = {
   CustomsItem,
   SelectionItem,
   SearchProduct,
+  FirstCostItem,
 };
 
 Object.keys(Components).forEach((name) => {

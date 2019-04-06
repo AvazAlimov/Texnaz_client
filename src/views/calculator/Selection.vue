@@ -127,6 +127,8 @@ export default {
         if (!ids.includes(product.id)) {
           const item = {
             product,
+            cash_profitability: 0,
+            income_tax: 0,
             contract_price: 0,
             customs_price: 0,
             excise: product.excise,

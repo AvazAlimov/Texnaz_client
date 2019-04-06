@@ -66,6 +66,11 @@ const router = new Router({
                   name: 'first_cost',
                   component: () => import('./views/calculator/FirstCost.vue'),
                 },
+                {
+                  path: 'second_cost',
+                  name: 'second_cost',
+                  component: () => import('./views/calculator/SecondCost.vue'),
+                },
               ],
             },
           ],

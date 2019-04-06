@@ -133,26 +133,6 @@ export default {
           value: 'cost_price_non_cash',
           sortable: false,
         },
-        // {
-        //   text: 'Себестоимость БН',
-        //   value: 'cost_price_non_cash',
-        //   sortable: false,
-        // },
-        // {
-        //   text: 'Рентабельность %',
-        //   value: 'profitability_non_cash',
-        //   sortable: false,
-        // },
-        // {
-        //   text: 'Налог на прибыль',
-        //   value: 'income_tax',
-        //   sortable: false,
-        // },
-        // {
-        //   text: 'Цена БН для списания',
-        //   value: 'charge_price',
-        //   sortable: false,
-        // },
       ],
       items: [],
     };
