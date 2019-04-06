@@ -61,6 +61,11 @@ const router = new Router({
                   name: 'customs_expanses',
                   component: () => import('./views/calculator/CustomsExpanses.vue'),
                 },
+                {
+                  path: 'first_cost',
+                  name: 'first_cost',
+                  component: () => import('./views/calculator/FirstCost.vue'),
+                },
               ],
             },
           ],

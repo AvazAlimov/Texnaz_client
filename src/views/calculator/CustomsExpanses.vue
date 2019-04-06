@@ -65,25 +65,27 @@
                           |  {{ non_cash_expanses_rate }} %
 
             v-flex(xs12)
-                .border.white.pa-4
-                    .title Выбранные товары: {{ products.length }}
+                .border.white
+                    .title.pa-4 Товары
                     v-data-table(
                         :headers="headers"
-                        :items="products"
+                        :items="items"
                         no-data-text="Ничего не выбрано"
                         hide-actions)
                         template(v-slot:items="props")
-                            Item(:productId="props.item.id" :batch="batch")
-            v-flex(xs12)
-                SearchProduct(v-model="products")
+                            CustomsItem(:item="props.item" :batch="batch")
             v-flex(xs12)
                 v-layout
                     v-spacer
-                    v-btn.ma-2(flat color="primary" :loading="loading") Завершить
+                    v-btn.ma-2(flat color="primary"
+                      :loading="loading"
+                      :disabled="errors.items.length > 0"
+                      @click="submit") Завершить
 </template>
 
 <script>
 import Batch from '@/services/Batch';
+import Item from '@/services/Item';
 
 export default {
   name: 'CustomsExpanses',
@@ -115,11 +117,6 @@ export default {
           sortable: false,
         },
         {
-          text: 'Вес',
-          value: 'weight',
-          sortable: false,
-        },
-        {
           text: 'Цена контрактная за фасовку',
           value: 'contract_price',
           sortable: false,
@@ -130,15 +127,18 @@ export default {
           sortable: false,
         },
         {
+          text: 'Вес',
+          value: 'weight',
+          sortable: false,
+        },
+        {
           text: 'Цена контрактная за кг',
           value: 'contract_price_per_unit',
-          // contract_price / packaging
           sortable: false,
         },
         {
           text: 'Цена таможенная за кг',
           value: 'customs_price_per_unit',
-          // customs_price / packaging
           sortable: false,
         },
         {
@@ -162,27 +162,28 @@ export default {
           sortable: false,
         },
         {
-          text: 'Размер Акциз %',
+          text: 'Размер акциза',
           value: 'excise_value',
-          // (customs_price + transport_non_cash_per_unit) * excise
           sortable: false,
         },
         {
-          text: 'Размер Пошлина %',
+          text: 'Размер пошлины',
           value: 'tax_value',
-          // (customs_price + transport_non_cash_per_unit) * tax
           sortable: false,
         },
         {
-          text: 'Размер НДС %',
+          text: 'Размер НДС',
           value: 'vat_value',
-          // (customs_price + transport_non_cash_per_unit + excise_value + tax_value) * vat
           sortable: false,
         },
         {
-          text: 'Размер Очистка %',
+          text: 'Размер очистки',
           value: 'cleaning_value',
-          // (customs_price + transport_non_cash_per_unit + excise_value + tax_value) * cleaning
+          sortable: false,
+        },
+        {
+          text: 'Итого',
+          value: 'cost_price_non_cash',
           sortable: false,
         },
         // {
@@ -206,7 +207,7 @@ export default {
         //   sortable: false,
         // },
       ],
-      products: [],
+      items: [],
     };
   },
   computed: {
@@ -245,7 +246,21 @@ export default {
         Batch.get(this.$route.params.id),
       ]).then((results) => {
         [this.batch] = results;
+        this.batch.items.forEach((item) => {
+          this.items.push(item);
+        });
       });
+    },
+    submit() {
+      this.loading = true;
+      const tasks = [];
+      this.items.forEach((item) => {
+        tasks.push(Item.update(item.id, item));
+      });
+      Promise.all(tasks)
+        .then(() => { this.$router.push({ name: 'first_cost' }); })
+        .catch((error) => { this.$store.commit('setMessage', error.message); })
+        .finally(() => { this.loading = false; });
     },
   },
   created() {

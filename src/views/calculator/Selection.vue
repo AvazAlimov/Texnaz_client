@@ -226,7 +226,15 @@ export default {
       if (product) {
         const ids = this.items.map(item => item.product.id);
         if (!ids.includes(product.id)) {
-          const item = { product, batchId: this.batch.id, productId: product.id };
+          const item = {
+            product,
+            excise: product.excise,
+            tax: product.tax,
+            vat: product.vat,
+            cleaning: product.cleaning,
+            batchId: this.batch.id,
+            productId: product.id,
+          };
           this.items.push(item);
         }
       }
