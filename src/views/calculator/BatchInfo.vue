@@ -21,7 +21,7 @@
                       item-text="name"
                       item-value="id"
                       label="Склад")
-                v-checkbox(v-model="batch.local" label="Импорт")
+                v-checkbox(v-model="batch.local" label="Местный")
           v-flex(xs6 d-flex)
               .border.pa-4.white
                   v-text-field(v-model="batch.total" label="Общий оборот")

@@ -117,6 +117,11 @@ export default {
           sortable: false,
         },
         {
+          text: 'Вес',
+          value: 'weight',
+          sortable: false,
+        },
+        {
           text: 'Цена контрактная за фасовку',
           value: 'contract_price',
           sortable: false,
@@ -124,11 +129,6 @@ export default {
         {
           text: 'Цена таможенная за фасовку',
           value: 'customs_price',
-          sortable: false,
-        },
-        {
-          text: 'Вес',
-          value: 'weight',
           sortable: false,
         },
         {

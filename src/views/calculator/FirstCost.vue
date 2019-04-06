@@ -13,7 +13,3 @@ export default {
   name: 'FirstCost',
 };
 </script>
-
-<style>
-
-</style>

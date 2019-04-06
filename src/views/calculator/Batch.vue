@@ -12,9 +12,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-    .border {
-        box-shadow: none
-    }
-</style>

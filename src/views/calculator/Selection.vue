@@ -122,28 +122,8 @@ export default {
           sortable: false,
         },
         {
-          text: 'Цена контрактная за фасовку',
-          value: 'contract_price',
-          sortable: false,
-        },
-        {
-          text: 'Цена таможенная за фасовку',
-          value: 'customs_price',
-          sortable: false,
-        },
-        {
           text: 'Вес',
           value: 'weight',
-          sortable: false,
-        },
-        {
-          text: 'Цена контрактная за кг',
-          value: 'contract_price_per_unit',
-          sortable: false,
-        },
-        {
-          text: 'Цена таможенная за кг',
-          value: 'customs_price_per_unit',
           sortable: false,
         },
         {
@@ -228,6 +208,8 @@ export default {
         if (!ids.includes(product.id)) {
           const item = {
             product,
+            contract_price: 0,
+            customs_price: 0,
             excise: product.excise,
             tax: product.tax,
             vat: product.vat,

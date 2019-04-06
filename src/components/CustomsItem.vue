@@ -4,9 +4,15 @@
       td {{ item.product.packing }}
       td {{ item.product.color }}
       td {{ item.quantity }}
-      td {{ item.contract_price }}
-      td {{ item.customs_price }}
       td {{ weight }}
+      td
+          v-text-field(v-model="item.contract_price"
+            name="contract_price"
+            v-validate="'required|decimal'")
+      td
+          v-text-field(v-model="item.customs_price"
+            name="customs_price"
+            v-validate="'required|decimal'")
       td {{ item.contract_price / item.product.packing }}
       td {{ item.customs_price / item.product.packing }}
       td
