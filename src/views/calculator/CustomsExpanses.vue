@@ -1,6 +1,6 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon :to="{ name: 'batch_expanses' }")
+        v-btn(icon :to="{ name: 'selection' }")
             v-icon arrow_back
         .title Расходы по растаможке
         v-spacer

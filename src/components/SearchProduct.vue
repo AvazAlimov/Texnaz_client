@@ -70,7 +70,6 @@ export default {
       types: [],
       query: '',
       products: [],
-      selected: [],
     };
   },
   methods: {
@@ -96,11 +95,7 @@ export default {
       }
     },
     select(product) {
-      const ids = this.selected.map(item => item.id);
-      if (!ids.includes(product.id)) {
-        product.quantity = 0;
-        this.selected.push(product);
-      }
+      this.$emit('input', product);
     },
   },
   watch: {
@@ -112,9 +107,6 @@ export default {
     },
     type() {
       this.search();
-    },
-    selected(value) {
-      this.$emit('input', value);
     },
   },
   created() {

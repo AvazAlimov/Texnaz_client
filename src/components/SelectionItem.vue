@@ -1,63 +1,43 @@
 <template lang="pug">
     tr
-        td {{ name }}
-        td {{ packing }}
-        td {{ color }}
+        td {{ item.product.name }}
+        td {{ item.product.packing }}
+        td {{ item.product.color }}
         td
-            v-text-field(v-model="quantity")
+            v-text-field(v-model="item.quantity"
+              name="quantity"
+              v-validate="'required|decimal'")
+        td
+            v-text-field(v-model="item.contract_price"
+              name="contract_price"
+              v-validate="'required|decimal'")
+        td
+            v-text-field(v-model="item.customs_price"
+              name="customs_price"
+              v-validate="'required|decimal'")
         td {{ weight }}
+        td {{ item.contract_price / item.product.packing }}
+        td {{ item.customs_price / item.product.packing }}
         td
-            v-text-field(v-model="contract_price")
-        td
-            v-text-field(v-model="customs_price")
-        td {{ contract_price / packing }}
-        td {{ customs_price / packing }}
+          v-btn.mx-0(icon)
+            v-icon(color="primary" small @click="remove(item.productId)") close
 </template>
 
 <script>
-import Product from '@/services/Product';
-
 export default {
   name: 'Item',
   props: {
-    batch: {
+    item: {
       required: true,
     },
-    productId: {
+    remove: {
       required: true,
     },
-  },
-  data() {
-    return {
-      name: '',
-      packing: 0,
-      color: '',
-      quantity: 0,
-      contract_price: 0,
-      customs_price: 0,
-    };
   },
   computed: {
     weight() {
-      return (this.packing * parseFloat(this.quantity || 0)).toFixed(2);
+      return (this.item.product.packing * parseFloat(this.item.quantity || 0)).toFixed(2);
     },
-  },
-  methods: {
-    getAll() {
-      Product.get(this.productId)
-        .then((product) => {
-          this.name = product.name;
-          this.packing = product.packing;
-          this.color = product.color;
-          this.excise = product.excise;
-          this.tax = product.tax;
-          this.vat = product.vat;
-          this.cleaning = product.cleaning;
-        });
-    },
-  },
-  created() {
-    this.getAll();
   },
 };
 </script>

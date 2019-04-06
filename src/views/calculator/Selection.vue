@@ -64,35 +64,42 @@
                           strong Расходы периода (бн):
                           |  {{ non_cash_expanses_rate }} %
             v-flex(xs12)
-                .border.white.pa-4
-                    .title Выбранные товары: {{ products.length }}
+                SearchProduct(v-model="product")
+            v-flex(xs12)
+                .border.white
+                    .title.pa-4 Выбранные товары: {{ items.length }}
+                    v-divider
                     v-data-table(
                         :headers="headers"
-                        :items="products"
+                        :items="items"
                         no-data-text="Ничего не выбрано"
                         hide-actions)
                         template(v-slot:items="props")
-                            SelectionItem(:productId="props.item.productId" :batch="batch")
-            v-flex(xs12)
-                SearchProduct(v-model="products")
+                            SelectionItem(:item="props.item" :remove="remove")
             v-flex(xs12)
                 v-layout
                     v-spacer
-                    v-btn.ma-2(flat color="primary" :loading="loading") Завершить
+                    v-btn.ma-2(flat color="primary"
+                      :disabled="errors.items.length > 0"
+                      :loading="loading"
+                      @click="submit") Завершить
 </template>
 
 <script>
+/* eslint-disable no-param-reassign */
 import Batch from '@/services/Batch';
+import Item from '@/services/Item';
 
 export default {
   name: 'Selection',
   data() {
     return {
       loading: false,
+      product: null,
+      items: [],
       batch: {
         expanses: [],
       },
-      products: [],
       headers: [
         {
           text: 'Наименование',
@@ -115,11 +122,6 @@ export default {
           sortable: false,
         },
         {
-          text: 'Вес',
-          value: 'weight',
-          sortable: false,
-        },
-        {
           text: 'Цена контрактная за фасовку',
           value: 'contract_price',
           sortable: false,
@@ -130,6 +132,11 @@ export default {
           sortable: false,
         },
         {
+          text: 'Вес',
+          value: 'weight',
+          sortable: false,
+        },
+        {
           text: 'Цена контрактная за кг',
           value: 'contract_price_per_unit',
           sortable: false,
@@ -137,6 +144,10 @@ export default {
         {
           text: 'Цена таможенная за кг',
           value: 'customs_price_per_unit',
+          sortable: false,
+        },
+        {
+          width: 100,
           sortable: false,
         },
       ],
@@ -178,10 +189,48 @@ export default {
         Batch.get(this.$route.params.id),
       ]).then((results) => {
         [this.batch] = results;
-        this.items.forEach((item) => {
-          this.products.push(item);
+        this.batch.items.forEach((item) => {
+          this.items.push(item);
         });
       });
+    },
+    remove(productId) {
+      const item = this.items.find(element => element.productId === productId);
+      this.items.splice(this.items.indexOf(item), 1);
+    },
+    submit() {
+      this.loading = true;
+      const tasks = [];
+      const ids = [];
+      this.items.forEach((item) => {
+        if (!item.id) {
+          tasks.push(Item.create(item));
+        } else {
+          ids.push(item.id);
+          tasks.push(Item.update(item.id, item));
+        }
+      });
+      this.batch.items.forEach((item) => {
+        if (!ids.includes(item.id)) {
+          tasks.push(Item.delete(item.id));
+        }
+      });
+      Promise.all(tasks)
+        .then(() => { this.$router.push({ name: 'customs_expanses' }); })
+        .catch((error) => { this.$store.commit('setMessage', error.message); })
+        .finally(() => { this.loading = false; });
+    },
+  },
+  watch: {
+    product(product) {
+      if (product) {
+        const ids = this.items.map(item => item.product.id);
+        if (!ids.includes(product.id)) {
+          const item = { product, batchId: this.batch.id, productId: product.id };
+          this.items.push(item);
+        }
+      }
+      this.product = null;
     },
   },
   created() {
