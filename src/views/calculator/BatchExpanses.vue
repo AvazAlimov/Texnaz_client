@@ -1,7 +1,7 @@
 <template lang="pug">
     v-layout(row wrap align-center)
         v-btn(icon :to="{ name: 'batch_info' }")
-            v-icon arrow_back
+          v-icon arrow_back
         .title Расходы по партии
         v-spacer
         .title 2/6
@@ -9,28 +9,29 @@
         v-flex.mt-3(xs12)
           Info(:batch="batch" :step="2")
 
-        v-flex(xs6)
+        v-layout(row wrap)
+          v-flex(xs6)
             Expanses(
-                v-model="cash_expanses"
-                title="Затраты на поставку (н)"
-                :total="batch.market_rate"
-                :is_transport="true"
-                :is_cash="true"
-                :batchId="$route.params.id")
+              v-model="cash_expanses"
+              title="Затраты на поставку (н)"
+              :total="batch.market_rate"
+              :is_transport="true"
+              :is_cash="true"
+              :batchId="$route.params.id")
 
-        v-flex(xs6)
+          v-flex(xs6)
             Expanses(
-                v-model="non_cash_expanses"
-                title="Затраты на поставку (бн)"
-                :total="batch.official_rate"
-                :is_transport="true"
-                :is_cash="false"
-                :batchId="$route.params.id")
+              v-model="non_cash_expanses"
+              title="Затраты на поставку (бн)"
+              :total="batch.official_rate"
+              :is_transport="true"
+              :is_cash="false"
+              :batchId="$route.params.id")
 
         v-flex(xs12)
-            v-layout
-                v-spacer
-                v-btn.ma-2(flat color="primary" :loading="loading" @click="submit") Подтвердить
+          v-layout
+            v-spacer
+            v-btn.ma-2(flat color="primary" :loading="loading" @click="submit") Подтвердить
 </template>
 
 <script>

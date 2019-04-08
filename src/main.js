@@ -11,6 +11,11 @@ import './registerServiceWorker';
 Vue.use(VeeValidate);
 Vue.config.productionTip = false;
 
+Vue.filter('roundUp', (value) => {
+  const precision = 10 ** 2;
+  return Math.ceil(value * precision) / precision;
+});
+
 new Vue({
   router,
   store,

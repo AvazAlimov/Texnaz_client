@@ -1,27 +1,27 @@
 <template lang="pug">
     .border.white
-            .title.ma-4 {{ title }}
-            v-data-table(:headers="headers" :items="expanses" :loading="loading" hide-actions)
-                template(v-slot:items="props")
-                        td {{ props.index + 1 }}
-                        td
-                            v-text-field(v-model="props.item.name")
-                        td
-                            v-text-field(v-model="props.item.value")
-                        td
-                            v-btn.mx-0(icon @click="remove(props.index)")
-                                v-icon(color="primary" small) close
-            v-divider
-            v-btn.ma-0(block flat @click="add") Добавить
-            v-divider
-            .ma-4
-                .subheading Всего: {{ sum }}
-                .subheading(v-if="!is_transport") Коэффициент:
-                    strong  {{ (sum / total) * 100 > min ? ((sum / total) * 100).toFixed(2) : min}}%
-                .subheading(v-if="is_transport") Результат (делить на курс):
-                    strong  {{ (sum / total).toFixed(2) }}
+      .title.ma-4 {{ title }}
+      v-data-table(:headers="headers" :items="expanses" :loading="loading" hide-actions)
+          template(v-slot:items="props")
+            td {{ props.index + 1 }}
+            td
+              v-text-field(v-model="props.item.name")
+            td
+              v-text-field(v-model="props.item.value")
+            td
+              v-btn.mx-0(icon @click="remove(props.index)")
+                  v-icon(color="primary" small) close
+      v-divider
+      v-btn.ma-0(block flat @click="add") Добавить
+      v-divider
+      .ma-4
+        .subheading Всего: {{ sum }}
+        .subheading(v-if="!is_transport") Коэффициент:
+          strong  {{ (sum / total) * 100 > min ? ((sum / total) * 100).toFixed(2) : min}}%
+        .subheading(v-if="is_transport") Результат (делить на курс):
+          strong  {{ (sum / total).toFixed(2) }}
 </template>
-1
+
 <script>
 import BatchExpanse from '@/services/BatchExpanse';
 

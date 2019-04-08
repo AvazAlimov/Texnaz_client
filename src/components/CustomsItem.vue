@@ -4,7 +4,7 @@
       td {{ item.product.packing }}
       td {{ item.product.color }}
       td {{ item.quantity }}
-      td {{ weight }}
+      td {{ weight | roundUp }}
       td
           v-text-field(v-model="item.contract_price"
             name="contract_price"
@@ -31,11 +31,11 @@
         v-text-field(v-model="item.cleaning"
               name="cleaning"
               v-validate="'required|decimal|between:0,100'")
-      td {{ exciseValue }}
-      td {{ taxValue }}
-      td {{ vatValue }}
-      td {{ cleaningValue }}
-      td {{ costPriceNonCash }}
+      td {{ exciseValue | roundUp }}
+      td {{ taxValue | roundUp }}
+      td {{ vatValue | roundUp }}
+      td {{ cleaningValue | roundUp }}
+      td {{ costPriceNonCash | roundUp }}
 </template>
 
 <script>
@@ -53,8 +53,9 @@ export default {
   },
   computed: {
     weight() {
-      return (this.item.product.packing * parseFloat(this.item.quantity || 0)).toFixed(2);
+      return this.item.product.packing * parseFloat(this.item.quantity || 0);
     },
+    // Общий вес
     totalWeight() {
       let sum = 0;
       this.batch.items.forEach((element) => {
@@ -62,47 +63,48 @@ export default {
       });
       return sum;
     },
+    // Транспорт Н за кг
+    transport_expanses_per_unit_cash() {
+      return this.batch.transport_cash / this.totalWeight;
+    },
+    // Транспорт БН за кг
+    transport_expanses_per_unit_non_cash() {
+      return this.batch.transport_non_cash / this.totalWeight;
+    },
+
+    // Размер акциза
     exciseValue() {
-      const value = (parseFloat(this.item.customs_price)
-                    + this.batch.transport_non_cash / this.totalWeight)
-                    * (this.item.excise / 100);
-      return this.roundUp(value, 2);
+      return parseFloat(this.item.customs_price)
+              * (this.item.excise / 100);
     },
+    // Размер пошлины
     taxValue() {
-      const value = (parseFloat(this.item.customs_price)
-                    + this.batch.transport_non_cash / this.totalWeight)
-                    * (this.item.tax / 100);
-      return this.roundUp(value, 2);
+      return parseFloat(this.item.customs_price)
+              * (this.item.tax / 100);
     },
+    // Размер НДС
     vatValue() {
-      const value = (parseFloat(this.item.customs_price)
-                    + this.exciseValue
-                    + this.taxValue
-                    + this.batch.transport_non_cash / this.totalWeight)
-                    * (this.item.vat / 100);
-      return this.roundUp(value, 2);
+      return (parseFloat(this.item.customs_price)
+              + this.exciseValue
+              + this.taxValue
+              + this.transport_expanses_per_unit_non_cash)
+              * (this.item.vat / 100);
     },
+    // Размер очистки
     cleaningValue() {
-      const value = (parseFloat(this.item.customs_price)
-                    + this.exciseValue
-                    + this.taxValue
-                    + this.batch.transport_non_cash / this.totalWeight)
-                    * (this.item.cleaning / 100);
-      return this.roundUp(value, 2);
+      return (parseFloat(this.item.customs_price)
+              + this.exciseValue
+              + this.taxValue
+              + this.transport_expanses_per_unit_non_cash)
+              * (this.item.cleaning / 100);
     },
+    // Себестоимость БН
     costPriceNonCash() {
-      const value = (this.batch.transport_non_cash / this.totalWeight
-                    + parseFloat(this.item.customs_price)
-                    + this.exciseValue
-                    + this.taxValue
-                    + this.cleaningValue);
-      return this.roundUp(value, 2);
-    },
-  },
-  methods: {
-    roundUp(num, precision) {
-      precision = 10 ** precision;
-      return Math.ceil(num * precision) / precision;
+      return (this.transport_expanses_per_unit_non_cash
+              + parseFloat(this.item.customs_price)
+              + this.exciseValue
+              + this.taxValue
+              + this.cleaningValue);
     },
   },
 };

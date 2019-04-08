@@ -3,16 +3,16 @@
       td {{ item.product.name }}
       td {{ item.product.packing }}
       td {{ item.product.color }}
-      td {{ costPriceCash }}
-      td {{ transport_cash_expanses_rate }}
-      td {{ cash_expanses_rate }} %
-      td {{ non_cash_expanses_rate }} %
+      td {{ costPriceCash | roundUp }}
+      td {{ transport_expanses_cash | roundUp }}
+      td {{ period_expanses_cash | roundUp }} %
+      td {{ period_expanses_non_cash | roundUp }} %
       td
         v-text-field(v-model="item.non_cash_profitability"
           name="profitability"
           v-validate="'required|between:0,100'")
-      td {{ profitabilityValue }}
-      td {{ secondCost }}
+      td {{ profitabilityValue | roundUp }}
+      td {{ secondCost | roundUp }}
 </template>
 
 <script>
@@ -28,27 +28,31 @@ export default {
     },
   },
   computed: {
-    cash_expanses_rate() {
+    // Расходы периода (н)
+    period_expanses_cash() {
       let sum = 0;
       this.batch.expanses.forEach((expanse) => {
         if (!expanse.is_transport && expanse.is_cash) sum += expanse.value;
       });
-      return (sum / this.batch.total) * 100 > 2 ? ((sum / this.batch.total) * 100).toFixed(2) : 2;
+      return ((sum / this.batch.total) * 100) > 2 ? ((sum / this.batch.total) * 100) : 2;
     },
-    non_cash_expanses_rate() {
+    // Расходы периода (бн)
+    period_expanses_non_cash() {
       let sum = 0;
       this.batch.expanses.forEach((expanse) => {
         if (!expanse.is_transport && !expanse.is_cash) sum += expanse.value;
       });
-      return (sum / this.batch.total) * 100 > 4 ? ((sum / this.batch.total) * 100).toFixed(2) : 4;
+      return ((sum / this.batch.total) * 100) > 4 ? ((sum / this.batch.total) * 100) : 4;
     },
-    transport_cash_expanses_rate() {
+    // Затраты на поставку (н)
+    transport_expanses_cash() {
       let sum = 0;
       this.batch.expanses.forEach((expanse) => {
         if (expanse.is_transport && expanse.is_cash) sum += expanse.value;
       });
-      return (sum / this.batch.market_rate).toFixed(2);
+      return sum / this.batch.market_rate;
     },
+    // Общий вес
     totalWeight() {
       let sum = 0;
       this.batch.items.forEach((element) => {
@@ -56,30 +60,28 @@ export default {
       });
       return sum;
     },
+    // Транспорт Н за кг
+    transport_expanses_per_unit_cash() {
+      return this.batch.transport_cash / this.totalWeight;
+    },
+    // Себестоимость Н
     costPriceCash() {
-      const value = parseFloat(this.item.contract_price)
-                    - parseFloat(this.item.customs_price);
-      return this.roundUp(value, 2);
+      return parseFloat(this.item.contract_price)
+              - parseFloat(this.item.customs_price);
     },
+    // Рентабельность
     profitabilityValue() {
-      const value = (parseFloat(this.costPriceCash)
-                    + parseFloat(this.cash_expanses_rate))
-                    * (parseFloat(this.item.non_cash_profitability) / 100)
-                    * (1 + (parseFloat(this.non_cash_expanses_rate) / 100));
-      return this.roundUp(value, 2);
+      return (parseFloat(this.costPriceCash)
+              + parseFloat(this.transport_expanses_cash))
+              * (parseFloat(this.item.non_cash_profitability) / 100)
+              * (1 + (parseFloat(this.period_expanses_non_cash) / 100));
     },
+    // Цена Н для расчетов
     secondCost() {
-      const value = (parseFloat(this.costPriceCash)
-                    + parseFloat(this.transport_cash_expanses_rate)
-                    + parseFloat(this.cash_expanses_rate)
-                    + parseFloat(this.profitabilityValue));
-      return this.roundUp(value, 2);
-    },
-  },
-  methods: {
-    roundUp(num, precision) {
-      precision = 10 ** precision;
-      return Math.ceil(num * precision) / precision;
+      return this.costPriceCash
+              + this.transport_expanses_per_unit_cash
+              + this.transport_expanses_cash
+              + this.profitabilityValue;
     },
   },
 };
