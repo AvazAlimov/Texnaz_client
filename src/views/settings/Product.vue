@@ -23,9 +23,7 @@
                   v-combobox(
                     v-model="product.color"
                     :items="colors"
-                    label="Цвет"
-                    name="color"
-                    v-validate="'required'")
+                    label="Цвет")
                   v-select(
                     v-model="product.brand"
                     :items="brands"
@@ -51,8 +49,7 @@
                     item-text="name"
                     item-value="id"
                     label="Тип"
-                    name="type"
-                    v-validate="'required'")
+                    clearable)
               v-flex(xs4 d-flex)
                 .border.pa-4
                   .subheading.mb-2 Дополнительные характеристики
@@ -78,9 +75,14 @@
                 .border.pa-4
                   .subheading.mb-2 Финансовые показатели
                   v-text-field(
-                    v-model="product.cleaning"
-                    label="Очистка %"
-                    name="cleaning"
+                    v-model="product.excise"
+                    label="Акциз %"
+                    name="excise"
+                    v-validate="'required|decimal|min:0|max:100'")
+                  v-text-field(
+                    v-model="product.tax"
+                    label="Пошлина %"
+                    name="tax"
                     v-validate="'required|decimal|min:0|max:100'")
                   v-text-field(
                     v-model="product.vat"
@@ -88,14 +90,9 @@
                     name="vat"
                     v-validate="'required|decimal|min:0|max:100'")
                   v-text-field(
-                    v-model="product.tax"
-                    label="Налог %"
-                    name="tax"
-                    v-validate="'required|decimal|min:0|max:100'")
-                  v-text-field(
-                    v-model="product.excise"
-                    label="Акциз %"
-                    name="excise"
+                    v-model="product.cleaning"
+                    label="Очистка %"
+                    name="cleaning"
                     v-validate="'required|decimal|min:0|max:100'")
               v-layout
                 v-spacer
