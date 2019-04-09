@@ -101,10 +101,11 @@ export default {
     },
     // Цена БН для списания
     firstCost() {
-      return (parseFloat(this.costPriceNonCash)
-              + parseFloat(this.profitabilityValue)
-              + parseFloat(this.incomeTaxValue))
-              * this.batch.market_rate;
+      const value = (parseFloat(this.costPriceNonCash)
+                    + parseFloat(this.profitabilityValue)
+                    + parseFloat(this.incomeTaxValue))
+                    * this.batch.market_rate;
+      return Math.ceil(value / 100) * 100;
     },
     // Затраты на поставку (н)
     transport_expanses_cash() {
@@ -135,7 +136,7 @@ export default {
     },
     // Цена №1
     firstPrice() {
-      return this.firstCost + this.secondCost * this.batch.official_rate;
+      return Math.ceil((this.firstCost + this.secondCost * this.batch.official_rate) / 100) * 100;
     },
     // Цена №2
     secondPrice() {
