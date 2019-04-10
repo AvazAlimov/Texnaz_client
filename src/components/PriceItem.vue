@@ -40,17 +40,17 @@ export default {
     },
     // Размер акциза
     exciseValue() {
-      return parseFloat(this.item.customs_price)
+      return parseFloat(this.item.customs_price / this.item.packing)
               * (this.item.excise / 100);
     },
     // Размер пошлины
     taxValue() {
-      return parseFloat(this.item.customs_price)
+      return parseFloat(this.item.customs_price / this.item.packing)
               * (this.item.tax / 100);
     },
     // Размер НДС
     vatValue() {
-      return (parseFloat(this.item.customs_price)
+      return (parseFloat(this.item.customs_price) / this.item.packing
               + this.exciseValue
               + this.taxValue
               + this.transport_expanses_per_unit_non_cash)
@@ -58,7 +58,7 @@ export default {
     },
     // Размер очистки
     cleaningValue() {
-      return (parseFloat(this.item.customs_price)
+      return (parseFloat(this.item.customs_price / this.item.packing)
               + this.exciseValue
               + this.taxValue
               + this.transport_expanses_per_unit_non_cash)
@@ -67,7 +67,7 @@ export default {
     // Себестоимость БН
     costPriceNonCash() {
       return (this.transport_expanses_per_unit_non_cash
-              + parseFloat(this.item.customs_price)
+              + parseFloat(this.item.customs_price / this.item.packing)
               + this.exciseValue
               + this.taxValue
               + this.cleaningValue);
@@ -81,7 +81,7 @@ export default {
       return ((sum / this.batch.total) * 100) > 4 ? ((sum / this.batch.total) * 100) : 4;
     },
     // Затраты на поставку (бн)
-    transport_expanses_non_cash() {
+    delivery_expanses_non_cash() {
       let sum = 0;
       this.batch.expanses.forEach((expanse) => {
         if (expanse.is_transport && !expanse.is_cash) sum += expanse.value;
@@ -91,9 +91,9 @@ export default {
     // Размер рентабельности
     profitabilityValue() {
       return (parseFloat(this.costPriceNonCash)
-              + parseFloat(this.transport_expanses_non_cash))
-              * (parseFloat(this.item.cash_profitability) / 100)
-              * (1 + (parseFloat(this.period_expanses_non_cash) / 100));
+              + parseFloat(this.delivery_expanses_non_cash))
+              * (1 + (parseFloat(this.period_expanses_non_cash) / 100))
+              * (parseFloat(this.item.non_cash_profitability) / 100);
     },
     // Размер налога на прибыль
     incomeTaxValue() {
@@ -104,41 +104,42 @@ export default {
       const value = (parseFloat(this.costPriceNonCash)
                     + parseFloat(this.profitabilityValue)
                     + parseFloat(this.incomeTaxValue))
-                    * this.batch.market_rate;
+                    * (1 + this.item.vat / 100)
+                    * this.batch.official_rate;
       return Math.ceil(value / 100) * 100;
     },
     // Затраты на поставку (н)
-    transport_expanses_cash() {
+    delivery_expanses_cash() {
       let sum = 0;
       this.batch.expanses.forEach((expanse) => {
         if (expanse.is_transport && expanse.is_cash) sum += expanse.value;
       });
-      return sum / this.batch.market_rate;
+      return sum / this.batch.market_rate / this.totalWeight;
     },
     // Себестоимость Н
     costPriceCash() {
-      return parseFloat(this.item.contract_price)
-              - parseFloat(this.item.customs_price);
+      return (parseFloat(this.item.contract_price)
+              - parseFloat(this.item.customs_price)) / this.item.packing;
     },
     // Рентабельность
-    nonCashProfitabilityValue() {
+    cashProfitabilityValue() {
       return (parseFloat(this.costPriceCash)
-              + parseFloat(this.transport_expanses_cash))
-              * (parseFloat(this.item.non_cash_profitability) / 100)
-              * (1 + (parseFloat(this.period_expanses_non_cash) / 100));
+              + parseFloat(this.delivery_expanses_cash))
+              * (1 + (parseFloat(this.period_expanses_cash) / 100))
+              * (parseFloat(this.item.profitability) / 100);
     },
     // Цена Н для расчетов
     secondCost() {
       return this.costPriceCash
               + this.transport_expanses_per_unit_cash
-              + this.transport_expanses_cash
-              + this.nonCashProfitabilityValue;
+              + this.delivery_expanses_cash
+              + this.cashProfitabilityValue;
     },
     // Цена №1
     firstPrice() {
       return Math.ceil((this.firstCost + this.secondCost * this.batch.official_rate) / 100) * 100;
     },
-    // Цена №2
+    // Цена №3
     secondPrice() {
       return this.secondCost + this.firstCost / this.batch.market_rate;
     },

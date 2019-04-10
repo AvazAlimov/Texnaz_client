@@ -24,6 +24,7 @@
                 v-checkbox(v-model="batch.local" label="Местный")
           v-flex(xs6 d-flex)
               .border.pa-4.white
+                  .title Финансовые показатели
                   v-text-field(v-model="batch.total" label="Общий оборот")
                   v-text-field(v-model="batch.conversion" label="Конвертация")
                   v-text-field(v-model="batch.bank_transfer" label="Банковский перевод")
