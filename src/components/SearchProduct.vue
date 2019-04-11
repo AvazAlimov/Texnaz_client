@@ -1,8 +1,8 @@
 <template lang="pug">
-    .border.pa-4.white
-        .title Поиск товаров
+    .border.white
+        .title.pt-4.px-4 Поиск товаров
         v-layout(row wrap)
-            v-flex(xs6)
+            v-flex(xs6).pl-4
                 v-combobox(
                     v-model="brand"
                     :items="brands"
@@ -11,7 +11,7 @@
                     label="Бренд"
                     clearable
                 )
-            v-flex(xs6)
+            v-flex(xs6).pr-4
                 v-combobox(
                     v-model="type"
                     :items="types"
@@ -20,20 +20,25 @@
                     label="Тип продукта"
                     clearable
                 )
-            v-flex(xs12)
+            v-flex(xs12).px-4.pb-4
                 v-text-field(
                     v-model="query"
                     label="Поиск"
                 )
             v-flex(xs12 v-if="products.length")
-                .title Результаты: {{ products.length }}
+                .title.px-4 Результаты: {{ products.length }}
                 v-data-table(
                     :headers="headers"
                     :items="products"
                     :loading="loading"
                     hide-actions)
                     template(v-slot:items="props")
-                        tr(@click="select(props.item)")
+                        tr(
+                          @click="select(props.item)"
+                          :class="{'selectable': !contains(props.item.id)}"
+                        )
+                            td
+                              v-icon(v-if="contains(props.item.id)") check
                             td {{ props.item.name }}
                             td {{ props.item.packing }}
                             td {{ props.item.color }}
@@ -47,9 +52,19 @@ import Product from '@/services/Product';
 
 export default {
   name: 'SearchProduct',
+  props: {
+    items: {
+      // Items
+      required: true,
+    },
+  },
   data() {
     return {
       headers: [
+        {
+          width: 50,
+          sortable: false,
+        },
         {
           text: 'Наименование',
           value: 'name',
@@ -97,6 +112,9 @@ export default {
     select(product) {
       this.$emit('input', product);
     },
+    contains(productId) {
+      return this.items.find(item => item.product.id === productId);
+    },
   },
   watch: {
     query() {
@@ -114,3 +132,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.selectable {
+    cursor: pointer;
+}
+</style>

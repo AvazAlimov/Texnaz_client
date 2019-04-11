@@ -10,7 +10,7 @@
           Info(:batch="batch" :step="3")
 
         v-flex(xs12)
-            SearchProduct(v-model="product")
+            SearchProduct(v-model="product" :items="items")
 
         v-flex(xs12)
             .border.white
@@ -23,9 +23,9 @@
                     hide-actions)
                     template(v-slot:items="props")
                         SelectionItem(:item="props.item" :remove="remove")
-
         v-flex(xs12)
-            v-layout
+            v-layout(align-center)
+                .title.ma-2 Общий вес: {{ weight | roundUp }} кг
                 v-spacer
                 v-btn.ma-2(flat color="primary"
                   :disabled="errors.items.length > 0 || items.length == 0"
@@ -58,17 +58,20 @@ export default {
         {
           text: 'Фасовка',
           value: 'packing',
+          align: 'center',
           sortable: false,
         },
         {
           text: 'Цвет',
           value: 'color',
+          align: 'center',
           sortable: false,
         },
         {
           text: 'Количество',
           value: 'quantity',
           sortable: false,
+          width: 200,
         },
         {
           text: 'Вес',
@@ -81,6 +84,15 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    weight() {
+      let sum = 0;
+      this.items.forEach((item) => {
+        sum += item.product.packing * (item.quantity || 0);
+      });
+      return sum || 0;
+    },
   },
   methods: {
     getAll() {

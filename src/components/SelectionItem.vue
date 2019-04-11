@@ -1,11 +1,12 @@
 <template lang="pug">
     tr
         td {{ item.product.name }}
-        td {{ item.product.packing }}
-        td {{ item.product.color }}
+        td.text-xs-center {{ item.product.packing }}
+        td.text-xs-center {{ item.product.color ? item.product.color : '-' }}
         td
           v-text-field(v-model="item.quantity"
-            name="quantity"
+            :error-messages="errors.first('количество')"
+            name="количество"
             v-validate="'required|decimal|min:0'")
         td {{ weight | roundUp }}
         td

@@ -1,15 +1,17 @@
 import Vue from 'vue';
 import './plugins/vuetify';
-import VeeValidate from 'vee-validate';
+import VeeValidate, { Validator } from 'vee-validate';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import ru from './translations/ru';
 import '@/components';
-
 import './registerServiceWorker';
 
 Vue.use(VeeValidate);
 Vue.config.productionTip = false;
+
+Validator.localize('ru', ru);
 
 Vue.filter('roundUp', (value) => {
   const precision = 10 ** 2;
