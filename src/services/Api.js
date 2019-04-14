@@ -18,6 +18,7 @@ export function execute(promise) {
 }
 
 export const AXIOS = axios.create({
+  // baseURL: 'http://erp.texnaz.uz/api/',
   baseURL: process.env.NODE_ENV === 'production' ? 'http://erp.texnaz.uz/api/' : 'http://localhost:3030/api/',
 });
 
