@@ -15,7 +15,7 @@ Validator.localize('ru', ru);
 
 Vue.filter('roundUp', (value) => {
   const precision = 10 ** 2;
-  return Math.ceil(value * precision) / precision;
+  return Math.ceil(value.toFixed(4) * precision) / precision;
 });
 
 new Vue({
