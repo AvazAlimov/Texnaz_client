@@ -77,7 +77,7 @@ export default {
     // Размер очистки
     cleaningValue() {
       return (parseFloat(this.item.customs_price)
-              // / this.item.product.packing
+              / this.item.product.packing
               + this.exciseValue
               + this.taxValue
               + this.transport_expanses_per_unit_non_cash)
@@ -87,6 +87,7 @@ export default {
     costPriceNonCash() {
       return (this.transport_expanses_per_unit_non_cash
               + parseFloat(this.item.customs_price)
+              / this.item.product.packing
               + this.exciseValue
               + this.taxValue
               + this.cleaningValue);
@@ -107,12 +108,12 @@ export default {
       });
       return sum / this.batch.official_rate / this.totalWeight;
     },
-    // Размер рентабельности
+    // Размер рентабельности (бн)
     profitabilityValue() {
-      return (parseFloat(this.costPriceNonCash)
-              + parseFloat(this.transport_expanses_non_cash))
-              * (parseFloat(this.item.cash_profitability) / 100)
-              * (1 + (parseFloat(this.period_expanses_non_cash) / 100));
+      return (this.costPriceNonCash // Себестоимость БН
+              + this.transport_expanses_non_cash // Затраты на поставку (бн)
+              + this.period_expanses_non_cash)
+              * (parseFloat(this.item.cash_profitability) / 100);
     },
     // Размер налога на прибыль
     incomeTaxValue() {
@@ -120,10 +121,10 @@ export default {
     },
     // Цена БН для списания
     firstCost() {
-      return (parseFloat(this.costPriceNonCash)
-              + parseFloat(this.profitabilityValue)
-              + parseFloat(this.incomeTaxValue))
-              * this.batch.market_rate;
+      return (this.costPriceNonCash
+                    + this.profitabilityValue
+                    + this.incomeTaxValue)
+                    * (1 + this.item.vat / 100);
     },
   },
   methods: {

@@ -63,7 +63,7 @@ export default {
           sortable: false,
         },
         {
-          text: 'Расходы БН',
+          text: 'Затраты на поставку (бн) за кг',
           value: 'expanses',
           sortable: false,
         },

@@ -34,7 +34,7 @@
       td {{ exciseValue | roundUp }}
       td {{ taxValue | roundUp }}
       td {{ vatValue | roundUp }}
-      td {{ cleaningValue | roundUp }}
+      td {{ cleaningValue }}
       td {{ costPriceNonCash | roundUp }}
 </template>
 
