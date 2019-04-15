@@ -4,18 +4,18 @@
       td {{ item.product.packing }}
       td {{ item.product.color }}
       td {{ costPriceNonCash | roundUp }}
-      td {{ transport_expanses_non_cash | roundUp }}
-      td {{ period_expanses_non_cash }} %
+      td {{ transport_expanses_non_cash.toFixed(2) }}
+      td {{ period_expanses_non_cash_per_unit.toFixed(2) }}
       td
         v-text-field(v-model="item.cash_profitability"
           name="profitability"
           v-validate="'required|between:0,100'")
-      td {{ profitabilityValue | roundUp }}
+      td {{ profitabilityValue.toFixed(2) }}
       td
         v-text-field(v-model="item.income_tax"
           name="income_tax"
           v-validate="'required|between:0,100'")
-      td {{ incomeTaxValue | roundUp }}
+      td {{ incomeTaxValue.toFixed(2) }}
       td {{ firstCost | roundUp }}
 </template>
 
@@ -52,7 +52,6 @@ export default {
     transport_expanses_per_unit_non_cash() {
       return this.batch.transport_non_cash / this.totalWeight;
     },
-
     // Размер акциза
     exciseValue() {
       return parseFloat(this.item.customs_price)
@@ -100,6 +99,11 @@ export default {
       });
       return ((sum / this.batch.total) * 100) > 4 ? ((sum / this.batch.total) * 100) : 4;
     },
+    period_expanses_non_cash_per_unit() {
+      return (this.costPriceNonCash
+              + this.transport_expanses_non_cash)
+              * (this.period_expanses_non_cash / 100);
+    },
     // Затраты на поставку (бн)
     transport_expanses_non_cash() {
       let sum = 0;
@@ -111,8 +115,8 @@ export default {
     // Размер рентабельности (бн)
     profitabilityValue() {
       return (this.costPriceNonCash // Себестоимость БН
-              + this.transport_expanses_non_cash // Затраты на поставку (бн)
-              + this.period_expanses_non_cash)
+              + this.transport_expanses_non_cash
+              + this.period_expanses_non_cash_per_unit)// Затраты на поставку (бн)
               * (parseFloat(this.item.cash_profitability) / 100);
     },
     // Размер налога на прибыль
@@ -122,6 +126,8 @@ export default {
     // Цена БН для списания
     firstCost() {
       return (this.costPriceNonCash
+                    + this.transport_expanses_non_cash
+                    + this.period_expanses_non_cash_per_unit
                     + this.profitabilityValue
                     + this.incomeTaxValue)
                     * (1 + this.item.vat / 100);
