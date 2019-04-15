@@ -46,13 +46,11 @@ export default {
       headers: [
         {
           text: 'Наименование',
-          value: 'name',
-          sortable: false,
+          value: 'product.name',
         },
         {
           text: 'Фасовка',
-          value: 'packing',
-          sortable: false,
+          value: 'product.packing',
         },
         {
           text: 'Цвет',
@@ -60,7 +58,7 @@ export default {
           sortable: false,
         },
         {
-          text: 'Себестоимость Н',
+          text: 'Себестоимость Н за кг',
           value: 'cost_price_non_cash',
           sortable: false,
         },
@@ -75,7 +73,7 @@ export default {
           sortable: false,
         },
         {
-          text: 'Расходы периода БН',
+          text: 'Затраты на поставку Н',
           value: 'period_expanses',
           sortable: false,
         },
