@@ -4,14 +4,14 @@
       td {{ item.product.packing }}
       td {{ item.product.color }}
       td {{ costPriceCash | roundUp }}
-      td {{ transport_expanses_per_unit_cash | roundUp }}
+      td {{ transport_expanses_per_unit_cash.toFixed(2) }}
       td {{ period_expanses_cash_per_unit.toFixed(2) }}
       td {{ transport_expanses_cash.toFixed(2) }}
       td
         v-text-field(v-model="item.non_cash_profitability"
           name="profitability"
           v-validate="'required|between:0,100'")
-      td {{ profitabilityValue | roundUp }}
+      td {{ profitabilityValue.toFixed(2) }}
       td {{ secondCost | roundUp }}
 </template>
 
@@ -65,7 +65,7 @@ export default {
     period_expanses_cash_per_unit() {
       return (this.costPriceCash
               + this.transport_expanses_per_unit_cash)
-              * this.period_expanses_cash / 100;
+              * (this.period_expanses_cash / 100);
     },
     // Рентабельность
     profitabilityValue() {
@@ -74,7 +74,6 @@ export default {
               + this.period_expanses_cash_per_unit)
               * (parseFloat(this.item.non_cash_profitability) / 100);
     },
-
     // Цена Н для расчетов
     secondCost() {
       return this.costPriceCash
