@@ -96,7 +96,7 @@ export default {
     // Размер очистки
     cleaningValue() {
       return (parseFloat(this.item.customs_price)
-              // / this.item.product.packing
+              / this.item.product.packing
               + this.exciseValue
               + this.taxValue
               + this.transport_expanses_per_unit_non_cash)
@@ -106,7 +106,7 @@ export default {
     costPriceNonCash() {
       return (this.transport_expanses_per_unit_non_cash
               + parseFloat(this.item.customs_price)
-              // / this.item.product.packing
+              / this.item.product.packing
               + this.exciseValue
               + this.taxValue
               + this.cleaningValue);
