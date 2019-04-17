@@ -11,7 +11,7 @@
         v-text-field(v-model="item.non_cash_profitability"
           name="profitability"
           v-validate="'required|between:0,100'")
-      td {{ profitabilityValue.toFixed(2) }}
+      td {{ profitabilityValue.toFixed(4) }}
       td {{ secondCost | roundUp }}
 </template>
 

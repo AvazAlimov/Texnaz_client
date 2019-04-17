@@ -31,10 +31,10 @@
         v-text-field(v-model="item.cleaning"
               name="cleaning"
               v-validate="'required|decimal|between:0,100'")
-      td {{ exciseValue | roundUp }}
-      td {{ taxValue | roundUp }}
-      td {{ vatValue | roundUp }}
-      td {{ cleaningValue }}
+      td {{ exciseValue.toFixed(2) }}
+      td {{ taxValue.toFixed(2) }}
+      td {{ vatValue.toFixed(2) }}
+      td {{ cleaningValue.toFixed(2) }}
       td {{ costPriceNonCash | roundUp }}
 </template>
 

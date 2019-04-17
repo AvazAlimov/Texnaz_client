@@ -35,13 +35,11 @@ export default {
       headers: [
         {
           text: 'Наименование',
-          value: 'name',
-          sortable: false,
+          value: 'product.name',
         },
         {
           text: 'Фасовка',
-          value: 'packing',
-          sortable: false,
+          value: 'product.packing',
         },
         {
           text: 'Цвет',
