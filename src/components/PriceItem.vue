@@ -5,7 +5,7 @@
       td {{ item.product.color }}
       td.blue.lighten-4 {{ firstPrice }} сум
       td.orange.lighten-4 {{ mixPriceNonCash }} сум
-      td.orange.lighten-4 {{ mixPriceCash | roundUp }} $
+      td.orange.lighten-4 {{ mixPriceCash }} $
       td.green.lighten-4 {{ secondPrice | roundUp }} $
 </template>
 
@@ -152,18 +152,18 @@ export default {
     },
     // Цена №1
     firstPrice() {
-      const value = ((this.firstCost
-                      * this.batch.official_rate / 1.2)
-                      + (this.secondCost
-                      * (1 + 1.12)
+      const value = ((this.mixPriceNonCash / this.item.product.packing / (1 + this.item.vat / 100))
+                      + (this.mixPriceCash / this.item.product.packing
+                      * (1 + this.item.income_tax / 100)
                       * this.batch.market_rate))
-                      * this.item.product.packing * 1.2;
+                      * this.item.product.packing
+                      * (1 + this.item.vat / 100);
 
       return Math.ceil((value) / 100) * 100;
     },
     // Цена №2
     mixPriceCash() {
-      return this.secondCost * this.item.product.packing;
+      return Math.ceil((this.secondCost * this.item.product.packing) * 100) / 100;
     },
     mixPriceNonCash() {
       const value = this.firstCost * this.batch.official_rate * this.item.product.packing;
