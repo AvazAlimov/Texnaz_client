@@ -152,13 +152,12 @@ export default {
     },
     // Цена №1
     firstPrice() {
-      const value = ((this.mixPriceNonCash / this.item.product.packing / (1 + this.item.vat / 100))
-                      + (this.mixPriceCash / this.item.product.packing
+      const value = ((this.mixPriceNonCash
+                      / (1 + this.item.vat / 100))
+                      + (this.mixPriceCash
                       * (1 + this.item.income_tax / 100)
                       * this.batch.market_rate))
-                      * this.item.product.packing
                       * (1 + this.item.vat / 100);
-
       return Math.ceil((value) / 100) * 100;
     },
     // Цена №2

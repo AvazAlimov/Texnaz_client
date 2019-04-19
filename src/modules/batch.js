@@ -17,9 +17,6 @@ const mutations = {
 };
 
 const actions = {
-  createBatch({ commit }, batch) {
-
-  },
 };
 
 export default {

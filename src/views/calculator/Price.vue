@@ -14,6 +14,7 @@
                     :headers="headers"
                     :items="items"
                     no-data-text="Ничего не выбрано"
+                    fixed-headers
                     hide-actions)
                     template(v-slot:items="props")
                         PriceItem(:item="props.item" :batch="batch")
