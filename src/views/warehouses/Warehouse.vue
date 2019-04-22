@@ -4,6 +4,22 @@
       v-btn(icon :to="{ name: 'warehouses' }")
           v-icon arrow_back
       .title СКЛАД: {{ warehouse.name }} - {{ warehouse.owner.name }}
+      v-spacer
+      v-menu(bottom left)
+        template(v-slot:activator="{ on }")
+          v-btn(icon v-on="on")
+            v-icon more_vert
+        v-list.border.pa-0
+          v-list-tile(:to="{ name: 'template_warehouse', params: { id: warehouse.id }}")
+            v-list-tile-content
+              v-list-tile-title Изменить данные
+            v-list-tile-action
+              v-icon(small) edit
+          v-list-tile(@click="remove")
+            v-list-tile-content
+              v-list-tile-title Удалить склад
+            v-list-tile-action
+              v-icon(small) delete
       v-flex(xs12)
 
       v-flex(xs4 v-for="(card, index) in cards" :key="index")
@@ -72,7 +88,18 @@ export default {
         .then((warehouse) => { this.warehouse = warehouse; })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
+          this.$router.push({ name: 'warehouses' });
         });
+    },
+    remove() {
+      // eslint-disable-next-line no-alert, no-restricted-globals
+      if (confirm('Это действие удалит элемент навсегда, вы уверены?')) {
+        Warehouse.delete(this.warehouse.id)
+          .then(() => { this.$router.push({ name: 'warehouses' }); })
+          .catch((error) => {
+            this.$store.commit('setMessage', error.message);
+          });
+      }
     },
   },
   created() {
@@ -80,3 +107,8 @@ export default {
   },
 };
 </script>
+<style>
+.v-menu__content {
+    box-shadow: none;
+}
+</style>

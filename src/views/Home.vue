@@ -47,7 +47,7 @@ export default {
         },
         {
           icon: 'money',
-          title: 'Калькулятор',
+          title: 'Ценообразование',
           to: '/calculator',
         },
         {

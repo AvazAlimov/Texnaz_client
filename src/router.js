@@ -242,24 +242,6 @@ const router = new Router({
               name: 'configurations',
               component: () => import('./views/settings/Configurations.vue'),
             },
-
-            // WAREHOUSES
-            {
-              path: 'warehouses',
-              name: 'settings_warehouses',
-              component: () => import('./views/settings/Warehouses.vue'),
-            },
-            {
-              path: 'warehouse',
-              name: 'settings_warehouse',
-              component: () => import('./views/settings/Warehouse.vue'),
-              children: [
-                {
-                  path: ':id',
-                  component: () => import('./views/settings/Warehouse.vue'),
-                },
-              ],
-            },
           ],
         },
 
@@ -282,6 +264,17 @@ const router = new Router({
                   path: 'stock',
                   name: 'stock',
                   component: () => import('./views/warehouses/Stock.vue'),
+                },
+              ],
+            },
+            {
+              path: 'template',
+              name: 'template_warehouse',
+              component: () => import('./views/warehouses/Template.vue'),
+              children: [
+                {
+                  path: ':id',
+                  component: () => import('./views/warehouses/Template.vue'),
                 },
               ],
             },

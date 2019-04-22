@@ -2,7 +2,7 @@
     v-layout(row wrap )
       v-flex(xs12).mb-1
         .title НАСТРОЙКИ
-      v-flex(xs4 v-for="(section, index) in cards" :key="index")
+      v-flex(xs6 v-for="(section, index) in cards" :key="index")
         v-list.pa-0.border.my-2(v-for="card in section" :key="card.title" two-line)
           v-list-tile(:to="'/settings' + card.to")
             v-list-tile-content
@@ -19,7 +19,6 @@ import Tag from '@/services/Tag';
 import ProductType from '@/services/ProductType';
 import Purpose from '@/services/Purpose';
 import User from '@/services/User';
-import Warehouse from '@/services/Warehouse';
 import Configuration from '@/services/Configuration';
 import Brand from '@/services/Brand';
 import Expanse from '@/services/Expanse';
@@ -74,16 +73,6 @@ export default {
             icon: 'style',
           },
         ],
-        // WAREHOUSE
-        [
-          {
-            key: 'warehouses',
-            to: '/warehouses',
-            title: 'СКЛАДЫ',
-            count: 0,
-            icon: 'store_mall_directory',
-          },
-        ],
         // CONFIGURATIONS
         [
           {
@@ -130,7 +119,6 @@ export default {
         this.getCount(Tag, 'tags'),
         this.getCount(Purpose, 'purposes'),
         this.getCount(User, 'users'),
-        this.getCount(Warehouse, 'warehouses'),
         this.getCount(Configuration, 'configurations'),
         this.getCount(Brand, 'brands'),
         this.getCount(Expanse, 'expanses'),

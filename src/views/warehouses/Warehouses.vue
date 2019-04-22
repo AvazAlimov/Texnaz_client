@@ -12,6 +12,14 @@
                         v-list-tile-sub-title {{ warehouse.owner.name }}
                     v-list-tile-action
                     v-icon(large) store_mall_directory
+        v-flex(xs4)
+          v-list.pa-0.border(three-line)
+                v-list-tile(:to="{ name: 'template_warehouse' }")
+                    v-list-tile-content
+                        v-list-tile-title Добавить
+                        v-list-tile-sub-title.text--primary Новый склад
+                    v-list-tile-action
+                    v-icon(large) add
     router-view
 </template>
 

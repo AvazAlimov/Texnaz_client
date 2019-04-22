@@ -1,6 +1,6 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon :to="{ name: 'settings_warehouses' }")
+        v-btn(icon @click="$router.go(-1)")
             v-icon arrow_back
         .title {{ id == null ? 'Добавить' : 'Сохранить' }} склад
         v-flex(xs12).mt-3
@@ -46,7 +46,7 @@ import User from '@/services/User';
 import Info from '@/services/Info';
 
 export default {
-  name: 'Warehouse',
+  name: 'WarehouseTemplate',
   $_veeValidate: {
     validator: 'new',
   },
@@ -86,7 +86,7 @@ export default {
     execute(promise) {
       this.loading = true;
       promise
-        .then(() => this.$router.push({ name: 'settings_warehouses' }))
+        .then(() => this.$router.go(-1))
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
         })
