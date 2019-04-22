@@ -1,99 +1,103 @@
 <template lang="pug">
-  v-layout(row wrap)
-    v-flex(xs6 d-flex)
-      .border.pa-4.white
-        v-layout.mb-1(align-center)
-          .subheading.font-weight-bold Название партии
-          v-spacer
-            v-divider.mx-4
-          .subheading {{ batch.name }}
-        v-layout.mb-1(align-center)
-          .subheading.font-weight-bold Номер партии
-          v-spacer
-            v-divider.mx-4
-          .subheading {{ batch.number }}
-        v-layout.mb-1(align-center)
-          .subheading.font-weight-bold Дата прибытия
-          v-spacer
-            v-divider.mx-4
-          .subheading {{ batch.date ? batch.date.substring(0, 10) : '-' }}
-        v-layout.mb-1(align-center)
-          .subheading.font-weight-bold Склад
-          v-spacer
-            v-divider.mx-4
-          .subheading {{ batch.Warehouse ? batch.Warehouse.name : '-' }}
-    v-flex(xs6 d-flex)
-      .border.pa-4.white
-        v-layout.mb-1(align-center)
-          .subheading.font-weight-bold Общий оборот
-          v-spacer
-            v-divider.mx-4
-          .subheading {{ batch.total }} сум
-        v-layout.mb-1(align-center)
-          .subheading.font-weight-bold Транспорт (Н)
-          v-spacer
-            v-divider.mx-4
-          .subheading {{ batch.transport_cash }} $
-        v-layout.mb-1(align-center)
-          .subheading.font-weight-bold Транспорт (БН)
-          v-spacer
-            v-divider.mx-4
-          .subheading {{ batch.transport_non_cash }} $
-        v-layout.mb-1(align-center)
-          .subheading.font-weight-bold Конвертация
-          v-spacer
-            v-divider.mx-4
-          .subheading {{ batch.conversion }} %
-        v-layout.mb-1(align-center)
-          .subheading.font-weight-bold Банковский перевод
-          v-spacer
-            v-divider.mx-4
-          .subheading {{ batch.bank_transfer }} %
-        v-layout.mb-1(align-center)
-          .subheading.font-weight-bold Курс доллара (рыночный)
-          v-spacer
-            v-divider.mx-4
-          .subheading {{ batch.market_rate }} сум
-        v-layout.mb-1(align-center)
-          .subheading.font-weight-bold Курс доллара (официальный)
-          v-spacer
-            v-divider.mx-4
-          .subheading {{ batch.official_rate }} сум
-        v-layout.mb-1(align-center v-if="step > 1")
-          .subheading.font-weight-bold Расходы периода (н)
-          v-spacer
-            v-divider.mx-4
-          .subheading {{ period_expanses_cash | roundUp }} %
-        v-layout.mb-1(align-center v-if="step > 1")
-          .subheading.font-weight-bold Расходы периода (бн)
-          v-spacer
-            v-divider.mx-4
-          .subheading {{ period_expanses_non_cash | roundUp }} %
-        v-layout.mb-1(align-center v-if="step > 2")
-          .subheading.font-weight-bold Затраты на поставку (н)
-          v-spacer
-            v-divider.mx-4
-          .subheading {{ transport_expanses_cash | roundUp }} $
-        v-layout.mb-1(align-center v-if="step > 2")
-          .subheading.font-weight-bold Затраты на поставку (бн)
-          v-spacer
-            v-divider.mx-4
-          .subheading {{ transport_expanses_non_cash | roundUp }} $
-        v-layout.mb-1(align-center v-if="step > 3")
-          .subheading.font-weight-bold Транспорт БН за кг
-          v-spacer
-            v-divider.mx-4
-          .subheading {{ transport_expanses_per_unit_non_cash | roundUp }} $/кг
-        v-layout.mb-1(align-center v-if="step > 3")
-          .subheading.font-weight-bold Транспорт Н за кг
-          v-spacer
-            v-divider.mx-4
-          .subheading {{ transport_expanses_per_unit_cash | roundUp }} $/кг
-        v-layout.mb-1(align-center v-if="step > 3")
-          .subheading.font-weight-bold Общий вес
-          v-spacer
-            v-divider.mx-4
-          .subheading {{ totalWeight | roundUp }} кг
+  v-expansion-panel.border
+    v-expansion-panel-content
+      template(v-slot:header)
+        .title Информация о партии
+      v-layout(row wrap).mx-3.mb-3
+        v-flex(xs6)
+          .pa-2.white
+            v-layout.mb-1(align-center)
+              .subheading Название партии
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ batch.name }}
+            v-layout.mb-1(align-center)
+              .subheading Номер партии
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ batch.number }}
+            v-layout.mb-1(align-center)
+              .subheading Дата прибытия
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ batch.date ? batch.date.substring(0, 10) : '-' }}
+            v-layout.mb-1(align-center)
+              .subheading Склад
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ batch.Warehouse ? batch.Warehouse.name : '-' }}
+        v-flex(xs6)
+          .pa-2.white
+            v-layout.mb-1(align-center)
+              .subheading Общий оборот
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ batch.total }} сум
+            v-layout.mb-1(align-center)
+              .subheading Конвертация
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ batch.conversion }} %
+            v-layout.mb-1(align-center)
+              .subheading Банковский перевод
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ batch.bank_transfer }} %
+            v-layout.mb-1(align-center)
+              .subheading Курс доллара (рыночный)
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ batch.market_rate }} сум
+            v-layout.mb-1(align-center)
+              .subheading Курс доллара (официальный)
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ batch.official_rate }} сум
+            v-layout.mb-1(align-center)
+              .subheading Транспорт (н)
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ batch.transport_cash }} $
+            v-layout.mb-1(align-center)
+              .subheading Транспорт (бн)
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ batch.transport_non_cash }} $
+            v-layout.mb-1(align-center v-if="step > 1")
+              .subheading Расходы периода (н)
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ period_expanses_cash | roundUp }} %
+            v-layout.mb-1(align-center v-if="step > 1")
+              .subheading Расходы периода (бн)
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ period_expanses_non_cash | roundUp }} %
+            v-layout.mb-1(align-center v-if="step > 1")
+              .subheading Затраты на поставку (н)
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ transport_expanses_cash | roundUp }} $
+            v-layout.mb-1(align-center v-if="step > 1")
+              .subheading Затраты на поставку (бн)
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ transport_expanses_non_cash | roundUp }} $
+            v-layout.mb-1(align-center v-if="step > 2")
+              .subheading Транспорт БН за кг
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ transport_expanses_per_unit_non_cash | roundUp }} $/кг
+            v-layout.mb-1(align-center v-if="step > 2")
+              .subheading Транспорт Н за кг
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ transport_expanses_per_unit_cash | roundUp }} $/кг
+            v-layout.mb-1(align-center v-if="step > 2")
+              .subheading Общий вес
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ totalWeight | roundUp }} кг
 </template>
 
 <script>
@@ -159,3 +163,8 @@ export default {
   },
 };
 </script>
+<style>
+.v-expansion-panel {
+  box-shadow: none;
+}
+</style>

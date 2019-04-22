@@ -7,7 +7,7 @@
         .title 2/5
 
         v-flex.mt-3(xs12)
-          Info(:batch="batch" :step="3")
+          Info(:batch="batch" :step="2")
 
         v-flex(xs12)
             SearchProduct(v-model="product" :items="items")
@@ -25,7 +25,6 @@
                         SelectionItem(:item="props.item" :remove="remove")
         v-flex(xs12)
             v-layout(align-center)
-                .title.ma-2 Общий вес: {{ weight | roundUp }} кг
                 v-spacer
                 v-btn.ma-2(flat color="primary"
                   :disabled="errors.items.length > 0 || items.length == 0"
@@ -52,14 +51,12 @@ export default {
       headers: [
         {
           text: 'Наименование',
-          value: 'name',
-          sortable: false,
+          value: 'product.name',
         },
         {
           text: 'Фасовка',
-          value: 'packing',
+          value: 'product.packing',
           align: 'center',
-          sortable: false,
         },
         {
           text: 'Цвет',
@@ -74,8 +71,28 @@ export default {
           width: 200,
         },
         {
+          text: 'Цена контрактная за фасовку',
+          value: 'contract_price',
+          sortable: false,
+        },
+        {
+          text: 'Цена таможенная за фасовку',
+          value: 'customs_price',
+          sortable: false,
+        },
+        {
           text: 'Вес',
           value: 'weight',
+          sortable: false,
+        },
+        {
+          text: 'Цена контрактная за кг',
+          value: 'contract_price_per_unit',
+          sortable: false,
+        },
+        {
+          text: 'Цена таможенная за кг',
+          value: 'customs_price_per_unit',
           sortable: false,
         },
         {

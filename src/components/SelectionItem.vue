@@ -8,7 +8,19 @@
             :error-messages="errors.first('количество')"
             name="количество"
             v-validate="'required|decimal|min:0'")
+        td
+          v-text-field(v-model="item.contract_price"
+            name="contract_price"
+            v-validate="'required|decimal'"
+            append-icon="attach_money")
+        td
+          v-text-field(v-model="item.customs_price"
+            name="customs_price"
+            v-validate="'required|decimal'"
+            append-icon="attach_money")
         td {{ weight | roundUp }}
+        td {{ (item.contract_price / item.product.packing) | roundUp }}
+        td {{ (item.customs_price / item.product.packing) | roundUp }}
         td
           v-btn.mx-0(icon)
             v-icon(color="primary" small @click="remove(item.productId)") close
