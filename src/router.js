@@ -47,11 +47,6 @@ const router = new Router({
                   component: () => import('./views/calculator/BatchInfo.vue'),
                 },
                 {
-                  path: 'batch_expanses',
-                  name: 'batch_expanses',
-                  component: () => import('./views/calculator/BatchExpanses.vue'),
-                },
-                {
                   path: 'selection',
                   name: 'selection',
                   component: () => import('./views/calculator/Selection.vue'),

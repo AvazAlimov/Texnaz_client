@@ -1,10 +1,10 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon :to="{ name: 'batch_expanses' }")
+        v-btn(icon :to="{ name: 'batch_info' }")
             v-icon arrow_back
         .title Выборка
         v-spacer
-        .title 3/6
+        .title 2/5
 
         v-flex.mt-3(xs12)
           Info(:batch="batch" :step="3")

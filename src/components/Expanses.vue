@@ -1,25 +1,33 @@
 <template lang="pug">
     .border.white
-      .title.ma-4 {{ title }}
-      v-data-table(:headers="headers" :items="expanses" :loading="loading" hide-actions)
+      v-layout.ma-4
+        .title {{ title }}
+        v-spacer
+        .title(v-if="!is_transport")
+          | {{ (sum / total) * 100 > min ? ((sum / total) * 100).toFixed(2) : min}} %
+        .title(v-if="is_transport")
+          | {{ (sum / total).toFixed(2) }} $
+      v-divider
+      v-data-table(
+        :headers="headers"
+        :items="expanses"
+        :loading="loading"
+        no-data-text="Нет расходов"
+        hide-actions)
           template(v-slot:items="props")
             td {{ props.index + 1 }}
             td
               v-text-field(v-model="props.item.name")
             td
-              v-text-field(v-model="props.item.value")
+              v-text-field(v-model="props.item.value"
+                name="значение"
+                v-validate="'required|decimal'"
+                :error-messages="errors.first('значение')")
             td
               v-btn.mx-0(icon @click="remove(props.index)")
                   v-icon(color="primary" small) close
       v-divider
-      v-btn.ma-0(block flat @click="add") Добавить
-      v-divider
-      .ma-4
-        .subheading Всего: {{ sum }}
-        .subheading(v-if="!is_transport") Коэффициент:
-          strong  {{ (sum / total) * 100 > min ? ((sum / total) * 100).toFixed(2) : min}}%
-        .subheading(v-if="is_transport") Результат (делить на курс):
-          strong  {{ (sum / total).toFixed(2) }}
+      v-btn.ma-0(block flat large @click="add") Добавить
 </template>
 
 <script>
@@ -61,7 +69,7 @@ export default {
           sortable: false,
         },
         {
-          text: 'Значение',
+          text: 'Значение (сум)',
           value: 'value',
           sortable: false,
         },
@@ -91,7 +99,7 @@ export default {
         .then((expanses) => {
           this.expanses = expanses
             .filter(expanse => expanse.is_transport === this.is_transport
-                && expanse.is_cash === this.is_cash);
+                            && expanse.is_cash === this.is_cash);
         })
         .finally(() => { this.loading = false; });
     },
@@ -120,5 +128,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

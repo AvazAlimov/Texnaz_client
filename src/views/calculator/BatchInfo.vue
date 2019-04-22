@@ -4,7 +4,7 @@
             v-icon arrow_back
         .title Информация о партии
         v-spacer
-        .title 1/6
+        .title 1/5
         v-flex(xs12)
         v-layout(row wrap)
           v-flex(xs6)
@@ -31,27 +31,44 @@
                   v-text-field(v-model="batch.market_rate" label="Курс доллара (рыночный)")
                   v-text-field(v-model="batch.official_rate" label="Курс доллара (официальный)")
                   v-text-field(v-model="batch.exchange_rate" label="Курс доллара (обмен)")
-          v-flex(xs6)
+          v-flex(xs6 d-flex)
             Expanses(
-              v-model="cash_expanses"
+              v-model="period_cash_expanses"
               title="Расходы периода (н)"
               :total="batch.total"
               :is_transport="false"
               :is_cash="true"
               :batchId="$route.params.id")
-          v-flex(xs6)
+          v-flex(xs6 d-flex)
             Expanses(
-              v-model="non_cash_expanses"
+              v-model="period_non_cash_expanses"
               title="Расходы периода (бн)"
               :total="batch.total"
               :is_transport="false"
               :is_cash="false"
               :batchId="$route.params.id")
+          v-flex(xs6 d-flex)
+            Expanses(
+              v-model="delivery_cash_expanses"
+              title="Затраты на поставку (н)"
+              :total="batch.market_rate"
+              :is_transport="true"
+              :is_cash="true"
+              :batchId="$route.params.id")
+          v-flex(xs6 d-flex)
+            Expanses(
+              v-model="delivery_non_cash_expanses"
+              title="Затраты на поставку (бн)"
+              :total="batch.official_rate"
+              :is_transport="true"
+              :is_cash="false"
+              :batchId="$route.params.id")
           v-flex(xs12)
               v-layout
                   v-spacer
-                  v-btn.ma-2(flat color="primary" :loading="loading" @click="submit") Подтвердить
-
+                  v-btn.ma-2(flat color="primary"
+                    :disabled="errors.items.length > 0"
+                    :loading="loading" @click="submit") Подтвердить
 </template>
 
 <script>
@@ -73,8 +90,10 @@ export default {
         exchange_rate: 0,
       },
       warehouses: [],
-      cash_expanses: [],
-      non_cash_expanses: [],
+      period_cash_expanses: [],
+      period_non_cash_expanses: [],
+      delivery_cash_expanses: [],
+      delivery_non_cash_expanses: [],
     };
   },
   methods: {
@@ -93,25 +112,40 @@ export default {
       const tasks = [];
       const expanseIds = [];
       tasks.push(Batch.update(this.batch.id, this.batch));
-      this.cash_expanses.forEach((expanse) => {
+
+      this.period_cash_expanses.forEach((expanse) => {
         if (expanse.id) {
           expanseIds.push(expanse.id);
           tasks.push(BatchExpanse.update(expanse.id, expanse));
         } else tasks.push(BatchExpanse.create(expanse));
       });
-      this.non_cash_expanses.forEach((expanse) => {
+      this.period_non_cash_expanses.forEach((expanse) => {
         if (expanse.id) {
           expanseIds.push(expanse.id);
           tasks.push(BatchExpanse.update(expanse.id, expanse));
         } else tasks.push(BatchExpanse.create(expanse));
       });
+      this.delivery_cash_expanses.forEach((expanse) => {
+        if (expanse.id) {
+          expanseIds.push(expanse.id);
+          tasks.push(BatchExpanse.update(expanse.id, expanse));
+        } else tasks.push(BatchExpanse.create(expanse));
+      });
+      this.delivery_non_cash_expanses.forEach((expanse) => {
+        if (expanse.id) {
+          expanseIds.push(expanse.id);
+          tasks.push(BatchExpanse.update(expanse.id, expanse));
+        } else tasks.push(BatchExpanse.create(expanse));
+      });
+
       this.batch.expanses.forEach((expanse) => {
-        if (!expanseIds.includes(expanse.id) && !expanse.is_transport) {
+        if (!expanseIds.includes(expanse.id)) {
           tasks.push(BatchExpanse.delete(expanse.id));
         }
       });
+
       Promise.all(tasks)
-        .then(() => { this.$router.push({ name: 'batch_expanses' }); })
+        .then(() => { this.$router.push({ name: 'selection' }); })
         .catch((error) => { this.$store.commit('setMessage', error.message); })
         .finally(() => { this.loading = false; });
     },
