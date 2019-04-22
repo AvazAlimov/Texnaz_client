@@ -33,7 +33,7 @@ const router = new Router({
         {
           path: 'calculator',
           name: 'calculator',
-          component: () => import('./views/Calculator.vue'),
+          component: () => import('./views/calculator/Calculator.vue'),
           children: [
             {
               path: ':id',
@@ -83,15 +83,9 @@ const router = new Router({
 
         {
           path: '/settings',
-          component: () => import('./views/Settings.vue'),
+          name: 'settings',
+          component: () => import('./views/settings/Settings.vue'),
           children: [
-          // DATABASE
-            {
-              path: '',
-              name: 'settings',
-              component: () => import('./views/settings/Database.vue'),
-            },
-
             // BRANDS
             {
               path: 'brands',

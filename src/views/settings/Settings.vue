@@ -1,5 +1,6 @@
 <template lang="pug">
-    v-layout(row wrap )
+  div
+    v-layout(row wrap v-if="path == 'settings'")
       v-flex(xs12).mb-1
         .title НАСТРОЙКИ
       v-flex(xs6 v-for="(section, index) in cards" :key="index")
@@ -10,6 +11,7 @@
               v-list-tile-sub-title {{ card.count }}
             v-list-tile-action
               v-icon(large) {{ card.icon }}
+    router-view
 </template>
 
 <script>
@@ -99,6 +101,11 @@ export default {
         ],
       ],
     };
+  },
+  computed: {
+    path() {
+      return this.$route.name;
+    },
   },
   methods: {
     getCount(Service, key) {
