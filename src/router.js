@@ -75,7 +75,16 @@ const router = new Router({
             },
           ],
         },
-
+        {
+          path: 'managers',
+          name: 'managers',
+          component: () => import('./views/managers/Managers.vue'),
+        },
+        {
+          path: 'clients',
+          name: 'clients',
+          component: () => import('./views/clients/Clients.vue'),
+        },
         {
           path: '/settings',
           name: 'settings',
