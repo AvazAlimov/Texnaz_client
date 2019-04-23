@@ -1,35 +1,30 @@
 <template lang="pug">
-    v-layout(row wrap align-center)
-        v-btn(icon :to="{ name: 'batch_info' }")
-            v-icon arrow_back
-        .title Выборка
+  v-layout.ma-2(row wrap align-center)
+    v-flex(xs12)
+      Info(:batch="batch" :step="2")
+
+    v-flex(xs12)
+      SearchProduct(v-model="product" :items="items")
+
+    v-flex(xs12)
+      .border.white
+        .title.pa-4 Выбранные товары: {{ items.length }}
+        v-divider
+        v-data-table(
+          :headers="headers"
+          :items="items"
+          :headers-length="2"
+          no-data-text="Ничего не выбрано"
+          hide-actions)
+          template(v-slot:items="props")
+            SelectionItem(:item="props.item" :remove="remove")
+    v-flex(xs12)
+      v-layout(align-center)
         v-spacer
-        .title 2/5
-
-        v-flex.mt-3(xs12)
-          Info(:batch="batch" :step="2")
-
-        v-flex(xs12)
-            SearchProduct(v-model="product" :items="items")
-
-        v-flex(xs12)
-            .border.white
-                .title.pa-4 Выбранные товары: {{ items.length }}
-                v-divider
-                v-data-table(
-                    :headers="headers"
-                    :items="items"
-                    no-data-text="Ничего не выбрано"
-                    hide-actions)
-                    template(v-slot:items="props")
-                        SelectionItem(:item="props.item" :remove="remove")
-        v-flex(xs12)
-            v-layout(align-center)
-                v-spacer
-                v-btn.ma-2(flat color="primary"
-                  :disabled="errors.items.length > 0 || items.length == 0"
-                  :loading="loading"
-                  @click="submit") Завершить
+        v-btn.ma-2(flat color="primary"
+          :disabled="errors.items.length > 0 || items.length == 0"
+          :loading="loading"
+          @click="submit") Завершить
 </template>
 
 <script>
@@ -71,28 +66,26 @@ export default {
           width: 200,
         },
         {
-          text: 'Цена контрактная за фасовку',
+          text: 'Цена контрактная за фасовку ($)',
           value: 'contract_price',
           sortable: false,
         },
         {
-          text: 'Цена таможенная за фасовку',
+          text: 'Цена таможенная за фасовку ($)',
           value: 'customs_price',
           sortable: false,
         },
         {
-          text: 'Вес',
+          text: 'Вес (кг)',
           value: 'weight',
           sortable: false,
         },
         {
-          text: 'Цена контрактная за кг',
-          value: 'contract_price_per_unit',
+          text: 'Цена контрактная за кг ($)',
           sortable: false,
         },
         {
-          text: 'Цена таможенная за кг',
-          value: 'customs_price_per_unit',
+          text: 'Цена таможенная за кг ($)',
           sortable: false,
         },
         {

@@ -1,20 +1,20 @@
 <template lang="pug">
     tr
       td {{ item.product.name }}
-      td {{ item.product.packing }}
-      td {{ item.product.color }}
-      td {{ item.quantity }}
-      td {{ weight | roundUp }}
-      td
-          v-text-field(v-model="item.contract_price"
-            name="contract_price"
-            v-validate="'required|decimal'")
-      td
-          v-text-field(v-model="item.customs_price"
-            name="customs_price"
-            v-validate="'required|decimal'")
-      td {{ (item.contract_price / item.product.packing) | roundUp }}
-      td {{ (item.customs_price / item.product.packing) | roundUp }}
+      td.text-xs-center {{ item.product.packing }}
+      td.text-xs-center {{ item.product.color || '-' }}
+      td.text-xs-center {{ item.quantity }}
+      // td {{ weight | roundUp }}
+      // td
+      //     v-text-field(v-model="item.contract_price"
+      //       name="contract_price"
+      //       v-validate="'required|decimal'")
+      // td
+      //     v-text-field(v-model="item.customs_price"
+      //       name="customs_price"
+      //       v-validate="'required|decimal'")
+      // td {{ (item.contract_price / item.product.packing) | roundUp }}
+      // td {{ (item.customs_price / item.product.packing) | roundUp }}
       td
         v-text-field(v-model="item.excise"
               name="excise"

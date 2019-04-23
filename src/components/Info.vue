@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-expansion-panel.border
+  v-expansion-panel.border(v-model="panel" expand)
     v-expansion-panel-content
       template(v-slot:header)
         .title Информация о партии
@@ -111,6 +111,11 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      panel: [true],
+    };
+  },
   computed: {
     // Расходы периода (н)
     period_expanses_cash() {
@@ -165,6 +170,6 @@ export default {
 </script>
 <style>
 .v-expansion-panel {
-  box-shadow: none;
+    box-shadow: none;
 }
 </style>

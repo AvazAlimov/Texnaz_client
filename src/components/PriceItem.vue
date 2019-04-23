@@ -1,8 +1,8 @@
 <template lang="pug">
     tr
       td {{ item.product.name }}
-      td {{ item.product.packing }}
-      td {{ item.product.color }}
+      td.text-xs-center {{ item.product.packing }}
+      td.text-xs-center {{ item.product.color || '-' }}
       td.blue.lighten-4 {{ firstPrice }} сум
       td.orange.lighten-4 {{ mixPriceNonCash }} сум
       td.orange.lighten-4 {{ mixPriceCash }} $

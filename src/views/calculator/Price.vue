@@ -1,23 +1,16 @@
 <template lang="pug">
-    v-layout(row wrap align-center)
-        v-btn(icon :to="{ name: 'second_cost' }")
-            v-icon arrow_back
-        .title Цены
-
-        v-flex.mt-3(xs12)
-            Info(:batch="batch" :step="5")
-
-        v-flex(xs12)
-            .border.white
-                .title.pa-4 Товары
-                v-data-table(
-                    :headers="headers"
-                    :items="items"
-                    no-data-text="Ничего не выбрано"
-                    fixed-headers
-                    hide-actions)
-                    template(v-slot:items="props")
-                        PriceItem(:item="props.item" :batch="batch")
+  v-layout.ma-2(row wrap)
+    v-flex(xs12)
+      Info(:batch="batch" :step="5")
+    v-flex(xs12)
+      v-data-table.border(
+        :headers="headers"
+        :items="items"
+        no-data-text="Ничего не выбрано"
+        fixed-headers
+        hide-actions)
+        template(v-slot:items="props")
+          PriceItem(:item="props.item" :batch="batch")
 </template>
 
 <script>
@@ -41,10 +34,12 @@ export default {
         {
           text: 'Фасовка',
           value: 'product.packing',
+          align: 'center',
         },
         {
           text: 'Цвет',
           value: 'color',
+          align: 'center',
           sortable: false,
         },
         {
