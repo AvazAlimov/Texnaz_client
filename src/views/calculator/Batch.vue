@@ -48,7 +48,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .v-stepper,
 .v-stepper__header {
     box-shadow: none;
