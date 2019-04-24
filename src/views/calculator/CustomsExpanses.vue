@@ -3,6 +3,33 @@
         v-flex(xs12)
           Info(:batch="batch" :step="4")
         v-flex(xs12)
+          .border.pa-4
+            v-layout(wrap row justify-space-between)
+              v-flex(xs3)
+                v-text-field(v-model="incomeTax" label="Налог на прибыль %")
+              v-flex(xs1)
+                v-btn.mx-0.mt-3(
+                  icon
+                  @click="applyToAll('income_tax', incomeTax)"
+                )
+                  v-icon check
+              v-flex(xs3)
+                v-text-field(v-model="nonCashProfitability" label="Рентабельность (БН) %")
+              v-flex(xs1)
+                v-btn.mx-0.mt-3(
+                  icon
+                  @click="applyToAll('non_cash_profitability', nonCashProfitability)"
+                )
+                  v-icon check
+              v-flex(xs3)
+                v-text-field(v-model="cashProfitability" label="Рентабельность (Н) %")
+              v-flex(xs1)
+                v-btn.mx-0.mt-3(
+                  icon
+                  @click="applyToAll('cash_profitability', cashProfitability)"
+                )
+                  v-icon check
+        v-flex(xs12)
           v-data-table.border(
               :headers="headers"
               :items="items"
@@ -51,31 +78,6 @@ export default {
           value: 'quantity',
           sortable: false,
         },
-        // {
-        //   text: 'Вес',
-        //   value: 'weight',
-        //   sortable: false,
-        // },
-        // {
-        //   text: 'Цена контрактная за фасовку',
-        //   value: 'contract_price',
-        //   sortable: false,
-        // },
-        // {
-        //   text: 'Цена таможенная за фасовку',
-        //   value: 'customs_price',
-        //   sortable: false,
-        // },
-        // {
-        //   text: 'Цена контрактная за кг',
-        //   value: 'contract_price_per_unit',
-        //   sortable: false,
-        // },
-        // {
-        //   text: 'Цена таможенная за кг',
-        //   value: 'customs_price_per_unit',
-        //   sortable: false,
-        // },
         {
           text: 'Акциз %',
           value: 'excise',
@@ -97,32 +99,40 @@ export default {
           sortable: false,
         },
         {
-          text: 'Размер акциза',
-          value: 'excise_value',
-          sortable: false,
-        },
-        {
-          text: 'Размер пошлины',
-          value: 'tax_value',
-          sortable: false,
-        },
-        {
-          text: 'Размер НДС',
-          value: 'vat_value',
-          sortable: false,
-        },
-        {
-          text: 'Размер очистки',
-          value: 'cleaning_value',
-          sortable: false,
-        },
-        {
           text: 'Себестоимость БН',
           value: 'cost_price_non_cash',
           sortable: false,
         },
+        {
+          text: 'Рентабельность (БН) %',
+          value: 'profitability_non_cash',
+          sortable: false,
+        },
+        {
+          text: 'Налог на прибыль %',
+          value: 'income_tax',
+          sortable: false,
+        },
+        {
+          text: 'Цена БН для списания',
+          value: 'charge_price',
+          sortable: false,
+        },
+        {
+          text: 'Рентабельность (Н) %',
+          value: 'profitability_cash',
+          sortable: false,
+        },
+        {
+          text: 'Цена Н для расчетов',
+          value: 'charge_price',
+          sortable: false,
+        },
       ],
       items: [],
+      incomeTax: 0,
+      cashProfitability: 0,
+      nonCashProfitability: 0,
     };
   },
   methods: {
@@ -143,9 +153,15 @@ export default {
         tasks.push(Item.update(item.id, item));
       });
       Promise.all(tasks)
-        .then(() => { this.$router.push({ name: 'first_cost' }); })
+        .then(() => { this.$router.push({ name: 'price' }); })
         .catch((error) => { this.$store.commit('setMessage', error.message); })
         .finally(() => { this.loading = false; });
+    },
+    applyToAll(name, value) {
+      this.items.forEach((item) => {
+        // eslint-disable-next-line no-param-reassign
+        item[name] = value;
+      });
     },
   },
   created() {

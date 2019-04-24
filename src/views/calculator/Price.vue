@@ -3,6 +3,33 @@
     v-flex(xs12)
       Info(:batch="batch" :step="5")
     v-flex(xs12)
+          .border.pa-4
+            v-layout(wrap row justify-space-between)
+              v-flex(xs3)
+                v-text-field(v-model="incomeTax" label="Налог на прибыль %")
+              v-flex(xs1)
+                v-btn.mx-0.mt-3(
+                  icon
+                  @click="applyToAll('income_tax', incomeTax)"
+                )
+                  v-icon check
+              v-flex(xs3)
+                v-text-field(v-model="nonCashProfitability" label="Рентабельность (БН) %")
+              v-flex(xs1)
+                v-btn.mx-0.mt-3(
+                  icon
+                  @click="applyToAll('non_cash_profitability', nonCashProfitability)"
+                )
+                  v-icon check
+              v-flex(xs3)
+                v-text-field(v-model="cashProfitability" label="Рентабельность (Н) %")
+              v-flex(xs1)
+                v-btn.mx-0.mt-3(
+                  icon
+                  @click="applyToAll('cash_profitability', cashProfitability)"
+                )
+                  v-icon check
+    v-flex(xs12)
       v-data-table.border(
         :headers="headers"
         :items="items"
@@ -63,6 +90,9 @@ export default {
           sortable: false,
         },
       ],
+      incomeTax: 0,
+      cashProfitability: 0,
+      nonCashProfitability: 0,
     };
   },
   methods: {
@@ -74,6 +104,12 @@ export default {
         this.batch.items.forEach((item) => {
           this.items.push(item);
         });
+      });
+    },
+    applyToAll(name, value) {
+      this.items.forEach((item) => {
+        // eslint-disable-next-line no-param-reassign
+        item[name] = value;
       });
     },
   },
