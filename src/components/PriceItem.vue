@@ -3,10 +3,10 @@
       td {{ item.product.name }}
       td.text-xs-center {{ item.product.packing }}
       td.text-xs-center {{ item.product.color || '-' }}
-      td.blue.lighten-4 {{ firstPrice }} сум
-      td.orange.lighten-4 {{ mixPriceNonCash }} сум
-      td.orange.lighten-4 {{ mixPriceCash }} $
-      td.green.lighten-4 {{ secondPrice | roundUp }} $
+      td.blue.lighten-5 {{ firstPrice }} сум
+      td.orange.lighten-5 {{ mixPriceNonCash }} сум
+      td.orange.lighten-5 {{ mixPriceCash }} $
+      td.green.lighten-5 {{ secondPrice | roundUp }} $
 </template>
 
 <script>
@@ -177,3 +177,11 @@ export default {
   },
 };
 </script>
+<style>
+td {
+  height: auto !important;
+}
+/* tr {
+  border-bottom: 1px solid rgba(0,0,0,0.50) !important;
+} */
+</style>
