@@ -240,6 +240,13 @@ const router = new Router({
               name: 'configurations',
               component: () => import('./views/settings/Configurations.vue'),
             },
+
+            // THEMES
+            {
+              path: 'themes',
+              name: 'themes',
+              component: () => import('./views/settings/Themes.vue'),
+            },
           ],
         },
 

@@ -24,13 +24,13 @@
                                 v-btn(icon
                                   :to="{ name: 'product', params: { id: props.item.id }}"
                                 ).mx-0
-                                    v-icon(color="primary" small) edit
+                                    v-icon(color="secondary" small) edit
                                 v-btn(icon @click="remove(props.item.id)").mx-0
-                                    v-icon(color="primary" small) delete
+                                    v-icon(color="red" small) delete
                 v-divider
                 v-layout
                     v-spacer
-                    v-btn.ma-2(flat color="primary"
+                    v-btn.ma-2(flat color="secondary"
                       :to="{ name: 'product' }"
                     ) Добавить
 </template>

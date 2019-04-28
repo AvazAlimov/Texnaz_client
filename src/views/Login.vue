@@ -8,10 +8,10 @@
                         .headline.font-weight-bold TEXNAZ
                         .sub-heading.font-weight-light Это больше, чем просто управление
                         v-text-field(v-model="username" label="имя пользователя"
-                          @keyup.enter="login")
+                          @keyup.enter="login" color="secondary")
                         v-text-field(v-model="password" type="password" label="пароль пользователя"
-                          @keyup.enter="login")
-                        v-btn(outline block @click="login") войти
+                          @keyup.enter="login" color="secondary")
+                        v-btn(outline block @click="login" color="secondary") войти
 </template>
 
 <script>

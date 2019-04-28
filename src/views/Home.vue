@@ -1,26 +1,26 @@
 <template lang="pug">
   v-app
     v-navigation-drawer(app v-model="drawer")
-      v-toolbar.transparent(flat)
+      v-toolbar.primary(flat).toolbar__border
         v-list.pa-0
           v-list-tile(avatar)
             v-list-tile-avatar
               img(:src="require('../assets/logo.svg')")
             v-list-tile-content
-              v-list-tile-title TEXNAZ
+              v-list-tile-title.font-weight-bold DIGMAN
       v-list.pt-0(two-line)
         template(v-for="(item, index) in items")
-          v-divider(v-if="item.divider")
+          v-divider(v-if="item.divider").divider
           v-list-tile(
             :to="item.to"
             active-class="bordered"
             :class="item.path === $route.path ? 'bordered' : ''"
           )
             v-list-tile-action
-              v-icon {{item.icon}}
+              v-icon(color="secondary") {{item.icon}}
             v-list-tile-content
-              v-list-tile-title {{item.title}}
-    v-toolbar.white.elevation-0.toolbar__border(app)
+              v-list-tile-title {{ item.title }}
+    v-toolbar.elevation-0.toolbar__border(app color="primary")
       v-toolbar-side-icon(@click.stop="drawer = !drawer")
       v-toolbar-title {{ user.name }}
     v-content
@@ -40,7 +40,6 @@ export default {
       user: {},
       items: [
         {
-          divider: true,
           icon: 'home',
           title: 'Главный',
           to: '/',
@@ -87,11 +86,19 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style>
 .toolbar__border {
     border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
 }
 .v-list-tile-height {
     min-height: 120px;
+}
+.bordered {
+    border-right: 2px solid;
+    border-color: var(--v-secondary-base);
+    background-color: var(--v-primary-base);
+}
+.bordered:hover {
+    background-color: var(--v-primary-base) !important;
 }
 </style>

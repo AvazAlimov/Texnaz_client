@@ -19,13 +19,13 @@
                             v-layout
                                 v-btn.mx-0(icon
                                   :to="{name: 'batch_info', params: {id: props.item.id}}")
-                                  v-icon(color="primary" small) edit
+                                  v-icon(small color="secondary") edit
                                 v-btn.mx-0(icon @click="remove(props.item.id)")
-                                  v-icon(color="primary" small) delete
+                                  v-icon(small color="red") delete
                     v-divider
                     v-layout
                         v-spacer
-                        v-btn.ma-2(flat color="primary" @click="create") Добавить
+                        v-btn.ma-2(flat @click="create" color="secondary") Добавить
     router-view
 </template>
 

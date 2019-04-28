@@ -1,14 +1,33 @@
 <template lang="pug">
   v-stepper.border(v-model="step" non-linear)
     v-stepper-header
-      v-stepper-step(step="1" editable @click="changeStep({ name: 'batch_info' })") Утверждение
+      v-stepper-step(
+        step="1" editable
+        color="secondary"
+        @click="changeStep({ name: 'batch_info' })"
+      ) Утверждение
       v-divider.mx-0
-      v-stepper-step(step="2" editable @click="changeStep({ name: 'selection' })") Выборка
+
+      v-stepper-step(
+        step="2" editable
+        color="secondary"
+        @click="changeStep({ name: 'selection' })"
+      ) Выборка
       v-divider.mx-0
-      v-stepper-step(step="3" editable @click="changeStep({ name: 'customs_expanses' })")
-        | Расходы по растаможке
+
+      v-stepper-step(
+        step="3" editable
+        color="secondary"
+        @click="changeStep({ name: 'customs_expanses' })"
+      ) Расходы по растаможке
       v-divider.mx-0
-      v-stepper-step(step="4" editable @click="changeStep({ name: 'price' })") Прайс
+
+      v-stepper-step(
+        step="4" editable
+        color="secondary"
+        @click="changeStep({ name: 'price' })"
+      ) Прайс
+
     v-divider
     v-stepper-items
       router-view

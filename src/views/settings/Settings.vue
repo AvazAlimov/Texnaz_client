@@ -10,7 +10,7 @@
               v-list-tile-title {{ card.title }}
               v-list-tile-sub-title {{ card.count }}
             v-list-tile-action
-              v-icon(large) {{ card.icon }}
+              v-icon(large color="secondary") {{ card.icon }}
     router-view
 </template>
 
@@ -97,6 +97,13 @@ export default {
             title: 'КОНФИГУРАЦИИ',
             count: 0,
             icon: 'settings',
+          },
+          {
+            key: 'themes',
+            to: '/themes',
+            title: 'Темы',
+            count: 3,
+            icon: 'format_paint',
           },
         ],
       ],
