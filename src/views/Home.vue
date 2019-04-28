@@ -86,10 +86,7 @@ export default {
   },
 };
 </script>
-<style>
-.toolbar__border {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
-}
+<style scoped>
 .v-list-tile-height {
     min-height: 120px;
 }

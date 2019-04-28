@@ -29,4 +29,7 @@ export default {
 .border {
     border: 1px solid rgba(0, 0, 0, 0.12) !important;
 }
+.toolbar__border {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
 </style>
