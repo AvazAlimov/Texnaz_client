@@ -86,7 +86,7 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style>
 .v-list-tile-height {
     min-height: 120px;
 }
