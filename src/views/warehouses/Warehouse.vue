@@ -6,6 +6,7 @@
       .title {{ warehouse.name }} {{ warehouse.company }}
       v-spacer
       v-btn.mx-0(
+        small
         v-for="(card, index) in cards"
         :key="index"
         color="secondary" flat
@@ -67,6 +68,11 @@ export default {
         {
           icon: 'check',
           title: 'Инвентаризация',
+          // to: { name: 'inventory' },
+        },
+        {
+          icon: 'done_all',
+          title: 'Реализация',
           // to: { name: 'inventory' },
         },
       ],

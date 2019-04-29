@@ -60,7 +60,7 @@
                     color="secondary"
                     v-model="props.item.quantity"
                     name="quantity"
-                    v-validate="'required|decimal|min_value:0.1'")
+                    v-validate="'required|decimal|min_value:0|is_not:0'")
               td
                   v-text-field(
                     color="secondary"
@@ -169,7 +169,7 @@ export default {
         if (!ids.includes(product.id)) {
           const item = {
             product,
-            quantity: 0,
+            quantity: 1,
             defected: false,
             arrival_date: this.getCurrentDate(),
             expiry_date: this.getCurrentDate(),
