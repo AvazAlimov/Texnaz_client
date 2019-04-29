@@ -10,6 +10,7 @@
                     item-text="name"
                     label="Бренд"
                     clearable
+                    color="secondary"
                 )
             v-flex(xs6).pr-4
                 v-combobox(
@@ -19,11 +20,13 @@
                     item-text="name"
                     label="Тип продукта"
                     clearable
+                    color="secondary"
                 )
-            v-flex(xs12).px-4.pb-4
+            v-flex(xs12).px-4.mb-3
                 v-text-field(
                     v-model="query"
                     label="Поиск"
+                    color="secondary"
                 )
             v-flex(xs12 v-if="products.length")
                 .title.px-4 Результаты: {{ products.length }}
@@ -38,7 +41,7 @@
                           :class="{'selectable': !contains(props.item.id)}"
                         )
                             td
-                              v-icon(v-if="contains(props.item.id)") check
+                              v-icon(v-if="contains(props.item.id)" small) check
                             td {{ props.item.name }}
                             td {{ props.item.packing }}
                             td {{ props.item.color }}

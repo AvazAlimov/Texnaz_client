@@ -1,20 +1,17 @@
 <template lang="pug">
-    v-layout(row wrap align-center)
-        v-btn(icon :to="{ name: 'warehouse' }")
-            v-icon arrow_back
-        .title Информация
-        v-flex(xs12).mt-3
-            .border.white
-                v-data-table(:headers="headers" :items="stocks" hide-actions :loading="loading")
-                    template(v-slot:items="props")
-                        td {{ props.item.product.name }}
-                        td {{ props.item.product.packing }}
-                        td {{ props.item.product.color }}
-                        td {{ props.item.quantity }}
-                        td {{ props.item.arrival_date }}
-                        td {{ props.item.expiry_date }}
-                        td.text-xs-center
-                            v-icon(small) {{ props.item.defected ? 'check' : 'close' }}
+  v-layout(row wrap align-center)
+    v-flex(xs12)
+      .border.white
+        v-data-table(:headers="headers" :items="stocks" hide-actions :loading="loading")
+          template(v-slot:items="props")
+            td {{ props.item.product.name }}
+            td {{ props.item.product.packing }}
+            td {{ props.item.product.color }}
+            td {{ props.item.quantity }}
+            td {{ props.item.arrival_date }}
+            td {{ props.item.expiry_date }}
+            td.text-xs-center
+              v-icon(small) {{ props.item.defected ? 'check' : 'close' }}
 </template>
 
 <script>

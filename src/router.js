@@ -258,6 +258,7 @@ const router = new Router({
             {
               path: ':id',
               name: 'warehouse',
+              redirect: ':id/information',
               component: () => import('./views/warehouses/Warehouse.vue'),
               children: [
                 {

@@ -1,35 +1,33 @@
 <template lang="pug">
   div
-    v-layout(row wrap align-center v-if="path == 'warehouse'")
-      v-btn(icon :to="{ name: 'warehouses' }")
+    v-layout(row wrap align-center)
+      v-btn(icon :to="{ name: 'warehouses' }" flat color="secondary")
           v-icon arrow_back
-      .title СКЛАД: {{ warehouse.name }} - {{ warehouse.owner.name }}
+      .title {{ warehouse.name }} {{ warehouse.company }}
       v-spacer
+      v-btn.mx-0(
+        v-for="(card, index) in cards"
+        :key="index"
+        color="secondary" flat
+        :to="card.to"
+      ) {{ card.title }}
+        v-icon.ml-2(small) {{ card.icon }}
       v-menu(bottom left)
         template(v-slot:activator="{ on }")
-          v-btn(icon v-on="on")
+          v-btn(icon v-on="on" flat color="secondary")
             v-icon more_vert
         v-list.border.pa-0
           v-list-tile(:to="{ name: 'template_warehouse', params: { id: warehouse.id }}")
             v-list-tile-content
               v-list-tile-title Изменить данные
             v-list-tile-action
-              v-icon(small) edit
+              v-icon(small color="secondary") edit
           v-list-tile(@click="remove")
             v-list-tile-content
               v-list-tile-title Удалить склад
             v-list-tile-action
-              v-icon(small) delete
+              v-icon(small color="secondary") delete
       v-flex(xs12)
-
-      v-flex(xs4 v-for="(card, index) in cards" :key="index")
-        v-list.pa-0.border(two-line)
-          v-list-tile(:to="card.to")
-            v-list-tile-content
-              v-list-tile-title {{ card.title }}
-            v-list-tile-action
-              v-icon(large) {{ card.icon }}
-
     router-view
 </template>
 
@@ -42,34 +40,34 @@ export default {
     return {
       cards: [
         {
-          icon: 'info',
+          icon: 'store',
           title: 'Информация',
           to: { name: 'information' },
         },
         {
-          icon: 'library_add',
+          icon: 'add',
           title: 'Добавление',
           to: { name: 'stock' },
         },
         {
-          icon: 'shopping_cart',
+          icon: 'arrow_right_alt',
           title: 'Перемещение',
-          to: { name: 'move' },
+          // to: { name: 'move' },
         },
         {
-          icon: 'book',
+          icon: 'hourglass_empty',
           title: 'Бронирование',
-          to: { name: 'booking' },
+          // to: { name: 'booking' },
         },
         {
-          icon: 'assignment_return',
+          icon: 'restore',
           title: 'Возврат',
-          to: { name: 'return' },
+          // to: { name: 'return' },
         },
         {
-          icon: 'check_circle',
+          icon: 'check',
           title: 'Инвентаризация',
-          to: { name: 'inventory' },
+          // to: { name: 'inventory' },
         },
       ],
       warehouse: {
