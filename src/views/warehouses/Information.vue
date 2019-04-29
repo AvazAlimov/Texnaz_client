@@ -24,23 +24,19 @@ export default {
       headers: [
         {
           text: 'Наименование',
-          value: 'name',
-          sortable: false,
+          value: 'product.name',
         },
         {
           text: 'Фасовка',
-          value: 'packing',
-          sortable: false,
+          value: 'product.packing',
         },
         {
           text: 'Цвет',
-          value: 'color',
-          sortable: false,
+          value: 'product.color',
         },
         {
           text: 'Количество',
           value: 'quantity',
-          sortable: false,
           width: 100,
         },
         {
@@ -58,7 +54,6 @@ export default {
         {
           text: 'Поврежден',
           value: 'defected',
-          sortable: false,
         },
       ],
       stocks: [],
