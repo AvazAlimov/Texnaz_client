@@ -45,9 +45,10 @@
                         td {{ props.item.color || '-' }}
 
     v-flex(xs6)
-      .border.white.pa-4
-        .title Выбрано: {{ items.length }}
+      .border.white.pb-1
+        .title.pa-4 Выбрано: {{ items.length }}
         v-data-table(
+          v-if="items.length"
           :headers="selected_headers"
           :items="items"
           hide-actions)
@@ -62,19 +63,41 @@
                     name="quantity"
                     v-validate="'required|decimal|min_value:0|is_not:0'")
               td
-                  v-text-field(
-                    color="secondary"
-                    v-model="props.item.arrival_date"
-                    mask="####-##-##"
-                    name="arrival_date"
-                    v-validate="'required'")
+                  v-dialog(
+                    v-model="props.item.arrival_date_modal"
+                    full-width
+                    width="290px"
+                  )
+                    template(v-slot:activator="{ on }")
+                      v-text-field(
+                        v-model="props.item.arrival_date"
+                        readonly
+                        v-on="on"
+                      )
+                    v-date-picker(
+                      v-model="props.item.arrival_date"
+                      no-title
+                      @input="props.item.arrival_date_modal = false"
+                      color="secondary"
+                    )
               td
-                  v-text-field(
-                    color="secondary"
-                    v-model="props.item.expiry_date"
-                    mask="####-##-##"
-                    name="expiry_date"
-                    v-validate="'required'")
+                  v-dialog(
+                    v-model="props.item.expiry_date_modal"
+                    full-width
+                    width="290px"
+                  )
+                    template(v-slot:activator="{ on }")
+                      v-text-field(
+                        v-model="props.item.expiry_date"
+                        readonly
+                        v-on="on"
+                      )
+                    v-date-picker(
+                      v-model="props.item.expiry_date"
+                      no-title
+                      @input="props.item.expiry_date_modal = false"
+                      color="secondary"
+                    )
               td
                   v-checkbox.mt-3(
                     v-model="props.item.defected"
@@ -83,7 +106,7 @@
           v-spacer
           v-btn(
             @click="submit"
-            :disabled="errors.items.length > 0"
+            :disabled="errors.items.length > 0 || items.length == 0"
             flat color="secondary") Добавить
 </template>
 
@@ -94,6 +117,7 @@ export default {
   name: 'Stock',
   data() {
     return {
+      modal: false,
       loading: false,
       warehouse: {
         owner: {},
@@ -123,7 +147,6 @@ export default {
           text: 'Дата прибытия',
           value: 'arrival_date',
           sortable: false,
-          width: 100,
         },
         {
           text: 'Срок действия',
