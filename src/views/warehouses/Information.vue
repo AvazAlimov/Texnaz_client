@@ -13,9 +13,9 @@
             td {{ props.item.product.packing }}
             td {{ props.item.product.color }}
             td {{ props.item.quantity }}
-            td {{ props.item.arrival_date }}
-            td {{ props.item.expiry_date }}
-            td.text-xs-center {{ props.item.defected ? 'поврежден' : '' }}
+            td {{ props.item.arrival_date.substring(0, 10) }}
+            td {{ props.item.expiry_date.substring(0, 10) }}
+            td {{ props.item.defected ? 'поврежден' : '' }}
 </template>
 
 <script>
