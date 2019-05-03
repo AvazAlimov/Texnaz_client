@@ -2,7 +2,7 @@
     v-layout(row wrap align-center)
         v-btn(icon :to="{ name: 'settings' }")
             v-icon arrow_back
-        .title КОНФИГУРАЦИИ
+        .title ПОКАЗАТЕЛИ
         v-flex(xs12).mt-3
             .border.white
                 v-data-table(:headers="headers" :items="configurations" hide-actions

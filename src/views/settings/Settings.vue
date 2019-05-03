@@ -94,7 +94,7 @@ export default {
           {
             key: 'configurations',
             to: '/configurations',
-            title: 'КОНФИГУРАЦИИ',
+            title: 'ПОКАЗАТЕЛИ',
             count: 0,
             icon: 'settings',
           },

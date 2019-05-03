@@ -2,7 +2,7 @@
   div
     v-layout(row wrap v-if="path == 'calculator'")
         v-flex(xs12).mb-3
-            .title КАЛЬКУЛЯТОР
+            .title РАСЧЕТЫ
             v-flex(xs12).mt-3
                 .border.white
                     v-data-table(

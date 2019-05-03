@@ -34,9 +34,9 @@
             PriceItem(:item="props.item" :batch="batch")
         v-divider
         v-layout(wrap row justify-end)
-          v-btn.mt-0.mb-1.ml-0.mr-0(flat color="secondary") Публиковать
+          v-btn.mt-0.mb-1.ml-0.mr-0(flat color="secondary") Утвердить
           v-btn.mt-0.mb-1.ml-0.mr-0(flat color="secondary") Сохранить
-          v-btn.mt-0.mb-1.ml-0.mr-1(flat color="secondary") Экспорт PDF
+          v-btn.mt-0.mb-1.ml-0.mr-1(flat color="secondary") Распечатать (pdf)
 </template>
 
 <script>
