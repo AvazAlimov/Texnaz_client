@@ -47,7 +47,7 @@ export default {
         },
         {
           icon: 'add',
-          title: 'Добавление',
+          title: 'Прием',
           to: { name: 'stock' },
         },
         {
