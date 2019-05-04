@@ -114,14 +114,14 @@ export default {
     },
     print() {
       const jsonData = this.items.map(item => ({
-        Наименование: item.product.name,
-        Фасовка: item.product.packing,
-        'Цена №1 (БН)': item.firstPrice,
-        'Цена №2 (БН)': item.mixPriceNonCash,
-        'Цена №2 (Н)': item.mixPriceCash,
-        'Цена №3 (Н)': item.secondPrice,
+        name: item.product.name,
+        packing: item.product.packing,
+        firstPrice: item.firstPrice,
+        mixPriceNonCash: item.mixPriceNonCash,
+        mixPriceCash: item.mixPriceCash,
+        secondPrice: item.secondPrice,
       }));
-      Export.downloadAsExcel(jsonData, 'Цены');
+      Export.priceToExcel(jsonData, 'Цены');
     },
   },
   created() {
