@@ -8,6 +8,7 @@ import ru from './translations/ru';
 import '@/components';
 import './registerServiceWorker';
 
+
 Vue.use(VeeValidate);
 Vue.config.productionTip = false;
 

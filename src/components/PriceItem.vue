@@ -6,7 +6,7 @@
       td.blue.lighten-5 {{ firstPrice }} сум
       td.orange.lighten-5 {{ mixPriceNonCash }} сум
       td.orange.lighten-5 {{ mixPriceCash }} $
-      td.green.lighten-5 {{ secondPrice | roundUp }} $
+      td.green.lighten-5 {{ secondPrice }} $
 </template>
 
 <script>
@@ -40,32 +40,32 @@ export default {
     // Размер акциза
     exciseValue() {
       return parseFloat(this.item.customs_price)
-              / this.item.product.packing
-              * (this.item.excise / 100);
+                / this.item.product.packing
+                * (this.item.excise / 100);
     },
     // Размер пошлины
     taxValue() {
       return parseFloat(this.item.customs_price)
-              / this.item.product.packing
-              * (this.item.tax / 100);
+                / this.item.product.packing
+                * (this.item.tax / 100);
     },
     // Размер очистки
     cleaningValue() {
       return (parseFloat(this.item.customs_price)
-              / this.item.product.packing
-              + this.exciseValue
-              + this.taxValue
-              + this.transport_expanses_per_unit_non_cash)
-              * (this.item.cleaning / 100);
+                / this.item.product.packing
+                + this.exciseValue
+                + this.taxValue
+                + this.transport_expanses_per_unit_non_cash)
+                * (this.item.cleaning / 100);
     },
     // Себестоимость БН
     costPriceNonCash() {
       return (this.transport_expanses_per_unit_non_cash
-              + parseFloat(this.item.customs_price)
-              / this.item.product.packing
-              + this.exciseValue
-              + this.taxValue
-              + this.cleaningValue);
+                + parseFloat(this.item.customs_price)
+                / this.item.product.packing
+                + this.exciseValue
+                + this.taxValue
+                + this.cleaningValue);
     },
     // Расходы периода (бн)
     period_expanses_non_cash() {
@@ -77,8 +77,8 @@ export default {
     },
     period_expanses_non_cash_per_unit() {
       return (this.costPriceNonCash
-              + this.transport_expanses_non_cash)
-              * (this.period_expanses_non_cash / 100);
+                + this.transport_expanses_non_cash)
+                * (this.period_expanses_non_cash / 100);
     },
     // Затраты на поставку (бн)
     transport_expanses_non_cash() {
@@ -91,9 +91,9 @@ export default {
     // Размер рентабельности (бн)
     nonCashProfitabilityValue() {
       return (this.costPriceNonCash // Себестоимость БН
-              + this.transport_expanses_non_cash
-              + this.period_expanses_non_cash_per_unit)// Затраты на поставку (бн)
-              * (parseFloat(this.item.non_cash_profitability) / 100);
+                + this.transport_expanses_non_cash
+                + this.period_expanses_non_cash_per_unit)// Затраты на поставку (бн)
+                * (parseFloat(this.item.non_cash_profitability) / 100);
     },
     // Размер налога на прибыль
     incomeTaxValue() {
@@ -102,11 +102,11 @@ export default {
     // Цена БН для списания
     firstCost() {
       return (this.costPriceNonCash
-                    + this.transport_expanses_non_cash
-                    + this.period_expanses_non_cash_per_unit
-                    + this.nonCashProfitabilityValue
-                    + this.incomeTaxValue)
-                    * (1 + this.item.vat / 100);
+                + this.transport_expanses_non_cash
+                + this.period_expanses_non_cash_per_unit
+                + this.nonCashProfitabilityValue
+                + this.incomeTaxValue)
+                * (1 + this.item.vat / 100);
     },
     // Расходы периода (н)
     period_expanses_cash() {
@@ -127,59 +127,71 @@ export default {
     // Себестоимость Н
     costPriceCash() {
       return (this.item.contract_price
-              - this.item.customs_price)
-              / this.item.product.packing;
+                - this.item.customs_price)
+                / this.item.product.packing;
     },
     period_expanses_cash_per_unit() {
       return (this.costPriceCash
-              + this.transport_expanses_per_unit_cash)
-              * (this.period_expanses_cash / 100);
+                + this.transport_expanses_per_unit_cash)
+                * (this.period_expanses_cash / 100);
     },
     // Рентабельность
     cashProfitabilityValue() {
       return (this.costPriceCash
-              + this.transport_expanses_per_unit_cash
-              + this.period_expanses_cash_per_unit)
-              * (parseFloat(this.item.cash_profitability) / 100);
+                + this.transport_expanses_per_unit_cash
+                + this.period_expanses_cash_per_unit)
+                * (parseFloat(this.item.cash_profitability) / 100);
     },
     // Цена Н для расчетов
     secondCost() {
       return this.costPriceCash
-              + this.period_expanses_cash_per_unit
-              + this.transport_expanses_per_unit_cash
-              + this.transport_expanses_cash
-              + this.cashProfitabilityValue;
+                + this.period_expanses_cash_per_unit
+                + this.transport_expanses_per_unit_cash
+                + this.transport_expanses_cash
+                + this.cashProfitabilityValue;
     },
     // Цена №1
     firstPrice() {
-      const value = ((this.mixPriceNonCash
-                      / (1 + this.item.vat / 100))
-                      + (this.mixPriceCash
-                      * (1 + this.item.income_tax / 100)
-                      * this.batch.market_rate))
-                      * (1 + this.item.vat / 100);
-      return Math.ceil((value) / 100) * 100;
+      const value = Math.ceil((((this.mixPriceNonCash
+                / (1 + this.item.vat / 100))
+                + (this.mixPriceCash
+                    * (1 + this.item.income_tax / 100)
+                    * this.batch.market_rate))
+                * (1 + this.item.vat / 100)) / 100) * 100;
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.item.firstPrice = value;
+      return value;
     },
     // Цена №2
     mixPriceCash() {
-      return Math.ceil((this.secondCost * this.item.product.packing) * 100) / 100;
+      const value = Math.ceil((this.secondCost * this.item.product.packing) * 100) / 100;
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.item.mixPriceCash = value;
+      return value;
     },
     mixPriceNonCash() {
-      const value = this.firstCost * this.batch.official_rate * this.item.product.packing;
-      return Math.ceil((value) / 100) * 100;
+      const value = Math.ceil(
+        (this.firstCost * this.batch.official_rate * this.item.product.packing) / 100,
+      ) * 100;
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.item.mixPriceNonCash = value;
+      return value;
     },
     // Цена №3
     secondPrice() {
-      return (this.secondCost
-                      + this.firstCost)
-                      * this.item.product.packing;
+      const value = Math.ceil(((this.secondCost
+                + this.firstCost)
+                * this.item.product.packing) * 100) / 100;
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.item.secondPrice = value;
+      return value;
     },
   },
 };
 </script>
 <style>
 td {
-  height: auto !important;
+    height: auto !important;
 }
 /* tr {
   border-bottom: 1px solid rgba(0,0,0,0.50) !important;

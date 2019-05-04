@@ -36,11 +36,12 @@
         v-layout(wrap row justify-end)
           v-btn.mt-0.mb-1.ml-0.mr-0(flat color="secondary") Утвердить
           v-btn.mt-0.mb-1.ml-0.mr-0(flat color="secondary") Сохранить
-          v-btn.mt-0.mb-1.ml-0.mr-1(flat color="secondary") Распечатать (pdf)
+          v-btn.mt-0.mb-1.ml-0.mr-1(flat color="secondary" @click="print") Распечатать
 </template>
 
 <script>
 import Batch from '@/services/Batch';
+import Export from '@/utils/Export';
 
 export default {
   name: 'Price',
@@ -110,6 +111,17 @@ export default {
         // eslint-disable-next-line no-param-reassign
         item[name] = value;
       });
+    },
+    print() {
+      const jsonData = this.items.map(item => ({
+        Наименование: item.product.name,
+        Фасовка: item.product.packing,
+        'Цена №1 (БН)': item.firstPrice,
+        'Цена №2 (БН)': item.mixPriceNonCash,
+        'Цена №2 (Н)': item.mixPriceCash,
+        'Цена №3 (Н)': item.secondPrice,
+      }));
+      Export.downloadAsExcel(jsonData, 'Цены');
     },
   },
   created() {
