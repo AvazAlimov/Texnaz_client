@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import Card from './Card.vue';
 import Info from './Info.vue';
 import Expanses from './Expanses.vue';
 import PriceItem from './PriceItem.vue';
@@ -9,6 +10,7 @@ import FirstCostItem from './FirstCostItem.vue';
 import SecondCostItem from './SecondCostItem.vue';
 
 const Components = {
+  Card,
   Info,
   Expanses,
   PriceItem,

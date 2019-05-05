@@ -3,8 +3,7 @@
     v-layout(row wrap v-if="path == 'calculator'")
         v-flex(xs12).mb-3
             .title РАСЧЕТЫ
-            v-flex(xs12).mt-3
-                .border.white
+                .border.white.mt-3
                     v-data-table(
                         :headers="headers"
                         :items="batches"
@@ -26,6 +25,25 @@
                     v-layout
                         v-spacer
                         v-btn.ma-2(flat @click="create" color="secondary") Добавить
+        v-flex(xs12).mb-3
+          .title УТВЕРЖДЕННЫЕ РАСЧЕТЫ
+          .border.white.mt-3
+                    v-data-table(
+                        :headers="headers"
+                        :items="batches"
+                        :loading="loading"
+                        hide-actions)
+                        template(v-slot:items="props")
+
+        v-flex(xs12)
+          .title СОХРАНЕННЫЕ
+          .border.white.mt-3
+                    v-data-table(
+                        :headers="headers"
+                        :items="batches"
+                        :loading="loading"
+                        hide-actions)
+                        template(v-slot:items="props")
     router-view
 </template>
 

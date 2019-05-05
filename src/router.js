@@ -79,6 +79,24 @@ const router = new Router({
           path: 'managers',
           name: 'managers',
           component: () => import('./views/managers/Managers.vue'),
+          children: [
+            {
+              path: ':id',
+              name: 'manager',
+              component: () => import('./views/managers/Manager.vue'),
+            },
+            {
+              path: 'template',
+              name: 'template_manager',
+              component: () => import('./views/managers/Template.vue'),
+              children: [
+                {
+                  path: ':id',
+                  component: () => import('./views/managers/Template.vue'),
+                },
+              ],
+            },
+          ],
         },
         {
           path: 'clients',
