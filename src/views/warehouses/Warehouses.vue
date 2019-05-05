@@ -4,22 +4,20 @@
         v-flex(xs12).mb-3
             .title СКЛАДЫ
         v-flex(xs4 v-for="(warehouse, index) in warehouses" :key="index")
-          v-list.pa-0.border(three-line)
-            v-list-tile(:to="{ name: 'warehouse', params: { id: warehouse.id }}")
-              v-list-tile-content
-                v-list-tile-title.secondary--text {{ warehouse.name }}
-                v-list-tile-sub-title.secondary--text.text--lighten-1 {{ warehouse.company }}
-                v-list-tile-sub-title.secondary--text.text--lighten-1 {{ warehouse.owner.name }}
-              v-list-tile-action
-                v-icon(large color="secondary") store_mall_directory
+          Card(
+            :title="warehouse.name"
+            :subtitle="warehouse.company"
+            :caption="warehouse.owner.name"
+            icon="store_mall_directory"
+            :to="{ name: 'warehouse', params: { id: warehouse.id }}"
+          )
         v-flex(xs4)
-          v-list.pa-0.border(three-line)
-            v-list-tile(:to="{ name: 'template_warehouse' }")
-              v-list-tile-content
-                v-list-tile-title.secondary--text Добавить
-                v-list-tile-sub-title.secondary--text Новый склад
-              v-list-tile-action
-                v-icon(large color="secondary") add
+          Card(
+            title="Добавить"
+            subtitle="Новый склад"
+            icon="add"
+            :to="{ name: 'template_warehouse' }"
+          )
     router-view
 </template>
 
