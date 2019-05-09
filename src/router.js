@@ -252,6 +252,24 @@ const router = new Router({
               ],
             },
 
+            // EXPANSES
+            {
+              path: 'regions',
+              name: 'regions',
+              component: () => import('./views/settings/Regions.vue'),
+            },
+            {
+              path: 'region',
+              name: 'region',
+              component: () => import('./views/settings/Region.vue'),
+              children: [
+                {
+                  path: ':id',
+                  component: () => import('./views/settings/Region.vue'),
+                },
+              ],
+            },
+
             // CONFIGURATIONS
             {
               path: 'configurations',

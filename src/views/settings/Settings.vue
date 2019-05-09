@@ -24,6 +24,7 @@ import User from '@/services/User';
 import Configuration from '@/services/Configuration';
 import Brand from '@/services/Brand';
 import Expanse from '@/services/Expanse';
+import Region from '@/services/Region';
 
 export default {
   name: 'Database',
@@ -99,6 +100,13 @@ export default {
             icon: 'settings',
           },
           {
+            key: 'regions',
+            to: '/regions',
+            title: 'Регионы',
+            count: 0,
+            icon: 'map',
+          },
+          {
             key: 'themes',
             to: '/themes',
             title: 'Темы',
@@ -136,6 +144,7 @@ export default {
         this.getCount(Configuration, 'configurations'),
         this.getCount(Brand, 'brands'),
         this.getCount(Expanse, 'expanses'),
+        this.getCount(Region, 'regions'),
       ]).then((results) => {
         results.forEach((element) => {
           const cards = [];
