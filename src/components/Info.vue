@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-expansion-panel.border(v-model="panel" expand)
+  v-expansion-panel(v-model="panel" expand)
     v-expansion-panel-content
       template(v-slot:header)
         .title Информация о партии

@@ -1,42 +1,41 @@
 <template lang="pug">
-  v-layout.ma-2(row wrap)
+  v-layout(row wrap)
     v-flex(xs12)
       Info(:batch="batch" :step="5")
-    v-flex(xs12)
-      .border
-        v-layout.pt-4(wrap row)
-          v-text-field.mx-4(
-            v-model="incomeTax"
-            label="Налог на прибыль %"
-            @input="applyToAll('income_tax', incomeTax)"
-            color="secondary"
-          )
-          v-text-field.mx-4(
-            v-model="nonCashProfitability"
-            label="Рентабельность (БН) %"
-            @input="applyToAll('non_cash_profitability', nonCashProfitability)"
-            color="secondary"
-          )
-          v-text-field.mx-4(
-            v-model="cashProfitability"
-            label="Рентабельность (Н) %"
-            @input="applyToAll('cash_profitability', cashProfitability)"
-            color="secondary"
-          )
-        v-divider
-        v-data-table(
-          :headers="headers"
-          :items="items"
-          no-data-text="Ничего не выбрано"
-          fixed-headers
-          hide-actions)
-          template(v-slot:items="props")
-            PriceItem(:item="props.item" :batch="batch")
-        v-divider
-        v-layout(wrap row justify-end)
-          v-btn.mt-0.mb-1.ml-0.mr-0(flat color="secondary") Утвердить
-          v-btn.mt-0.mb-1.ml-0.mr-0(flat color="secondary") Сохранить
-          v-btn.mt-0.mb-1.ml-0.mr-1(flat color="secondary" @click="print") Распечатать
+      v-divider
+      v-layout.pt-3(wrap row)
+        v-text-field.mx-4(
+          v-model="incomeTax"
+          label="Налог на прибыль %"
+          @input="applyToAll('income_tax', incomeTax)"
+          color="secondary"
+        )
+        v-text-field.mx-4(
+          v-model="nonCashProfitability"
+          label="Рентабельность (БН) %"
+          @input="applyToAll('non_cash_profitability', nonCashProfitability)"
+          color="secondary"
+        )
+        v-text-field.mx-4(
+          v-model="cashProfitability"
+          label="Рентабельность (Н) %"
+          @input="applyToAll('cash_profitability', cashProfitability)"
+          color="secondary"
+        )
+      v-divider
+      v-data-table(
+        :headers="headers"
+        :items="items"
+        no-data-text="Ничего не выбрано"
+        fixed-headers
+        hide-actions)
+        template(v-slot:items="props")
+          PriceItem(:item="props.item" :batch="batch")
+      v-divider
+      v-layout(wrap row justify-end)
+        v-btn.mt-0.mb-1.ml-0.mr-0(flat color="secondary") Утвердить
+        //v-btn.mt-0.mb-1.ml-0.mr-0(flat color="secondary") Сохранить
+        v-btn.mt-0.mb-1.ml-0.mr-1(flat color="secondary" @click="print") Распечатать
 </template>
 
 <script>

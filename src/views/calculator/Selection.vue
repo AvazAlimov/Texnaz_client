@@ -1,13 +1,11 @@
 <template lang="pug">
-  v-layout.ma-2(row wrap align-center)
+  v-layout(row wrap align-center)
     v-flex(xs12)
       Info(:batch="batch" :step="2")
-
-    v-flex(xs12)
+      v-divider
       SearchProduct(v-model="product" :items="items")
-
-    v-flex(xs12)
-      .border.white
+      v-divider
+      .white
         .title.pa-4 Выбранные товары: {{ items.length }}
         v-divider
         v-data-table(
@@ -18,10 +16,10 @@
           hide-actions)
           template(v-slot:items="props")
             SelectionItem(:item="props.item" :remove="remove")
-    v-flex(xs12)
+      v-divider
       v-layout(align-center)
         v-spacer
-        v-btn.ma-2(flat color="primary"
+        v-btn.mt-0.mb-1.mx-0(flat color="secondary"
           :disabled="errors.items.length > 0 || items.length == 0"
           :loading="loading"
           @click="submit") Завершить

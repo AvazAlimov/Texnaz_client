@@ -30,12 +30,12 @@
           .border.white.mt-3
                     v-data-table(
                         :headers="headers"
-                        :items="batches"
+                        :items="[]"
                         :loading="loading"
                         hide-actions)
                         template(v-slot:items="props")
 
-        v-flex(xs12)
+        //- v-flex(xs12)
           .title СОХРАНЕННЫЕ
           .border.white.mt-3
                     v-data-table(

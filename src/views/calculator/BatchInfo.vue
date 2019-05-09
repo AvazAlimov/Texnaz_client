@@ -59,7 +59,7 @@
     v-flex(xs12)
         v-layout
             v-spacer
-            v-btn.ma-2(flat color="primary"
+            v-btn.ma-2(flat color="secondary"
               :disabled="errors.items.length > 0"
               :loading="loading" @click="submit") Подтвердить
 </template>

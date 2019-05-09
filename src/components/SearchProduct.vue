@@ -1,5 +1,5 @@
 <template lang="pug">
-    .border.white
+    .white
         .title.pt-4.px-4 Поиск товаров
         v-layout(row wrap)
             v-flex(xs6).pl-4

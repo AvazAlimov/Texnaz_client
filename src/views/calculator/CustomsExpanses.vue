@@ -1,46 +1,39 @@
 <template lang="pug">
-    v-layout.ma-2(row wrap)
+    v-layout(row wrap)
         v-flex(xs12)
           Info(:batch="batch" :step="4")
-        v-flex(xs12)
-          .border.pa-4
-            v-layout(wrap row justify-space-between)
-              v-flex(xs3)
-                v-text-field(v-model="incomeTax" label="Налог на прибыль %")
-              v-flex(xs1)
-                v-btn.mx-0.mt-3(
-                  icon
-                  @click="applyToAll('income_tax', incomeTax)"
-                )
-                  v-icon check
-              v-flex(xs3)
-                v-text-field(v-model="nonCashProfitability" label="Рентабельность (БН) %")
-              v-flex(xs1)
-                v-btn.mx-0.mt-3(
-                  icon
-                  @click="applyToAll('non_cash_profitability', nonCashProfitability)"
-                )
-                  v-icon check
-              v-flex(xs3)
-                v-text-field(v-model="cashProfitability" label="Рентабельность (Н) %")
-              v-flex(xs1)
-                v-btn.mx-0.mt-3(
-                  icon
-                  @click="applyToAll('cash_profitability', cashProfitability)"
-                )
-                  v-icon check
-        v-flex(xs12)
-          v-data-table.border(
+          v-divider
+          v-layout.pt-3(wrap row)
+            v-text-field.mx-4(
+              v-model="incomeTax"
+              label="Налог на прибыль %"
+              @input="applyToAll('income_tax', incomeTax)"
+              color="secondary"
+            )
+            v-text-field.mx-4(
+              v-model="nonCashProfitability"
+              label="Рентабельность (БН) %"
+              @input="applyToAll('non_cash_profitability', nonCashProfitability)"
+              color="secondary"
+            )
+            v-text-field.mx-4(
+              v-model="cashProfitability"
+              label="Рентабельность (Н) %"
+              @input="applyToAll('cash_profitability', cashProfitability)"
+              color="secondary"
+            )
+          v-divider
+          v-data-table(
               :headers="headers"
               :items="items"
               no-data-text="Ничего не выбрано"
               hide-actions)
               template(v-slot:items="props")
                   CustomsItem(:item="props.item" :batch="batch")
-        v-flex(xs12)
+          v-divider
           v-layout
             v-spacer
-            v-btn.ma-2(flat color="primary"
+            v-btn.mt-0.mb-1.mx-0(flat color="secondary"
               :loading="loading"
               :disabled="errors.items.length > 0"
               @click="submit") Завершить
