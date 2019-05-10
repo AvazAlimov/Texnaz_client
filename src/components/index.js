@@ -4,6 +4,7 @@ import Info from './Info.vue';
 import Expanses from './Expanses.vue';
 import PriceItem from './PriceItem.vue';
 import CustomsItem from './CustomsItem.vue';
+import PricesTable from './PricesTable.vue';
 import SelectionItem from './SelectionItem.vue';
 import SearchProduct from './SearchProduct.vue';
 import FirstCostItem from './FirstCostItem.vue';
@@ -16,6 +17,7 @@ const Components = {
   Expanses,
   PriceItem,
   CustomsItem,
+  PricesTable,
   SelectionItem,
   SearchProduct,
   FirstCostItem,

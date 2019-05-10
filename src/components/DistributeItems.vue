@@ -132,10 +132,10 @@ export default {
         Batch.update(this.batch.id, this.batch),
         Price.createMultiple(this.items.map(item => ({
           productId: item.product.id,
-          non_cash: item.firstPrice,
-          mix_non_cash: item.mixPriceNonCash,
-          mix_cash: item.mixPriceCash,
-          cash: item.secondPrice,
+          firstPrice: item.firstPrice,
+          mixPriceNonCash: item.mixPriceNonCash,
+          mixPriceCash: item.mixPriceCash,
+          secondPrice: item.secondPrice,
         }))),
       ])
         .then(() => {

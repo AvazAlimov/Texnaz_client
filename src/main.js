@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import './plugins/vuetify';
 import VeeValidate, { Validator } from 'vee-validate';
+import moment from 'vue-moment';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -10,6 +11,7 @@ import './registerServiceWorker';
 
 
 Vue.use(VeeValidate);
+Vue.use(moment);
 Vue.config.productionTip = false;
 
 Validator.localize('ru', ru);
