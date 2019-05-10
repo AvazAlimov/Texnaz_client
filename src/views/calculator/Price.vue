@@ -33,7 +33,10 @@
           PriceItem(:item="props.item" :batch="batch")
       v-divider
       v-layout(wrap row justify-end)
-        v-btn.mt-0.mb-1.ml-0.mr-0(flat color="secondary") Утвердить
+        DistributeItems(
+          v-if="items.length"
+          :items="items"
+        )
         //v-btn.mt-0.mb-1.ml-0.mr-0(flat color="secondary") Сохранить
         v-btn.mt-0.mb-1.ml-0.mr-1(flat color="secondary" @click="print") Распечатать
 </template>
@@ -63,10 +66,9 @@ export default {
           align: 'center',
         },
         {
-          text: 'Цвет',
-          value: 'color',
+          text: 'Количество',
+          value: 'quantity',
           align: 'center',
-          sortable: false,
         },
         {
           text: 'Цена №1 (БН)',

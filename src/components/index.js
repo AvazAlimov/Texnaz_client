@@ -8,6 +8,7 @@ import SelectionItem from './SelectionItem.vue';
 import SearchProduct from './SearchProduct.vue';
 import FirstCostItem from './FirstCostItem.vue';
 import SecondCostItem from './SecondCostItem.vue';
+import DistributeItems from './DistributeItems.vue';
 
 const Components = {
   Card,
@@ -19,6 +20,7 @@ const Components = {
   SearchProduct,
   FirstCostItem,
   SecondCostItem,
+  DistributeItems,
 };
 
 Object.keys(Components).forEach((name) => {
