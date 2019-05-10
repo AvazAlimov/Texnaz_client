@@ -16,7 +16,7 @@
           template(v-slot:items="props")
             tr
               td {{ props.item.product.name }}
-              td {{ props.item.warehouses.reduce((a, b) => parseFloat(a) + (parseFloat(b['quantity']) || 0), 0) }}
+              td {{props.item.warehouses.reduce((a,b)=>parseFloat(a)+(parseFloat(b['quantity'])||0),0)}}
                 |  / {{ props.item.quantity }}
               td(v-for="(warehouse, index) in props.item.warehouses" :key="index")
                 v-text-field.ma-0(
@@ -48,6 +48,7 @@
 import Warehouse from '@/services/Warehouse';
 import PreStock from '@/services/PreStock';
 import Batch from '@/services/Batch';
+import Price from '@/services/Price';
 
 export default {
   name: 'DistributeItems',
@@ -125,10 +126,19 @@ export default {
           }
         });
       });
-      PreStock.createMultiple(preStocks)
+      this.batch.approved = true;
+      Promise.all([
+        PreStock.createMultiple(preStocks),
+        Batch.update(this.batch.id, this.batch),
+        Price.createMultiple(this.items.map(item => ({
+          productId: item.product.id,
+          non_cash: item.firstPrice,
+          mix_non_cash: item.mixPriceNonCash,
+          mix_cash: item.mixPriceCash,
+          cash: item.secondPrice,
+        }))),
+      ])
         .then(() => {
-          this.batch.approved = true;
-          Batch.update(this.batch.id, this.batch);
           this.$router.push({ name: 'calculator' });
         })
         .catch((error) => {
