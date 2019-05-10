@@ -6,7 +6,7 @@
                 .border.white.mt-3
                     v-data-table(
                         :headers="headers"
-                        :items="batches"
+                        :items="notApprovedBatches"
                         :loading="loading"
                         hide-actions)
                         template(v-slot:items="props")
@@ -30,10 +30,21 @@
           .border.white.mt-3
                     v-data-table(
                         :headers="headers"
-                        :items="[]"
+                        :items="approvedBatches"
                         :loading="loading"
                         hide-actions)
                         template(v-slot:items="props")
+                          td {{ props.item.name || '-' }}
+                          td {{ props.item.number || '-' }}
+                          td {{ props.item.date ? props.item.date.substring(0, 10) : '-' }}
+                          td {{ props.item.Warehouse ? props.item.Warehouse.name : '-' }}
+                          td
+                            v-layout
+                                v-btn.mx-0(icon
+                                  :to="{name: 'batch_info', params: {id: props.item.id}}")
+                                  v-icon(small color="secondary") edit
+                                v-btn.mx-0(icon @click="remove(props.item.id)")
+                                  v-icon(small color="red") delete
 
         //- v-flex(xs12)
           .title СОХРАНЕННЫЕ
@@ -83,6 +94,12 @@ export default {
   computed: {
     path() {
       return this.$route.name;
+    },
+    approvedBatches() {
+      return this.batches.filter(batch => batch.approved);
+    },
+    notApprovedBatches() {
+      return this.batches.filter(batch => !batch.approved);
     },
   },
   methods: {

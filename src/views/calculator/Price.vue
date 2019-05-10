@@ -35,6 +35,7 @@
       v-layout(wrap row justify-end)
         DistributeItems(
           v-if="items.length"
+          :batch="batch"
           :items="items"
         )
         //v-btn.mt-0.mb-1.ml-0.mr-0(flat color="secondary") Сохранить
