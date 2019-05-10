@@ -36,6 +36,12 @@
                     @click="submit"
                     :disabled="errors.items.length > 0"
                 ) Утвердить
+                v-btn.ma-0(
+                    flat
+                    color="secondary"
+                    @click="dialog = false"
+                ) Отменить
+
 </template>
 
 <script>
