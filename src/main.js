@@ -8,12 +8,11 @@ import store from './store';
 import ru from './translations/ru';
 import '@/components';
 import './registerServiceWorker';
-
+import '@/assets/style/app.css';
 
 Vue.use(VeeValidate);
 Vue.use(moment);
 Vue.config.productionTip = false;
-
 Validator.localize('ru', ru);
 
 Vue.filter('roundUp', (value) => {

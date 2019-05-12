@@ -31,6 +31,10 @@ const router = new Router({
       component: () => import('./views/Home.vue'),
       children: [
         {
+          path: '',
+          component: () => import('./views/analytics/Analytics.vue'),
+        },
+        {
           path: 'calculator',
           name: 'calculator',
           component: () => import('./views/calculator/Calculator.vue'),
