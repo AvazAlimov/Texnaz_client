@@ -118,6 +118,18 @@ const router = new Router({
           path: 'prices',
           name: 'prices',
           component: () => import('./views/prices/Prices.vue'),
+          children: [
+            {
+              path: 'priced',
+              name: 'priced',
+              component: () => import('./views/prices/PricedProducts.vue'),
+            },
+            {
+              path: 'unpriced',
+              name: 'unpriced',
+              component: () => import('./views/prices/UnpricedProducts.vue'),
+            },
+          ],
         },
         {
           path: '/settings',
