@@ -117,6 +117,7 @@ const router = new Router({
         {
           path: 'prices',
           name: 'prices',
+          redirect: { name: 'priced' },
           component: () => import('./views/prices/Prices.vue'),
           children: [
             {

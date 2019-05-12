@@ -2,7 +2,7 @@
     v-layout(row wrap)
         v-flex(xs12).mb-3
             v-layout(row align-center)
-                .title ЦЕНЫ
+                .title.ml-1 ЦЕНЫ
                 v-spacer
                 v-btn.mx-0(
                     small
