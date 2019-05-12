@@ -104,6 +104,11 @@ const router = new Router({
           component: () => import('./views/clients/Clients.vue'),
         },
         {
+          path: 'prices',
+          name: 'prices',
+          component: () => import('./views/prices/Prices.vue'),
+        },
+        {
           path: '/settings',
           name: 'settings',
           component: () => import('./views/settings/Settings.vue'),

@@ -5,13 +5,32 @@
     :loading="loading"
     hide-actions)
     template(v-slot:items="props")
-      td {{ props.item.product.Brand.name }} {{ props.item.product.name }}
-      td {{ props.item.product.packing }}
-      td {{ props.item.firstPrice }}
-      td {{ props.item.mixPriceNonCash }}
-      td {{ props.item.mixPriceCash }}
-      td {{ props.item.secondPrice }}
-      td {{ props.item.createdAt | moment("HH:mm DD-MM-YYYY") }}
+      tr(@click="props.expanded = !props.expanded")
+        td {{ props.index + 1 }}
+        td {{ props.item.product.Brand.name }} {{ props.item.product.name }}
+        td.text-xs-center {{ props.item.product.packing }}
+        td.blue.lighten-5 {{ props.item.firstPrice }}
+        td.orange.lighten-5 {{ props.item.mixPriceNonCash }}
+        td.orange.lighten-5 {{ props.item.mixPriceCash }}
+        td.green.lighten-5 {{ props.item.secondPrice }}
+        td {{ props.item.createdAt | moment("HH:mm DD-MM-YYYY") }}
+    template(v-slot:expand="props")
+      v-data-table(
+        hide-headers
+        :headers="headers"
+        :items="props.item.prices"
+        :loading="loading"
+        hide-actions
+      )
+        template(v-slot:items="prices")
+          tr(@click="prices.expanded = !prices.expanded")
+            td {{ props.index + 1 }}.{{ prices.index + 1 }}
+            td.blue.lighten-5 {{ prices.item.firstPrice }}
+            td.orange.lighten-5 {{ prices.item.mixPriceNonCash }}
+            td.orange.lighten-5 {{ prices.item.mixPriceCash }}
+            td.green.lighten-5 {{ prices.item.secondPrice }}
+            td {{ prices.item.createdAt | moment("HH:mm DD-MM-YYYY") }}
+      v-divider
 </template>
 
 <script>
@@ -23,6 +42,11 @@ export default {
     return {
       loading: true,
       headers: [{
+        text: '#',
+        value: 'index',
+        sortable: false,
+      },
+      {
         text: 'Наименование',
         value: 'product.name',
       },
@@ -54,6 +78,7 @@ export default {
       {
         text: 'Дата генерации',
         value: 'createdAt',
+        width: '0',
         sortable: false,
       }],
       prices: [],
@@ -64,11 +89,26 @@ export default {
       this.loading = true;
       this.prices = [];
       Price.getAll()
-        .then((prices) => { this.prices = prices; })
+        .then((prices) => {
+          this.prices = this.group(prices.sort((a, b) => (a.id < b.id ? 0 : -1)));
+        })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
         })
         .finally(() => { this.loading = false; });
+    },
+    group(prices) {
+      const groupedPrices = [];
+      prices.forEach((price) => {
+        const groupedPrice = groupedPrices.find(item => item.product.id === price.product.id);
+        if (groupedPrice) {
+          groupedPrice.prices.push(price);
+        } else {
+          const index = groupedPrices.push(price) - 1;
+          groupedPrices[index].prices = [];
+        }
+      });
+      return groupedPrices;
     },
   },
   created() {
@@ -76,3 +116,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+.bottom__border {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+</style>

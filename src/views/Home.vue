@@ -36,7 +36,7 @@ export default {
   name: 'Home',
   data() {
     return {
-      drawer: false,
+      drawer: true,
       user: {},
       items: [
         {
@@ -48,6 +48,11 @@ export default {
           icon: 'money',
           title: 'Ценообразование',
           to: '/calculator',
+        },
+        {
+          icon: 'list',
+          title: 'Цены',
+          to: '/prices',
         },
         {
           icon: 'store_mall_directory',

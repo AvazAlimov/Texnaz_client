@@ -45,10 +45,6 @@
                                   v-icon(small color="secondary") edit
                                 v-btn.mx-0(icon @click="remove(props.item.id)")
                                   v-icon(small color="red") delete
-        v-flex(xs12).mb-3
-          .title ЦЕНЫ
-          .border.white.mt-3
-            PricesTable
         //- v-flex(xs12)
           .title СОХРАНЕННЫЕ
           .border.white.mt-3
