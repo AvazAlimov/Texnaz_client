@@ -102,6 +102,17 @@ const router = new Router({
           path: 'clients',
           name: 'clients',
           component: () => import('./views/clients/Clients.vue'),
+          children: [
+            {
+              path: 'client',
+              name: 'client',
+              component: () => import('./views/clients/Client.vue'),
+              children: [{
+                path: ':id',
+                component: () => import('./views/clients/Client.vue'),
+              }],
+            },
+          ],
         },
         {
           path: 'prices',

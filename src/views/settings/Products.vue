@@ -4,7 +4,7 @@
             v-icon arrow_back
         .title ТОВАРЫ
         v-spacer
-        v-btn.ma-2(flat color="secondary"
+        v-btn(flat color="secondary"
             :to="{ name: 'product' }"
           ) Добавить
         v-flex(xs12).mt-3
