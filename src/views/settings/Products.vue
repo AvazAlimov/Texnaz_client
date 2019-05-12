@@ -3,11 +3,15 @@
         v-btn(icon :to="{ name: 'settings' }")
             v-icon arrow_back
         .title ТОВАРЫ
+        v-spacer
+        v-btn.ma-2(flat color="secondary"
+            :to="{ name: 'product' }"
+          ) Добавить
         v-flex(xs12).mt-3
             .border.white
                 v-data-table(:headers="headers" :items="products" hide-actions :loading="loading")
                     template(v-slot:items="props")
-                        td {{ props.item.name }}
+                        td {{ props.item.Brand.name }} {{ props.item.name }}
                         td {{ props.item.code }}
                         td {{ props.item.packing }}
                         td {{ props.item.color }}
