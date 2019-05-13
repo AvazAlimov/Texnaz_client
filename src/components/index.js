@@ -11,6 +11,8 @@ import FirstCostItem from './FirstCostItem.vue';
 import SecondCostItem from './SecondCostItem.vue';
 import DistributeItems from './DistributeItems.vue';
 
+import PreStockItem from './warehouse/PreStockItem.vue';
+
 const Components = {
   Card,
   Info,
@@ -23,6 +25,7 @@ const Components = {
   FirstCostItem,
   SecondCostItem,
   DistributeItems,
+  PreStockItem,
 };
 
 Object.keys(Components).forEach((name) => {

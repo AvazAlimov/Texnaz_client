@@ -5,14 +5,6 @@
           v-icon arrow_back
       .title {{ warehouse.name }} {{ warehouse.company }}
       v-spacer
-      v-btn.mx-0(
-        small
-        v-for="(card, index) in cards"
-        :key="index"
-        color="secondary" flat
-        :to="card.to"
-      ) {{ card.title }}
-        v-icon.ml-2(small) {{ card.icon }}
       v-menu(bottom left)
         template(v-slot:activator="{ on }")
           v-btn(icon v-on="on" flat color="secondary")
@@ -28,12 +20,31 @@
               v-list-tile-title Удалить склад
             v-list-tile-action
               v-icon(small color="secondary") delete
+    v-layout(row wrap)
+      v-btn.mx-0(
+        small
+        v-for="(card, index) in cards"
+        :key="index"
+        color="secondary" flat
+        :to="card.to"
+      ) {{ card.title }}
+        v-icon.ml-2(small) {{ card.icon }}
+      v-badge(color="red" overlap :value="prestocks.length")
+        template(v-slot:badge)
+          span {{ prestocks.length }}
+        v-btn.mx-0(
+          small flat
+          color="secondary"
+          :to="{name: 'prestocks'}"
+        ) Прием
+          v-icon.ml-2(small) add
       v-flex(xs12)
-    router-view
+        router-view
 </template>
 
 <script>
 import Warehouse from '@/services/Warehouse';
+import PreStock from '@/services/PreStock';
 
 export default {
   name: 'Warehouse',
@@ -44,11 +55,6 @@ export default {
           icon: 'store',
           title: 'Информация',
           to: { name: 'information' },
-        },
-        {
-          icon: 'add',
-          title: 'Прием',
-          to: { name: 'stock' },
         },
         {
           icon: 'arrow_right_alt',
@@ -79,6 +85,7 @@ export default {
       warehouse: {
         owner: {},
       },
+      prestocks: [],
     };
   },
   computed: {
@@ -87,9 +94,12 @@ export default {
     },
   },
   methods: {
-    getWarehouse() {
-      Warehouse.get(this.$route.params.id)
-        .then((warehouse) => { this.warehouse = warehouse; })
+    getAll() {
+      Promise.all([
+        Warehouse.get(this.$route.params.id),
+        PreStock.getByWarehouse(this.$route.params.id),
+      ])
+        .then((results) => { [this.warehouse, this.prestocks] = results; })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
           this.$router.push({ name: 'warehouses' });
@@ -107,7 +117,7 @@ export default {
     },
   },
   created() {
-    this.getWarehouse();
+    this.getAll();
   },
 };
 </script>

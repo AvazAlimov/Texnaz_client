@@ -340,6 +340,11 @@ const router = new Router({
                   name: 'stock',
                   component: () => import('./views/warehouses/Stock.vue'),
                 },
+                {
+                  path: 'prestocks',
+                  name: 'prestocks',
+                  component: () => import('./views/warehouses/PreStocks.vue'),
+                },
               ],
             },
             {
