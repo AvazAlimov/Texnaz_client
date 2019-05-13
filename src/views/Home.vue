@@ -40,8 +40,8 @@ export default {
       user: {},
       items: [
         {
-          icon: 'home',
-          title: 'Главный',
+          icon: 'data_usage',
+          title: 'Статистика',
           to: '/',
         },
         {
