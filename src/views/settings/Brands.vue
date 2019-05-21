@@ -9,18 +9,19 @@
                     template(v-slot:items="props")
                         td {{ props.item.name }}
                         td {{ props.item.country }}
+                        td {{ props.item.manufacturer }}
                         td
                             v-layout
                                 v-btn(icon
                                   :to="{ name: 'brand', params: { id: props.item.id }}"
                                 ).mx-0
-                                    v-icon(color="primary" small) edit
+                                    v-icon(color="secondary" small) edit
                                 v-btn(icon @click="remove(props.item.id)").mx-0
-                                    v-icon(color="primary" small) delete
+                                    v-icon(color="secondary" small) delete
                 v-divider
                 v-layout
                     v-spacer
-                    v-btn.ma-2(flat color="primary"
+                    v-btn.ma-2(flat color="secondary"
                       :to="{ name: 'brand' }"
                     ) Добавить
 </template>
@@ -40,6 +41,10 @@ export default {
         {
           text: 'Страна',
           value: 'country',
+        },
+        {
+          text: 'Производитель',
+          value: 'manufacturer',
         },
         {
           sortable: false,

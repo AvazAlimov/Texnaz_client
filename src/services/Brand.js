@@ -5,9 +5,9 @@ export default {
 
   get: id => execute(Api().get(`brands/${id}`)),
 
-  create: ({ name, country }) => execute(Api().post('brands/', { name, country })),
+  create: ({ name, country, manufacturer }) => execute(Api().post('brands/', { name, country, manufacturer })),
 
-  update: (id, { name, country }) => execute(Api().post(`brands/${id}`, { name, country })),
+  update: (id, { name, country, manufacturer }) => execute(Api().post(`brands/${id}`, { name, country, manufacturer })),
 
   delete: id => Api().delete(`brands/${id}`),
 };
