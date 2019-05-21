@@ -39,6 +39,14 @@ export default {
           value: 'product.name',
         },
         {
+          text: 'Фасовка',
+          value: 'product.packing',
+        },
+        {
+          text: 'Цвет',
+          value: 'product.color',
+        },
+        {
           text: 'Количество',
           value: 'quantity',
           sortable: false,

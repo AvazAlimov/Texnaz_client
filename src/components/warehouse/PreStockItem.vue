@@ -2,6 +2,8 @@
     tr
         td {{ index + 1 }}
         td {{ item.product.Brand.name }} {{ item.product.name }}
+        td {{ item.product.packing }}
+        td {{ item.product.color || '-' }}
         td {{ item.quantity }}
         td
             v-layout(row align-center)
