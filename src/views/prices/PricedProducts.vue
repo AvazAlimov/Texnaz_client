@@ -10,22 +10,23 @@
           td {{ props.index + 1 }}
           td {{ props.item.product.Brand.name }} {{ props.item.product.name }}
           td.text-xs-center {{ props.item.product.packing }}
-          td.blue.lighten-5 {{ props.item.firstPrice }}
-          td.orange.lighten-5 {{ props.item.mixPriceNonCash }}
-          td.orange.lighten-5 {{ props.item.mixPriceCash }}
-          td.green.lighten-5 {{ props.item.secondPrice }}
+          td.blue.lighten-4 {{ props.item.firstPrice }}
+          td.orange.lighten-4 {{ props.item.mixPriceNonCash }}
+          td.orange.lighten-4 {{ props.item.mixPriceCash }}
+          td.green.lighten-4 {{ props.item.secondPrice }}
           td {{ props.item.createdAt | moment("HH:mm DD-MM-YYYY") }}
       template(v-slot:expand="props")
-        v-data-table(
-          hide-headers
-          :headers="headers"
+        v-data-table#expanded(
+          :headers="expandedHeaders"
           :items="props.item.prices"
           :loading="loading"
           hide-actions
         )
           template(v-slot:items="prices")
             tr(@click="prices.expanded = !prices.expanded")
-              td {{ props.index + 1 }}.{{ prices.index + 1 }}
+              td
+              td
+              td
               td.blue.lighten-5 {{ prices.item.firstPrice }}
               td.orange.lighten-5 {{ prices.item.mixPriceNonCash }}
               td.orange.lighten-5 {{ prices.item.mixPriceCash }}
@@ -46,44 +47,68 @@ export default {
         text: '#',
         value: 'index',
         sortable: false,
+        width: 1,
+        invisible: true,
       },
       {
         text: 'Наименование',
         value: 'product.name',
+        invisible: true,
       },
       {
         text: 'Фасовка',
         value: 'product.packing',
         align: 'center',
+        width: 1,
+        invisible: true,
       },
       {
         text: 'Цена №1 (БН)',
         value: 'price',
         sortable: false,
+        width: 1,
       },
       {
         text: 'Цена №2 (БН)',
         value: 'price',
         sortable: false,
+        width: 1,
       },
       {
         text: 'Цена №2 (Н)',
         value: 'price',
         sortable: false,
+        width: 1,
       },
       {
         text: 'Цена №3 (Н)',
         value: 'price',
         sortable: false,
+        width: 1,
       },
       {
         text: 'Дата генерации',
         value: 'createdAt',
-        width: '0',
         sortable: false,
+        width: 1,
       }],
       prices: [],
     };
+  },
+  computed: {
+    expandedHeaders() {
+      const columns = [];
+      this.headers.forEach((column) => {
+        columns.push({
+          text: column.text,
+          value: column.value,
+          sortable: false,
+          width: column.width,
+          class: [column.invisible ? 'transparent--text' : 'gray--text'],
+        });
+      });
+      return columns;
+    },
   },
   methods: {
     getAll() {
