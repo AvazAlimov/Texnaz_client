@@ -22,6 +22,12 @@
                     clearable
                     color="secondary"
                 )
+            v-flex(xs12).px-4
+                v-text-field(
+                    v-model="code"
+                    label="Код товара"
+                    color="secondary"
+                )
             v-flex(xs12).px-4.mb-3
                 v-text-field(
                     v-model="query"
@@ -42,9 +48,10 @@
                         )
                             td
                               v-icon(v-if="contains(props.item.id)" small) check
-                            td {{ props.item.name }}
+                            td {{ props.item.code }}
+                            td {{ props.item.Brand.name }} {{ props.item.name }}
                             td {{ props.item.packing }}
-                            td {{ props.item.color }}
+                            td {{ props.item.color || '-' }}
 </template>
 
 <script>
@@ -69,6 +76,10 @@ export default {
           sortable: false,
         },
         {
+          text: 'Код товара',
+          value: 'code',
+        },
+        {
           text: 'Наименование',
           value: 'name',
         },
@@ -87,6 +98,7 @@ export default {
       type: null,
       types: [],
       query: '',
+      code: '',
       products: [],
     };
   },
@@ -101,11 +113,12 @@ export default {
         });
     },
     search() {
-      if (this.query || this.brand || this.type) {
+      if (this.query || this.brand || this.type || this.code) {
         this.loading = true;
         Product.search(this.query,
           this.brand ? this.brand.id : null,
-          this.type ? this.type.id : null)
+          this.type ? this.type.id : null,
+          this.code ? this.code : null)
           .then((products) => { this.products = products; })
           .finally(() => { this.loading = false; });
       } else {
@@ -127,6 +140,9 @@ export default {
       this.search();
     },
     type() {
+      this.search();
+    },
+    code() {
       this.search();
     },
   },

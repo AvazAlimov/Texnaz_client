@@ -11,8 +11,9 @@
             td {{ props.item.product.Brand.name }}
             td {{ props.item.product.name }}
             td {{ props.item.product.packing }}
-            td {{ props.item.product.color }}
+            td {{ props.item.product.color || '-' }}
             td {{ props.item.quantity }}
+            td {{ props.item.quantity * props.item.product.packing }}
             td {{ props.item.arrival_date.substring(0, 10) }}
             td {{ props.item.expiry_date.substring(0, 10) }}
             td {{ props.item.defected ? 'поврежден' : '' }}
@@ -48,15 +49,17 @@ export default {
           width: 100,
         },
         {
+          text: 'Вес',
+          value: 'weight',
+        },
+        {
           text: 'Дата прибытия',
           value: 'arrival_date',
-          sortable: false,
           width: 100,
         },
         {
           text: 'Срок действия',
-          value: 'arrival_date',
-          sortable: false,
+          value: 'expiry_date',
           width: 100,
         },
         {
