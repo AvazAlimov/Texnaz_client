@@ -126,19 +126,33 @@ export default {
       Promise.all([
         User.getAll(),
         Region.getAll(),
+        Client.getAll(),
       ])
         .then((result) => {
-          const [users, regions] = result;
+          const [users, regions, clients] = result;
           this.managers = users.filter((user) => {
             const managerRole = user.roles.filter(role => role.id === 2);
             return managerRole.length;
           });
+
           regions.forEach((region) => {
             if (!this.provinces.find(province => province.id === region.provinceId)) {
               this.provinces.push(region.province);
             }
           });
           this.regions = regions;
+
+          // eslint-disable-next-line no-nested-ternary
+          clients.sort((a, b) => ((a.icc > b.icc) ? -1 : ((b.icc > a.icc) ? 1 : 0)));
+          if (clients.length) {
+            if (parseInt(clients[0].icc, 10)) {
+              this.client.icc = parseInt(clients[0].icc, 10) + 1;
+            } else {
+              this.client.icc = '';
+            }
+          } else {
+            this.client.icc = 1;
+          }
         })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
