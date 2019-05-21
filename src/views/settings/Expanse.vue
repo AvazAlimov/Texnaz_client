@@ -9,20 +9,28 @@
                     v-model="expanse.name"
                     label="Название"
                     name="name"
-                    v-validate="'required'")
+                    v-validate="'required'"
+                    color="secondary")
                 v-text-field(
                     v-model="expanse.value"
                     label="Значение"
                     name="value"
-                    v-validate="'required|decimal'")
-                v-checkbox(v-model="expanse.is_transport" label="Для транспорта")
-                v-checkbox(v-model="expanse.is_cash" label="Наличные")
+                    v-validate="'required|decimal'"
+                    color="secondary")
+                v-checkbox(
+                  v-model="expanse.is_transport"
+                  label="Для транспорта"
+                  color="secondary")
+                v-checkbox(
+                  v-model="expanse.is_cash"
+                  label="Наличные"
+                  color="secondary")
                 v-layout
                     v-spacer
                     v-btn(
                         :loading="loading"
                         :disabled="errors.items.length > 0"
-                        flat color="primary"
+                        flat color="secondary"
                         @click="submit") {{ id == null ? 'Добавить' : 'Сохранить' }}
 </template>
 

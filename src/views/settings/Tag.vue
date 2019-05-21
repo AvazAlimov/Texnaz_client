@@ -9,13 +9,14 @@
                     v-model="name"
                     label="Наименование"
                     name="name"
-                    v-validate="'required'")
+                    v-validate="'required'"
+                    color="secondary")
                 v-layout
                     v-spacer
                     v-btn(
                         :loading="loading"
                         :disabled="errors.items.length > 0"
-                        flat color="primary"
+                        flat color="secondary"
                         @click="submit") {{ id == null ? 'Добавить' : 'Сохранить' }}
 </template>
 

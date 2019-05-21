@@ -10,18 +10,20 @@
                     label="Номер"
                     mask="########"
                     name="number"
-                    v-validate="'required'")
+                    v-validate="'required'"
+                    color="secondary")
                 v-textarea(
                     v-model="description"
                     label="Описание"
                     name="description"
-                    v-validate="'required'")
+                    v-validate="'required'"
+                    color="secondary")
                 v-layout
                     v-spacer
                     v-btn(
                         :loading="loading"
                         :disabled="errors.items.length > 0"
-                        flat color="primary"
+                        flat color="secondary"
                         @click="submit") {{ id == null ? 'Добавить' : 'Сохранить' }}
 </template>
 

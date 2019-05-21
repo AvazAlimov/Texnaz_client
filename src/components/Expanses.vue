@@ -25,7 +25,7 @@
                 :error-messages="errors.first('значение')")
             td
               v-btn.mx-0(icon @click="remove(props.index)")
-                  v-icon(color="primary" small) close
+                  v-icon(color="secondary" small) close
       v-divider
       v-btn.ma-0(block flat large @click="add") Добавить
 </template>

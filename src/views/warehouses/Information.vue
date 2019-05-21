@@ -76,7 +76,10 @@ export default {
       this.loading = true;
       this.stocks = [];
       Stock.getByWarehouse(this.$route.params.id)
-        .then((stocks) => { this.stocks = stocks; })
+        .then((stocks) => {
+          this.stocks = [];
+          this.stocks = stocks;
+        })
         .catch(() => this.getAll())
         .finally(() => { this.loading = false; });
     },

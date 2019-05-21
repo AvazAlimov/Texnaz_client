@@ -9,12 +9,14 @@
                     v-model="warehouse.name"
                     label="Название"
                     name="name"
-                    v-validate="'required'")
+                    v-validate="'required'"
+                    color="secondary")
                 v-text-field(
                     v-model="warehouse.company"
                     label="Компания"
                     name="company"
-                    v-validate="'required'")
+                    v-validate="'required'"
+                    color="secondary")
                 v-select(
                     v-model="warehouse.type"
                     :items="types"
@@ -22,7 +24,8 @@
                     item-text="name"
                     item-value="id"
                     name="type"
-                    v-validate="'required'")
+                    v-validate="'required'"
+                    color="secondary")
                 v-select(
                     v-model="warehouse.ownerId"
                     :items="users"
@@ -30,13 +33,14 @@
                     item-text="name"
                     item-value="id"
                     name="ownerId"
-                    v-validate="'required'")
+                    v-validate="'required'"
+                    color="secondary")
                 v-layout
                     v-spacer
                     v-btn(
                         :loading="loading"
                         :disabled="errors.items.length > 0"
-                        flat color="primary"
+                        flat color="secondary"
                         @click="submit") {{ id == null ? 'Добавить' : 'Сохранить' }}
 </template>
 

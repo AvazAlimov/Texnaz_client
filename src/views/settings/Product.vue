@@ -11,7 +11,8 @@
                   v-model="product.name"
                   label="Наименование"
                   name="name"
-                  v-validate="'required'")
+                  v-validate="'required'"
+                  color="secondary")
               v-flex(xs4 d-flex)
                 .border.pa-4
                   .subheading.mb-2 Основные характеристики
@@ -19,18 +20,21 @@
                     v-model="product.packing"
                     label="Фасовка"
                     name="packing"
-                    v-validate="'required|decimal'")
+                    v-validate="'required|decimal'"
+                    color="secondary")
                   v-combobox(
                     v-model="product.color"
                     :items="colors"
-                    label="Цвет")
+                    label="Цвет"
+                    color="secondary")
                   v-select(
                     v-model="product.brand"
                     :items="brands"
                     item-value="id"
                     label="Бренд"
                     name="brand"
-                    v-validate="'required'")
+                    v-validate="'required'"
+                    color="secondary")
                     template(slot="item" slot-scope="data")
                       | {{ data.item.name }} / {{ data.item.country }}
                     template(slot="selection" slot-scope="data")
@@ -42,27 +46,31 @@
                     item-value="id"
                     label="Единица"
                     name="unit"
-                    v-validate="'required'")
+                    v-validate="'required'"
+                    color="secondary")
                   v-select(
                     v-model="product.type"
                     :items="types"
                     item-text="name"
                     item-value="id"
                     label="Тип"
-                    clearable)
+                    clearable
+                    color="secondary")
               v-flex(xs4 d-flex)
                 .border.pa-4
                   .subheading.mb-2 Дополнительные характеристики
                   v-text-field(
                     v-model="product.code"
-                    label="Код")
+                    label="Код"
+                    color="secondary")
                   v-select(
                     v-model="product.purpose"
                     :items="purposes"
                     item-text="number"
                     item-value="id"
                     label="Назначение"
-                    clearable)
+                    clearable
+                    color="secondary")
                   v-combobox(
                     v-model="product.tags"
                     :items="tags"
@@ -70,7 +78,8 @@
                     deletable-chips
                     multiple
                     label="Теги"
-                    clearable)
+                    clearable
+                    color="secondary")
               v-flex(xs4 d-flex)
                 .border.pa-4
                   .subheading.mb-2 Финансовые показатели
@@ -78,27 +87,31 @@
                     v-model="product.excise"
                     label="Акциз %"
                     name="excise"
-                    v-validate="'required|decimal|min:0|max:100'")
+                    v-validate="'required|decimal|min:0|max:100'"
+                    color="secondary")
                   v-text-field(
                     v-model="product.tax"
                     label="Пошлина %"
                     name="tax"
-                    v-validate="'required|decimal|min:0|max:100'")
+                    v-validate="'required|decimal|min:0|max:100'"
+                    color="secondary")
                   v-text-field(
                     v-model="product.vat"
                     label="НДС %"
                     name="vat"
-                    v-validate="'required|decimal|min:0|max:100'")
+                    v-validate="'required|decimal|min:0|max:100'"
+                    color="secondary")
                   v-text-field(
                     v-model="product.cleaning"
                     label="Очистка %"
                     name="cleaning"
-                    v-validate="'required|decimal|min:0|max:100'")
+                    v-validate="'required|decimal|min:0|max:100'"
+                    color="secondary")
               v-layout
                 v-spacer
                 v-btn(:loading="loading"
                   :disabled="errors.items.length > 0"
-                  flat color="primary"
+                  flat color="secondary"
                   @click="submit") {{ id == null ? 'Добавить' : 'Сохранить' }}
 </template>
 

@@ -11,11 +11,11 @@
                         td {{ props.item.id }}
                         td {{ props.item.name }}
                         td
-                          v-text-field(v-model="props.item.value").ma-0
+                          v-text-field(v-model="props.item.value" color="secondary").ma-0
                         td
                             v-layout
                                 v-btn(icon @click="update(props.item.id, props.item.value)").mx-0
-                                    v-icon(color="primary" small) save
+                                    v-icon(color="secondary" small) save
 </template>
 
 <script>

@@ -14,23 +14,23 @@
                             v-for="role in props.item.roles"
                             :key="role.id"
                             outline disabled
-                            color="primary"
+                            color="secondary"
                             text-color="black") {{ role.name }}
                         td
                             v-layout
                                 v-btn.mx-0(icon
                                   :to="{ name: 'user', params: {id: props.item.id }}"
                                 )
-                                    v-icon(color="primary" small) edit
+                                    v-icon(color="secondary" small) edit
                                 v-btn(
                                   v-if="props.item.id > 1"
                                   icon
                                   @click="remove(props.item.id)").mx-0
-                                    v-icon(color="primary" small) delete
+                                    v-icon(color="secondary" small) delete
                 v-divider
                 v-layout
                     v-spacer
-                    v-btn.ma-2(flat color="primary"
+                    v-btn.ma-2(flat color="secondary"
                       :to="{ name: 'user' }"
                     ) Добавить
 </template>

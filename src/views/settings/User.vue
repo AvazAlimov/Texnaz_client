@@ -9,17 +9,20 @@
                     v-model="user.name"
                     label="Имя"
                     name="name"
-                    v-validate="'required'")
+                    v-validate="'required'"
+                   color="secondary")
                 v-text-field(
                     v-model="user.username"
                     label="Имя пользователя"
                     name="username"
-                    v-validate="'required'")
+                    v-validate="'required'"
+                    color="secondary")
                 v-text-field(
                     v-model="user.password"
                     label="Пароль"
                     name="password"
-                    v-validate="'required'")
+                    v-validate="'required'"
+                    color="secondary")
                 v-select(
                     v-model="user.roles"
                     :items="fixedRoles"
@@ -28,13 +31,14 @@
                     item-value="id"
                     multiple
                     name="roles"
-                    v-validate="'required'")
+                    v-validate="'required'"
+                    color="secondary")
                 v-layout
                     v-spacer
                     v-btn(
                         :loading="loading"
                         :disabled="errors.items.length > 0"
-                        flat color="primary"
+                        flat color="secondary"
                         @click="submit") {{ id == null ? 'Добавить' : 'Сохранить' }}
 </template>
 
