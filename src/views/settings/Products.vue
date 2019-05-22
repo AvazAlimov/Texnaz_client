@@ -11,7 +11,8 @@
             .border.white
                 v-data-table(:headers="headers" :items="products" hide-actions :loading="loading")
                     template(v-slot:items="props")
-                        td {{ props.item.Brand.name }} {{ props.item.name }}
+                        td {{ props.item.Brand.name }}
+                        td {{ props.item.name }}
                         td {{ props.item.code }}
                         td {{ props.item.packing }}
                         td {{ props.item.color }}
@@ -51,6 +52,10 @@ export default {
   data() {
     return {
       headers: [
+        {
+          text: 'Бренд',
+          value: 'Brand.name',
+        },
         {
           text: 'Наименование',
           value: 'name',
