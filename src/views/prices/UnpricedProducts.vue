@@ -42,7 +42,7 @@
             v-layout
               v-btn(
                 icon flat
-                :disabled="errors.first(`${props.item.id}`)"
+                :disabled="disabled(props.item)"
                 color="secondary"
                 @click="save(props.item)"
               )
@@ -99,6 +99,11 @@ export default {
         }],
       products: [],
     };
+  },
+  computed: {
+    disabled() {
+      return item => !!this.errors.first(`${item.id}`);
+    },
   },
   methods: {
     getAll() {

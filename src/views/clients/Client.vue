@@ -142,16 +142,18 @@ export default {
           });
           this.regions = regions;
 
-          // eslint-disable-next-line no-nested-ternary
-          clients.sort((a, b) => ((a.icc > b.icc) ? -1 : ((b.icc > a.icc) ? 1 : 0)));
-          if (clients.length) {
-            if (parseInt(clients[0].icc, 10)) {
-              this.client.icc = parseInt(clients[0].icc, 10) + 1;
+          if (!this.$route.params.id) {
+            // eslint-disable-next-line no-nested-ternary
+            clients.sort((a, b) => ((a.icc > b.icc) ? -1 : ((b.icc > a.icc) ? 1 : 0)));
+            if (clients.length) {
+              if (parseInt(clients[0].icc, 10)) {
+                this.client.icc = parseInt(clients[0].icc, 10) + 1;
+              } else {
+                this.client.icc = '';
+              }
             } else {
-              this.client.icc = '';
+              this.client.icc = 1;
             }
-          } else {
-            this.client.icc = 1;
           }
         })
         .catch((error) => {

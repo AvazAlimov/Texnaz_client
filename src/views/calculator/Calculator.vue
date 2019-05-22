@@ -66,19 +66,19 @@ export default {
     return {
       headers: [
         {
-          text: 'Name',
+          text: 'Название',
           value: 'name',
         },
         {
-          text: 'Number',
+          text: 'Номер',
           value: 'number',
         },
         {
-          text: 'Date',
+          text: 'Дата',
           value: 'date',
         },
         {
-          text: 'Warehouse',
+          text: 'Склад',
           value: 'warehouse',
         },
         {

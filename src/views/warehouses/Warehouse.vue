@@ -29,6 +29,15 @@
         :to="card.to"
       ) {{ card.title }}
         v-icon.ml-2(small) {{ card.icon }}
+
+      v-badge(color="red" overlap :value="0")
+        template(v-slot:badge)
+          span 0
+        v-btn.mx-0(
+          small flat
+          color="secondary"
+        ) Отгрузки
+          v-icon.ml-2(small) local_shipping
       v-badge(color="red" overlap :value="prestocks.length")
         template(v-slot:badge)
           span {{ prestocks.length }}
@@ -36,8 +45,9 @@
           small flat
           color="secondary"
           :to="{name: 'prestocks'}"
-        ) Прием
+        ) Новое поступление
           v-icon.ml-2(small) add
+
       v-flex(xs12)
         router-view
 </template>
@@ -71,11 +81,11 @@ export default {
           title: 'Возврат',
           // to: { name: 'return' },
         },
-        {
-          icon: 'check',
-          title: 'Инвентаризация',
-          // to: { name: 'inventory' },
-        },
+        // {
+        //   icon: 'check',
+        //   title: 'Инвентаризация',
+        //   // to: { name: 'inventory' },
+        // },
         {
           icon: 'done_all',
           title: 'Реализация',

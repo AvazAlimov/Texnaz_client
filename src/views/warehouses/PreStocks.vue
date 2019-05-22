@@ -52,7 +52,7 @@ export default {
           sortable: false,
         },
         {
-          text: 'Прибыли',
+          text: 'Принять',
           value: 'arrived',
           sortable: false,
         },

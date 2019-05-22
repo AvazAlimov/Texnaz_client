@@ -60,6 +60,11 @@ export default {
           to: '/warehouses',
         },
         {
+          icon: 'local_shipping',
+          title: 'Отгрузки',
+          // to: '/warehouses',
+        },
+        {
           icon: 'how_to_reg',
           title: 'Менеджеры',
           to: '/managers',
