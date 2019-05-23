@@ -13,6 +13,7 @@
           td
             v-text-field(
               v-model="props.item.firstPrice"
+              @input="changed"
               color="secondary"
               :name="props.item.id"
               v-validate="'required|decimal|min_value:0|excluded:0'"
@@ -20,6 +21,7 @@
           td
             v-text-field(
               v-model="props.item.mixPriceNonCash"
+              @input="changed"
               color="secondary"
               :name="props.item.id"
               v-validate="'required|decimal|min_value:0|excluded:0'"
@@ -27,6 +29,7 @@
           td
             v-text-field(
               v-model="props.item.mixPriceCash"
+              @input="changed"
               color="secondary"
               :name="props.item.id"
               v-validate="'required|decimal|min_value:0|excluded:0'"
@@ -34,6 +37,7 @@
           td
             v-text-field(
               v-model="props.item.secondPrice"
+              @input="changed"
               color="secondary"
               :name="props.item.id"
               v-validate="'required|decimal|min_value:0|excluded:0'"
@@ -142,6 +146,11 @@ export default {
     },
     disabled(item) {
       return !!this.errors.first(`${item.id}`);
+    },
+    changed() {
+      new Promise(resolve => setTimeout(resolve, 100)).then(() => {
+        this.$validator.validate();
+      });
     },
   },
   created() {
