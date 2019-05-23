@@ -75,6 +75,11 @@ export default {
           to: '/clients',
         },
         {
+          icon: 'import_contacts',
+          title: 'Мои расходы',
+          // to: '/myexpanses',
+        },
+        {
           icon: 'settings',
           title: 'Настройки',
           to: '/settings',
