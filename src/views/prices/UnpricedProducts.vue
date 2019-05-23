@@ -15,28 +15,28 @@
               v-model="props.item.firstPrice"
               color="secondary"
               :name="props.item.id"
-              v-validate="'required|decimal'"
+              v-validate="'required|decimal|min_value:0|excluded:0'"
             )
           td
             v-text-field(
               v-model="props.item.mixPriceNonCash"
               color="secondary"
               :name="props.item.id"
-              v-validate="'required|decimal'"
+              v-validate="'required|decimal|min_value:0|excluded:0'"
             )
           td
             v-text-field(
               v-model="props.item.mixPriceCash"
               color="secondary"
               :name="props.item.id"
-              v-validate="'required|decimal'"
+              v-validate="'required|decimal|min_value:0|excluded:0'"
             )
           td
             v-text-field(
               v-model="props.item.secondPrice"
               color="secondary"
               :name="props.item.id"
-              v-validate="'required|decimal'"
+              v-validate="'required|decimal|min_value:0|excluded:0'"
             )
           td
             v-layout
@@ -100,23 +100,21 @@ export default {
       products: [],
     };
   },
-  computed: {
-    disabled() {
-      return item => !!this.errors.first(`${item.id}`);
-    },
-  },
   methods: {
     getAll() {
       this.loading = true;
       this.products = [];
       Price.getUnpricedProducts()
         .then((products) => {
+          products.forEach((product) => {
+            product.firstPrice = '0';
+            product.mixPriceNonCash = '0';
+            product.mixPriceCash = '0';
+            product.secondPrice = '0';
+          });
           this.products = products;
-          this.products.forEach((product) => {
-            product.firstPrice = 0;
-            product.mixPriceNonCash = 0;
-            product.mixPriceCash = 0;
-            product.secondPrice = 0;
+          new Promise(resolve => setTimeout(resolve, 100)).then(() => {
+            this.$validator.validate();
           });
         })
         .catch((error) => {
@@ -141,6 +139,9 @@ export default {
           this.$store.commit('setMessage', error.message);
         })
         .finally(() => { this.loading = false; });
+    },
+    disabled(item) {
+      return !!this.errors.first(`${item.id}`);
     },
   },
   created() {
