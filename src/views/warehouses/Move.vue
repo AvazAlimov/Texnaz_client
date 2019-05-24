@@ -8,7 +8,6 @@
                 color="secondary"
               ) Выборка
               v-divider.mx-0
-
               v-stepper-step(
                 step="2" :editable="selected.length > 0"
                 color="secondary"
@@ -100,6 +99,15 @@ export default {
       },
     ],
   }),
+  watch: {
+    step(value) {
+      if (value > 1) {
+        new Promise(resolve => setTimeout(resolve, 100)).then(() => {
+          this.$validator.validate();
+        });
+      }
+    },
+  },
 };
 </script>
 
