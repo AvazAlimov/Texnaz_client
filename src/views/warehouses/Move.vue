@@ -79,16 +79,20 @@
                   v-btn.ma-0.mb-1.mr-1(
                     flat
                     color="secondary"
+                    :loading="loading"
                     :disabled="!warehouse"
+                    @click="submit()"
                   ) Завершить
 </template>
 
 <script>
 import Warehouse from '@/services/Warehouse';
+import Move from '@/services/Move';
 
 export default {
   name: 'Move',
   data: () => ({
+    loading: false,
     step: 1,
     stock: null,
     selected: [],
@@ -146,6 +150,24 @@ export default {
           if (warehouseId !== currentWarehouseId) this.warehouses.push(warehouse);
         });
       });
+    },
+
+    submit() {
+      this.loading = true;
+      const moves = this.selected.map(move => ({
+        from: this.$route.params.id,
+        to: this.warehouse,
+        quantity: move.move,
+        stockId: move.id,
+      }));
+      Move.createMultiple(moves)
+        .then(() => {
+          window.location.reload();
+        })
+        .catch((error) => {
+          this.$store.commit('setMessage', error.message);
+        })
+        .finally(() => { this.loading = false; });
     },
   },
   watch: {
