@@ -11,11 +11,25 @@
               v-stepper-step(
                 step="2" :editable="selected.length > 0"
                 color="secondary"
-              ) Утверждение
+              ) Определить количество
+              v-divider.mx-0
+              v-stepper-step(
+                step="3" :editable="selected.length > 0 && errors.items.length == 0"
+                color="secondary"
+              ) Выбор склада
+
             v-divider
             v-stepper-items
               v-stepper-content(step="1").pa-0
                 SearchStock(v-model="stock" :warehouseId="$route.params.id" :items="selected")
+                v-layout(row wrap)
+                  v-spacer
+                  v-btn.ma-0.my-1.mr-1(
+                    flat color="secondary"
+                    :disabled="selected.length == 0"
+                    @click="step = 2"
+                  ) Далее
+
               v-stepper-content(step="2").pa-0
                 v-data-table(
                     :headers="headers"
@@ -49,16 +63,37 @@
                   v-btn.ma-0.mb-1.mr-1(
                     flat color="secondary"
                     :disabled="errors.items.length > 0"
+                    @click="step = 3"
+                  ) Далее
+              v-stepper-content(step="3")
+                v-select(
+                  v-model="warehouse"
+                  :items="warehouses"
+                  item-text="name"
+                  item-value="id"
+                  label="Склад"
+                  color="secondary"
+                )
+                v-layout(row wrap)
+                  v-spacer
+                  v-btn.ma-0.mb-1.mr-1(
+                    flat
+                    color="secondary"
+                    :disabled="!warehouse"
                   ) Завершить
 </template>
 
 <script>
+import Warehouse from '@/services/Warehouse';
+
 export default {
   name: 'Move',
   data: () => ({
     step: 1,
     stock: null,
     selected: [],
+    warehouses: [],
+    warehouse: null,
     headers: [
       {
         text: 'Код товара',
@@ -99,6 +134,20 @@ export default {
       },
     ],
   }),
+  methods: {
+    getAll() {
+      Promise.all([
+        Warehouse.getAll(),
+      ]).then((results) => {
+        const [warehouses] = results;
+        warehouses.forEach((warehouse) => {
+          const currentWarehouseId = parseInt(this.$route.params.id, 10);
+          const warehouseId = parseInt(warehouse.id, 10);
+          if (warehouseId !== currentWarehouseId) this.warehouses.push(warehouse);
+        });
+      });
+    },
+  },
   watch: {
     step(value) {
       if (value > 1) {
@@ -107,6 +156,9 @@ export default {
         });
       }
     },
+  },
+  created() {
+    this.getAll();
   },
 };
 </script>
