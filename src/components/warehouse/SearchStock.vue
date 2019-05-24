@@ -41,7 +41,7 @@
                     :loading="loading"
                     hide-actions)
                     template(v-slot:items="props")
-                        tr(
+                        tr.selectable(
                         @click="props.expanded = !props.expanded"
                         :class="{'grey': props.expanded, 'lighten-2': props.expanded}"
                         )
@@ -62,10 +62,10 @@
                                 hide-actions
                             )
                                 template(v-slot:items="stocks")
-                                    tr(@click="select(stocks.item)"
+                                    tr.selectable(@click="select(stocks.item)"
                                         :class="{'light-green': indexOf(stocks.item.id) != null}"
                                     )
-                                        td {{ stocks.item.defected ? 'поврежден' : '' }}
+                                        td {{ stocks.item.defected ? 'Поврежден' : 'Хорошо' }}
                                         td {{ stocks.item.arrival_date | moment('YYYY-MM-DD') }}
                                         td {{ stocks.item.expiry_date | moment('YYYY-MM-DD') }}
                                         td {{ stocks.item.quantity }}
