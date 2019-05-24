@@ -69,7 +69,7 @@ export default {
         {
           icon: 'arrow_right_alt',
           title: 'Перемещение',
-          // to: { name: 'move' },
+          to: { name: 'move' },
         },
         {
           icon: 'hourglass_empty',

@@ -345,6 +345,11 @@ const router = new Router({
                   name: 'prestocks',
                   component: () => import('./views/warehouses/PreStocks.vue'),
                 },
+                {
+                  path: 'move',
+                  name: 'move',
+                  component: () => import('./views/warehouses/Move.vue'),
+                },
               ],
             },
             {
