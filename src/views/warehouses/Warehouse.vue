@@ -20,7 +20,7 @@
               v-list-tile-title Удалить склад
             v-list-tile-action
               v-icon(small color="secondary") delete
-    v-layout(row wrap)
+    v-layout(row wrap justify-end)
       v-btn.mx-0(
         small
         v-for="(card, index) in cards"
@@ -48,7 +48,7 @@
         ) Новое поступление
           v-icon.ml-2(small) add
 
-      v-flex(xs12)
+      v-flex(xs12).mt-2
         router-view
 </template>
 
