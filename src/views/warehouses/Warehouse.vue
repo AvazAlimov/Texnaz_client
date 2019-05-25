@@ -21,32 +21,19 @@
             v-list-tile-action
               v-icon(small color="secondary") delete
     v-layout(row wrap justify-end)
-      v-btn.mx-0(
-        small
+      v-badge(
         v-for="(card, index) in cards"
-        :key="index"
-        color="secondary" flat
-        :to="card.to"
-      ) {{ card.title }}
-        v-icon.ml-2(small) {{ card.icon }}
-
-      v-badge(color="red" overlap :value="0")
+        color="red"
+        overlap
+        :value="card.counter"
+      )
         template(v-slot:badge)
-          span 0
+          span {{ card.counter }}
         v-btn.mx-0(
           small flat
           color="secondary"
-        ) Отгрузки
-          v-icon.ml-2(small) local_shipping
-      v-badge(color="red" overlap :value="prestocks.length")
-        template(v-slot:badge)
-          span {{ prestocks.length }}
-        v-btn.mx-0(
-          small flat
-          color="secondary"
-          :to="{name: 'prestocks'}"
-        ) Новое поступление
-          v-icon.ml-2(small) add
+          :to="card.to"
+        ) {{ card.title }}
 
       v-flex(xs12).mt-2
         router-view
@@ -55,6 +42,7 @@
 <script>
 import Warehouse from '@/services/Warehouse';
 import PreStock from '@/services/PreStock';
+import Move from '@/services/Move';
 
 export default {
   name: 'Warehouse',
@@ -62,54 +50,67 @@ export default {
     return {
       cards: [
         {
-          icon: 'store',
+          counter: 0,
+          id: 'information',
           title: 'Информация',
           to: { name: 'information' },
         },
         {
-          icon: 'arrow_right_alt',
+          counter: 0,
+          id: 'move',
           title: 'Перемещение',
           to: { name: 'move' },
         },
         {
-          icon: 'hourglass_empty',
+          counter: 0,
+          id: 'booking',
           title: 'Бронирование',
-          // to: { name: 'booking' },
         },
         {
-          icon: 'restore',
+          counter: 0,
+          id: 'return',
           title: 'Возврат',
-          // to: { name: 'return' },
         },
-        // {
-        //   icon: 'check',
-        //   title: 'Инвентаризация',
-        //   // to: { name: 'inventory' },
-        // },
         {
-          icon: 'done_all',
+          counter: 0,
+          id: 'sale',
           title: 'Реализация',
-          // to: { name: 'inventory' },
+        },
+        {
+          counter: 0,
+          id: 'shipments',
+          title: 'Отгрузки',
+        },
+        {
+          counter: 0,
+          id: 'prestocks',
+          title: 'Новое поступление',
+          to: { name: 'prestocks' },
+        },
+        {
+          counter: 0,
+          id: 'moves',
+          title: 'Прием',
+          to: { name: 'acceptance' },
         },
       ],
       warehouse: {
         owner: {},
       },
-      prestocks: [],
     };
-  },
-  computed: {
-    path() {
-      return this.$route.name;
-    },
   },
   methods: {
     getAll() {
       Promise.all([
         Warehouse.get(this.$route.params.id),
         PreStock.getByWarehouse(this.$route.params.id),
+        Move.getAllPending(this.$route.params.id),
       ])
-        .then((results) => { [this.warehouse, this.prestocks] = results; })
+        .then((results) => {
+          [this.warehouse] = results;
+          this.setCounter('prestocks', results[1].length);
+          this.setCounter('moves', results[2].length);
+        })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
           this.$router.push({ name: 'warehouses' });
@@ -124,6 +125,10 @@ export default {
             this.$store.commit('setMessage', error.message);
           });
       }
+    },
+    setCounter(id, counter) {
+      const card = this.cards.find(item => item.id === id);
+      card.counter = counter;
     },
   },
   created() {

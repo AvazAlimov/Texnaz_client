@@ -350,6 +350,11 @@ const router = new Router({
                   name: 'move',
                   component: () => import('./views/warehouses/Move.vue'),
                 },
+                {
+                  path: 'acceptance',
+                  name: 'acceptance',
+                  component: () => import('./views/warehouses/Acceptance.vue'),
+                },
               ],
             },
             {
