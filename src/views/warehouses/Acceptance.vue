@@ -3,24 +3,12 @@
         v-flex(xs12)
             .border.white
                 v-data-table(
-                    v-model="selected"
                     :headers="headers"
                     :items="moves"
-                    select-all
                     hide-actions
                 )
                     template(v-slot:items="props")
-                        td
-                          v-checkbox(v-model="props.selected" hide-details color="secondary")
-                        td {{ props.item.stock.product.code || '-' }}
-                        td {{ props.item.stock.product.Brand.name }}
-                            |  {{ props.item.stock.product.name }}
-                        td {{ props.item.stock.product.packing }}
-                        td {{ props.item.stock.product.color || '-' }}
-                        td {{ props.item.quantity }}
-                        td {{ props.item.stock.defected ? 'Поврежден' : 'Хорошо' }}
-                        td {{ props.item.stock.arrival_date | moment('YYYY-MM-DD') }}
-                        td {{ props.item.stock.expiry_date | moment('YYYY-MM-DD') }}
+                      AcceptanceItem(:item="props.item")
                 v-divider
                 v-layout(row wrap)
                   v-spacer
@@ -29,7 +17,7 @@
                     color="secondary"
                     @click="submit()"
                     :loading="loading"
-                    :disabled="!selected.length"
+                    :disabled="errors.items.length > 0"
                   ) Завершить
 </template>
 
@@ -41,39 +29,48 @@ export default {
   data: () => ({
     loading: false,
     moves: [],
-    selected: [],
     headers: [
       {
-        text: 'Код товара',
-        value: 'stock.product.code',
+        sortable: false,
       },
       {
         text: 'Наименование',
         value: 'stock.product.name',
       },
       {
+        text: 'Код товара',
+        value: 'stock.product.code',
+        width: 1,
+      },
+      {
         text: 'Фасовка',
         value: 'stock.product.packing',
+        width: 1,
       },
       {
         text: 'Цвет',
         value: 'stock.product.color',
+        width: 1,
       },
       {
         text: 'Количество',
         value: 'quantity',
+        width: 1,
       },
       {
         text: 'Состояние',
         value: 'stock.product.defected',
+        width: 1,
       },
       {
         text: 'Дата прибытия',
         value: 'stock.arrival_date',
+        width: 1,
       },
       {
         text: 'Срок действия',
         value: 'stock.expiry_date',
+        width: 1,
       },
     ],
   }),
@@ -91,7 +88,12 @@ export default {
     },
     submit() {
       this.loading = true;
-      Move.acceptMultiple(this.selected)
+      // const accepted = this.moves.filter(move => move.arrived === move.quantity);
+      // const rejected = this.moves.filter(move => move.arrived !== move.quantity);
+      Promise.all([
+        Move.acceptMultiple(this.moves),
+        // Move.rejectMultiple(rejected),
+      ])
         .then(() => {
           window.location.reload();
         })
