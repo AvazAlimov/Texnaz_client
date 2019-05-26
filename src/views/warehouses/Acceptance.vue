@@ -88,11 +88,8 @@ export default {
     },
     submit() {
       this.loading = true;
-      // const accepted = this.moves.filter(move => move.arrived === move.quantity);
-      // const rejected = this.moves.filter(move => move.arrived !== move.quantity);
       Promise.all([
         Move.acceptMultiple(this.moves),
-        // Move.rejectMultiple(rejected),
       ])
         .then(() => {
           window.location.reload();
