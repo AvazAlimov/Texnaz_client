@@ -18,6 +18,7 @@
               td {{ props.item.product.color || '-' }}
               td {{ props.item.quantity }}
               td {{ props.item.quantity * props.item.product.packing }}
+              td {{ getBooked(props.item) }}
           template(v-slot:expand="props")
             .pb-4.grey.lighten-2
               v-data-table(
@@ -32,6 +33,7 @@
                   td {{ stocks.item.expiry_date.substring(0, 10) }}
                   td {{ stocks.item.quantity }}
                   td {{ stocks.item.quantity * props.item.product.packing }}
+                  td {{ stocks.item.bookings.map(a => a.quantity).reduce((a,b) => a + b, 0) }}
 </template>
 
 <script>
@@ -71,6 +73,11 @@ export default {
           value: 'quantity',
           width: 1,
         },
+        {
+          text: 'Забронировано',
+          value: 'booked',
+          width: 1,
+        },
       ],
       expandedHeaders: [
         {
@@ -96,6 +103,11 @@ export default {
         {
           text: 'Вес',
           value: 'quantity',
+          width: 1,
+        },
+        {
+          text: 'Забронировано',
+          value: 'booked',
           width: 1,
         },
       ],
@@ -132,6 +144,15 @@ export default {
         })
         .catch(() => this.getAll())
         .finally(() => { this.loading = false; });
+    },
+    getBooked(item) {
+      let bookings = 0;
+      item.stocks.forEach((stock) => {
+        stock.bookings.forEach((booking) => {
+          bookings += booking.quantity;
+        });
+      });
+      return bookings;
     },
   },
   created() {

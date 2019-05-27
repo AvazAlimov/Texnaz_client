@@ -51,8 +51,8 @@
                             td {{ props.item.product.Brand.name }} {{ props.item.product.name }}
                             td {{ props.item.product.packing }}
                             td {{ props.item.product.color || '-' }}
-                            td {{ props.item.quantity }}
-                            td {{ props.item.quantity * props.item.product.packing }}
+                            td {{ props.item.quantity - props.item.booked }}
+                            td {{ (props.item.quantity - props.item.booked) * props.item.product.packing }}
                     template(v-slot:expand="props")
                         .pb-4.grey.lighten-2
                             v-data-table(
@@ -68,8 +68,8 @@
                                         td {{ stocks.item.defected ? 'Поврежден' : 'Хорошо' }}
                                         td {{ stocks.item.arrival_date | moment('YYYY-MM-DD') }}
                                         td {{ stocks.item.expiry_date | moment('YYYY-MM-DD') }}
-                                        td {{ stocks.item.quantity }}
-                                        td {{ stocks.item.quantity * props.item.product.packing }}
+                                        td {{ stocks.item.quantity - stocks.item.booked }}
+                                        td {{ (stocks.item.quantity - stocks.item.booked) * props.item.product.packing }}
                 v-divider
 </template>
 
@@ -183,9 +183,12 @@ export default {
           let stocks;
           [stocks, this.brands, this.types] = warehouse;
           stocks.forEach((stock) => {
+            // eslint-disable-next-line no-param-reassign
+            stock.booked = stock.bookings.map(a => a.quantity).reduce((a, b) => a + b, 0);
             const row = this.stocks.find(item => item.product.id === stock.product.id);
             if (row) {
               row.quantity += stock.quantity;
+              row.booked += stock.booked;
               row.stocks.push(stock);
             } else {
               this.stocks.push({
@@ -193,6 +196,7 @@ export default {
                 product: stock.product,
                 quantity: stock.quantity,
                 stocks: [stock],
+                booked: stock.booked,
               });
             }
           });
