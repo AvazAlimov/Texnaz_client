@@ -47,7 +47,7 @@
                       td
                         v-text-field(
                           color="secondary"
-                          v-model="props.item.move"
+                          v-model="props.item.book"
                           :name="props.item.id"
                           v-validate="{\
                             required: true,\
@@ -93,8 +93,10 @@
 </template>
 
 <script>
+
 import Client from '@/services/Client';
-// import Move from '@/services/Move';
+import Booking from '@/services/Booking';
+import Permissions from '@/utils/Permissions';
 
 export default {
   name: 'Booking',
@@ -106,6 +108,7 @@ export default {
     clients: [],
     client: null,
     date: null,
+    user: JSON.parse(localStorage.getItem('user')),
     minDate: () => {
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
@@ -161,21 +164,22 @@ export default {
     },
 
     submit() {
-    //   this.loading = true;
-    //   const moves = this.selected.map(move => ({
-    //     from: this.$route.params.id,
-    //     to: this.warehouse,
-    //     quantity: move.move,
-    //     stockId: move.id,
-    //   }));
-    //   Move.createMultiple(moves)
-    //     .then(() => {
-    //       window.location.reload();
-    //     })
-    //     .catch((error) => {
-    //       this.$store.commit('setMessage', error.message);
-    //     })
-    //     .finally(() => { this.loading = false; });
+      this.loading = true;
+      const bookings = this.selected.map(booking => ({
+        quantity: booking.book,
+        stockId: booking.id,
+        clientId: this.client,
+        date: this.date,
+        userId: this.user.id,
+      }));
+      Booking.createMultiple(bookings)
+        .then(() => {
+          window.location.reload();
+        })
+        .catch((error) => {
+          this.$store.commit('setMessage', error.message);
+        })
+        .finally(() => { this.loading = false; });
     },
   },
   watch: {
@@ -188,6 +192,9 @@ export default {
     },
   },
   created() {
+    if (!this.$hasPermission(Permissions.CAN_BOOK.name)) {
+      this.$router.go(-1);
+    }
     this.getAll();
   },
 };

@@ -19,7 +19,7 @@ const router = new Router({
         requiresAuth: true,
       },
       beforeEnter(_, __, next) {
-        store.commit('logout');
+        localStorage.removeItem('user');
         next({
           name: 'login',
         });

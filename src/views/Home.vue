@@ -97,7 +97,10 @@ export default {
     AXIOS.interceptors.response.use(undefined, (error) => {
       if (error.response && error.response.status === 401) { this.$router.push('/logout'); }
     });
-    Auth.details().then((user) => { this.user = user; });
+    Auth.details().then((user) => {
+      this.user = user;
+      localStorage.setItem('user', JSON.stringify(user));
+    });
   },
 };
 </script>

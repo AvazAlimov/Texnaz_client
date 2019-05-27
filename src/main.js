@@ -15,6 +15,21 @@ Vue.use(moment);
 Vue.config.productionTip = false;
 Validator.localize('ru', ru);
 
+Vue.prototype.$hasPermission = (key) => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user) {
+    router.push({ name: 'login' });
+    return false;
+  }
+  const permissions = [];
+  user.roles.forEach((role) => {
+    role.permissions.forEach((permission) => {
+      permissions.push(permission);
+    });
+  });
+  return !!permissions.find(permission => permission.name === key);
+};
+
 Vue.filter('roundUp', (value) => {
   const precision = 10 ** 2;
   return Math.ceil(value.toFixed(4) * precision) / precision;
