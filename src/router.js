@@ -360,6 +360,11 @@ const router = new Router({
                   name: 'return',
                   component: () => import('./views/warehouses/Return.vue'),
                 },
+                {
+                  path: 'booking',
+                  name: 'booking',
+                  component: () => import('./views/warehouses/Booking.vue'),
+                },
               ],
             },
             {

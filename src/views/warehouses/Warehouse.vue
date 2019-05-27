@@ -67,6 +67,7 @@ export default {
           counter: 0,
           id: 'booking',
           title: 'Бронирование',
+          to: { name: 'booking' },
         },
         {
           counter: 0,
@@ -78,7 +79,7 @@ export default {
           counter: 0,
           id: 'losts',
           title: 'Потерянные продукты',
-          // to: { name: 'return' },
+          // to: { name: 'losts' },
         },
         {
           counter: 0,
