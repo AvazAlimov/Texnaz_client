@@ -355,6 +355,11 @@ const router = new Router({
                   name: 'acceptance',
                   component: () => import('./views/warehouses/Acceptance.vue'),
                 },
+                {
+                  path: 'return',
+                  name: 'return',
+                  component: () => import('./views/warehouses/Return.vue'),
+                },
               ],
             },
             {
