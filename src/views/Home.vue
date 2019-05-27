@@ -15,6 +15,7 @@
             :to="item.to"
             active-class="bordered"
             :class="item.path === $route.path ? 'bordered' : ''"
+            v-if="item.permission ? $hasPermission(item.permission) : true"
           )
             v-list-tile-action
               v-icon(color="secondary") {{item.icon}}
@@ -43,46 +44,61 @@ export default {
           icon: 'data_usage',
           title: 'Статистика',
           to: '/',
+          permission: this.$permissions.SHOW_STATISTICS.name,
         },
         {
           icon: 'money',
           title: 'Ценообразование',
           to: '/calculator',
+          permission: this.$permissions.SHOW_CALCULATOR.name,
         },
         {
           icon: 'list',
           title: 'Цены',
           to: '/prices',
+          permission: this.$permissions.SHOW_PRICES.name,
         },
         {
           icon: 'store_mall_directory',
           title: 'Склады',
           to: '/warehouses',
-        },
-        {
-          icon: 'local_shipping',
-          title: 'Отгрузки',
-          // to: '/warehouses',
+          permission: this.$permissions.SHOW_WAREHOUSES.name,
         },
         {
           icon: 'how_to_reg',
           title: 'Менеджеры',
           to: '/managers',
+          permission: this.$permissions.SHOW_MANAGERS.name,
         },
         {
           icon: 'perm_identity',
           title: 'Клиенты',
           to: '/clients',
+          permission: this.$permissions.SHOW_CLIENTS.name,
+        },
+        {
+          icon: 'local_shipping',
+          title: 'Отгрузки',
+          // to: '/warehouses',
+          permission: this.$permissions.SHOW_SHIPMENTS.name,
+        },
+        {
+          icon: 'payment',
+          title: 'Оплаты',
+          // to: '/warehouses',
+          permission: this.$permissions.SHOW_PAYMENTS.name,
         },
         {
           icon: 'import_contacts',
           title: 'Мои расходы',
           // to: '/myexpanses',
+          permission: this.$permissions.SHOW_MY_EXPANSES.name,
         },
         {
           icon: 'settings',
           title: 'Настройки',
           to: '/settings',
+          permission: this.$permissions.SHOW_SETTINGS.name,
         },
         {
           divider: true,

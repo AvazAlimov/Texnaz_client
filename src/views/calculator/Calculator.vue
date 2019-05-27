@@ -1,7 +1,10 @@
 <template lang="pug">
   div
     v-layout(row wrap v-if="path == 'calculator'")
-        v-flex(xs12).mb-3
+        v-flex.mb-3(
+          xs12
+          v-if="$hasPermission($permissions.SHOW_CALCULATOR_NON_APPROVED.name)"
+        )
             .title РАСЧЕТЫ
                 .border.white.mt-3
                     v-data-table(
@@ -25,7 +28,10 @@
                     v-layout
                         v-spacer
                         v-btn.ma-2(flat @click="create" color="secondary") Добавить
-        v-flex(xs12).mb-3
+        v-flex.mb-3(
+          xs12
+          v-if="$hasPermission($permissions.SHOW_CALCULATOR_APPROVED.name)"
+        )
           .title УТВЕРЖДЕННЫЕ РАСЧЕТЫ
           .border.white.mt-3
                     v-data-table(
@@ -45,15 +51,6 @@
                                   v-icon(small color="secondary") edit
                                 v-btn.mx-0(icon @click="remove(props.item.id)")
                                   v-icon(small color="red") delete
-        //- v-flex(xs12)
-          .title СОХРАНЕННЫЕ
-          .border.white.mt-3
-                    v-data-table(
-                        :headers="headers"
-                        :items="batches"
-                        :loading="loading"
-                        hide-actions)
-                        template(v-slot:items="props")
     router-view
 </template>
 

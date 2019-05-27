@@ -4,13 +4,17 @@
       v-flex(xs12).mb-1
         .title НАСТРОЙКИ
       v-flex(xs6 v-for="(section, index) in cards" :key="index")
-        v-list.pa-0.border.my-2(v-for="card in section" :key="card.title" two-line)
-          v-list-tile(:to="'/settings' + card.to")
-            v-list-tile-content
-              v-list-tile-title {{ card.title }}
-              v-list-tile-sub-title {{ card.count }}
-            v-list-tile-action
-              v-icon(large color="secondary") {{ card.icon }}
+        template(v-for="card in section")
+          v-list.pa-0.border.my-2(
+            :key="card.title" two-line
+            v-if="card.permission ? $hasPermission(card.permission) : true"
+          )
+            v-list-tile(:to="'/settings' + card.to")
+              v-list-tile-content
+                v-list-tile-title {{ card.title }}
+                v-list-tile-sub-title {{ card.count }}
+              v-list-tile-action
+                v-icon(large color="secondary") {{ card.icon }}
     router-view
 </template>
 
@@ -39,6 +43,7 @@ export default {
             title: 'ТОВАРЫ',
             count: 0,
             icon: 'local_mall',
+            permission: this.$permissions.SHOW_SETTINGS_PRODUCTS.name,
           },
           {
             key: 'brands',
@@ -46,6 +51,7 @@ export default {
             title: 'Бренды',
             count: 0,
             icon: 'drive_eta',
+            permission: this.$permissions.SHOW_SETTINGS_BRANDS.name,
           },
           {
             key: 'product_types',
@@ -53,6 +59,7 @@ export default {
             title: 'ТИПЫ ПРОДУКТОВ',
             count: 0,
             icon: 'turned_in',
+            permission: this.$permissions.SHOW_SETTINGS_PRODUCT_TYPES.name,
           },
           {
             key: 'units',
@@ -60,6 +67,7 @@ export default {
             title: 'ЕДИНИЦЫ ИЗМЕРЕНИЯ',
             count: 0,
             icon: 'extension',
+            permission: this.$permissions.SHOW_SETTINGS_UNITS.name,
           },
           {
             key: 'purposes',
@@ -67,6 +75,7 @@ export default {
             title: 'НАЗНАЧЕНИЕ',
             count: 0,
             icon: 'label',
+            permission: this.$permissions.SHOW_SETTINGS_PURPOSES.name,
           },
           {
             key: 'tags',
@@ -74,6 +83,7 @@ export default {
             title: 'ТЕГИ',
             count: 0,
             icon: 'style',
+            permission: this.$permissions.SHOW_SETTINGS_TAGS.name,
           },
         ],
         // CONFIGURATIONS
@@ -84,6 +94,7 @@ export default {
             title: 'ПОЛЬЗОВАТЕЛИ',
             count: 0,
             icon: 'group',
+            permission: this.$permissions.SHOW_SETTINGS_USERS.name,
           },
           {
             key: 'expanses',
@@ -91,6 +102,7 @@ export default {
             title: 'РАСХОДЫ',
             count: 0,
             icon: 'attach_money',
+            permission: this.$permissions.SHOW_SETTINGS_EXPANSES.name,
           },
           {
             key: 'configurations',
@@ -98,6 +110,7 @@ export default {
             title: 'ПОКАЗАТЕЛИ',
             count: 0,
             icon: 'settings',
+            permission: this.$permissions.SHOW_SETTINGS_CONFIGURATIONS.name,
           },
           {
             key: 'regions',
@@ -105,6 +118,7 @@ export default {
             title: 'Регионы',
             count: 0,
             icon: 'map',
+            permission: this.$permissions.SHOW_SETTINGS_REGIONS.name,
           },
           {
             key: 'themes',

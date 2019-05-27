@@ -8,12 +8,14 @@
                     small
                     color="secondary" flat
                     :to="{name: 'priced'}"
+                    v-if="$hasPermission($permissions.SHOW_PRICES_PRICED.name)"
                 ) Продукты с ценами
                     v-icon.ml-2(small) check
                 v-btn.mx-0(
                     small
                     color="secondary" flat
                     :to="{name: 'unpriced'}"
+                    v-if="$hasPermission($permissions.SHOW_PRICES_UNPRICED.name)"
                 ) Продукты без цен
                     v-icon.ml-2(small) close
         v-flex(xs12)

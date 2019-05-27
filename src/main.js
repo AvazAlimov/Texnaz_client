@@ -6,6 +6,7 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import ru from './translations/ru';
+import Permissions from './utils/Permissions';
 import '@/components';
 import './registerServiceWorker';
 import '@/assets/style/app.css';
@@ -15,6 +16,7 @@ Vue.use(moment);
 Vue.config.productionTip = false;
 Validator.localize('ru', ru);
 
+Vue.prototype.$permissions = Permissions;
 Vue.prototype.$hasPermission = (key) => {
   const user = JSON.parse(localStorage.getItem('user'));
   if (!user) {
