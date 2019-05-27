@@ -3,7 +3,7 @@ import Api, { execute } from './Api';
 export default {
   createMultiple: bookings => execute(Api().post('bookings', { bookings })),
 
-  getAll: (to, from) => execute(Api().get(`bookings/?to=${to || ''}&from=${from || ''}`)),
+  getAll: (userId, clientId) => execute(Api().get(`bookings/?userId=${userId || ''}&clientId=${clientId || ''}`)),
 
-  deleteMultiple: bookings => execute(Api().delete('bookings', { bookings })),
+  delete: id => execute(Api().delete(`bookings/${id}`)),
 };

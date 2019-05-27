@@ -15,6 +15,7 @@ import SearchStock from './warehouse/SearchStock.vue';
 import PreStockItem from './warehouse/PreStockItem.vue';
 import AcceptanceItem from './warehouse/AcceptanceItem.vue';
 import ReturnItem from './warehouse/ReturnItem.vue';
+import UserBookings from './warehouse/UserBookings.vue';
 
 const Components = {
   Card,
@@ -33,6 +34,7 @@ const Components = {
   SearchStock,
   AcceptanceItem,
   ReturnItem,
+  UserBookings,
 };
 
 Object.keys(Components).forEach((name) => {

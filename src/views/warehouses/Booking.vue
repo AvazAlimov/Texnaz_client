@@ -148,7 +148,7 @@ export default {
         value: 'expiry_date',
       },
       {
-        text: 'Количество для перемещение',
+        text: 'Количество бронирований',
         value: 'quantity',
         width: 1,
       },
