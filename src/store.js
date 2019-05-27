@@ -24,6 +24,7 @@ export default new Vuex.Store({
     },
     logout(state) {
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
       // eslint-disable-next-line no-param-reassign
       state.token = '';
     },
@@ -34,7 +35,13 @@ export default new Vuex.Store({
         .login({ username, password })
         .then((token) => {
           commit('setToken', token);
-          resolve();
+          Auth
+            .details()
+            .then((user) => {
+              localStorage.setItem('user', JSON.stringify(user));
+              resolve();
+            })
+            .catch(error => reject(error));
         }).catch(error => reject(error));
     }),
   },
