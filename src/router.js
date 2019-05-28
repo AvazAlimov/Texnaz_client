@@ -365,6 +365,11 @@ const router = new Router({
                   name: 'booking',
                   component: () => import('./views/warehouses/Booking.vue'),
                 },
+                {
+                  path: 'sale',
+                  name: 'sale',
+                  component: () => import('./views/warehouses/Sale.vue'),
+                },
               ],
             },
             {

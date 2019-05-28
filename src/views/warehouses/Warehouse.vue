@@ -85,6 +85,7 @@ export default {
           counter: 0,
           id: 'sale',
           title: 'Реализация',
+          to: { name: 'sale' },
         },
         {
           counter: 0,
