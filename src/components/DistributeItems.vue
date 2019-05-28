@@ -107,7 +107,7 @@ export default {
           quantity: item.quantity,
           warehouses: this.warehouses.map(warehouse => ({
             id: warehouse.id,
-            quantity: 0,
+            quantity: this.batch.warehouse === warehouse.id ? item.quantity : 0,
           })),
         });
       });
@@ -140,6 +140,7 @@ export default {
       ])
         .then(() => {
           this.$router.push({ name: 'calculator' });
+          window.location.reload();
         })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
