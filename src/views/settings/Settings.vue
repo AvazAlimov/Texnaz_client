@@ -35,6 +35,48 @@ export default {
   data() {
     return {
       cards: [
+        // CONFIGURATIONS
+        [
+          {
+            key: 'users',
+            to: '/users',
+            title: 'ПОЛЬЗОВАТЕЛИ',
+            count: 0,
+            icon: 'group',
+            permission: this.$permissions.SHOW_SETTINGS_USERS.name,
+          },
+          {
+            key: 'expanses',
+            to: '/expanses',
+            title: 'РАСХОДЫ',
+            count: 0,
+            icon: 'attach_money',
+            permission: this.$permissions.SHOW_SETTINGS_EXPANSES.name,
+          },
+          {
+            key: 'configurations',
+            to: '/configurations',
+            title: 'ПОКАЗАТЕЛИ',
+            count: 0,
+            icon: 'settings',
+            permission: this.$permissions.SHOW_SETTINGS_CONFIGURATIONS.name,
+          },
+          {
+            key: 'regions',
+            to: '/regions',
+            title: 'Регионы',
+            count: 0,
+            icon: 'map',
+            permission: this.$permissions.SHOW_SETTINGS_REGIONS.name,
+          },
+          {
+            key: 'themes',
+            to: '/themes',
+            title: 'Темы',
+            count: 3,
+            icon: 'format_paint',
+          },
+        ],
         // PRODUCT DETAILS
         [
           {
@@ -84,48 +126,6 @@ export default {
             count: 0,
             icon: 'style',
             permission: this.$permissions.SHOW_SETTINGS_TAGS.name,
-          },
-        ],
-        // CONFIGURATIONS
-        [
-          {
-            key: 'users',
-            to: '/users',
-            title: 'ПОЛЬЗОВАТЕЛИ',
-            count: 0,
-            icon: 'group',
-            permission: this.$permissions.SHOW_SETTINGS_USERS.name,
-          },
-          {
-            key: 'expanses',
-            to: '/expanses',
-            title: 'РАСХОДЫ',
-            count: 0,
-            icon: 'attach_money',
-            permission: this.$permissions.SHOW_SETTINGS_EXPANSES.name,
-          },
-          {
-            key: 'configurations',
-            to: '/configurations',
-            title: 'ПОКАЗАТЕЛИ',
-            count: 0,
-            icon: 'settings',
-            permission: this.$permissions.SHOW_SETTINGS_CONFIGURATIONS.name,
-          },
-          {
-            key: 'regions',
-            to: '/regions',
-            title: 'Регионы',
-            count: 0,
-            icon: 'map',
-            permission: this.$permissions.SHOW_SETTINGS_REGIONS.name,
-          },
-          {
-            key: 'themes',
-            to: '/themes',
-            title: 'Темы',
-            count: 3,
-            icon: 'format_paint',
           },
         ],
       ],
