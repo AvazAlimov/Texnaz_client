@@ -318,7 +318,6 @@ const router = new Router({
             },
           ],
         },
-
         {
           path: 'warehouses',
           name: 'warehouses',
@@ -384,6 +383,11 @@ const router = new Router({
               ],
             },
           ],
+        },
+        {
+          path: 'myexpanses',
+          name: 'myexpanses',
+          component: () => import('./views/expanses/MyExpanses'),
         },
       ],
     },

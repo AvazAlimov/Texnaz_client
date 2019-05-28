@@ -1,5 +1,5 @@
 <template lang="pug">
-    v-list.pa-0.border(three-line)
+    v-list.pa-0.border.white(three-line)
         v-list-tile(:to="to" :click="click")
             v-list-tile-content
                 v-list-tile-title.secondary--text {{ title }}

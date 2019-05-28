@@ -91,13 +91,13 @@ export default {
         {
           icon: 'import_contacts',
           title: 'Мои расходы',
-          // to: '/myexpanses',
+          to: { name: 'myexpanses' },
           permission: this.$permissions.SHOW_MY_EXPANSES.name,
         },
         {
           icon: 'settings',
           title: 'Настройки',
-          to: '/settings',
+          to: { name: 'settings' },
           permission: this.$permissions.SHOW_SETTINGS.name,
         },
         {
