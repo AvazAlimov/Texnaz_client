@@ -17,6 +17,8 @@ import AcceptanceItem from './warehouse/AcceptanceItem.vue';
 import ReturnItem from './warehouse/ReturnItem.vue';
 import UserBookings from './warehouse/UserBookings.vue';
 
+import Map from './analytics/Map.vue';
+
 const Components = {
   Card,
   Info,
@@ -35,6 +37,8 @@ const Components = {
   AcceptanceItem,
   ReturnItem,
   UserBookings,
+
+  Map,
 };
 
 Object.keys(Components).forEach((name) => {
