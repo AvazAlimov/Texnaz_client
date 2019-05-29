@@ -3,7 +3,7 @@
     v-layout(row wrap v-if="$route.name == 'myexpanses'")
       v-flex(xs12).mb-3
         .title МОИ РАСХОДЫ
-      v-flex(xs12)
+      //v-flex(xs12)
         v-layout(row wrap)
           v-flex(xs3 v-for="(card, index) in cards" :key="index")
             Card(:title="card.title" :caption="card.counter" :icon="card.icon")
@@ -15,7 +15,14 @@
               v-model="value"
               color="secondary"
               label="Сумма"
-              style="min-width: 300px"
+              style="min-width: 250px"
+              name="value"
+              v-validate="{\
+                required: true,\
+                decimal: true,\
+                min_value: 0,\
+                excluded: '0',\
+              }"
             )
             v-combobox.mx-1(
               v-model="form"
@@ -23,7 +30,7 @@
               label="Тип расхода"
               :items="forms"
               item-text="name"
-              item-value="id"
+              clearable
             )
             v-combobox.mx-1(
               v-model="purpose"
@@ -31,7 +38,7 @@
               label="Назначение"
               :items="purposes"
               item-text="name"
-              item-value="id"
+              clearable
             )
             v-combobox.mx-1(
               v-model="type"
@@ -39,7 +46,7 @@
               label="Вид расхода"
               :items="types"
               item-text="name"
-              item-value="id"
+              clearable
             )
             v-combobox.mx-1(
               v-model="person"
@@ -47,11 +54,14 @@
               label="Лицо"
               :items="people"
               item-text="name"
-              item-value="id"
+              clearable
             )
             v-btn.mx-1(
               flat
               color="secondary"
+              :loading="loading"
+              :disabled="errors.items.length > 0"
+              @click="submit()"
             ) Сохранить
 
         .white.border
@@ -153,6 +163,48 @@ export default {
         })
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });
+    },
+    submit() {
+      this.loading = true;
+
+      new Promise(resolve => setTimeout(resolve, 1000)).then(() => {
+        Promise.all([
+          this.getPropertyId(this.type, MyExpanses.createType),
+          this.getPropertyId(this.form, MyExpanses.createForm),
+          this.getPropertyId(this.purpose, MyExpanses.createPurpose),
+          this.getPropertyId(this.person, MyExpanses.createPerson),
+        ])
+          .then((results) => {
+            const [typeId, formId, purposeId, personId] = results;
+            MyExpanses.create({
+              value: this.value,
+              typeId,
+              purposeId,
+              formId,
+              personId,
+            }).then(() => {
+              this.getAll();
+            })
+              .catch(error => this.$store.commit('setMessage', error.message))
+              .finally(() => { this.loading = false; });
+          })
+          .catch(error => this.$store.commit('setMessage', error.message));
+      });
+    },
+    getPropertyId(property, createAction) {
+      return new Promise((resolve, reject) => {
+        if (property) {
+          if (property.id) {
+            resolve(property.id);
+          } else {
+            createAction(property)
+              .then(item => resolve(item.id))
+              .catch(error => reject(error));
+          }
+        } else {
+          resolve(null);
+        }
+      });
     },
   },
   created() {
