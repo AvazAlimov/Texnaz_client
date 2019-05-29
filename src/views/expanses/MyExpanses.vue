@@ -3,7 +3,7 @@
     v-layout(row wrap v-if="$route.name == 'myexpanses'")
       v-flex(xs12).mb-3
         .title МОИ РАСХОДЫ
-      //v-flex(xs12)
+      v-flex(xs12)
         v-layout(row wrap)
           v-flex(xs3 v-for="(card, index) in cards" :key="index")
             Card(:title="card.title" :caption="card.counter" :icon="card.icon")
@@ -88,7 +88,7 @@
                   v-btn(icon).mx-0
                       v-icon(color="secondary" small) edit
                   v-btn(icon).mx-0
-                      v-icon(color="red" small) delete
+                      v-icon(color="red" small @click="remove(props.item.id)") delete
     router-view
 </template>
 
@@ -224,6 +224,17 @@ export default {
           resolve(null);
         }
       });
+    },
+
+    remove(id) {
+      // eslint-disable-next-line no-alert, no-restricted-globals
+      if (confirm('Это действие удалит элемент навсегда, вы уверены?')) {
+        MyExpanses.delete(id)
+          .then(() => { this.getAll(); })
+          .catch((error) => {
+            this.$store.commit('setMessage', error.message);
+          });
+      }
     },
   },
   created() {

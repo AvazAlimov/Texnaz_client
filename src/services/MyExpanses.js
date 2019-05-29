@@ -13,4 +13,5 @@ export default {
 
   create: expense => execute(Api().post('myexpanses', expense)),
   getAll: () => execute(Api().get('myexpanses')),
+  delete: id => execute(Api().delete(`myexpanses/${id}`)),
 };
