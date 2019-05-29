@@ -12,4 +12,5 @@ export default {
   createPerson: name => execute(Api().post('myexpanses/people', { name })),
 
   create: expense => execute(Api().post('myexpanses', expense)),
+  getAll: () => execute(Api().get('myexpanses')),
 };

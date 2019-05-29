@@ -76,6 +76,19 @@
             :headers="headers"
             :items="expanses"
           )
+            template(v-slot:items="props")
+              td
+                .title {{ props.item.value }}
+              td {{ props.item.form ? props.item.form.name : '-' }}
+              td {{ props.item.purpose ? props.item.purpose.name : '-' }}
+              td {{ props.item.type ? props.item.type.name : '-' }}
+              td {{ props.item.person ? props.item.person.name : '-' }}
+              td
+                v-layout
+                  v-btn(icon).mx-0
+                      v-icon(color="secondary" small) edit
+                  v-btn(icon).mx-0
+                      v-icon(color="red" small) delete
     router-view
 </template>
 
@@ -118,21 +131,26 @@ export default {
       {
         text: 'Тип расходов',
         value: 'typeId',
+        width: 1,
       },
       {
         text: 'Назначение',
         value: 'purposeId',
+        width: 1,
       },
       {
         text: 'Лицо',
         value: 'personId',
+        width: 1,
       },
       {
         text: 'Дата',
         value: 'date',
+        width: 1,
       },
       {
         sortable: false,
+        width: 1,
       },
     ],
     expanses: [],
@@ -149,13 +167,14 @@ export default {
     getAll() {
       this.loading = true;
       Promise.all([
+        MyExpanses.getAll(),
         MyExpanses.getAllForms(),
         MyExpanses.getAllPurposes(),
         MyExpanses.getAllTypes(),
         MyExpanses.getAllPeople(),
       ])
         .then((results) => {
-          [this.forms, this.purposes, this.types, this.people] = results;
+          [this.expanses, this.forms, this.purposes, this.types, this.people] = results;
           this.cards[0].counter = `${this.forms.length}`;
           this.cards[1].counter = `${this.purposes.length}`;
           this.cards[2].counter = `${this.types.length}`;
