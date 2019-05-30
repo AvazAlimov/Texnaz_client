@@ -76,6 +76,7 @@ export default {
       {
         text: 'Наименование',
         value: 'name',
+        sortable: false,
       },
       {
         sortable: false,

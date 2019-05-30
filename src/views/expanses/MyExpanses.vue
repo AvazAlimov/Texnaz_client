@@ -241,6 +241,11 @@ export default {
               formId,
               personId,
             }).then(() => {
+              this.value = 0;
+              this.type = null;
+              this.form = null;
+              this.purpose = null;
+              this.person = null;
               this.getAll();
             })
               .catch(error => this.$store.commit('setMessage', error.message))
