@@ -46,7 +46,12 @@
                         :class="{'grey': props.expanded, 'lighten-2': props.expanded}"
                         )
                             td
-                                v-icon(v-if="isSelected(props.item)" small) check
+                              v-checkbox(
+                                :value="isSelected(props.item)"
+                                hide-details
+                                color="secondary"
+                                readonly
+                              )
                             td {{ props.item.product.code || '-' }}
                             td {{ props.item.product.Brand.name }} {{ props.item.product.name }}
                             td {{ props.item.product.packing }}
@@ -62,14 +67,15 @@
                                 hide-actions
                             )
                                 template(v-slot:items="stocks")
-                                    tr.selectable(@click="select(stocks.item)"
-                                        :class="{'light-green': indexOf(stocks.item.id) != null}"
-                                    )
-                                        td {{ stocks.item.defected ? 'Поврежден' : 'Хорошо' }}
-                                        td {{ stocks.item.arrival_date | moment('YYYY-MM-DD') }}
-                                        td {{ stocks.item.expiry_date | moment('YYYY-MM-DD') }}
-                                        td {{ stocks.item.quantity - stocks.item.booked }}
-                                        td {{ (stocks.item.quantity - stocks.item.booked) * props.item.product.packing }}
+                                  tr.selectable(@click="select(stocks.item)")
+                                    td
+                                      v-icon(v-if="indexOf(stocks.item.id) != null" small) check
+                                      //{{ stocks.item.defected ? 'Поврежден' : 'Хорошо' }}
+
+                                    td {{ stocks.item.arrival_date | moment('YYYY-MM-DD') }}
+                                    td {{ stocks.item.expiry_date | moment('YYYY-MM-DD') }}
+                                    td {{ stocks.item.quantity - stocks.item.booked }}
+                                    td {{ (stocks.item.quantity - stocks.item.booked) * props.item.product.packing }}
                 v-divider
 </template>
 
@@ -121,8 +127,7 @@ export default {
       ],
       expandedHeaders: [
         {
-          text: 'Состояние',
-          value: 'defected',
+          sortable: false,
         },
         {
           text: 'Дата прибытия',
