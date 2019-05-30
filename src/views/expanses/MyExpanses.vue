@@ -1,12 +1,17 @@
 <template lang="pug">
   div
-    v-layout(row wrap v-if="$route.name == 'myexpanses'")
+    v-layout(row wrap v-if="!data")
       v-flex(xs12).mb-3
         .title МОИ РАСХОДЫ
       v-flex(xs12)
         v-layout(row wrap)
           v-flex(xs3 v-for="(card, index) in cards" :key="index")
-            Card(:title="card.title" :caption="card.counter" :icon="card.icon")
+            Card(
+              :title="card.title"
+              :caption="card.counter"
+              :icon="card.icon"
+              :click="() => data = card.data"
+            )
       v-flex(xs12)
         .white.border.px-4.py-3.mb-2
           .title.mb-2 Новый расход
@@ -89,7 +94,12 @@
                       v-icon(color="secondary" small) edit
                   v-btn(icon).mx-0
                       v-icon(color="red" small @click="remove(props.item.id)") delete
-    router-view
+    v-layout(row wrap v-if="data" align-center)
+      v-btn(icon @click="data=null;getAll()")
+            v-icon arrow_back
+      .title {{ data.title }}
+      v-flex(xs12)
+        ExpenseProperty(:data="data")
 </template>
 
 <script>
@@ -98,6 +108,7 @@ import MyExpanses from '@/services/MyExpanses';
 export default {
   name: 'MyExpanses',
   data: () => ({
+    data: null,
     value: 0,
     showTable: true,
     loading: false,
@@ -106,21 +117,49 @@ export default {
         title: 'Тип расходов',
         icon: 'payment',
         counter: '0',
+        data: {
+          title: 'Тип расходов',
+          getAll: MyExpanses.getAllForms,
+          update: MyExpanses.updateForm,
+          remove: MyExpanses.deleteForm,
+          create: MyExpanses.createForm,
+        },
       },
       {
         title: 'Назначение',
         icon: 'call_split',
         counter: '0',
+        data: {
+          title: 'Назначение',
+          getAll: MyExpanses.getAllPurposes,
+          update: MyExpanses.updatePurpose,
+          remove: MyExpanses.deletePurpose,
+          create: MyExpanses.createPurpose,
+        },
       },
       {
         title: 'Вид расходов',
         icon: 'style',
         counter: '0',
+        data: {
+          title: 'Вид расходов',
+          getAll: MyExpanses.getAllTypes,
+          update: MyExpanses.updateType,
+          remove: MyExpanses.deleteType,
+          create: MyExpanses.createType,
+        },
       },
       {
         title: 'Лицо',
         icon: 'person_outline',
         counter: '0',
+        data: {
+          title: 'Лицо',
+          getAll: MyExpanses.getAllPeople,
+          update: MyExpanses.updatePerson,
+          remove: MyExpanses.deletePerson,
+          create: MyExpanses.createPerson,
+        },
       },
     ],
     headers: [
