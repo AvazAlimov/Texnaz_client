@@ -85,7 +85,7 @@ export default {
         {
           icon: 'payment',
           title: 'Оплаты',
-          // to: '/warehouses',
+          to: '/payments',
           permission: this.$permissions.SHOW_PAYMENTS.name,
         },
         {

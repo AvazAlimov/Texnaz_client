@@ -394,6 +394,11 @@ const router = new Router({
           name: 'shipments',
           component: () => import('./views/shipments/Shipments.vue'),
         },
+        {
+          path: 'payments',
+          name: 'payments',
+          component: () => import('./views/payments/Payments.vue'),
+        },
       ],
     },
   ],
