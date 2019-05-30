@@ -24,6 +24,7 @@
                         td {{ props.item.vat }}%
                         td {{ props.item.tax }}%
                         td {{ props.item.excise }}%
+                        td {{ props.item.discount }}%
                         td
                             v-layout
                                 v-btn(icon
@@ -112,6 +113,11 @@ export default {
         {
           text: 'Акциз',
           value: 'excise',
+          sortable: false,
+        },
+        {
+          text: 'Скидка',
+          value: 'discount',
           sortable: false,
         },
         {

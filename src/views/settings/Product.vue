@@ -107,6 +107,12 @@
                     name="cleaning"
                     v-validate="'required|decimal|min:0|max:100'"
                     color="secondary")
+                  v-text-field(
+                    v-model="product.discount"
+                    label="Скидка %"
+                    name="discount"
+                    v-validate="'required|decimal|min:0|max:100'"
+                    color="secondary")
               v-layout
                 v-spacer
                 v-btn(:loading="loading"
@@ -146,6 +152,7 @@ export default {
         tax: 0,
         vat: 0,
         excise: 0,
+        discount: 0,
       },
       colors: [],
       brands: [],
