@@ -47,6 +47,18 @@
                       td
                         v-text-field(
                           color="secondary"
+                          v-model="props.item.discount"
+                          name="discount"
+                          v-validate="{\
+                            required: true,\
+                            decimal: true,\
+                            min_value: 0,\
+                            max_value: 100,\
+                          }"
+                        )
+                      td
+                        v-text-field(
+                          color="secondary"
                           v-model="props.item.book"
                           :name="props.item.id"
                           v-validate="{\
@@ -178,7 +190,12 @@ export default {
         value: 'expiry_date',
       },
       {
-        text: 'Продажа',
+        text: 'Скидка %',
+        value: 'discount',
+        width: 1,
+      },
+      {
+        text: 'Количество',
         value: 'quantity',
         width: 1,
       },
@@ -219,6 +236,12 @@ export default {
           this.$validator.validate();
         });
       }
+    },
+    selected(value) {
+      value.forEach((element) => {
+        // eslint-disable-next-line no-param-reassign
+        element.discount = element.product.discount;
+      });
     },
   },
   created() {
