@@ -389,6 +389,11 @@ const router = new Router({
           name: 'myexpanses',
           component: () => import('./views/expanses/MyExpanses'),
         },
+        {
+          path: 'shipments',
+          name: 'shipments',
+          component: () => import('./views/shipments/Shipments.vue'),
+        },
       ],
     },
   ],

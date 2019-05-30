@@ -79,7 +79,7 @@ export default {
         {
           icon: 'local_shipping',
           title: 'Отгрузки',
-          // to: '/warehouses',
+          to: '/shipments',
           permission: this.$permissions.SHOW_SHIPMENTS.name,
         },
         {
