@@ -88,6 +88,7 @@
               td {{ props.item.purpose ? props.item.purpose.name : '-' }}
               td {{ props.item.type ? props.item.type.name : '-' }}
               td {{ props.item.person ? props.item.person.name : '-' }}
+              td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
               td
                 v-layout
                   v-btn(icon).mx-0
@@ -170,22 +171,27 @@ export default {
       {
         text: 'Тип расходов',
         value: 'typeId',
-        width: 1,
+
       },
       {
         text: 'Назначение',
         value: 'purposeId',
-        width: 1,
+
+      },
+      {
+        text: 'Вид расходов',
+        value: 'personId',
+
       },
       {
         text: 'Лицо',
         value: 'personId',
-        width: 1,
+
       },
       {
         text: 'Дата',
         value: 'date',
-        width: 1,
+
       },
       {
         sortable: false,
