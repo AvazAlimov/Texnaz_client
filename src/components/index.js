@@ -19,6 +19,7 @@ import UserBookings from './warehouse/UserBookings.vue';
 
 import Map from './analytics/Map.vue';
 import ExpenseProperty from './expenses/ExpenseProperty.vue';
+import EditExpense from './expenses/EditExpense.vue';
 
 const Components = {
   Card,
@@ -41,6 +42,7 @@ const Components = {
 
   Map,
   ExpenseProperty,
+  EditExpense,
 };
 
 Object.keys(Components).forEach((name) => {

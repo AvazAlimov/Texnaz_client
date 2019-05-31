@@ -91,10 +91,19 @@
               td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
               td
                 v-layout
-                  v-btn(icon).mx-0
+                  v-btn(icon @click="openEditDilog(props.item)").mx-0
                       v-icon(color="secondary" small) edit
-                  v-btn(icon).mx-0
-                      v-icon(color="red" small @click="remove(props.item.id)") delete
+                  v-btn(icon @click="remove(props.item.id)").mx-0
+                      v-icon(color="red" small) delete
+          EditExpense(
+            v-model="dialog"
+            :expense="expense"
+            :forms="forms"
+            :types="types"
+            :purposes="purposes"
+            :people="people"
+            :postUpdate="getAll"
+          )
     v-layout(row wrap v-if="data" align-center)
       v-btn(icon @click="data=null;getAll()")
             v-icon arrow_back
@@ -207,6 +216,8 @@ export default {
     type: null,
     people: [],
     person: null,
+    dialog: false,
+    expense: {},
   }),
   methods: {
     getAll() {
@@ -285,6 +296,11 @@ export default {
             this.$store.commit('setMessage', error.message);
           });
       }
+    },
+
+    openEditDilog(item) {
+      this.expense = item;
+      this.dialog = true;
     },
   },
   created() {
