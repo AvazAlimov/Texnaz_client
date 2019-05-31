@@ -75,6 +75,14 @@
             v-spacer
             v-btn.mr-0(icon flat color="seconadry" @click="showTable=!showTable")
               v-icon {{ showTable ? 'data_usage' : 'view_list' }}
+          ExpenseAnalytics(
+            v-if="!showTable"
+            :forms="forms"
+            :types="types"
+            :purposes="purposes"
+            :people="people"
+            :expenses="expanses"
+          )
           v-data-table(
             v-if="showTable"
             hide-actions
@@ -199,7 +207,7 @@ export default {
       },
       {
         text: 'Дата',
-        value: 'date',
+        value: 'createdAt',
 
       },
       {
