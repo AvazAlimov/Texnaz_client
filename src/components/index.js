@@ -22,6 +22,8 @@ import ExpenseProperty from './expenses/ExpenseProperty.vue';
 import EditExpense from './expenses/EditExpense.vue';
 import ExpenseAnalytics from './expenses/ExpenseAnalytics.vue';
 
+import NewPayment from './payments/NewPayment.vue';
+
 const Components = {
   Card,
   Info,
@@ -45,6 +47,8 @@ const Components = {
   ExpenseProperty,
   EditExpense,
   ExpenseAnalytics,
+
+  NewPayment,
 };
 
 Object.keys(Components).forEach((name) => {
