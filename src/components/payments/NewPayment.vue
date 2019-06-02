@@ -41,7 +41,7 @@
                 color="secondary"
                 v-model="clientId"
                 label="Клиент"
-                :items="clients"
+                :items="filteredClients"
                 item-text="name"
                 item-value="id"
                 name="Клиент"
@@ -103,6 +103,13 @@ export default {
     managers: [],
     configurations: [],
   }),
+  computed: {
+    filteredClients() {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      this.clientId = null;
+      return this.managerId ? this.clients.filter(item => item.managerId === this.managerId) : [];
+    },
+  },
   methods: {
     getAll() {
       this.loading = true;
