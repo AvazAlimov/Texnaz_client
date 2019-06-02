@@ -5,4 +5,5 @@ export default {
   getAll: () => execute(Api().get('payments')),
   get: id => execute(Api().get(`payments/${id}`)),
   approve: id => execute(Api().post(`payments/approve/${id}`)),
+  delete: id => execute(Api().delete(`payments/${id}`)),
 };

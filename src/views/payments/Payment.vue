@@ -50,7 +50,7 @@
                 v-layout(row)
                   v-spacer
                   v-btn.ma-0(flat color="secondary" @click="approve()") Утвердить
-                  v-btn.ma-0(flat color="secondary") Отменить
+                  v-btn.ma-0(flat color="secondary" @click="remove()") Отменить
 </template>
 
 <script>
@@ -104,6 +104,19 @@ export default {
           this.$store.commit('setMessage', error.message);
         })
         .finally(() => { this.loading = false; });
+    },
+    remove() {
+      // eslint-disable-next-line no-alert, no-restricted-globals
+      if (confirm('Это действие удалит элемент навсегда, вы уверены?')) {
+        Payment.delete(this.$route.params.id)
+          .then(() => {
+            this.$router.push({ name: 'payments' });
+            window.location.reload();
+          })
+          .catch((error) => {
+            this.$store.commit('setMessage', error.message);
+          });
+      }
     },
   },
   created() {
