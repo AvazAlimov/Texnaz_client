@@ -23,7 +23,7 @@
               td {{ (props.item.sum / props.item.ratio).toFixed(2) }} $
               td {{ props.item.user.name }}
               td
-                v-btn(icon).ma-0
+                v-btn(icon :to="{name: 'payment', params: {id: props.item.id}}").ma-0
                   v-icon(color="secondary" small) visibility
       v-flex(xs12)
         .white.border
