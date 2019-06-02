@@ -20,6 +20,7 @@
               td {{ props.item.client.name }}
               td {{ props.item.client.icc }}
               td {{ props.item.manager.name }}
+              td {{ balance(props.item.client).toFixed(2) }} $
               td {{ (props.item.sum / props.item.ratio).toFixed(2) }} $
               td {{ props.item.user.name }}
               td
@@ -40,6 +41,7 @@
               td {{ props.item.client.name }}
               td {{ props.item.client.icc }}
               td {{ props.item.manager.name }}
+              td {{ balance(props.item.client).toFixed(2) }} $
               td {{ (props.item.sum / props.item.ratio).toFixed(2) }} $
               td {{ props.item.user.name }}
     router-view
@@ -71,6 +73,11 @@ export default {
       {
         text: 'Менеджер',
         value: 'manager',
+      },
+      {
+        text: 'Баланс клиента',
+        value: 'sum',
+        sortable: false,
       },
       {
         text: 'Сумма',
@@ -105,6 +112,18 @@ export default {
           this.$store.commit('setMessage', error.message);
         })
         .finally(() => { this.loading = false; });
+    },
+    balance(client) {
+      if (client.payments) {
+        let balance = 0;
+        client.payments.forEach((payment) => {
+          if (payment.approved) {
+            balance += payment.sum / payment.ratio;
+          }
+        });
+        return balance;
+      }
+      return 0;
     },
   },
   created() {

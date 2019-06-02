@@ -41,7 +41,7 @@
                           .title Баланс клиента
                           v-spacer
                             v-divider.mx-4
-                          .subheading {{ payment.client.balance || 0 }} $
+                          .subheading {{ balance.toFixed(2) || 0 }} $
                         v-layout.my-2(align-center)
                           .title Сумма оплаты
                           v-spacer
@@ -67,6 +67,20 @@ export default {
       createdAt: new Date(),
     },
   }),
+  computed: {
+    balance() {
+      if (this.payment.client.payments) {
+        let balance = 0;
+        this.payment.client.payments.forEach((payment) => {
+          if (payment.approved) {
+            balance += payment.sum / payment.ratio;
+          }
+        });
+        return balance;
+      }
+      return 0;
+    },
+  },
   methods: {
     getAll() {
       this.loading = true;
