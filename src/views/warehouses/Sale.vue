@@ -79,14 +79,6 @@
                   ) Далее
               v-stepper-content(step="3")
                 v-select(
-                  v-model="client"
-                  :items="clients"
-                  item-text="name"
-                  item-value="id"
-                  label="Клиент"
-                  color="secondary"
-                )
-                v-select(
                   v-model="type"
                   :items="types"
                   item-text="name"
@@ -102,6 +94,15 @@
                   label="Тип расчета"
                   color="secondary"
                 )
+                v-select(
+                  v-model="client"
+                  :items="filteredClients"
+                  item-text="name"
+                  return-object
+                  label="Клиент"
+                  color="secondary"
+                )
+                .caption(v-if="client") Баланс клиента: {{ balance.toFixed(2) }} $
 
                 v-layout(row wrap)
                   v-spacer
@@ -134,26 +135,30 @@ export default {
     payments: [
       {
         id: 1,
-        name: 'Полный',
+        name: 'Предоплата',
       },
       {
         id: 2,
-        name: 'Частично',
+        name: 'Частичная',
+      },
+      {
+        id: 3,
+        name: 'Реализация',
       },
     ],
     type: 1,
     types: [
       {
         id: 1,
-        name: 'Цена 1',
+        name: 'B2C',
       },
       {
         id: 2,
-        name: 'Цена 2 (mix)',
+        name: 'Цена с наценкой',
       },
       {
         id: 3,
-        name: 'Цена 3',
+        name: 'B2B',
       },
     ],
     headers: [
@@ -201,6 +206,23 @@ export default {
       },
     ],
   }),
+  computed: {
+    filteredClients() {
+      return this.clients.filter(client => client.managerId === this.user.id);
+    },
+    balance() {
+      if (this.client) {
+        let balance = 0;
+        this.client.payments.forEach((payment) => {
+          if (payment.approved) {
+            balance += payment.sum / payment.ratio;
+          }
+        });
+        return balance;
+      }
+      return 0;
+    },
+  },
   methods: {
     getAll() {
       Promise.all([
@@ -211,22 +233,7 @@ export default {
     },
 
     submit() {
-    //   this.loading = true;
-    //   const bookings = this.selected.map(booking => ({
-    //     quantity: booking.book,
-    //     stockId: booking.id,
-    //     clientId: this.client,
-    //     date: this.date,
-    //     userId: this.user.id,
-    //   }));
-    //   Booking.createMultiple(bookings)
-    //     .then(() => {
-    //       window.location.reload();
-    //     })
-    //     .catch((error) => {
-    //       this.$store.commit('setMessage', error.message);
-    //     })
-    //     .finally(() => { this.loading = false; });
+
     },
   },
   watch: {

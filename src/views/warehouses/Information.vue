@@ -142,7 +142,9 @@ export default {
           });
           // this.stocks = stocks;
         })
-        .catch(() => this.getAll())
+        .catch((error) => {
+          this.$store.commit('setMessage', error.message);
+        })
         .finally(() => { this.loading = false; });
     },
     getBooked(item) {
