@@ -31,7 +31,11 @@
                     :items="selected"
                     hide-actions)
                     template(v-slot:items="props")
-                      SaleItem(:item="props.item")
+                      SaleItem(
+                        :item="props.item"
+                        :exchangeRate="exchangeRate"
+                        :officialRate="officialRate"
+                      )
                 v-divider
                 v-layout(row wrap)
                   v-spacer
@@ -44,9 +48,9 @@
                 v-select(v-model="type"
                   :items="types"
                   item-text="name"
-                  item-value="id"
                   label="Тип оплаты"
-                  color="secondary")
+                  color="secondary"
+                  return-object)
                 v-select(v-model="payment"
                   :items="payments"
                   item-text="name"
@@ -72,6 +76,7 @@
 </template>
 
 <script>
+import Sale from '@/services/Sale';
 import Client from '@/services/Client';
 import Configuration from '@/services/Configuration';
 
@@ -100,19 +105,22 @@ export default {
         name: 'Реализация',
       },
     ],
-    type: 1,
+    type: null,
     types: [
       {
         id: 1,
         name: 'B2C',
+        key: 'firstPrice',
       },
       {
         id: 2,
         name: 'Цена с наценкой',
+        key: 'mixPrice',
       },
       {
         id: 3,
         name: 'B2B',
+        key: 'secondPrice',
       },
     ],
     headers: [
@@ -178,6 +186,8 @@ export default {
       },
     ],
     configurations: [],
+    exchangeRate: 1,
+    officialRate: 1,
   }),
   computed: {
     filteredClients() {
@@ -201,37 +211,47 @@ export default {
   },
   methods: {
     getAll() {
+      this.loading = true;
       Promise.all([
         Client.getAll(),
         Configuration.getAll(),
       ]).then((results) => {
         [this.clients, this.configurations] = results;
-      });
+        this.exchangeRate = (this.configurations.find(conf => conf.id === 4)).value;
+        this.officialRate = (this.configurations.find(conf => conf.id === 5)).value;
+      })
+        .catch(error => this.$store.commit('setMessage', error.message))
+        .finally(() => { this.loading = false; });
     },
     submit() {
-
+      this.loading = true;
+      const sale = {
+        type: this.type.id,
+        form: this.payment,
+        clientId: this.client.id,
+        managerId: this.user.id,
+        items: [],
+      };
+      this.selected.forEach((item) => {
+        sale.items.push({
+          stockId: item.id,
+          priceId: item.product.prices[0].id,
+          quantity: item.sale,
+          discount: item.discount,
+        });
+      });
+      Sale.create(sale)
+        .then(() => {
+          this.$router.push({ name: 'information' });
+          window.location.reload();
+        })
+        .catch(error => this.$store.commit('setMessage', error.message))
+        .finally(() => { this.loading = false; });
     },
     getTotalPrice() {
       let price = 0;
-      switch (this.type) {
-        // B2C
-        case 1:
-          this.selected.forEach((item) => {
-            price += item.firstPrice;
-          });
-          price /= this.configurations[5].value;
-          break;
-
-        // Цена с наценкой
-        case 2:
-          break;
-
-        // B2B
-        case 3:
-          break;
-
-        default:
-          break;
+      if (this.type) {
+        this.selected.forEach((item) => { price += item[this.type.key]; });
       }
       return price;
     },

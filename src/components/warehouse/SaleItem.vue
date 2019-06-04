@@ -46,6 +46,12 @@ export default {
       type: Object,
       required: true,
     },
+    exchangeRate: {
+      required: true,
+    },
+    officialRate: {
+      required: true,
+    },
   },
   data: () => ({
     discount: 0,
@@ -55,6 +61,19 @@ export default {
     calculateFirstPrice() {
       this.item.firstPrice = this.item.product.prices[0].firstPrice
                       * parseFloat(this.item.sale)
+                      * parseFloat((100 - this.item.discount) / 100) / this.officialRate;
+    },
+
+    calculateMixPrice() {
+      this.item.mixPrice = (this.item.product.prices[0].mixPriceNonCash / this.exchangeRate
+                      + this.item.product.prices[0].mixPriceCash)
+                      * parseFloat(this.item.sale)
+                      * parseFloat((100 - this.item.discount) / 100);
+    },
+
+    calculateSecondPrice() {
+      this.item.secondPrice = this.item.product.prices[0].secondPrice
+                      * parseFloat(this.item.sale)
                       * parseFloat((100 - this.item.discount) / 100);
     },
   },
@@ -62,10 +81,14 @@ export default {
     discount(value) {
       this.item.discount = parseFloat(value) || 0;
       this.calculateFirstPrice();
+      this.calculateSecondPrice();
+      this.calculateMixPrice();
     },
     sale(value) {
       this.item.sale = parseFloat(value) || 0;
       this.calculateFirstPrice();
+      this.calculateSecondPrice();
+      this.calculateMixPrice();
     },
   },
   created() {
@@ -74,6 +97,8 @@ export default {
     this.discount = this.item.discount;
     this.sale = this.item.sale;
     this.calculateFirstPrice();
+    this.calculateSecondPrice();
+    this.calculateMixPrice();
   },
   mounted() {
     this.$validator.validate();
