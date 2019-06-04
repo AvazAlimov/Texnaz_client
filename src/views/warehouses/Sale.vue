@@ -5,19 +5,15 @@
             v-stepper-header
               v-stepper-step(
                 step="1" editable
-                color="secondary"
-              ) Выборка
+                color="secondary") Выборка
               v-divider.mx-0
               v-stepper-step(
                 step="2" :editable="selected.length > 0"
-                color="secondary"
-              ) Определить количество
+                color="secondary") Определить количество
               v-divider.mx-0
               v-stepper-step(
                 step="3" :editable="selected.length > 0 && errors.items.length == 0"
-                color="secondary"
-              ) Выбор клиента
-
+                color="secondary") Выбор клиента
             v-divider
             v-stepper-items
               v-stepper-content(step="1").pa-0
@@ -27,8 +23,7 @@
                   v-btn.ma-0.my-1.mr-1(
                     flat color="secondary"
                     :disabled="selected.length == 0"
-                    @click="step = 2"
-                  ) Далее
+                    @click="step = 2") Далее
 
               v-stepper-content(step="2").pa-0
                 v-data-table(
@@ -36,74 +31,36 @@
                     :items="selected"
                     hide-actions)
                     template(v-slot:items="props")
-                      td {{ props.item.product.code || '-' }}
-                      td {{ props.item.product.Brand.name }} {{ props.item.product.name }}
-                      td {{ props.item.product.packing }}
-                      td {{ props.item.product.color || '-' }}
-                      td {{ props.item.quantity - props.item.booked }}
-                      td {{ props.item.defected ? 'Поврежден' : 'Хорошо' }}
-                      td {{ props.item.arrival_date | moment('YYYY-MM-DD') }}
-                      td {{ props.item.expiry_date | moment('YYYY-MM-DD') }}
-                      td
-                        v-text-field(
-                          color="secondary"
-                          v-model="props.item.discount"
-                          name="discount"
-                          v-validate="{\
-                            required: true,\
-                            decimal: true,\
-                            min_value: 0,\
-                            max_value: 100,\
-                          }"
-                        )
-                      td
-                        v-text-field(
-                          color="secondary"
-                          v-model="props.item.book"
-                          :name="props.item.id"
-                          v-validate="{\
-                            required: true,\
-                            decimal: true,\
-                            min_value: 0,\
-                            excluded: '0',\
-                            max_value: props.item.quantity - props.item.booked\
-                          }"
-                        )
+                      SaleItem(:item="props.item")
                 v-divider
                 v-layout(row wrap)
                   v-spacer
                   v-btn.ma-0.mb-1.mr-1(
                     flat color="secondary"
                     :disabled="errors.items.length > 0"
-                    @click="step = 3"
-                  ) Далее
+                    @click="step = 3") Далее
+
               v-stepper-content(step="3")
-                v-select(
-                  v-model="type"
+                v-select(v-model="type"
                   :items="types"
                   item-text="name"
                   item-value="id"
                   label="Тип оплаты"
-                  color="secondary"
-                )
-                v-select(
-                  v-model="payment"
+                  color="secondary")
+                v-select(v-model="payment"
                   :items="payments"
                   item-text="name"
                   item-value="id"
                   label="Тип расчета"
-                  color="secondary"
-                )
-                v-select(
-                  v-model="client"
+                  color="secondary")
+                v-select(v-model="client"
                   :items="filteredClients"
                   item-text="name"
                   return-object
                   label="Клиент"
-                  color="secondary"
-                )
+                  color="secondary")
                 .caption(v-if="client") Баланс клиента: {{ balance.toFixed(2) }} $
-
+                .caption Итоговая цена: {{ getTotalPrice().toFixed(2) }} $
                 v-layout(row wrap)
                   v-spacer
                   v-btn.ma-0.mb-1.mr-1(
@@ -111,26 +68,23 @@
                     color="secondary"
                     :loading="loading"
                     :disabled="!client || !payment || !type"
-                    @click="submit()"
-                  ) Завершить
+                    @click="submit()") Завершить
 </template>
 
 <script>
-
 import Client from '@/services/Client';
-// import Booking from '@/services/Booking';
-import Permissions from '@/utils/Permissions';
+import Configuration from '@/services/Configuration';
 
 export default {
   name: 'Sale',
   data: () => ({
-    loading: false,
     step: 1,
+    user: JSON.parse(localStorage.getItem('user')),
+    loading: false,
     stock: null,
+    client: null,
     selected: [],
     clients: [],
-    client: null,
-    user: JSON.parse(localStorage.getItem('user')),
     payment: 1,
     payments: [
       {
@@ -195,6 +149,24 @@ export default {
         value: 'expiry_date',
       },
       {
+        text: 'B2C',
+        value: 'price',
+        sortable: false,
+        width: 1,
+      },
+      {
+        text: 'Цена с наценкой',
+        value: 'price',
+        sortable: false,
+        width: 1,
+      },
+      {
+        text: 'B2B',
+        value: 'price',
+        sortable: false,
+        width: 1,
+      },
+      {
         text: 'Скидка %',
         value: 'discount',
         width: 1,
@@ -205,9 +177,13 @@ export default {
         width: 1,
       },
     ],
+    configurations: [],
   }),
   computed: {
     filteredClients() {
+      if (this.user.id === 1) {
+        return this.clients;
+      }
       return this.clients.filter(client => client.managerId === this.user.id);
     },
     balance() {
@@ -227,34 +203,40 @@ export default {
     getAll() {
       Promise.all([
         Client.getAll(),
+        Configuration.getAll(),
       ]).then((results) => {
-        [this.clients] = results;
+        [this.clients, this.configurations] = results;
       });
     },
-
     submit() {
 
     },
-  },
-  watch: {
-    step(value) {
-      if (value > 1) {
-        new Promise(resolve => setTimeout(resolve, 100)).then(() => {
-          this.$validator.validate();
-        });
+    getTotalPrice() {
+      let price = 0;
+      switch (this.type) {
+        // B2C
+        case 1:
+          this.selected.forEach((item) => {
+            price += item.firstPrice;
+          });
+          price /= this.configurations[5].value;
+          break;
+
+        // Цена с наценкой
+        case 2:
+          break;
+
+        // B2B
+        case 3:
+          break;
+
+        default:
+          break;
       }
-    },
-    selected(value) {
-      value.forEach((element) => {
-        // eslint-disable-next-line no-param-reassign
-        element.discount = element.product.discount;
-      });
+      return price;
     },
   },
   created() {
-    if (!this.$hasPermission(Permissions.CAN_BOOK.name)) {
-      this.$router.go(-1);
-    }
     this.getAll();
   },
 };

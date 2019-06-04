@@ -16,6 +16,7 @@ import PreStockItem from './warehouse/PreStockItem.vue';
 import AcceptanceItem from './warehouse/AcceptanceItem.vue';
 import ReturnItem from './warehouse/ReturnItem.vue';
 import UserBookings from './warehouse/UserBookings.vue';
+import SaleItem from './warehouse/SaleItem.vue';
 
 import Map from './analytics/Map.vue';
 import ExpenseProperty from './expenses/ExpenseProperty.vue';
@@ -37,6 +38,7 @@ const Components = {
   SecondCostItem,
   DistributeItems,
 
+  SaleItem,
   PreStockItem,
   SearchStock,
   AcceptanceItem,
