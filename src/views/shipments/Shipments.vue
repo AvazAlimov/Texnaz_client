@@ -1,10 +1,9 @@
 <template lang="pug">
   div
     v-layout(row wrap v-if="$route.name == 'shipments'")
-      v-flex(xs12).mb-3
-        .title ОТГРУЗКИ
       v-flex(xs12)
-        .white.border
+        .title ОТГРУЗКИ
+        .white.border.mt-3
           v-data-table(
             hide-actions
             :headers="headers"
@@ -20,6 +19,34 @@
               td {{ types.find(type => type.id == props.item.type).name }}
               td {{ payments.find(payment => payment.id == props.item.form).name }}
               td {{ getClientBalance(props.item.client) }} $
+              td
+                v-btn.ma-0(
+                  flat icon color="secondary"
+                  :to="{ name: 'shipment', params: {id: props.item.id} }")
+                  v-icon(small) visibility
+      v-flex(xs12).mt-3
+        .title МОИ ОТГРУЗКИ
+        .white.border.mt-3
+          v-data-table(
+              hide-actions
+              :headers="headers"
+              :items="mySales"
+              :loading="loading")
+              template(v-slot:items="props")
+                td {{ props.item.id }}
+                td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
+                td {{ props.item.client.icc }}
+                td {{ props.item.client.name }}
+                td {{ props.item.manager.name }}
+                td {{ getTotalPrice(props.item).toFixed(2) }} $
+                td {{ types.find(type => type.id == props.item.type).name }}
+                td {{ payments.find(payment => payment.id == props.item.form).name }}
+                td {{ getClientBalance(props.item.client) }} $
+                td
+                  v-btn.ma-0(
+                    flat icon color="secondary"
+                    :to="{ name: 'shipment', params: {id: props.item.id} }")
+                    v-icon(small) visibility
     router-view
 </template>
 
@@ -30,6 +57,7 @@ import Configuration from '@/services/Configuration';
 export default {
   name: 'Shipments',
   data: () => ({
+    user: JSON.parse(localStorage.getItem('user')),
     loading: false,
     configurations: [],
     exchangeRate: 1,
@@ -68,43 +96,53 @@ export default {
     sales: [],
     headers: [
       {
-        text: 'Number',
+        text: 'Номер',
         value: 'id',
       },
       {
-        text: 'Date',
+        text: 'Дата',
         value: 'createdAt',
       },
       {
-        text: 'ICC',
+        text: 'ИКК',
         value: 'client.icc',
       },
       {
-        text: 'Client',
+        text: 'Клиент',
         value: 'client.name',
       },
       {
-        text: 'Manger',
+        text: 'Менеджер',
         value: 'manager.name',
       },
       {
-        text: 'Price',
+        text: 'Сумма',
         value: 'price',
+        sortable: false,
       },
       {
-        text: 'Type',
+        text: 'Тип оплаты',
         value: 'type',
       },
       {
-        text: 'Form',
+        text: 'Тип расчета',
         value: 'form',
       },
       {
-        text: 'Balance',
+        text: 'Баланс',
         value: 'balance',
+        sortable: false,
+      },
+      {
+        sortable: false,
       },
     ],
   }),
+  computed: {
+    mySales() {
+      return this.sales.filter(sale => sale.managerId === this.user.id);
+    },
+  },
   methods: {
     getAll() {
       this.loading = true;

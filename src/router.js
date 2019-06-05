@@ -393,6 +393,13 @@ const router = new Router({
           path: 'shipments',
           name: 'shipments',
           component: () => import('./views/shipments/Shipments.vue'),
+          children: [
+            {
+              path: ':id',
+              name: 'shipment',
+              component: () => import('./views/shipments/Shipment.vue'),
+            },
+          ],
         },
         {
           path: 'payments',
