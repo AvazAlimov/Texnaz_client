@@ -230,6 +230,7 @@ export default {
         form: this.payment,
         clientId: this.client.id,
         managerId: this.user.id,
+        warehouseId: parseInt(this.$route.params.id, 10),
         items: [],
       };
       this.selected.forEach((item) => {

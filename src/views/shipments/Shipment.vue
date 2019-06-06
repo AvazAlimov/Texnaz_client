@@ -18,6 +18,11 @@
                             v-divider.mx-4
                           .subheading {{ sale.createdAt | moment('HH:mm DD-MM-YYYY') }}
                         v-layout.mb-2(align-center)
+                          .title Склад
+                          v-spacer
+                            v-divider.mx-4
+                          .subheading {{ sale.warehouse.name }} {{ sale.warehouse.company }}
+                        v-layout.mb-2(align-center)
                           .title ИКК клиента
                           v-spacer
                             v-divider.mx-4
