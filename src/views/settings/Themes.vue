@@ -41,13 +41,13 @@ export default {
           accent: '#82B1FF',
         },
         {
-          title: 'Храм розовый',
+          title: 'Чирок',
           primary: '#03DAC5',
           secondary: '#424242',
           accent: '#FD5523',
         },
         {
-          title: 'Храм розовый',
+          title: 'Зелень',
           primary: '#37966F',
           secondary: '#000000',
           accent: '#FD5523',

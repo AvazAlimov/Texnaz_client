@@ -73,7 +73,7 @@ export default {
             key: 'themes',
             to: '/themes',
             title: 'Темы',
-            count: 3,
+            count: 7,
             icon: 'format_paint',
           },
         ],
