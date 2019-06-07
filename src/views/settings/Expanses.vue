@@ -24,7 +24,7 @@
                 v-divider
                 v-layout
                     v-spacer
-                    v-btn.ma-2(flat color="secondary"
+                    v-btn.ma-0.mb-1.mr-1(flat color="secondary"
                       :to="{ name: 'expanse' }"
                     ) Добавить
 </template>

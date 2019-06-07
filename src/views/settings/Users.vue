@@ -18,19 +18,18 @@
                             text-color="black") {{ role.name }}
                         td
                             v-layout
-                                v-btn.mx-0(icon
+                                v-btn.mx-0(icon flat color="secondary"
                                   :to="{ name: 'user', params: {id: props.item.id }}"
                                 )
-                                    v-icon(color="secondary" small) edit
-                                v-btn(
+                                    v-icon(small) edit
+                                v-btn(icon flat color="red"
                                   v-if="props.item.id > 1"
-                                  icon
                                   @click="remove(props.item.id)").mx-0
-                                    v-icon(color="secondary" small) delete
+                                    v-icon(small) delete
                 v-divider
                 v-layout
                     v-spacer
-                    v-btn.ma-2(flat color="secondary"
+                    v-btn.ma-0.mb-1.mr-1(flat color="secondary"
                       :to="{ name: 'user' }"
                     ) Добавить
 </template>

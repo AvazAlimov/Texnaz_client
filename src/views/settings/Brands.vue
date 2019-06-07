@@ -12,16 +12,16 @@
                         td {{ props.item.manufacturer }}
                         td
                             v-layout
-                                v-btn(icon
+                                v-btn(icon flat color="secondary"
                                   :to="{ name: 'brand', params: { id: props.item.id }}"
                                 ).mx-0
-                                    v-icon(color="secondary" small) edit
-                                v-btn(icon @click="remove(props.item.id)").mx-0
-                                    v-icon(color="secondary" small) delete
+                                    v-icon(small) edit
+                                v-btn(flat color="red" icon @click="remove(props.item.id)").mx-0
+                                    v-icon(small) delete
                 v-divider
                 v-layout
                     v-spacer
-                    v-btn.ma-2(flat color="secondary"
+                    v-btn.ma-0.mb-1.mr-1(flat color="secondary"
                       :to="{ name: 'brand' }"
                     ) Добавить
 </template>

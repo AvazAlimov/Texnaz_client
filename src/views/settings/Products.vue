@@ -12,10 +12,11 @@
                 v-data-table(:headers="headers" :items="products" hide-actions :loading="loading")
                     template(v-slot:items="props")
                         td {{ props.item.Brand.name }}
+                        td {{ props.item.Brand.manufacturer }}
                         td {{ props.item.name }}
-                        td {{ props.item.code }}
+                        td {{ props.item.code || '-' }}
                         td {{ props.item.packing }}
-                        td {{ props.item.color }}
+                        td {{ props.item.color || '-' }}
                         td {{ getUnitName(props.item.unit) }}
                         td {{ getTypeName(props.item.type) }}
                         td {{ getPurposeName(props.item.purpose) }}
@@ -36,7 +37,7 @@
                 v-divider
                 v-layout
                     v-spacer
-                    v-btn.ma-2(flat color="secondary"
+                    v-btn.ma-0.mb-1.mr-1(flat color="secondary"
                       :to="{ name: 'product' }"
                     ) Добавить
 </template>
@@ -58,6 +59,10 @@ export default {
           value: 'Brand.name',
         },
         {
+          text: 'Производитель',
+          value: 'Brand.manufacturer',
+        },
+        {
           text: 'Наименование',
           value: 'name',
         },
@@ -68,27 +73,22 @@ export default {
         {
           text: 'Фасовка',
           value: 'packing',
-          sortable: false,
         },
         {
           text: 'Цвет',
           value: 'color',
-          sortable: false,
         },
         {
           text: 'Единица',
           value: 'unit',
-          sortable: false,
         },
         {
           text: 'Тип',
           value: 'type',
-          sortable: false,
         },
         {
           text: 'Назначение',
           value: 'purpose',
-          sortable: false,
         },
         {
           text: 'Тег',
