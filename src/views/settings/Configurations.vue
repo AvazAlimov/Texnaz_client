@@ -40,6 +40,7 @@ export default {
           text: 'Значение',
           value: 'value',
           width: 200,
+          sortable: false,
         },
         {
           sortable: false,

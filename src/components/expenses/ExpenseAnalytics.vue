@@ -1,8 +1,8 @@
 <template lang="pug">
-  .pa-4
+  .px-4.pb-4
     v-layout(row wrap)
       v-flex(xs12)
-        v-layout(row justify-center align-center)
+        v-layout(row align-center)
             .title.mr-2 От:
             v-dialog(
               v-model="startModal"
@@ -123,23 +123,33 @@ export default {
       }
       return filtered;
     },
+    total() {
+      let sum = 0;
+      this.inPeriodExpenses.forEach((item) => { sum += item.value; });
+      return sum;
+    },
   },
   methods: {
-    data(set) {
+    data({ set, key }) {
       const forms = Array(set.length);
       this.inPeriodExpenses.forEach((expense) => {
         set.forEach((form, index) => {
-          if (form.id === expense.formId) {
+          if (form.id === expense[key]) {
             forms[index] = (forms[index] || 0) + parseFloat(expense.value);
           }
         });
       });
+      const isEmpty = forms.reduce((a, b) => a + b, 0) === 0;
       return {
         datasets: [{
-          data: forms,
-          backgroundColor: set.map(() => ColorGenerator.getRandomColor()),
+          data: isEmpty ? [100] : forms,
+          backgroundColor: isEmpty ? ['rgba(0, 0, 0, 0.05)']
+            : set.map(() => ColorGenerator.getRandomColor()),
         }],
-        labels: set.map((form, index) => `${form.name} ${((forms[index] * 100 / this.total) || 0).toFixed(2)}%`),
+        labels: isEmpty ? ['Нет расходов']
+          : set
+            .filter((form, index) => forms[index] > 0)
+            .map((form, index) => `${form.name} ${((forms[index] * 100 / this.total) || 0).toFixed(2)}%`),
       };
     },
     renderPieCharts() {
@@ -147,25 +157,29 @@ export default {
         {
           ctx: 'pieChartForms',
           set: this.forms,
+          key: 'formId',
         },
         {
           ctx: 'pieChartTypes',
           set: this.types,
+          key: 'typeId',
         },
         {
           ctx: 'pieChartPurposes',
           set: this.purposes,
+          key: 'purposeId',
         },
         {
           ctx: 'pieChartPeople',
           set: this.people,
+          key: 'personId',
         },
       ];
       charts.forEach((chart) => {
         // eslint-disable-next-line no-new
         new Chart(chart.ctx, {
           type: 'pie',
-          data: this.data(chart.set),
+          data: this.data(chart),
         });
       });
     },
