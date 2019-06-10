@@ -96,12 +96,10 @@ export default {
         // },
         {
           text: 'Наценка',
-          value: 'mixPriceCash',
           sortable: false,
         },
         {
           text: 'B2B',
-          value: 'secondPrice',
           sortable: false,
         },
       ],

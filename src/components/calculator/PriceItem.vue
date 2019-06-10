@@ -11,13 +11,13 @@
       td.pa-0
         v-text-field.ma-0(
           solo flat hide-details
-          v-model="item.mixPriceCash"
-          :value="mixPriceCash"
+          v-model="item.mixPriceNonCash"
+          :value="mixPriceNonCash"
           color="secondary"
           background-color="transparent"
           :name="`${item.product.id}`"
           v-validate="'required|decimal'"
-          suffix="$" type="number" style="max-width: 100px;"
+          suffix="сум" type="number"  style="max-width: 150px;"
         )
       td.pa-0
         v-text-field.ma-0(
