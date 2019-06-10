@@ -9,7 +9,6 @@ import SelectionItem from './SelectionItem.vue';
 import SearchProduct from './SearchProduct.vue';
 import FirstCostItem from './FirstCostItem.vue';
 import SecondCostItem from './SecondCostItem.vue';
-import DistributeItems from './DistributeItems.vue';
 
 import SearchStock from './warehouse/SearchStock.vue';
 import PreStockItem from './warehouse/PreStockItem.vue';
@@ -36,7 +35,6 @@ const Components = {
   SearchProduct,
   FirstCostItem,
   SecondCostItem,
-  DistributeItems,
 
   SaleItem,
   PreStockItem,

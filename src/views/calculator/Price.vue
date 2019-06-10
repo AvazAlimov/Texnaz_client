@@ -33,18 +33,18 @@
           PriceItem(:item="props.item" :batch="batch")
       v-divider
       v-layout(wrap row justify-end)
-        DistributeItems(
-          v-if="items.length"
-          :batch="batch"
-          :items="items"
-        )
-        //v-btn.mt-0.mb-1.ml-0.mr-0(flat color="secondary") Сохранить
-        v-btn.mt-0.mb-1.ml-0.mr-1(flat color="secondary" @click="print") Распечатать
+        v-btn.ma-0.mb-1(
+          flat color="secondary"
+          :disabled="errors.items.length > 0"
+          @click="approve") Утвердить
+        v-btn.ma-0.mb-1.mr-1(flat color="secondary" @click="print") Распечатать
 </template>
 
 <script>
 import Batch from '@/services/Batch';
 import Export from '@/utils/Export';
+import PreStock from '@/services/PreStock';
+import Price from '@/services/Price';
 
 export default {
   name: 'Price',
@@ -56,14 +56,23 @@ export default {
         items: [],
       },
       items: [],
-      headers: [
+      incomeTax: 0,
+      cashProfitability: 0,
+      nonCashProfitability: 0,
+    };
+  },
+  computed: {
+    headers() {
+      const columns = [
         {
           text: 'Бренд',
           value: 'product.Brand.name',
+          width: 1,
         },
         {
           text: 'Производитель',
           value: 'product.Brand.manufacturer',
+          width: 1,
         },
         {
           text: 'Наименование',
@@ -72,41 +81,38 @@ export default {
         {
           text: 'Фасовка',
           value: 'product.packing',
-          align: 'center',
+          width: 1,
         },
         {
           text: 'Цвет',
           value: 'color',
-          align: 'center',
+          width: 1,
         },
         {
           text: 'Количество',
           value: 'quantity',
-          align: 'center',
-        },
-        // {
-        //   text: 'Цена №1 (БН)',
-        //   value: 'price',
-        //   sortable: false,
-        // },
-        // {
-        //   text: 'Цена №2 (БН)',
-        //   value: 'mixPriceNonCash',
-        //   sortable: false,
-        // },
-        {
-          text: 'Наценка',
-          sortable: false,
+          width: 1,
         },
         {
-          text: 'B2B',
+          text: 'Наценка (сум)',
           sortable: false,
+          width: 1,
         },
-      ],
-      incomeTax: 0,
-      cashProfitability: 0,
-      nonCashProfitability: 0,
-    };
+        {
+          text: 'B2B ($)',
+          sortable: false,
+          width: 1,
+        },
+      ];
+      if (this.batch.Warehouse) {
+        columns.splice(6, 0, {
+          text: 'Экспорт в склад',
+          sortable: false,
+          width: 1,
+        });
+      }
+      return columns;
+    },
   },
   methods: {
     getAll() {
@@ -124,6 +130,39 @@ export default {
         // eslint-disable-next-line no-param-reassign
         item[name] = value;
       });
+    },
+    approve() {
+      const preStocks = [];
+      this.batch.approved = true;
+
+      if (this.batch.Warehouse) {
+        this.items.forEach((item) => {
+          preStocks.push({
+            productId: item.product.id,
+            warehouseId: this.batch.warehouse,
+            quantity: item.export,
+          });
+        });
+      }
+
+      Promise.all([
+        PreStock.createMultiple(preStocks),
+        Price.createMultiple(this.items.map(item => ({
+          productId: item.product.id,
+          firstPrice: item.firstPrice || 0,
+          mixPriceNonCash: item.mixPriceNonCash,
+          mixPriceCash: item.mixPriceCash || 0,
+          secondPrice: item.secondPrice,
+        }))),
+        Batch.update(this.batch.id, this.batch),
+      ])
+        .then(() => {
+          this.$router.push({ name: 'calculator' });
+          window.location.reload();
+        })
+        .catch((error) => {
+          this.$store.commit('setMessage', error.message);
+        });
     },
     print() {
       const jsonData = this.items.map(item => ({

@@ -1,47 +1,39 @@
 <template lang="pug">
-    tr
-      td {{ item.product.Brand.name }}
-      td {{ item.product.Brand.manufacturer }}
-      td {{ item.product.name }}
-      td.text-xs-center {{ item.product.packing }}
-      td.text-xs-center {{ item.product.color || '-' }}
-      td.text-xs-center {{ item.quantity }}
-      //- td.blue.lighten-5 {{ firstPrice }} сум
-      //- td.orange.lighten-5 {{ mixPriceNonCash }} сум
-      td.pa-0
-        v-text-field.ma-0(
-          solo flat hide-details
-          v-model="item.mixPriceNonCash"
-          :value="mixPriceNonCash"
-          color="secondary"
-          background-color="transparent"
-          :name="`${item.product.id}`"
-          v-validate="'required|decimal'"
-          suffix="сум" type="number"  style="max-width: 150px;"
-        )
-      td.pa-0
-        v-text-field.ma-0(
-          solo flat hide-details
-          v-model="item.secondPrice"
-          :value="secondPrice"
-          color="secondary"
-          background-color="transparent"
-          :name="`${item.product.id}`"
-          v-validate="'required|decimal'"
-          suffix="$" type="number" style="max-width: 100px;"
-        )
+  tr
+    td {{ item.product.Brand.name }}
+    td {{ item.product.Brand.manufacturer }}
+    td {{ item.product.name }}
+    td {{ item.product.packing }}
+    td {{ item.product.color || '-' }}
+    td {{ item.quantity }}
+    td.px-2(v-if="batch.Warehouse")
+      v-text-field.ma-0(v-model="item.export"
+        solo flat hide-details style="min-width: 100px;"
+        color="secondary" background-color="transparent"
+        name="export"
+        v-validate="{required: true, decimal: true, min_value: 0}")
+    td.px-2
+      v-text-field.ma-0(v-model="item.mixPriceNonCash"
+        :value="mixPriceNonCash"
+        solo flat hide-details style="min-width: 150px;"
+        color="secondary" background-color="transparent"
+        name="mixPriceNonCash"
+        v-validate="{required: true, decimal: true, min_value: 0}")
+    td.px-2
+      v-text-field.ma-0(v-model="item.secondPrice"
+        :value="secondPrice"
+        solo flat hide-details style="min-width: 100px;"
+        color="secondary" background-color="transparent"
+        name="secondPrice"
+        v-validate="{required: true, decimal: true, min_value: 0}")
 </template>
 
 <script>
 export default {
   name: 'Item',
   props: {
-    item: {
-      required: true,
-    },
-    batch: {
-      required: true,
-    },
+    item: { required: true },
+    batch: { required: true },
   },
   computed: {
     // Общий вес
@@ -209,6 +201,11 @@ export default {
       this.item.secondPrice = value;
       return value;
     },
+  },
+  created() {
+    if (this.batch.Warehouse) {
+      this.item.export = this.item.quantity;
+    }
   },
 };
 </script>
