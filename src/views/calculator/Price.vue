@@ -58,12 +58,25 @@ export default {
       items: [],
       headers: [
         {
+          text: 'Бренд',
+          value: 'product.Brand.name',
+        },
+        {
+          text: 'Производитель',
+          value: 'product.Brand.manufacturer',
+        },
+        {
           text: 'Наименование',
           value: 'product.name',
         },
         {
           text: 'Фасовка',
           value: 'product.packing',
+          align: 'center',
+        },
+        {
+          text: 'Цвет',
+          value: 'color',
           align: 'center',
         },
         {
@@ -82,7 +95,7 @@ export default {
         //   sortable: false,
         // },
         {
-          text: 'Mix',
+          text: 'Наценка',
           value: 'mixPriceCash',
           sortable: false,
         },

@@ -1,29 +1,34 @@
 <template lang="pug">
     tr
+      td {{ item.product.Brand.name }}
+      td {{ item.product.Brand.manufacturer }}
       td {{ item.product.name }}
       td.text-xs-center {{ item.product.packing }}
       td.text-xs-center {{ item.product.color || '-' }}
+      td.text-xs-center {{ item.quantity }}
       //- td.blue.lighten-5 {{ firstPrice }} сум
       //- td.orange.lighten-5 {{ mixPriceNonCash }} сум
-      td.orange.lighten-5
+      td.pa-0
         v-text-field.ma-0(
-          solo
-          hide-details
+          solo flat hide-details
           v-model="item.mixPriceCash"
           :value="mixPriceCash"
           color="secondary"
+          background-color="transparent"
           :name="`${item.product.id}`"
           v-validate="'required|decimal'"
+          suffix="$" type="number" style="max-width: 100px;"
         )
-      td.green.lighten-5
+      td.pa-0
         v-text-field.ma-0(
-          solo
-          hide-details
+          solo flat hide-details
           v-model="item.secondPrice"
           :value="secondPrice"
           color="secondary"
+          background-color="transparent"
           :name="`${item.product.id}`"
           v-validate="'required|decimal'"
+          suffix="$" type="number" style="max-width: 100px;"
         )
 </template>
 
@@ -207,8 +212,3 @@ export default {
   },
 };
 </script>
-<style>
-td {
-    height: auto !important;
-}
-</style>
