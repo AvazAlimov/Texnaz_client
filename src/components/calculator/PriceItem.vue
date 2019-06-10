@@ -3,10 +3,28 @@
       td {{ item.product.name }}
       td.text-xs-center {{ item.product.packing }}
       td.text-xs-center {{ item.product.color || '-' }}
-      td.blue.lighten-5 {{ firstPrice }} сум
-      td.orange.lighten-5 {{ mixPriceNonCash }} сум
-      td.orange.lighten-5 {{ mixPriceCash }} $
-      td.green.lighten-5 {{ secondPrice }} $
+      //- td.blue.lighten-5 {{ firstPrice }} сум
+      //- td.orange.lighten-5 {{ mixPriceNonCash }} сум
+      td.orange.lighten-5
+        v-text-field.ma-0(
+          solo
+          hide-details
+          v-model="item.mixPriceCash"
+          :value="mixPriceCash"
+          color="secondary"
+          :name="`${item.product.id}`"
+          v-validate="'required|decimal'"
+        )
+      td.green.lighten-5
+        v-text-field.ma-0(
+          solo
+          hide-details
+          v-model="item.secondPrice"
+          :value="secondPrice"
+          color="secondary"
+          :name="`${item.product.id}`"
+          v-validate="'required|decimal'"
+        )
 </template>
 
 <script>

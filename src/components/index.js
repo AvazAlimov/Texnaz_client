@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Card from './Card.vue';
 import Info from './Info.vue';
 import Expanses from './Expanses.vue';
-import PriceItem from './PriceItem.vue';
+import PriceItem from './calculator/PriceItem.vue';
 import CustomsItem from './CustomsItem.vue';
 import PricesTable from './PricesTable.vue';
 import SelectionItem from './SelectionItem.vue';

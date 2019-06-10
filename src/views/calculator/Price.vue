@@ -71,24 +71,24 @@ export default {
           value: 'quantity',
           align: 'center',
         },
+        // {
+        //   text: 'Цена №1 (БН)',
+        //   value: 'price',
+        //   sortable: false,
+        // },
+        // {
+        //   text: 'Цена №2 (БН)',
+        //   value: 'mixPriceNonCash',
+        //   sortable: false,
+        // },
         {
-          text: 'Цена №1 (БН)',
-          value: 'price',
+          text: 'Mix',
+          value: 'mixPriceCash',
           sortable: false,
         },
         {
-          text: 'Цена №2 (БН)',
-          value: 'price',
-          sortable: false,
-        },
-        {
-          text: 'Цена №2 (Н)',
-          value: 'price',
-          sortable: false,
-        },
-        {
-          text: 'Цена №3 (Н)',
-          value: 'price',
+          text: 'B2B',
+          value: 'secondPrice',
           sortable: false,
         },
       ],
