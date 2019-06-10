@@ -6,26 +6,44 @@
     td {{ item.product.packing }}
     td {{ item.product.color || '-' }}
     td {{ item.quantity }}
-    td.px-2(v-if="batch.Warehouse")
+    td.px-2.text-xs-right(v-if="batch.Warehouse")
       v-text-field.ma-0(v-model="item.export"
         solo flat hide-details style="min-width: 100px;"
         color="secondary" background-color="transparent"
         name="export"
         v-validate="{required: true, decimal: true, min_value: 0}")
     td.px-2
-      v-text-field.ma-0(v-model="item.mixPriceNonCash"
+      v-text-field.ma-0(v-model="priceOne"
         :value="mixPriceNonCash"
         solo flat hide-details style="min-width: 150px;"
         color="secondary" background-color="transparent"
         name="mixPriceNonCash"
         v-validate="{required: true, decimal: true, min_value: 0}")
+        template(v-slot:append-outer)
+          v-layout.pt-2(align-center v-if="mixPriceNonCashChange != 0")
+            .caption(:class="{\
+              'red--text': mixPriceNonCashChange < 0,\
+              'green--text': mixPriceNonCashChange > 0\
+            }") {{ mixPriceNonCashChange.toFixed(2) }}%
+            v-icon(
+              small :color="mixPriceNonCashChange < 0 ? 'red' : 'green'"
+            ) {{ mixPriceNonCashChange < 0 ? 'arrow_downward' : 'arrow_upward' }}
     td.px-2
-      v-text-field.ma-0(v-model="item.secondPrice"
+      v-text-field.ma-0(v-model="priceTwo"
         :value="secondPrice"
         solo flat hide-details style="min-width: 100px;"
         color="secondary" background-color="transparent"
         name="secondPrice"
         v-validate="{required: true, decimal: true, min_value: 0}")
+        template(v-slot:append-outer)
+          v-layout.pt-2(align-center v-if="secondPriceChange != 0")
+            .caption(:class="{\
+              'red--text': secondPriceChange < 0,\
+              'green--text': secondPriceChange > 0\
+            }") {{ secondPriceChange.toFixed(2) }}%
+            v-icon(
+              small :color="secondPriceChange < 0 ? 'red' : 'green'"
+            ) {{ secondPriceChange < 0 ? 'arrow_downward' : 'arrow_upward' }}
 </template>
 
 <script>
@@ -35,6 +53,10 @@ export default {
     item: { required: true },
     batch: { required: true },
   },
+  data: () => ({
+    priceOne: 0,
+    priceTwo: 0,
+  }),
   computed: {
     // Общий вес
     totalWeight() {
@@ -189,7 +211,7 @@ export default {
         (this.firstCost * this.batch.official_rate * this.item.product.packing) / 100,
       ) * 100;
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      this.item.mixPriceNonCash = value;
+      this.priceOne = value;
       return value;
     },
     // Цена №3
@@ -198,8 +220,30 @@ export default {
                 + this.firstCost)
                 * this.item.product.packing) * 100) / 100;
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      this.item.secondPrice = value;
+      this.priceTwo = value;
       return value;
+    },
+
+    // Changes in Price
+    mixPriceNonCashChange() {
+      if (this.item.product.prices.length) {
+        return (((this.priceOne / this.item.product.prices[0].mixPriceNonCash) - 1) * 100);
+      }
+      return 0;
+    },
+    secondPriceChange() {
+      if (this.item.product.prices.length) {
+        return (((this.priceTwo / this.item.product.prices[0].secondPrice) - 1) * 100);
+      }
+      return 0;
+    },
+  },
+  watch: {
+    priceOne(value) {
+      this.item.mixPriceNonCash = value;
+    },
+    priceTwo(value) {
+      this.item.secondPrice = value;
     },
   },
   created() {

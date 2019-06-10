@@ -67,12 +67,10 @@ export default {
         {
           text: 'Бренд',
           value: 'product.Brand.name',
-          width: 1,
         },
         {
           text: 'Производитель',
           value: 'product.Brand.manufacturer',
-          width: 1,
         },
         {
           text: 'Наименование',
@@ -81,34 +79,28 @@ export default {
         {
           text: 'Фасовка',
           value: 'product.packing',
-          width: 1,
         },
         {
           text: 'Цвет',
           value: 'color',
-          width: 1,
         },
         {
           text: 'Количество',
           value: 'quantity',
-          width: 1,
         },
         {
           text: 'Наценка (сум)',
           sortable: false,
-          width: 1,
         },
         {
           text: 'B2B ($)',
           sortable: false,
-          width: 1,
         },
       ];
       if (this.batch.Warehouse) {
         columns.splice(6, 0, {
           text: 'Экспорт в склад',
           sortable: false,
-          width: 1,
         });
       }
       return columns;
