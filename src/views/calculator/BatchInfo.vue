@@ -21,9 +21,9 @@
             v-text-field(v-model="batch.total" label="Общий оборот")
             v-text-field(v-model="batch.conversion" label="Конвертация")
             v-text-field(v-model="batch.bank_transfer" label="Банковский перевод")
-            v-text-field(v-model="batch.market_rate" label="Курс доллара (рыночный)")
+            v-text-field(v-model="batch.market_rate" label="Курс доллара (обмен)")
             v-text-field(v-model="batch.official_rate" label="Курс доллара (официальный)")
-            v-text-field(v-model="batch.exchange_rate" label="Курс доллара (обмен)")
+            v-text-field(v-model="batch.exchange_rate" label="Курс доллара (рыночный)")
     v-flex(xs6 d-flex)
       Expanses(
         v-model="period_cash_expanses"

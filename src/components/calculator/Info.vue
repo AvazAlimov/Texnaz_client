@@ -44,7 +44,7 @@
                 v-divider.mx-4
               .subheading {{ batch.bank_transfer }} %
             v-layout.mb-1(align-center)
-              .subheading Курс доллара (рыночный)
+              .subheading Курс доллара (обмен)
               v-spacer
                 v-divider.mx-4
               .subheading {{ batch.market_rate }} сум
