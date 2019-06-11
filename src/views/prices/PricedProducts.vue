@@ -6,17 +6,26 @@
       :loading="loading"
       hide-actions)
       template(v-slot:items="props")
-        tr(@click="props.expanded = !props.expanded")
+        tr
           td {{ props.index + 1 }}
           td {{ props.item.product.Brand.name }}
           td {{ props.item.product.Brand.manufacturer }}
           td {{ props.item.product.name }}
+          td.text-xs-center {{ props.item.product.color || '-' }}
           td.text-xs-center {{ props.item.product.packing }}
           td.orange.lighten-4 {{ props.item.mixPriceNonCash }}
           td.green.lighten-4 {{ props.item.secondPrice }}
           td {{ props.item.secondPrice * exchangeRate | ceil }}
           td {{ props.item.secondPrice - props.item.mixPriceNonCash / exchangeRate | roundUp }}
           td {{ props.item.createdAt | moment("HH:mm DD-MM-YYYY") }}
+          td
+            v-layout
+              v-btn.ma-0(
+                flat color="secondary" icon
+                :to="{name: 'editprice', params: {id: props.item.id}}")
+                v-icon(small) edit
+              v-btn.ma-0(flat color="secondary" icon @click="props.expanded = !props.expanded")
+                v-icon {{ props.expanded ? 'expand_less' : 'expand_more' }}
       template(v-slot:expand="props")
         v-data-table#expanded(
           :headers="expandedHeaders"
@@ -30,11 +39,14 @@
               td
               td
               td
+              td
               td.orange.lighten-5 {{ prices.item.mixPriceNonCash }}
               td.green.lighten-5 {{ prices.item.secondPrice }}
               td {{ prices.item.secondPrice * exchangeRate | ceil }}
               td {{ prices.item.secondPrice - prices.item.mixPriceNonCash/ exchangeRate | roundUp }}
               td {{ prices.item.createdAt | moment("HH:mm DD-MM-YYYY") }}
+              td
+                div(style="width: 72px;")
         v-divider
 </template>
 
@@ -70,6 +82,13 @@ export default {
           invisible: true,
         },
         {
+          text: 'Цвет',
+          value: 'product.color',
+          align: 'center',
+          width: 1,
+          invisible: true,
+        },
+        {
           text: 'Фасовка',
           value: 'product.packing',
           align: 'center',
@@ -98,6 +117,10 @@ export default {
         },
         {
           text: 'Дата генерации',
+          width: 1,
+          sortable: false,
+        },
+        {
           width: 1,
           sortable: false,
         }],
@@ -157,8 +180,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-.bottom__border {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
-}
-</style>

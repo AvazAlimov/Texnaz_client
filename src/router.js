@@ -134,6 +134,11 @@ const router = new Router({
               name: 'unpriced',
               component: () => import('./views/prices/UnpricedProducts.vue'),
             },
+            {
+              path: 'editprice/:id',
+              name: 'editprice',
+              component: () => import('./views/prices/EditPrice.vue'),
+            },
           ],
         },
         {
