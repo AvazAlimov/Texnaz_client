@@ -8,16 +8,11 @@
       template(v-slot:items="props")
         tr(@click="props.expanded = !props.expanded")
           td {{ props.index + 1 }}
-          td {{ props.item.Brand.name }} {{ props.item.name }}
-          td.text-xs-center {{ props.item.packing }}
-          td
-            v-text-field(
-              v-model="props.item.firstPrice"
-              @input="changed"
-              color="secondary"
-              :name="props.item.id"
-              v-validate="'required|decimal|min_value:0|excluded:0'"
-            )
+          td {{ props.item.Brand.name }}
+          td {{ props.item.Brand.manufacturer }}
+          td {{ props.item.name }}
+          td {{ props.item.packing }}
+          td {{ props.item.color || '-' }}
           td
             v-text-field(
               v-model="props.item.mixPriceNonCash"
@@ -25,15 +20,7 @@
               color="secondary"
               :name="props.item.id"
               v-validate="'required|decimal|min_value:0|excluded:0'"
-            )
-          td
-            v-text-field(
-              v-model="props.item.mixPriceCash"
-              @input="changed"
-              color="secondary"
-              :name="props.item.id"
-              v-validate="'required|decimal|min_value:0|excluded:0'"
-            )
+              style="min-width: 80px")
           td
             v-text-field(
               v-model="props.item.secondPrice"
@@ -41,7 +28,9 @@
               color="secondary"
               :name="props.item.id"
               v-validate="'required|decimal|min_value:0|excluded:0'"
-            )
+              style="min-width: 80px")
+          td {{ props.item.secondPrice * exchangeRate | ceil }}
+          td {{ props.item.secondPrice - props.item.mixPriceNonCash / exchangeRate | roundUp }}
           td
             v-layout
               v-btn(
@@ -56,12 +45,14 @@
 <script>
 /* eslint-disable no-param-reassign */
 import Price from '@/services/Price';
+import Configuration from '@/services/Configuration';
 
 export default {
   name: 'UnpricedProducts',
   data() {
     return {
       loading: false,
+      exchangeRate: 1,
       headers: [
         {
           text: '#',
@@ -70,31 +61,38 @@ export default {
         },
         {
           text: 'Наименование',
+          value: 'Brand.name',
+        },
+        {
+          text: 'Наименование',
+          value: 'Brand.manufacturer',
+        },
+        {
+          text: 'Наименование',
           value: 'name',
         },
         {
           text: 'Фасовка',
           value: 'packing',
-          align: 'center',
         },
         {
-          text: 'Цена №1 (БН)',
-          value: 'price',
+          text: 'Цвет',
+          value: 'color',
+        },
+        {
+          text: 'Наценка (сум)',
           sortable: false,
         },
         {
-          text: 'Цена №2 (БН)',
-          value: 'price',
+          text: 'B2B ($)',
           sortable: false,
         },
         {
-          text: 'Цена №2 (Н)',
-          value: 'price',
+          text: 'B2C (сум)',
           sortable: false,
         },
         {
-          text: 'Цена №3 (Н)',
-          value: 'price',
+          text: 'Наценка ($)',
           sortable: false,
         },
         {
@@ -108,8 +106,13 @@ export default {
     getAll() {
       this.loading = true;
       this.products = [];
-      Price.getUnpricedProducts()
-        .then((products) => {
+      Promise.all([
+        Price.getUnpricedProducts(),
+        Configuration.getExchangeRate(),
+      ])
+        .then((results) => {
+          const [products] = results;
+          this.exchangeRate = results[1].value;
           products.forEach((product) => {
             product.firstPrice = '0';
             product.mixPriceNonCash = '0';
