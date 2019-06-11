@@ -74,12 +74,14 @@
                   label="Клиент"
                   color="secondary"
                 )
-                v-date-picker.elevation-0.border.my-2(
-                    locale="ru-RU"
-                    v-model="date"
-                    full-width
-                    color="secondary"
-                    :min="minDate()"
+                v-text-field(
+                  color="secondary"
+                  type="number"
+                  v-model="days"
+                  label="Количество дней бронирования"
+                  name="Количество дней бронирования"
+                  v-validate="'required|numeric|min_value:1'"
+                  :suffix="date"
                 )
                 v-layout(row wrap)
                   v-spacer
@@ -107,13 +109,8 @@ export default {
     selected: [],
     clients: [],
     client: null,
-    date: null,
     user: JSON.parse(localStorage.getItem('user')),
-    minDate: () => {
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      return tomorrow.toISOString().substr(0, 10);
-    },
+    days: 1,
     headers: [
       {
         text: 'Код товара',
@@ -154,6 +151,11 @@ export default {
       },
     ],
   }),
+  computed: {
+    date() {
+      return this.$moment(new Date()).add(this.days, 'd').format('YYYY-MM-DD');
+    },
+  },
   methods: {
     getAll() {
       Promise.all([
