@@ -8,91 +8,101 @@
       template(v-slot:items="props")
         tr(@click="props.expanded = !props.expanded")
           td {{ props.index + 1 }}
-          td {{ props.item.product.Brand.name }} {{ props.item.product.name }}
+          td {{ props.item.product.Brand.name }}
+          td {{ props.item.product.Brand.manufacturer }}
+          td {{ props.item.product.name }}
           td.text-xs-center {{ props.item.product.packing }}
-          td.blue.lighten-4 {{ props.item.firstPrice }}
           td.orange.lighten-4 {{ props.item.mixPriceNonCash }}
-          td.orange.lighten-4 {{ props.item.mixPriceCash }}
           td.green.lighten-4 {{ props.item.secondPrice }}
+          td {{ props.item.secondPrice * exchangeRate | ceil }}
+          td {{ props.item.secondPrice - props.item.mixPriceNonCash / exchangeRate | roundUp }}
           td {{ props.item.createdAt | moment("HH:mm DD-MM-YYYY") }}
       template(v-slot:expand="props")
         v-data-table#expanded(
           :headers="expandedHeaders"
           :items="props.item.prices"
           :loading="loading"
-          hide-actions
-        )
+          hide-actions)
           template(v-slot:items="prices")
             tr(@click="prices.expanded = !prices.expanded")
               td
               td
               td
-              td.blue.lighten-5 {{ prices.item.firstPrice }}
+              td
+              td
               td.orange.lighten-5 {{ prices.item.mixPriceNonCash }}
-              td.orange.lighten-5 {{ prices.item.mixPriceCash }}
               td.green.lighten-5 {{ prices.item.secondPrice }}
+              td {{ prices.item.secondPrice * exchangeRate | ceil }}
+              td {{ prices.item.secondPrice - prices.item.mixPriceNonCash/ exchangeRate | roundUp }}
               td {{ prices.item.createdAt | moment("HH:mm DD-MM-YYYY") }}
         v-divider
 </template>
 
 <script>
 import Price from '@/services/Price';
+import Configuration from '@/services/Configuration';
 
 export default {
   name: 'PricedProducts',
   data() {
     return {
       loading: true,
-      headers: [{
-        text: '#',
-        value: 'index',
-        sortable: false,
-        width: 1,
-        invisible: true,
-      },
-      {
-        text: 'Наименование',
-        value: 'product.name',
-        invisible: true,
-      },
-      {
-        text: 'Фасовка',
-        value: 'product.packing',
-        align: 'center',
-        width: 1,
-        invisible: true,
-      },
-      {
-        text: 'Цена №1 (БН)',
-        value: 'price',
-        sortable: false,
-        width: 1,
-      },
-      {
-        text: 'Цена №2 (БН)',
-        value: 'price',
-        sortable: false,
-        width: 1,
-      },
-      {
-        text: 'Цена №2 (Н)',
-        value: 'price',
-        sortable: false,
-        width: 1,
-      },
-      {
-        text: 'Цена №3 (Н)',
-        value: 'price',
-        sortable: false,
-        width: 1,
-      },
-      {
-        text: 'Дата генерации',
-        value: 'createdAt',
-        sortable: false,
-        width: 1,
-      }],
+      headers: [
+        {
+          text: '#',
+          width: 1,
+          invisible: true,
+          sortable: false,
+        },
+        {
+          text: 'Бренд',
+          value: 'product.Brand.name',
+          invisible: true,
+        },
+        {
+          text: 'Производитель',
+          value: 'product.Brand.manufacturer',
+          invisible: true,
+        },
+        {
+          text: 'Наименование',
+          value: 'product.name',
+          invisible: true,
+        },
+        {
+          text: 'Фасовка',
+          value: 'product.packing',
+          align: 'center',
+          width: 1,
+          invisible: true,
+        },
+        {
+          text: 'Наценка (сум)',
+          width: 1,
+          sortable: false,
+        },
+        {
+          text: 'B2B ($)',
+          width: 1,
+          sortable: false,
+        },
+        {
+          text: 'B2C',
+          width: 1,
+          sortable: false,
+        },
+        {
+          text: 'Наценка ($)',
+          width: 1,
+          sortable: false,
+        },
+        {
+          text: 'Дата генерации',
+          width: 1,
+          sortable: false,
+        }],
       prices: [],
+      exchangeRate: 1,
     };
   },
   computed: {
@@ -114,9 +124,14 @@ export default {
     getAll() {
       this.loading = true;
       this.prices = [];
-      Price.getAll()
-        .then((prices) => {
+      Promise.all([
+        Price.getAll(),
+        Configuration.getExchangeRate(),
+      ])
+        .then((results) => {
+          const [prices, configuration] = results;
           this.prices = this.group(prices.sort((a, b) => (a.id < b.id ? 0 : -1)));
+          this.exchangeRate = configuration.value;
         })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);

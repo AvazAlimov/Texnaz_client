@@ -37,6 +37,8 @@ Vue.filter('roundUp', (value) => {
   return Math.ceil(value.toFixed(4) * precision) / precision;
 });
 
+Vue.filter('ceil', value => Math.ceil(value / 100) * 100);
+
 new Vue({
   router,
   store,
