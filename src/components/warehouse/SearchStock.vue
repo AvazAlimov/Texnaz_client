@@ -1,82 +1,78 @@
 <template lang="pug">
-    .white.pt-2
-        v-layout(row wrap)
-            v-flex(xs4).pl-4
-                v-combobox(
-                    v-model="brand"
-                    :items="brands"
-                    item-value="id"
-                    item-text="name"
-                    label="Бренд"
-                    clearable
-                    color="secondary"
-                )
-            v-flex(xs4)
-                v-combobox(
-                    v-model="type"
-                    :items="types"
-                    item-value="id"
-                    item-text="name"
-                    label="Тип продукта"
-                    clearable
-                    color="secondary"
-                )
-            v-flex(xs4).pr-4
-                v-text-field(
-                    v-model="code"
-                    label="Код товара"
-                    color="secondary"
-                )
-            v-flex(xs12).px-4
-                v-text-field(
-                    v-model="query"
-                    label="Поиск"
-                    color="secondary"
-                )
-            v-flex(xs12).pb-0
-                v-divider
-                v-data-table(
-                    :headers="headers"
-                    :items="filteredStocks"
-                    :loading="loading"
-                    hide-actions)
-                    template(v-slot:items="props")
-                        tr.selectable(
-                        @click="props.expanded = !props.expanded"
-                        :class="{'grey': props.expanded, 'lighten-2': props.expanded}"
-                        )
-                            td
-                              v-checkbox(
-                                :value="isSelected(props.item)"
-                                hide-details
-                                color="secondary"
-                                readonly
-                              )
-                            td {{ props.item.product.code || '-' }}
-                            td {{ props.item.product.Brand.name }} {{ props.item.product.name }}
-                            td {{ props.item.product.packing }}
-                            td {{ props.item.product.color || '-' }}
-                            td {{ props.item.quantity - props.item.booked }}
-                            td {{ (props.item.quantity - props.item.booked) * props.item.product.packing }}
-                    template(v-slot:expand="props")
-                        .pb-4.grey.lighten-2
-                            v-data-table(
-                                :headers="expandedHeaders"
-                                :items="props.item.stocks"
-                                :loading="loading"
-                                hide-actions
-                            )
-                                template(v-slot:items="stocks")
-                                  tr.selectable(@click="select(stocks.item)")
-                                    td
-                                      v-icon(v-if="indexOf(stocks.item.id) != null" small) check
-                                      //{{ stocks.item.defected ? 'Поврежден' : 'Хорошо' }}
-
-                                    td {{ stocks.item.arrival_date | moment('YYYY-MM-DD') }}
-                                    td {{ stocks.item.expiry_date | moment('YYYY-MM-DD') }}
-                                    td {{ stocks.item.quantity - stocks.item.booked }}
-                                    td {{ (stocks.item.quantity - stocks.item.booked) * props.item.product.packing }}
-                v-divider
+  .white.pt-2
+    v-layout(row wrap)
+      v-flex(xs4).pl-4
+          v-combobox(
+              v-model="brand"
+              :items="brands"
+              item-value="id"
+              item-text="name"
+              label="Бренд"
+              clearable
+              color="secondary"
+          )
+      v-flex(xs4)
+          v-combobox(
+              v-model="type"
+              :items="types"
+              item-value="id"
+              item-text="name"
+              label="Тип продукта"
+              clearable
+              color="secondary"
+          )
+      v-flex(xs4).pr-4
+          v-text-field(
+              v-model="code"
+              label="Код товара"
+              color="secondary"
+          )
+      v-flex(xs12).px-4
+          v-text-field(
+              v-model="query"
+              label="Поиск"
+              color="secondary"
+          )
+      v-flex(xs12).pb-0
+        v-divider
+        v-data-table(
+          :headers="headers"
+          :items="filteredStocks"
+          :loading="loading"
+          hide-actions)
+          template(v-slot:items="props")
+              tr.selectable(
+                v-if="readOnly ? true : (props.item.quantity - props.item.booked > 0)"
+                @click="props.expanded = !props.expanded"
+                :class="{'grey': props.expanded, 'lighten-2': props.expanded}")
+                td(v-if="!readOnly")
+                  v-icon(v-if="isSelected(props.item)" small) check
+                td {{ props.item.product.code || '-' }}
+                td {{ props.item.product.Brand.name }}
+                td {{ props.item.product.Brand.manufacturer }}
+                td {{ props.item.product.name }}
+                td {{ props.item.product.packing }}
+                td {{ props.item.product.color || '-' }}
+                td {{ props.item.quantity }}
+                td {{ props.item.booked }}
+                td {{(props.item.quantity-props.item.booked)*props.item.product.packing}}
+          template(v-slot:expand="props")
+            .pb-4.grey.lighten-2
+              v-data-table(
+                :headers="expandedHeaders"
+                :items="props.item.stocks"
+                :loading="loading"
+                hide-actions)
+                template(v-slot:items="stocks")
+                  tr.selectable(@click="readOnly ? null : select(stocks.item)")
+                    td
+                      v-icon(v-if="indexOf(stocks.item.id) != null" small) check
+                    td {{ stocks.item.arrival_date | moment('YYYY-MM-DD') }}
+                    td {{ stocks.item.expiry_date | moment('YYYY-MM-DD') }}
+                    td {{ stocks.item.quantity }}
+                    td {{ stocks.item.booked }}
+                    td {{(stocks.item.quantity-stocks.item.booked)*props.item.product.packing}}
+        v-divider
 </template>
 
 <script>
@@ -91,40 +87,14 @@ export default {
       required: true,
     },
     items: {
-      required: true,
+      type: Array,
+    },
+    readOnly: {
+      type: Boolean,
     },
   },
   data() {
     return {
-      headers: [
-        {
-          sortable: false,
-        },
-        {
-          text: 'Код товара',
-          value: 'product.code',
-        },
-        {
-          text: 'Наименование',
-          value: 'product.name',
-        },
-        {
-          text: 'Фасовка',
-          value: 'product.packing',
-        },
-        {
-          text: 'Цвет',
-          value: 'product.color',
-        },
-        {
-          text: 'Количество',
-          value: 'quantity',
-        },
-        {
-          text: 'Вес',
-          value: 'quantity',
-        },
-      ],
       expandedHeaders: [
         {
           sortable: false,
@@ -140,6 +110,11 @@ export default {
         {
           text: 'Количество',
           value: 'quantity',
+          width: 1,
+        },
+        {
+          text: 'Забронировано',
+          value: 'booked',
           width: 1,
         },
         {
@@ -159,6 +134,52 @@ export default {
     };
   },
   computed: {
+    headers() {
+      const headers = [
+        {
+          text: 'Код',
+          value: 'product.code',
+        },
+        {
+          text: 'Бренд',
+          value: 'product.Brand.name',
+        },
+        {
+          text: 'Производитель',
+          value: 'product.Brand.manufacturer',
+        },
+        {
+          text: 'Наименование',
+          value: 'product.name',
+        },
+        {
+          text: 'Фасовка',
+          value: 'product.packing',
+        },
+        {
+          text: 'Цвет',
+          value: 'product.color',
+        },
+        {
+          text: 'Количество',
+          value: 'quantity',
+        },
+        {
+          text: 'Забронировано',
+          value: 'booked',
+        },
+        {
+          text: 'Вес',
+          value: 'quantity',
+        },
+      ];
+      if (!this.readOnly) {
+        headers.splice(0, 0, {
+          sortable: false,
+        });
+      }
+      return headers;
+    },
     filteredStocks() {
       return this.stocks.filter(stock => (
         (this.query

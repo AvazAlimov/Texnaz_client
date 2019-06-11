@@ -2,38 +2,39 @@
   v-layout(row wrap align-center)
     v-flex(xs12)
       .border.white
-        v-data-table(
-          :headers="headers"
-          :items="stocks"
-          hide-actions
-          :loading="loading")
-          template(v-slot:items="props")
-            tr(
-              @click="props.expanded = !props.expanded"
-              :class="{'grey': props.expanded, 'lighten-2': props.expanded}"
-            )
-              td {{ props.item.product.Brand.name }}
-              td {{ props.item.product.name }}
-              td {{ props.item.product.packing }}
-              td {{ props.item.product.color || '-' }}
-              td {{ props.item.quantity }}
-              td {{ props.item.quantity * props.item.product.packing }}
-              td {{ getBooked(props.item) }}
-          template(v-slot:expand="props")
-            .pb-4.grey.lighten-2
-              v-data-table(
-                :headers="expandedHeaders"
-                :items="props.item.stocks"
-                :loading="loading"
-                hide-actions
-              )
-                template(v-slot:items="stocks")
-                  td {{ stocks.item.defected ? 'поврежден' : '' }}
-                  td {{ stocks.item.arrival_date.substring(0, 10) }}
-                  td {{ stocks.item.expiry_date.substring(0, 10) }}
-                  td {{ stocks.item.quantity }}
-                  td {{ stocks.item.quantity * props.item.product.packing }}
-                  td {{ stocks.item.bookings.map(a => a.quantity).reduce((a,b) => a + b, 0) }}
+        SearchStock(:warehouseId="$route.params.id" :items="[]" readOnly)
+        //- v-data-table(
+        //-   :headers="headers"
+        //-   :items="stocks"
+        //-   hide-actions
+        //-   :loading="loading")
+        //-   template(v-slot:items="props")
+        //-     tr(
+        //-       @click="props.expanded = !props.expanded"
+        //-       :class="{'grey': props.expanded, 'lighten-2': props.expanded}"
+        //-     )
+        //-       td {{ props.item.product.Brand.name }}
+        //-       td {{ props.item.product.name }}
+        //-       td {{ props.item.product.packing }}
+        //-       td {{ props.item.product.color || '-' }}
+        //-       td {{ props.item.quantity }}
+        //-       td {{ props.item.quantity * props.item.product.packing }}
+        //-       td {{ getBooked(props.item) }}
+        //-   template(v-slot:expand="props")
+        //-     .pb-4.grey.lighten-2
+        //-       v-data-table(
+        //-         :headers="expandedHeaders"
+        //-         :items="props.item.stocks"
+        //-         :loading="loading"
+        //-         hide-actions
+        //-       )
+        //-         template(v-slot:items="stocks")
+        //-           td {{ stocks.item.defected ? 'поврежден' : '' }}
+        //-           td {{ stocks.item.arrival_date.substring(0, 10) }}
+        //-           td {{ stocks.item.expiry_date.substring(0, 10) }}
+        //-           td {{ stocks.item.quantity }}
+        //-           td {{ stocks.item.quantity * props.item.product.packing }}
+        //-           td {{ stocks.item.bookings.map(a => a.quantity).reduce((a,b) => a + b, 0) }}
 </template>
 
 <script>
