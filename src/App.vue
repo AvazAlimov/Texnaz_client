@@ -25,16 +25,3 @@ export default {
   },
 };
 </script>
-<style>
-.border {
-    border: 1px solid rgba(0, 0, 0, 0.12) !important;
-}
-.bordered {
-    border-right: 2px solid;
-    border-color: var(--v-secondary-base);
-    background-color: var(--v-primary-base);
-}
-.bordered:hover {
-    background-color: var(--v-primary-base) !important;
-}
-</style>

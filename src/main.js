@@ -1,38 +1,16 @@
 import Vue from 'vue';
-import './plugins/vuetify';
-import './plugins/filters';
-import VeeValidate, { Validator } from 'vee-validate';
-import moment from 'vue-moment';
 import App from './App.vue';
 import router from './router';
 import store from './store';
-import ru from './translations/ru';
-import Permissions from './utils/Permissions';
+import './plugins/vuetify';
+import './plugins/filters';
+import './plugins/validator';
+import './plugins/prototypes';
+import './plugins/moment';
 import '@/components';
-import './registerServiceWorker';
 import '@/assets/style/app.css';
 
-Vue.use(VeeValidate);
-Vue.use(moment);
 Vue.config.productionTip = false;
-Validator.localize('ru', ru);
-
-Vue.prototype.$permissions = Permissions;
-Vue.prototype.$hasPermission = (key) => {
-  const user = JSON.parse(localStorage.getItem('user'));
-  if (!user) {
-    router.push({ name: 'login' });
-    return false;
-  }
-  const permissions = [];
-  user.roles.forEach((role) => {
-    role.permissions.forEach((permission) => {
-      permissions.push(permission);
-    });
-  });
-  return !!permissions.find(permission => permission.name === key);
-};
-
 new Vue({
   router,
   store,
