@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import './plugins/vuetify';
+import './plugins/filters';
 import VeeValidate, { Validator } from 'vee-validate';
 import moment from 'vue-moment';
 import App from './App.vue';
@@ -31,13 +32,6 @@ Vue.prototype.$hasPermission = (key) => {
   });
   return !!permissions.find(permission => permission.name === key);
 };
-
-Vue.filter('roundUp', (value) => {
-  const precision = 10 ** 2;
-  return Math.ceil(value.toFixed(4) * precision) / precision;
-});
-
-Vue.filter('ceil', value => Math.ceil(value / 100) * 100);
 
 new Vue({
   router,
