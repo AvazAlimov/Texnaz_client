@@ -86,7 +86,7 @@ export default {
   methods: {
     getAll() {
       this.loading = true;
-      Booking.getAll(this.$route.params.id)
+      Booking.getAll(this.userId)
         .then((bookings) => { this.bookings = bookings; })
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });

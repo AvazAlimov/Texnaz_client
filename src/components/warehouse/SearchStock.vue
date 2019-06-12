@@ -72,7 +72,14 @@
                     td {{ stocks.item.quantity }}
                     td {{ stocks.item.booked }}
                     td {{(stocks.item.quantity-stocks.item.booked)*props.item.product.packing}}
+                    td
+                      v-btn.ma-0(
+                        v-if="props.item.booked"
+                        flat icon color="secondary"
+                        @click="showBookings(stocks.item)")
+                        v-icon(small) visibility
         v-divider
+        StockBookings(v-model="dialog" ref="stockBookings")
 </template>
 
 <script>
@@ -95,6 +102,7 @@ export default {
   },
   data() {
     return {
+      dialog: false,
       expandedHeaders: [
         {
           sortable: false,
@@ -121,6 +129,10 @@ export default {
           text: 'Вес',
           value: 'quantity',
           width: 1,
+        },
+        {
+          width: 1,
+          sortable: false,
         },
       ],
       loading: false,
@@ -247,6 +259,10 @@ export default {
     },
     isSelected(stock) {
       return this.items.find(item => item.product.id === stock.product.id);
+    },
+    showBookings(stock) {
+      this.$refs.stockBookings.setStock(stock);
+      this.dialog = true;
     },
   },
   created() {
