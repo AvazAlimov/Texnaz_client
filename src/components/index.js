@@ -1,15 +1,17 @@
 import Vue from 'vue';
 import Card from './Card.vue';
-import Info from './calculator/Info.vue';
-import Expanses from './Expanses.vue';
-import PriceItem from './calculator/PriceItem.vue';
-import CustomsItem from './CustomsItem.vue';
-import PricesTable from './PricesTable.vue';
-import SelectionItem from './SelectionItem.vue';
-import SearchProduct from './SearchProduct.vue';
-import FirstCostItem from './FirstCostItem.vue';
-import SecondCostItem from './SecondCostItem.vue';
 
+// CALCULATOR
+import Info from './calculator/Info.vue';
+import Expanses from './calculator/Expanses.vue';
+import PriceItem from './calculator/PriceItem.vue';
+import CustomsItem from './calculator/CustomsItem.vue';
+import SelectionItem from './calculator/SelectionItem.vue';
+import SearchProduct from './calculator/SearchProduct.vue';
+import FirstCostItem from './calculator/FirstCostItem.vue';
+import SecondCostItem from './calculator/SecondCostItem.vue';
+
+// WAREHOUSE
 import SearchStock from './warehouse/SearchStock.vue';
 import PreStockItem from './warehouse/PreStockItem.vue';
 import AcceptanceItem from './warehouse/AcceptanceItem.vue';
@@ -22,18 +24,16 @@ import Map from './analytics/Map.vue';
 import ExpenseProperty from './expenses/ExpenseProperty.vue';
 import EditExpense from './expenses/EditExpense.vue';
 import ExpenseAnalytics from './expenses/ExpenseAnalytics.vue';
-
 import NewPayment from './payments/NewPayment.vue';
-
 import UserSales from './shipment/UserSales.vue';
 
 const Components = {
   Card,
+
   Info,
   Expanses,
   PriceItem,
   CustomsItem,
-  PricesTable,
   SelectionItem,
   SearchProduct,
   FirstCostItem,
@@ -51,9 +51,7 @@ const Components = {
   ExpenseProperty,
   EditExpense,
   ExpenseAnalytics,
-
   NewPayment,
-
   UserSales,
 };
 
