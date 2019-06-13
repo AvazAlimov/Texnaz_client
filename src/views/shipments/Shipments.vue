@@ -1,59 +1,57 @@
 <template lang="pug">
-  div
-    v-layout(row wrap v-if="$route.name == 'shipments'")
-      v-flex(xs12)
-        .title ОТГРУЗКИ
-        .white.border.mt-3
-          v-data-table(
+  v-layout(row wrap)
+    v-flex(xs12)
+      .title ОТГРУЗКИ
+      .white.border.mt-3
+        v-data-table(
+          hide-actions
+          :headers="headers"
+          :items="pendingSales"
+          :loading="loading")
+          template(v-slot:items="props")
+            td {{ props.item.id }}
+            td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
+              td {{ props.item.warehouse.name }} {{ props.item.warehouse.company }}
+            td {{ props.item.client.icc }}
+            td {{ props.item.client.name }}
+            td {{ props.item.manager.name }}
+            td {{ getTotalPrice(props.item).toFixed(2) }} $
+            td {{ types.find(type => type.id == props.item.type).name }}
+            td {{ payments.find(payment => payment.id == props.item.form).name }}
+            td {{ getClientBalance(props.item.client) }} $
+            td
+              v-btn.ma-0(
+                flat icon color="secondary"
+                :to="{ name: 'shipment', params: {id: props.item.id} }")
+                v-icon(small) visibility
+    v-flex(xs12).mt-3
+      .title МОИ ОТГРУЗКИ
+      .white.border.mt-3
+        v-data-table(
             hide-actions
             :headers="headers"
-            :items="pendingSales"
+            :items="mySales"
             :loading="loading")
             template(v-slot:items="props")
-              td {{ props.item.id }}
-              td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
+              tr(:class="{\
+                'green lighten-3': props.item.approved > 0,\
+                'red lighten-3': props.item.approved < 0\
+                }")
+                td {{ props.item.id }}
+                td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
                 td {{ props.item.warehouse.name }} {{ props.item.warehouse.company }}
-              td {{ props.item.client.icc }}
-              td {{ props.item.client.name }}
-              td {{ props.item.manager.name }}
-              td {{ getTotalPrice(props.item).toFixed(2) }} $
-              td {{ types.find(type => type.id == props.item.type).name }}
-              td {{ payments.find(payment => payment.id == props.item.form).name }}
-              td {{ getClientBalance(props.item.client) }} $
-              td
-                v-btn.ma-0(
-                  flat icon color="secondary"
-                  :to="{ name: 'shipment', params: {id: props.item.id} }")
-                  v-icon(small) visibility
-      v-flex(xs12).mt-3
-        .title МОИ ОТГРУЗКИ
-        .white.border.mt-3
-          v-data-table(
-              hide-actions
-              :headers="headers"
-              :items="mySales"
-              :loading="loading")
-              template(v-slot:items="props")
-                tr(:class="{\
-                  'green lighten-3': props.item.approved > 0,\
-                  'red lighten-3': props.item.approved < 0\
-                  }")
-                  td {{ props.item.id }}
-                  td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
-                  td {{ props.item.warehouse.name }} {{ props.item.warehouse.company }}
-                  td {{ props.item.client.icc }}
-                  td {{ props.item.client.name }}
-                  td {{ props.item.manager.name }}
-                  td {{ getTotalPrice(props.item).toFixed(2) }} $
-                  td {{ types.find(type => type.id == props.item.type).name }}
-                  td {{ payments.find(payment => payment.id == props.item.form).name }}
-                  td {{ getClientBalance(props.item.client) }} $
-                  td
-                    v-btn.ma-0(
-                      flat icon color="secondary"
-                      :to="{ name: 'shipment', params: {id: props.item.id} }")
-                      v-icon(small) edit
-    router-view
+                td {{ props.item.client.icc }}
+                td {{ props.item.client.name }}
+                td {{ props.item.manager.name }}
+                td {{ getTotalPrice(props.item).toFixed(2) }} $
+                td {{ types.find(type => type.id == props.item.type).name }}
+                td {{ payments.find(payment => payment.id == props.item.form).name }}
+                td {{ getClientBalance(props.item.client) }} $
+                td
+                  v-btn.ma-0(
+                    flat icon color="secondary"
+                    :to="{ name: 'shipment', params: {id: props.item.id} }")
+                    v-icon(small) edit
 </template>
 
 <script>

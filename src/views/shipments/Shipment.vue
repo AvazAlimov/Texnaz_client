@@ -77,7 +77,16 @@
                 v-divider
                 v-layout(row)
                     v-spacer
-                    v-btn.ma-0.mb-1.mr-1(flat color="secondary") Подтвердить
+                    v-btn.ma-0.mb-1.mr-1(
+                      :loading="loading"
+                      flat color="secondary"
+                      @click="approve()"
+                    ) Подтвердить
+                    v-btn.ma-0.mb-1.mr-1(
+                      :loading="loading"
+                      flat color="secondary"
+                      @click="disapprove()"
+                    ) Не подтвердить
 </template>
 
 <script>
@@ -142,6 +151,7 @@ export default {
       client: {
         payments: [],
       },
+      warehouse: {},
       manager: {},
       type: 1,
       form: 1,
@@ -251,6 +261,19 @@ export default {
         });
       }
       return balance;
+    },
+    submit(promise) {
+      this.loading = true;
+      Promise.all([promise])
+        .then(() => this.$router.push({ name: 'shipments' }))
+        .catch(error => this.$store.commit('setMessage', error.message))
+        .finally(() => { this.loading = false; });
+    },
+    approve() {
+      this.submit(Sale.approve(this.$route.params.id));
+    },
+    disapprove() {
+      this.submit(Sale.disapprove(this.$route.params.id));
     },
   },
   created() {
