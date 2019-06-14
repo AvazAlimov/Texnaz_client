@@ -3,29 +3,73 @@
         v-flex(xs12)
           v-stepper.border(v-model="step" non-linear)
             v-stepper-header
-              v-stepper-step(
-                step="1" editable
-                color="secondary") Выборка
+              v-stepper-step(step="1" color="secondary") Выборка
               v-divider.mx-0
-              v-stepper-step(
-                step="2" :editable="selected.length > 0"
-                color="secondary") Определить количество
+              v-stepper-step(step="2" color="secondary") Определить количество
               v-divider.mx-0
-              v-stepper-step(
-                step="3" :editable="selected.length > 0 && errors.items.length == 0"
-                color="secondary") Выбор клиента
+              v-stepper-step(step="3" color="secondary") Выбор клиента
+              v-divider.mx-0
+              v-stepper-step(step="4" color="secondary") Завершение
             v-divider
             v-stepper-items
-              v-stepper-content(step="1").pa-0
-                SearchStock(v-model="stock" :warehouseId="$route.params.id" :items="selected")
-                v-layout(row wrap)
+              v-stepper-content.pa-0(step="1")
+                v-layout.grey.lighten-2(row wrap)
                   v-spacer
-                  v-btn.ma-0.my-1.mr-1(
+                  v-btn.ma-0.mt-1(
+                    flat color="secondary"
+                    :loading="loading"
+                    :disabled="!client || !payment || !type"
+                    @click="step = 2")
+                      | Далее
+                      v-icon.ml-2 keyboard_arrow_right
+                .pa-4
+                  v-select(v-model="type"
+                    :items="types"
+                    item-text="name"
+                    label="Тип оплаты"
+                    color="secondary"
+                    return-object)
+                  v-select(v-model="payment"
+                    :items="payments"
+                    item-text="name"
+                    item-value="id"
+                    label="Тип расчета"
+                    color="secondary")
+                  v-select(v-model="client"
+                    :items="filteredClients"
+                    item-text="name"
+                    return-object
+                    label="Клиент"
+                    color="secondary")
+
+              v-stepper-content.pa-0(step="2")
+                v-layout.grey.lighten-2(row wrap align-center)
+                  v-btn.ma-0.mt-1(flat color="secondary" @click="step = 1")
+                    v-icon.mr-2 keyboard_arrow_left
+                    | Назад
+                  v-spacer
+                  .subheading.mt-1 Выбрано: {{ selected.length }}
+                  v-spacer
+                  v-btn.ma-0.mt-1(
                     flat color="secondary"
                     :disabled="selected.length == 0"
-                    @click="step = 2") Далее
-
-              v-stepper-content(step="2").pa-0
+                    @click="step = 3")
+                      | Далее
+                      v-icon.ml-2 keyboard_arrow_right
+                v-divider
+                SearchStock(v-model="stock" :warehouseId="$route.params.id" :items="selected")
+              v-stepper-content.pa-0(step="3")
+                v-layout.grey.lighten-2(row wrap)
+                  v-btn.ma-0.mt-1(flat color="secondary" @click="step = 2")
+                    v-icon.mr-2 keyboard_arrow_left
+                    | Назад
+                  v-spacer
+                  v-btn.ma-0.mt-1(
+                    flat color="secondary"
+                    :disabled="errors.items.length > 0"
+                    @click="step=4")
+                      | Далее
+                      v-icon.ml-2 keyboard_arrow_right
                 v-data-table(
                     :headers="headers"
                     :items="selected"
@@ -34,37 +78,16 @@
                       SaleItem(
                         :item="props.item"
                         :exchangeRate="exchangeRate"
-                        :officialRate="officialRate"
-                      )
+                        :officialRate="officialRate")
+              v-stepper-content.pa-0(step="4")
+                v-layout.grey.lighten-2(row wrap)
+                  v-btn.ma-0.mt-1(flat color="secondary" @click="step=3")
+                    v-icon.mr-2 keyboard_arrow_left
+                    | Назад
+                .pa-4
+                  .subheading Баланс клиента: {{ balance.toFixed(2) }} $
+                  .subheading Итоговая цена: {{ getTotalPrice().toFixed(2) }} $
                 v-divider
-                v-layout(row wrap)
-                  v-spacer
-                  v-btn.ma-0.mb-1.mr-1(
-                    flat color="secondary"
-                    :disabled="errors.items.length > 0"
-                    @click="step = 3") Далее
-
-              v-stepper-content(step="3")
-                v-select(v-model="type"
-                  :items="types"
-                  item-text="name"
-                  label="Тип оплаты"
-                  color="secondary"
-                  return-object)
-                v-select(v-model="payment"
-                  :items="payments"
-                  item-text="name"
-                  item-value="id"
-                  label="Тип расчета"
-                  color="secondary")
-                v-select(v-model="client"
-                  :items="filteredClients"
-                  item-text="name"
-                  return-object
-                  label="Клиент"
-                  color="secondary")
-                .caption(v-if="client") Баланс клиента: {{ balance.toFixed(2) }} $
-                .caption Итоговая цена: {{ getTotalPrice().toFixed(2) }} $
                 v-layout(row wrap)
                   v-spacer
                   v-btn.ma-0.mb-1.mr-1(
@@ -258,6 +281,7 @@ export default {
     },
   },
   created() {
+    [this.type] = this.types;
     this.getAll();
   },
 };
