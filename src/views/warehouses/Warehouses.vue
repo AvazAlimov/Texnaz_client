@@ -5,9 +5,9 @@
             .title СКЛАДЫ
         v-flex(xs4 v-for="(warehouse, index) in warehouses" :key="index")
           Card(
-            :title="warehouse.name"
-            :subtitle="warehouse.company"
-            :caption="warehouse.owner.name"
+            :title="`${warehouse.name} ${warehouse.company}`"
+            :subtitle="warehouse.owner.name"
+            :caption="`Сумма товаров: ${warehouse.totalPrice.toFixed(2)} $`"
             icon="store_mall_directory"
             :to="{ name: 'warehouse', params: { id: warehouse.id }}"
           )
