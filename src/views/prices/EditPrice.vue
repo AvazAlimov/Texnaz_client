@@ -46,7 +46,12 @@
               v-model="price.mixPriceNonCash"
               suffix="сум"
               name="Наценка (сум)"
-              v-validate="'required|decimal|min_value:0'")
+              v-validate="{\
+                required: true,\
+                decimal: true,\
+                min_value: 0,\
+                excluded: '0'\
+              }")
           v-flex(xs6)
             v-text-field.mr-4.ml-2.my-0(
               color="secondary"
@@ -54,7 +59,12 @@
               v-model="price.secondPrice"
               suffix="$"
               name="B2B"
-              v-validate="'required|decimal|min_value:0'")
+              v-validate="{\
+                required: true,\
+                decimal: true,\
+                min_value: 0,\
+                excluded: '0'\
+              }")
         v-layout(row align-center)
           v-spacer
           v-btn.ma-0(
