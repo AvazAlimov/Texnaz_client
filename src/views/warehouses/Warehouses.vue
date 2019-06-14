@@ -6,8 +6,8 @@
         v-flex(xs4 v-for="(warehouse, index) in warehouses" :key="index")
           Card(
             :title="`${warehouse.name} ${warehouse.company}`"
-            :subtitle="warehouse.owner.name"
-            :caption="`Сумма товаров: ${warehouse.totalPrice.toFixed(2)} $`"
+            :subtitle="`Владелец: ${warehouse.owner.name}`"
+            :caption="`Сумма товаров: ${warehouse.totalPrice.toFixed(0)} $`"
             icon="store_mall_directory"
             :to="{ name: 'warehouse', params: { id: warehouse.id }}"
           )
