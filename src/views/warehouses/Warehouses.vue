@@ -11,7 +11,7 @@
             icon="store_mall_directory"
             :to="{ name: 'warehouse', params: { id: warehouse.id }}"
           )
-        v-flex(xs4)
+        v-flex(xs4 v-if="$hasRole(1)")
           Card(
             title="Добавить"
             subtitle="Новый склад"

@@ -5,7 +5,7 @@
           v-icon arrow_back
       .title {{ warehouse.name }} {{ warehouse.company }}
       v-spacer
-      v-menu(bottom left)
+      v-menu(bottom left v-if="$hasRole(1)")
         template(v-slot:activator="{ on }")
           v-btn(icon v-on="on" flat color="secondary")
             v-icon more_vert

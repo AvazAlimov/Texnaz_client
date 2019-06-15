@@ -21,7 +21,7 @@
                 td {{ props.item.sphere }}
                 td {{ props.item.manager.name }}
                 td
-                  v-layout
+                  v-layout(v-if="$hasRole(1)")
                       v-btn(icon
                         :to="{ name: 'client', params: { id: props.item.id }}"
                       ).mx-0
@@ -29,7 +29,7 @@
                       v-btn(icon @click="remove(props.item.id)").mx-0
                           v-icon(color="red" small) delete
             v-divider
-            v-layout(row)
+            v-layout(row v-if="$hasRole(1)")
               v-spacer
               v-btn.ma-2(
                 flat color="secondary"
