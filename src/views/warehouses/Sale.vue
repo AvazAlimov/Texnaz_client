@@ -3,13 +3,11 @@
         v-flex(xs12)
           v-stepper.border(v-model="step" non-linear)
             v-stepper-header
-              v-stepper-step(step="1" color="secondary") Выборка
+              v-stepper-step(step="1" color="secondary") Выбор клиента
               v-divider.mx-0
-              v-stepper-step(step="2" color="secondary") Определить количество
+              v-stepper-step(step="2" color="secondary") Выборка
               v-divider.mx-0
-              v-stepper-step(step="3" color="secondary") Выбор клиента
-              v-divider.mx-0
-              v-stepper-step(step="4" color="secondary") Завершение
+              v-stepper-step(step="3" color="secondary") Определить количество
             v-divider
             v-stepper-items
               v-stepper-content.pa-0(step="1")
@@ -67,9 +65,11 @@
                   v-btn.ma-0.mt-1(
                     flat color="secondary"
                     :disabled="errors.items.length > 0"
-                    @click="step=4")
-                      | Далее
-                      v-icon.ml-2 keyboard_arrow_right
+                    @click="submit()") Завершить
+                .pa-4
+                  .subheading Баланс клиента: {{ balance.toFixed(2) }} $
+                  .subheading Итоговая цена: {{ getTotalPrice().toFixed(2) }} $
+                v-divider
                 v-data-table(
                     :headers="headers"
                     :items="selected"
@@ -79,23 +79,6 @@
                         :item="props.item"
                         :exchangeRate="exchangeRate"
                         :officialRate="officialRate")
-              v-stepper-content.pa-0(step="4")
-                v-layout.grey.lighten-2(row wrap)
-                  v-btn.ma-0.mt-1(flat color="secondary" @click="step=3")
-                    v-icon.mr-2 keyboard_arrow_left
-                    | Назад
-                .pa-4
-                  .subheading Баланс клиента: {{ balance.toFixed(2) }} $
-                  .subheading Итоговая цена: {{ getTotalPrice().toFixed(2) }} $
-                v-divider
-                v-layout(row wrap)
-                  v-spacer
-                  v-btn.ma-0.mb-1.mr-1(
-                    flat
-                    color="secondary"
-                    :loading="loading"
-                    :disabled="!client || !payment || !type"
-                    @click="submit()") Завершить
 </template>
 
 <script>
