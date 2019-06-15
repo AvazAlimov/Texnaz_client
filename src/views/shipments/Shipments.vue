@@ -1,6 +1,6 @@
 <template lang="pug">
   v-layout(row wrap)
-    v-flex(xs12)
+    v-flex(xs12 v-if="$hasRole(1) || $hasRole(3)")
       .title ОТГРУЗКИ
       .white.border.mt-3
         v-data-table(
