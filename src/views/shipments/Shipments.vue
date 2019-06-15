@@ -24,6 +24,30 @@
                 flat icon color="secondary"
                 :to="{ name: 'shipment', params: {id: props.item.id} }")
                 v-icon(small) visibility
+    v-flex.mt-3(xs12 v-if="$hasRole(1) || $hasRole(3)")
+      .title СОГЛАСОВАННЫЕ ОТГРУЗКИ
+      .white.border.mt-3
+        v-data-table(
+          hide-actions
+          :headers="headers"
+          :items="approvedSales"
+          :loading="loading")
+          template(v-slot:items="props")
+            td {{ props.item.id }}
+            td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
+              td {{ props.item.warehouse.name }} {{ props.item.warehouse.company }}
+            td {{ props.item.client.icc }}
+            td {{ props.item.client.name }}
+            td {{ props.item.manager.name }}
+            td {{ getTotalPrice(props.item).toFixed(2) }} $
+            td {{ types.find(type => type.id == props.item.type).name }}
+            td {{ payments.find(payment => payment.id == props.item.form).name }}
+            td {{ getClientBalance(props.item.client) }} $
+            td
+              v-btn.ma-0(
+                flat icon color="secondary"
+                :to="{ name: 'shipment', params: {id: props.item.id} }")
+                v-icon(small) visibility
     v-flex(xs12).mt-3
       .title МОИ ОТГРУЗКИ
       .white.border.mt-3
@@ -148,7 +172,10 @@ export default {
   }),
   computed: {
     pendingSales() {
-      return this.sales.filter(sale => sale.approved === 0);
+      return this.sales.filter(sale => sale.approved < 1);
+    },
+    approvedSales() {
+      return this.sales.filter(sale => sale.approved === 1);
     },
     mySales() {
       return this.sales.filter(sale => sale.managerId === this.user.id);
