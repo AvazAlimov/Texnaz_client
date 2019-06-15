@@ -88,20 +88,18 @@ export default {
         id: 1,
         name: 'Сум',
         ratio: 1,
-        // divide by market rate
       },
       {
         id: 2,
         name: 'Сум БН',
         ratio: 1,
-        // divide by official rate
       },
     ],
     clientId: null,
     clients: [],
     managerId: null,
     managers: [],
-    configurations: [],
+    exchangeRate: null,
   }),
   computed: {
     filteredClients() {
@@ -116,13 +114,13 @@ export default {
       Promise.all([
         Client.getAll(),
         User.getAll(),
-        Configuration.getAll(),
+        Configuration.getExchangeRate(),
       ])
         .then((result) => {
-          [this.clients, this.managers, this.configurations] = result;
+          [this.clients, this.managers, this.exchangeRate] = result;
           this.managers = this.managers.filter(user => !!user.roles.find(role => role.id === 2));
-          this.currencies[1].ratio = parseFloat((this.configurations.find(a => a.id === 4)).value);
-          this.currencies[2].ratio = parseFloat((this.configurations.find(a => a.id === 5)).value);
+          this.currencies[1].ratio = parseFloat(this.exchangeRate.value);
+          this.currencies[2].ratio = parseFloat(this.exchangeRate.value);
           this.$validator.validate();
         })
         .catch((error) => {
