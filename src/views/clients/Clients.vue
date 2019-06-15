@@ -9,7 +9,7 @@
               :loading="loading"
               hide-actions
               :headers="headers"
-              :items="clients"
+              :items="myClients"
             )
               template(v-slot:items="props")
                 td {{ props.item.icc }}
@@ -86,6 +86,14 @@ export default {
       ],
       clients: [],
     };
+  },
+  computed: {
+    myClients() {
+      if (this.$hasRole(1)) {
+        return this.clients;
+      }
+      return this.clients.filter(client => client.managerId === this.$getUserId());
+    },
   },
   methods: {
     getAll() {
