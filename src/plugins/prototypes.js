@@ -27,3 +27,12 @@ Vue.prototype.$hasRole = (id) => {
   }
   return !!user.roles.find(role => role.id === id);
 };
+
+Vue.prototype.$getUserId = () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user) {
+    router.push({ name: 'login' });
+    return false;
+  }
+  return user.id;
+};
