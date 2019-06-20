@@ -1,5 +1,7 @@
 <template lang="pug">
     .white.border
+        .title.mx-4.my-3 МОИ БРОНИ
+        v-divider
         v-data-table(
           v-model="selected"
           select-all

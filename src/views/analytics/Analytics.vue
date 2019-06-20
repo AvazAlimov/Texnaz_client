@@ -8,9 +8,8 @@
               Map(:scale="1.2")
       // Manager view
       v-flex(xs12 v-if="$hasRole(2)")
-        .title.mb-2 МОИ БРОНИ
         UserBookings(:userId="$getUserId()")
-        .title.mt-4.mb-2 МОИ ОТГРУЗКИ
+      v-flex(xs12 v-if="$hasRole(2)")
         UserSales(:userId="$getUserId()")
 </template>
 

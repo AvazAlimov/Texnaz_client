@@ -1,5 +1,7 @@
 <template lang="pug">
   .white.border
+    .title.mx-4.my-3 МОИ ОТГРУЗКИ
+    v-divider
     v-data-table(
       hide-actions
       :headers="headers"

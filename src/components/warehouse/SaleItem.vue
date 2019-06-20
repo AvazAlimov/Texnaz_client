@@ -49,9 +49,6 @@ export default {
     exchangeRate: {
       required: true,
     },
-    officialRate: {
-      required: true,
-    },
   },
   data: () => ({
     discount: 0,
@@ -59,13 +56,14 @@ export default {
   }),
   methods: {
     calculateFirstPrice() {
-      this.item.firstPrice = this.item.product.prices[0].firstPrice
+      this.item.firstPrice = this.item.product.prices[0].secondPrice
                       * parseFloat(this.item.sale)
-                      * parseFloat((100 - this.item.discount) / 100) / this.officialRate;
+                      * parseFloat((100 - this.item.discount) / 100);
     },
 
     calculateMixPrice() {
-      this.item.mixPrice = (this.item.product.prices[0].mixPriceNonCash / this.exchangeRate
+      this.item.mixPrice = (this.item.product.prices[0].secondPrice
+                      - this.item.product.prices[0].mixPriceNonCash / this.exchangeRate
                       + this.item.product.prices[0].mixPriceCash)
                       * parseFloat(this.item.sale)
                       * parseFloat((100 - this.item.discount) / 100);
