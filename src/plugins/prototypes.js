@@ -36,3 +36,14 @@ Vue.prototype.$getUserId = () => {
   }
   return user.id;
 };
+
+Vue.prototype.$getClients = (clients) => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (Vue.prototype.$hasRole(1) || Vue.prototype.$hasRole(6)) {
+    return clients;
+  }
+  if (Vue.prototype.$hasRole(2)) {
+    return clients.filter(client => client.managerId === user.id);
+  }
+  return [];
+};

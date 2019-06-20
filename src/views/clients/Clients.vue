@@ -89,10 +89,7 @@ export default {
   },
   computed: {
     myClients() {
-      if (this.$hasRole(1)) {
-        return this.clients;
-      }
-      return this.clients.filter(client => client.managerId === this.$getUserId());
+      return this.$getClients(this.clients);
     },
   },
   methods: {
