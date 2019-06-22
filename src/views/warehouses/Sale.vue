@@ -39,6 +39,14 @@
                     return-object
                     label="Клиент"
                     color="secondary")
+                  v-text-field(
+                    color="secondary"
+                    type="number"
+                    v-model="days"
+                    label="Количество дней платежа"
+                    name="Количество дней платежа"
+                    v-validate="'required|numeric|min_value:1'"
+                    :suffix="dueDate")
 
               v-stepper-content.pa-0(step="2")
                 v-layout.grey.lighten-2(row wrap align-center)
@@ -90,6 +98,7 @@ export default {
   name: 'Sale',
   data: () => ({
     step: 1,
+    days: 1,
     user: JSON.parse(localStorage.getItem('user')),
     loading: false,
     stock: null,
@@ -196,6 +205,9 @@ export default {
     officialRate: 1,
   }),
   computed: {
+    dueDate() {
+      return this.$moment(new Date()).add(this.days, 'd').format('YYYY-MM-DD');
+    },
     filteredClients() {
       if (this.user.id === 1) {
         return this.clients;
