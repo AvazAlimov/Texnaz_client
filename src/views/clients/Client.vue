@@ -75,6 +75,25 @@
                       color="secondary"
                       name="Менеджер"
                       v-validate="'required'")
+              v-menu(
+                v-model="menu"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                lazy
+                transition="scale-transition"
+                offset-y
+                full-width
+                min-width="290px")
+                template(v-slot:activator="{ on }")
+                  v-text-field(
+                    color="secondary"
+                    v-model="client.createdAt"
+                    label="Добавлен"
+                    readonly v-on="on")
+                v-date-picker(
+                    color="secondary"
+                    v-model="client.createdAt"
+                    @input="menu = false")
             v-flex(xs12)
               v-layout(row wrap)
                 v-layout
@@ -96,6 +115,7 @@ export default {
     return {
       id: null,
       province: null,
+      menu: false,
       client: {
         icc: '',
         name: '',
@@ -105,6 +125,7 @@ export default {
         regionId: null,
         sphere: '',
         managerId: null,
+        createdAt: (new Date()).toISOString().substring(0, 10),
       },
       provinces: [],
       regions: [],
@@ -188,6 +209,7 @@ export default {
       Client.get(this.$route.params.id)
         .then((client) => {
           this.client = client;
+          this.client.createdAt = this.client.createdAt.substring(0, 10);
           this.province = client.region.provinceId;
         });
     }
