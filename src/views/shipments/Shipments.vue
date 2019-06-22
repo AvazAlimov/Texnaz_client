@@ -1,8 +1,9 @@
 <template lang="pug">
   v-layout(row wrap)
     v-flex(xs12 v-if="$hasRole(1) || $hasRole(3)")
-      .title ОТГРУЗКИ
-      .white.border.mt-3
+      .white.border
+        .title.ml-4.my-3 ОТГРУЗКИ
+        v-divider
         v-data-table(
           hide-actions
           :headers="headers"
@@ -24,9 +25,10 @@
                 flat icon color="secondary"
                 :to="{ name: 'shipment', params: {id: props.item.id} }")
                 v-icon(small) visibility
-    v-flex.mt-3(xs12 v-if="$hasRole(1) || $hasRole(3)")
-      .title СОГЛАСОВАННЫЕ ОТГРУЗКИ
-      .white.border.mt-3
+    v-flex(xs12 v-if="$hasRole(1) || $hasRole(3)")
+      .white.border
+        .title.ml-4.my-3 СОГЛАСОВАННЫЕ ОТГРУЗКИ
+        v-divider
         v-data-table(
           hide-actions
           :headers="headers"
@@ -48,9 +50,10 @@
                 flat icon color="secondary"
                 :to="{ name: 'shipment', params: {id: props.item.id} }")
                 v-icon(small) visibility
-    v-flex(xs12).mt-3
-      .title МОИ ОТГРУЗКИ
-      .white.border.mt-3
+    v-flex(xs12)
+      .white.border
+        .title.ml-4.my-3 МОИ ОТГРУЗКИ
+        v-divider
         v-data-table(
             hide-actions
             :headers="headers"

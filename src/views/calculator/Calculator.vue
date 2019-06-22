@@ -1,56 +1,52 @@
 <template lang="pug">
   div
     v-layout(row wrap v-if="path == 'calculator'")
-        v-flex.mb-3(
-          xs12
-          v-if="$hasPermission($permissions.SHOW_CALCULATOR_NON_APPROVED.name)"
-        )
-            .title РАСЧЕТЫ
-                .border.white.mt-3
-                    v-data-table(
-                        :headers="headers"
-                        :items="notApprovedBatches"
-                        :loading="loading"
-                        hide-actions)
-                        template(v-slot:items="props")
-                          td {{ props.item.name || '-' }}
-                          td {{ props.item.number || '-' }}
-                          td {{ props.item.date ? props.item.date.substring(0, 10) : '-' }}
-                          td {{ props.item.Warehouse ? props.item.Warehouse.name : '-' }}
-                          td
-                            v-layout
-                                v-btn.mx-0(icon
-                                  :to="{name: 'batch_info', params: {id: props.item.id}}")
-                                  v-icon(small color="secondary") edit
-                                v-btn.mx-0(icon @click="remove(props.item.id)")
-                                  v-icon(small color="red") delete
-                    v-divider
+        v-flex.mb-3(xs12 v-if="$hasPermission($permissions.SHOW_CALCULATOR_NON_APPROVED.name)")
+            .border.white
+              .title.ml-4.my-3 РАСЧЕТЫ
+              v-divider
+              v-data-table(
+                :headers="headers"
+                :items="notApprovedBatches"
+                :loading="loading"
+                hide-actions)
+                template(v-slot:items="props")
+                  td {{ props.item.name || '-' }}
+                  td {{ props.item.number || '-' }}
+                  td {{ props.item.date ? props.item.date.substring(0, 10) : '-' }}
+                  td {{ props.item.Warehouse ? props.item.Warehouse.name : '-' }}
+                  td
                     v-layout
-                        v-spacer
-                        v-btn.ma-2(flat @click="create" color="secondary") Добавить
-        v-flex.mb-3(
-          xs12
-          v-if="$hasPermission($permissions.SHOW_CALCULATOR_APPROVED.name)"
-        )
-          .title УТВЕРЖДЕННЫЕ РАСЧЕТЫ
+                      v-btn.mx-0(icon
+                        :to="{name: 'batch_info', params: {id: props.item.id}}")
+                        v-icon(small color="secondary") edit
+                      v-btn.mx-0(icon @click="remove(props.item.id)")
+                        v-icon(small color="red") delete
+              v-divider
+              v-layout
+                v-spacer
+                v-btn.ma-2(flat @click="create" color="secondary") Добавить
+        v-flex.mb-3(xs12 v-if="$hasPermission($permissions.SHOW_CALCULATOR_APPROVED.name)")
           .border.white.mt-3
-                    v-data-table(
-                        :headers="headers"
-                        :items="approvedBatches"
-                        :loading="loading"
-                        hide-actions)
-                        template(v-slot:items="props")
-                          td {{ props.item.name || '-' }}
-                          td {{ props.item.number || '-' }}
-                          td {{ props.item.date ? props.item.date.substring(0, 10) : '-' }}
-                          td {{ props.item.Warehouse ? props.item.Warehouse.name : '-' }}
-                          td
-                            v-layout
-                                v-btn.mx-0(icon
-                                  :to="{name: 'batch_info', params: {id: props.item.id}}")
-                                  v-icon(small color="secondary") edit
-                                v-btn.mx-0(icon @click="remove(props.item.id)")
-                                  v-icon(small color="red") delete
+            .title.ml-4.my-3 УТВЕРЖДЕННЫЕ РАСЧЕТЫ
+            v-divider
+            v-data-table(
+                :headers="headers"
+                :items="approvedBatches"
+                :loading="loading"
+                hide-actions)
+                template(v-slot:items="props")
+                  td {{ props.item.name || '-' }}
+                  td {{ props.item.number || '-' }}
+                  td {{ props.item.date ? props.item.date.substring(0, 10) : '-' }}
+                  td {{ props.item.Warehouse ? props.item.Warehouse.name : '-' }}
+                  td
+                    v-layout
+                      v-btn.mx-0(icon
+                        :to="{name: 'batch_info', params: {id: props.item.id}}")
+                        v-icon(small color="secondary") edit
+                      v-btn.mx-0(icon @click="remove(props.item.id)")
+                        v-icon(small color="red") delete
     router-view
 </template>
 
