@@ -20,6 +20,7 @@
                 td {{ props.item.region.province.name }} / {{ props.item.region.name }}
                 td {{ props.item.sphere }}
                 td {{ props.item.manager.name }}
+                td {{ props.item.createdAt | moment('YYYY-MM-DD') }}
                 td
                   v-layout(v-if="$hasRole(1)")
                       v-btn(icon
@@ -78,6 +79,10 @@ export default {
         {
           text: 'Менеджер',
           value: 'manager.name',
+        },
+        {
+          text: 'Добавлено',
+          value: 'createdAt',
         },
         {
           sortable: false,
