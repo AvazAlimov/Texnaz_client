@@ -88,6 +88,13 @@ const router = new Router({
               path: ':id',
               name: 'manager',
               component: () => import('./views/managers/Manager.vue'),
+              children: [
+                {
+                  path: 'motivation',
+                  name: 'motivation',
+                  component: () => import('./views/managers/Motivation.vue'),
+                },
+              ],
             },
             {
               path: 'template',
