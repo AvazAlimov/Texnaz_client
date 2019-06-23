@@ -7,7 +7,8 @@
           Card(
             :title="`${warehouse.name} ${warehouse.company}`"
             :subtitle="`Владелец: ${warehouse.owner.name}`"
-            :caption="`Сумма товаров: ${$options.filters.readable(warehouse.totalPrice.toFixed(0))} $`"
+            :caption="`Сумма товаров: \
+              ${$options.filters.readable(warehouse.totalPrice.toFixed(0))} $`"
             icon="store_mall_directory"
             :to="{ name: 'warehouse', params: { id: warehouse.id }}"
           )
