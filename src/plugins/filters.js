@@ -6,3 +6,5 @@ Vue.filter('roundUp', (value) => {
 });
 
 Vue.filter('ceil', value => Math.ceil(value / 100) * 100);
+
+Vue.filter('readable', value => `${Number(value).toLocaleString().replace(',', ' ')}`);
