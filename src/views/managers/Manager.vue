@@ -4,6 +4,8 @@
         UserBookings(:userId="$route.params.id")
       v-flex(xs12)
         UserSales(:userId="$route.params.id")
+      v-flex(xs12)
+        Motivations
 </template>
 
 <script>

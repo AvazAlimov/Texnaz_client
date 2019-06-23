@@ -29,6 +29,8 @@ import ExpenseAnalytics from './expenses/ExpenseAnalytics.vue';
 import NewPayment from './payments/NewPayment.vue';
 import UserSales from './shipment/UserSales.vue';
 
+import Motivations from './managers/Motivations.vue';
+
 const Components = {
   Card,
 
@@ -57,6 +59,8 @@ const Components = {
   ExpenseAnalytics,
   NewPayment,
   UserSales,
+
+  Motivations,
 };
 
 Object.keys(Components).forEach((name) => {
