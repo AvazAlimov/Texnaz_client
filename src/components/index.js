@@ -19,6 +19,8 @@ import ReturnItem from './warehouse/ReturnItem.vue';
 import UserBookings from './warehouse/UserBookings.vue';
 import SaleItem from './warehouse/SaleItem.vue';
 import StockBookings from './warehouse/StockBookings.vue';
+import StockItem from './warehouse/StockItem.vue';
+import StockItemExpanded from './warehouse/StockItemExpanded.vue';
 
 import Map from './analytics/Map.vue';
 import ExpenseProperty from './expenses/ExpenseProperty.vue';
@@ -46,6 +48,8 @@ const Components = {
   ReturnItem,
   UserBookings,
   StockBookings,
+  StockItem,
+  StockItemExpanded,
 
   Map,
   ExpenseProperty,

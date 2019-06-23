@@ -4,7 +4,7 @@
         td {{ item.product.Brand.name }} {{ item.product.name }}
         td {{ item.product.packing }}
         td {{ item.product.color || '-' }}
-        td {{ item.quantity - item.booked }}
+        td {{ item.quantity - item.booked - item.sold }}
         td {{ item.defected ? 'Поврежден' : 'Хорошо' }}
         td {{ item.arrival_date | moment('YYYY-MM-DD') }}
         td {{ item.expiry_date | moment('YYYY-MM-DD') }}
@@ -34,7 +34,7 @@
                     decimal: true,\
                     min_value: 0,\
                     excluded: '0',\
-                    max_value: item.quantity - item.booked\
+                    max_value: item.quantity - item.booked - item.sold\
                 }"
             )
 </template>
