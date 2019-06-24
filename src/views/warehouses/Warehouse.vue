@@ -79,7 +79,7 @@ export default {
           counter: 0,
           id: 'losts',
           title: 'Потерянные продукты',
-          // to: { name: 'losts' },
+          to: { name: 'loststocks' },
         },
         {
           counter: 0,

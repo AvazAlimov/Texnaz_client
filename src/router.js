@@ -347,6 +347,11 @@ const router = new Router({
                   component: () => import('./views/warehouses/Information.vue'),
                 },
                 {
+                  path: 'loststocks',
+                  name: 'loststocks',
+                  component: () => import('./views/warehouses/LostStocks.vue'),
+                },
+                {
                   path: 'stock',
                   name: 'stock',
                   component: () => import('./views/warehouses/Stock.vue'),
