@@ -59,11 +59,13 @@ export default {
           bookings.push(booking);
         });
         this.stock.sales.forEach((saleItem) => {
-          bookings.push({
-            user: saleItem.sale.manager,
-            client: saleItem.sale.client,
-            quantity: saleItem.quantity,
-          });
+          if (saleItem.approved < 1) {
+            bookings.push({
+              user: saleItem.sale.manager,
+              client: saleItem.sale.client,
+              quantity: saleItem.quantity,
+            });
+          }
         });
       }
       return bookings;

@@ -49,7 +49,7 @@ export default {
       let sales = 0;
       this.item.stocks.forEach((stock) => {
         stock.sales.forEach((saleItem) => {
-          sales += saleItem.quantity;
+          if (saleItem.approved < 1) { sales += saleItem.quantity; }
         });
       });
       return sales;

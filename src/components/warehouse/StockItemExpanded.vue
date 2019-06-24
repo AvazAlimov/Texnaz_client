@@ -58,7 +58,7 @@ export default {
     sales() {
       let sales = 0;
       this.item.sales.forEach((saleItem) => {
-        sales += saleItem.quantity;
+        if (saleItem.approved < 1) { sales += saleItem.quantity; }
       });
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.item.sold = sales;
