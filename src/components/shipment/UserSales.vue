@@ -23,10 +23,17 @@
           td {{ payments.find(payment => payment.id == props.item.form).name }}
           td {{ getClientBalance(props.item.client) }} $
           td
-            v-btn.ma-0(
-              flat icon color="secondary"
-              :to="{ name: 'shipment', params: {id: props.item.id} }")
-              v-icon(small) edit
+            v-layout(row)
+              v-btn.ma-0(
+                v-if="props.item.approved < 1"
+                flat icon color="secondary"
+                :to="{ name: 'shipment', params: {id: props.item.id} }")
+                v-icon(small) edit
+              v-btn.ma-0(
+                v-if="props.item.approved == 1"
+                flat icon color="secondary"
+                :to="{ name: 'shipment', params: {id: props.item.id} }")
+                v-icon(small) visibility
 </template>
 
 <script>
