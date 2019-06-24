@@ -17,7 +17,6 @@ export function execute(promise) {
   });
 }
 
-console.log(process.env.VUE_APP_API);
 export const AXIOS = axios.create({
   baseURL: process.env.NODE_ENV === 'production' ? process.env.VUE_APP_API : 'http://localhost:3030/api/',
 });
