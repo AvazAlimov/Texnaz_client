@@ -151,7 +151,7 @@ export default {
             .filter((form, index) => forms[index] > 0)
             .map((form, index) => `${form.name} ${((forms[index] * 100 / this.total) || 0).toFixed(2)}%`),
       };
-    },
+    }, 
     renderPieCharts() {
       const charts = [
         {

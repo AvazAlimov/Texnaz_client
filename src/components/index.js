@@ -21,6 +21,13 @@ import SaleItem from './warehouse/SaleItem.vue';
 import StockBookings from './warehouse/StockBookings.vue';
 
 import Map from './analytics/Map.vue';
+import UserContainer from './analytics/UserContainer.vue';
+import UserDataContainer from './analytics/UserDataContainer.vue';
+import TotalBrandPie from './analytics/TotalBrandPie.vue';
+import Guage from './analytics/Guage.vue';
+import ManagerStatics from './analytics/ManagerStatics.vue';
+import ClientData from './analytics/ClientData.vue';
+
 import ExpenseProperty from './expenses/ExpenseProperty.vue';
 import EditExpense from './expenses/EditExpense.vue';
 import ExpenseAnalytics from './expenses/ExpenseAnalytics.vue';
@@ -48,6 +55,13 @@ const Components = {
   StockBookings,
 
   Map,
+  UserContainer,
+  UserDataContainer,
+  TotalBrandPie,
+  Guage,
+  ManagerStatics,
+  ClientData,
+
   ExpenseProperty,
   EditExpense,
   ExpenseAnalytics,

@@ -18,7 +18,7 @@ export function execute(promise) {
 }
 
 export const AXIOS = axios.create({
-  baseURL: process.env.NODE_ENV === 'production' ? 'http://dev.texnaz.uz/api/' : 'http://localhost:3030/api/',
+  baseURL: process.env.NODE_ENV === 'production' ? 'http://dev.texnaz.uz/api/' : 'http://192.168.43.113:3030/api/',
 });
 
 export default () => {
