@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  props: ["icon", "title", "quantity", "color", "duration"]
+  props: ['icon', 'title', 'quantity', 'color', 'duration'],
 };
 </script>
 

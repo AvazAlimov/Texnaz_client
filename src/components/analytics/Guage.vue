@@ -10,35 +10,41 @@
 </template>
 
 <script>
-import Chart from "chart.js";
-import ColorGenerator from "../../utils/ColorGenerator";
+import Chart from 'chart.js';
+
 export default {
-  props: ['id','title','color','percent'],
+  props: ['id', 'title', 'color', 'percent'],
+  data() {
+    return {
+      guageChart: null,
+    };
+  },
   methods: {
     renderGuage() {
-      new Chart(`GuageChart${this.id}`, {
-        type: "doughnut",
+      if (this.guageChart) this.guageChart.destroy();
+      this.guageChart = new Chart(`GuageChart${this.id}`, {
+        type: 'doughnut',
         data: {
           datasets: [
             {
               data: [this.percent, 100 - this.percent],
               backgroundColor:
                 this.percent === undefined
-                  ? ["rgba(0,0,0,0.05)"]
-                  : [this.color,'#A0A1A5']
-            }
-          ]
+                  ? ['rgba(0,0,0,0.05)']
+                  : [this.color, '#A0A1A5'],
+            },
+          ],
         },
-        options:{
+        options: {
           circumference: Math.PI,
           rotation: -Math.PI,
-        }
+        },
       });
-    }
+    },
   },
   mounted() {
     this.renderGuage();
-  }
+  },
 };
 </script>
 

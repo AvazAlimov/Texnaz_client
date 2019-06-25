@@ -5,7 +5,7 @@
           v-icon().color-blue {{ icon }}
           .title.darkgrey--text.mt-2 {{ heading }}
           .font-weight-bold.darkgrey--text {{ subheading }}
-        v-sparkline.line( 
+        v-sparkline.line(
           :fill="fill"
           :gradient="gradient"
           :smooth="radius || false"
@@ -22,18 +22,18 @@
  * }
  */
 export default {
-  props: ["icon", "heading", "subheading","value","color"],
+  props: ['icon', 'heading', 'subheading', 'value', 'color'],
   data() {
-    return{
+    return {
       fill: true,
       radius: 10,
-    }
+    };
   },
-  computed:{
-    gradient:function(){
-      return [this.color,'#FFF']
-    }
-  }
+  computed: {
+    gradient() {
+      return [this.color, '#FFF'];
+    },
+  },
 };
 </script>
 

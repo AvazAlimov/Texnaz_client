@@ -12,46 +12,52 @@
  *    quantity: 'TotalSoldQuantity',
  *  }
  */
-import Chart from "chart.js";
-import ColorGenerator from "../../utils/ColorGenerator";
+import Chart from 'chart.js';
+import ColorGenerator from '../../utils/ColorGenerator';
+
 export default {
-  props: ["title", "models"],
+  props: ['title', 'models'],
+  data() {
+    return {
+      barChart: null,
+    };
+  },
   methods: {
     renderPie() {
       const total = this.models
         .map(el => el.quantity)
         .reduce((a, b) => a + b, 0);
-      new Chart("totalBrandPie", {
-        type: "pie",
-        data: { 
+      if (this.barChart) this.barChart.destroy();
+      this.barChart = new Chart('totalBrandPie', {
+        type: 'pie',
+        data: {
           labels:
             total === 0
-              ? ["Empty"]
+              ? ['Empty']
               : this.models.map(
-                  el =>
-                    `${el.name} ${((el.quantity * 100) / total || 0).toFixed(
-                      2
-                    )}%`
-                ),
+                el => `${el.name} ${((el.quantity * 100) / total || 0).toFixed(
+                  2,
+                )}%`,
+              ),
           datasets: [
             {
               data: this.models.map(el => el.quantity),
               backgroundColor:
                 total === 0
-                  ? ["rgba(0,0,0,0.05)"]
-                  : this.models.map(el => ColorGenerator.getRandomColor())
-            }
-          ]
+                  ? ['rgba(0,0,0,0.05)']
+                  : this.models.map(el => ColorGenerator.getRandomColor()),
+            },
+          ],
         },
-        options:{
-          responsive:true
-        }
+        options: {
+          responsive: true,
+        },
       });
-    }
+    },
   },
   mounted() {
     this.renderPie();
-  }
+  },
 };
 </script>
 <style scoped>

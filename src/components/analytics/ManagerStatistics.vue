@@ -8,7 +8,7 @@
 </template>
 
 <script>
-/** 
+/**
  * Expected Model
  * {
  *    name: 'ManagerName',
@@ -21,35 +21,39 @@
  *    ]
  * }
  */
-import Chart from "chart.js";
-import ColorGenerator from "../../utils/ColorGenerator";
+import Chart from 'chart.js';
+import ColorGenerator from '../../utils/ColorGenerator';
 
 export default {
-  props: ['dropdown','models'],
+  props: ['dropdown', 'models'],
+  data() {
+    return {
+      lineChart: null,
+    };
+  },
   methods: {
     dataSets(managers) {
-      return managers.map(manager => {
-        return {
-          label: manager.name,
-          data: manager.data.map(el => el.value),
-          backgroundColor: [ColorGenerator.getRandomRGBA()]
-        };
-      });
+      return managers.map(manager => ({
+        label: manager.name,
+        data: manager.data.map(el => el.value),
+        backgroundColor: [ColorGenerator.getRandomRGBA()],
+      }));
     },
     renderChart() {
-      const isEmpty = typeof this.models === "undefined" || this.models.length === 0;
-      new Chart("ManagerLineChart", {
-        type: "line",
+      if (this.lineChart) this.lineChart.destroy();
+      const isEmpty = typeof this.models === 'undefined' || this.models.length === 0;
+      this.lineChart = new Chart('ManagerLineChart', {
+        type: 'line',
         data: {
-          labels: isEmpty ? ["Empty"] : [...this.models[0].data.map(el => el.date)],
-          datasets: this.dataSets(this.models)
+          labels: isEmpty ? ['Empty'] : [...this.models[0].data.map(el => el.date)],
+          datasets: this.dataSets(this.models),
         },
       });
-    }
+    },
   },
   mounted() {
     this.renderChart();
-  }
+  },
 };
 </script>
 
