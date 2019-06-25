@@ -23,6 +23,15 @@
                     decimal: true,\
                 }"
             )
+            v-select(
+                color="secondary"
+                v-model="brandId"
+                label="Бренд"
+                :items="brands"
+                item-text="name"
+                item-value="id"
+                clearable
+            )
         v-flex(xs6)
             v-select(
                 color="secondary"
@@ -61,6 +70,7 @@
 <script>
 import Payment from '@/services/Payment';
 import Client from '@/services/Client';
+import Brand from '@/services/Brand';
 import User from '@/services/User';
 import Configuration from '@/services/Configuration';
 
@@ -95,6 +105,8 @@ export default {
     ],
     clientId: null,
     clients: [],
+    brandId: null,
+    brands: [],
     managerId: null,
     managers: [],
     exchangeRate: null,
@@ -112,10 +124,11 @@ export default {
       Promise.all([
         Client.getAll(),
         User.getAll(),
+        Brand.getAll(),
         Configuration.getExchangeRate(),
       ])
         .then((result) => {
-          [this.clients, this.managers, this.exchangeRate] = result;
+          [this.clients, this.managers, this.brands, this.exchangeRate] = result;
           this.managers = this.managers.filter(user => !!user.roles.find(role => role.id === 2));
           this.currencies[1].ratio = parseFloat(this.exchangeRate.value);
           this.currencies[2].ratio = parseFloat(this.exchangeRate.value);
@@ -135,12 +148,14 @@ export default {
           ratio: this.currency.ratio,
           managerId: this.managerId,
           clientId: this.clientId,
+          brandId: this.brandId,
           sum: this.sum,
         })
           .then(() => {
             this.sum = 0;
             this.managerId = null;
             this.clientId = null;
+            this.brandId = null;
             this.$validator.validate();
             this.postAction();
           })

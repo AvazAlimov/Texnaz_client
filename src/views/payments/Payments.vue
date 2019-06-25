@@ -19,6 +19,8 @@
               td {{ props.item.id }}
               td {{ props.item.client.name }}
               td {{ props.item.client.icc }}
+              td {{ props.item.brand ? `${props.item.brand.name} ` : '-' }}
+                | {{ props.item.brand ? `${props.item.brand.manufacturer}` : '' }}
               td {{ props.item.manager.name }}
               td {{ balance(props.item.client).toFixed(2) }} $
               td {{ (props.item.sum / props.item.ratio).toFixed(2) }} $
@@ -40,6 +42,8 @@
               td {{ props.item.id }}
               td {{ props.item.client.name }}
               td {{ props.item.client.icc }}
+              td {{ props.item.brand ? `${props.item.brand.name} ` : '-' }}
+                | {{ props.item.brand ? `${props.item.brand.manufacturer}` : '' }}
               td {{ props.item.manager.name }}
               td {{ balance(props.item.client).toFixed(2) }} $
               td {{ (props.item.sum / props.item.ratio).toFixed(2) }} $
@@ -69,6 +73,10 @@ export default {
       {
         text: 'ИКК',
         value: 'client.icc',
+      },
+      {
+        text: 'Бренд',
+        value: 'brandId',
       },
       {
         text: 'Менеджер',
