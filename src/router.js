@@ -422,12 +422,28 @@ const router = new Router({
         },
         {
           path: 'shipments',
+          redirect: 'mysales',
           component: () => import('./views/shipments/Main.vue'),
           children: [
             {
-              path: '',
-              name: 'shipments',
-              component: () => import('./views/shipments/Shipments.vue'),
+              path: 'mysales',
+              name: 'mysales',
+              component: () => import('./views/shipments/MySales.vue'),
+            },
+            {
+              path: 'salesinformation',
+              name: 'salesinformation',
+              component: () => import('./views/shipments/Information.vue'),
+            },
+            {
+              path: 'pendingsales',
+              name: 'pendingsales',
+              component: () => import('./views/shipments/PendingSales.vue'),
+            },
+            {
+              path: 'approvedsales',
+              name: 'approvedsales',
+              component: () => import('./views/shipments/ApprovedSales.vue'),
             },
             {
               path: ':id',
