@@ -422,7 +422,8 @@ const router = new Router({
         },
         {
           path: 'shipments',
-          redirect: 'mysales',
+          name: 'shipments',
+          redirect: { name: 'mysales' },
           component: () => import('./views/shipments/Main.vue'),
           children: [
             {
