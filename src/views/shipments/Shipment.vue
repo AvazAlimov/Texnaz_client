@@ -86,7 +86,7 @@
                       :loading="loading"
                       flat color="secondary"
                       @click="disapprove()"
-                    ) Не подтвердить
+                    ) Отменить
 </template>
 
 <script>
