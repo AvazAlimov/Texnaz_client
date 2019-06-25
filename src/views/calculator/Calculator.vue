@@ -1,7 +1,7 @@
 <template lang="pug">
   div
     v-layout(row wrap v-if="path == 'calculator'")
-        v-flex.mb-3(xs12 v-if="$hasPermission($permissions.SHOW_CALCULATOR_NON_APPROVED.name)")
+        v-flex(xs12 v-if="$hasPermission($permissions.SHOW_CALCULATOR_NON_APPROVED.name)")
             .border.white
               .title.ml-4.my-3 РАСЧЕТЫ
               v-divider
@@ -26,8 +26,8 @@
               v-layout
                 v-spacer
                 v-btn.ma-2(flat @click="create" color="secondary") Добавить
-        v-flex.mb-3(xs12 v-if="$hasPermission($permissions.SHOW_CALCULATOR_APPROVED.name)")
-          .border.white.mt-3
+        v-flex(xs12 v-if="$hasPermission($permissions.SHOW_CALCULATOR_APPROVED.name)")
+          .border.white
             .title.ml-4.my-3 УТВЕРЖДЕННЫЕ РАСЧЕТЫ
             v-divider
             v-data-table(

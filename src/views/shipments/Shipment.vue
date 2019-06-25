@@ -75,7 +75,7 @@
                         td {{ props.item.quantity }}
                         td {{ getPrice(props.item).toFixed(2) }} $
                 v-divider
-                v-layout(row)
+                v-layout(row v-if="sale.approved < 1")
                     v-spacer
                     v-btn.ma-0.mb-1.mr-1(
                       :loading="loading"

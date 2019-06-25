@@ -324,6 +324,27 @@ const router = new Router({
           ],
         },
         {
+          path: 'motivations',
+          component: () => import('./views/motivations/Main.vue'),
+          children: [
+            {
+              path: '',
+              name: 'motivations',
+              component: () => import('./views/motivations/Motivations.vue'),
+            },
+            {
+              path: 'template',
+              name: 'motivation_create',
+              component: () => import('./views/motivations/Motivation.vue'),
+            },
+            {
+              path: 'template/:id',
+              name: 'motivation_update',
+              component: () => import('./views/motivations/Motivation.vue'),
+            },
+          ],
+        },
+        {
           path: 'warehouses',
           name: 'warehouses',
           component: () => import('./views/warehouses/Warehouses.vue'),
@@ -338,6 +359,11 @@ const router = new Router({
                   path: 'information',
                   name: 'information',
                   component: () => import('./views/warehouses/Information.vue'),
+                },
+                {
+                  path: 'loststocks',
+                  name: 'loststocks',
+                  component: () => import('./views/warehouses/LostStocks.vue'),
                 },
                 {
                   path: 'stock',
@@ -396,12 +422,28 @@ const router = new Router({
         },
         {
           path: 'shipments',
+          redirect: 'mysales',
           component: () => import('./views/shipments/Main.vue'),
           children: [
             {
-              path: '',
-              name: 'shipments',
-              component: () => import('./views/shipments/Shipments.vue'),
+              path: 'mysales',
+              name: 'mysales',
+              component: () => import('./views/shipments/MySales.vue'),
+            },
+            {
+              path: 'salesinformation',
+              name: 'salesinformation',
+              component: () => import('./views/shipments/Information.vue'),
+            },
+            {
+              path: 'pendingsales',
+              name: 'pendingsales',
+              component: () => import('./views/shipments/PendingSales.vue'),
+            },
+            {
+              path: 'approvedsales',
+              name: 'approvedsales',
+              component: () => import('./views/shipments/ApprovedSales.vue'),
             },
             {
               path: ':id',

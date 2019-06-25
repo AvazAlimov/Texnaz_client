@@ -1,37 +1,27 @@
 <template lang="pug">
-  .white.border
-    .title.mx-4.my-3 МОИ ОТГРУЗКИ
-    v-divider
-    v-data-table(
-      hide-actions
-      :headers="headers"
-      :items="sales"
-      :loading="loading")
-      template(v-slot:items="props")
-        tr(:class="{\
-          'green lighten-3': props.item.approved > 0,\
-          'red lighten-3': props.item.approved < 0\
-          }")
-          td {{ props.item.id }}
-          td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
-          td {{ props.item.approved == 1 ? 'Согласованные' : 'Не согласованные' }}
-          td {{ props.item.warehouse.name }} {{ props.item.warehouse.company }}
-          td {{ props.item.client.icc }}
-          td {{ props.item.client.name }}
-          td {{ props.item.manager.name }}
-          td {{ getTotalPrice(props.item).toFixed(2) }} $
-          td {{ types.find(type => type.id == props.item.type).name }}
-          td {{ payments.find(payment => payment.id == props.item.form).name }}
-          td {{ getClientBalance(props.item.client) }} $
-          td
-            v-layout(row)
+  v-layout(row wrap)
+    v-flex(xs12)
+      .white.border
+        .title.ml-4.my-3 ОТГРУЗКИ
+        v-divider
+        v-data-table(
+          hide-actions
+          :headers="headers"
+          :items="sales"
+          :loading="loading")
+          template(v-slot:items="props")
+            td {{ props.item.id }}
+            td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
+              td {{ props.item.warehouse.name }} {{ props.item.warehouse.company }}
+            td {{ props.item.client.icc }}
+            td {{ props.item.client.name }}
+            td {{ props.item.manager.name }}
+            td {{ getTotalPrice(props.item).toFixed(2) }} $
+            td {{ types.find(type => type.id == props.item.type).name }}
+            td {{ payments.find(payment => payment.id == props.item.form).name }}
+            td {{ getClientBalance(props.item.client) }} $
+            td
               v-btn.ma-0(
-                v-if="props.item.approved < 1"
-                flat icon color="secondary"
-                :to="{ name: 'shipment', params: {id: props.item.id} }")
-                v-icon(small) edit
-              v-btn.ma-0(
-                v-if="props.item.approved == 1"
                 flat icon color="secondary"
                 :to="{ name: 'shipment', params: {id: props.item.id} }")
                 v-icon(small) visibility
@@ -42,17 +32,44 @@ import Sale from '@/services/Sale';
 import Configuration from '@/services/Configuration';
 
 export default {
-  name: 'UserSales',
-  props: {
-    userId: {
-      required: true,
-    },
-  },
+  name: 'SalesInformation',
   data: () => ({
+    user: JSON.parse(localStorage.getItem('user')),
     loading: false,
     configurations: [],
     exchangeRate: 1,
     officialRate: 1,
+    payments: [
+      {
+        id: 1,
+        name: 'Предоплата',
+      },
+      {
+        id: 2,
+        name: 'Частичная',
+      },
+      {
+        id: 3,
+        name: 'Реализация',
+      },
+    ],
+    types: [
+      {
+        id: 1,
+        name: 'B2C',
+        key: 'firstPrice',
+      },
+      {
+        id: 2,
+        name: 'Цена с наценкой',
+        key: 'mixPrice',
+      },
+      {
+        id: 3,
+        name: 'B2B',
+        key: 'secondPrice',
+      },
+    ],
     sales: [],
     headers: [
       {
@@ -62,10 +79,6 @@ export default {
       {
         text: 'Дата',
         value: 'createdAt',
-      },
-      {
-        text: 'Статус',
-        value: 'approved',
       },
       {
         text: 'Склад',
@@ -105,37 +118,6 @@ export default {
         sortable: false,
       },
     ],
-    payments: [
-      {
-        id: 1,
-        name: 'Предоплата',
-      },
-      {
-        id: 2,
-        name: 'Частичная',
-      },
-      {
-        id: 3,
-        name: 'Реализация',
-      },
-    ],
-    types: [
-      {
-        id: 1,
-        name: 'B2C',
-        key: 'firstPrice',
-      },
-      {
-        id: 2,
-        name: 'Цена с наценкой',
-        key: 'mixPrice',
-      },
-      {
-        id: 3,
-        name: 'B2B',
-        key: 'secondPrice',
-      },
-    ],
   }),
   methods: {
     getAll() {
@@ -146,7 +128,6 @@ export default {
       ])
         .then((results) => {
           [this.sales, this.configurations] = results;
-          this.sales = this.sales.filter(sale => sale.managerId === parseInt(this.userId, 10));
           this.exchangeRate = (this.configurations.find(conf => conf.id === 4)).value;
           this.officialRate = (this.configurations.find(conf => conf.id === 5)).value;
         })

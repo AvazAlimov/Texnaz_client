@@ -19,6 +19,8 @@ import ReturnItem from './warehouse/ReturnItem.vue';
 import UserBookings from './warehouse/UserBookings.vue';
 import SaleItem from './warehouse/SaleItem.vue';
 import StockBookings from './warehouse/StockBookings.vue';
+import StockItem from './warehouse/StockItem.vue';
+import StockItemExpanded from './warehouse/StockItemExpanded.vue';
 
 import Map from './analytics/Map.vue';
 import UserContainer from './analytics/UserContainer.vue';
@@ -33,6 +35,8 @@ import EditExpense from './expenses/EditExpense.vue';
 import ExpenseAnalytics from './expenses/ExpenseAnalytics.vue';
 import NewPayment from './payments/NewPayment.vue';
 import UserSales from './shipment/UserSales.vue';
+
+import Motivations from './managers/Motivations.vue';
 
 const Components = {
   Card,
@@ -53,6 +57,8 @@ const Components = {
   ReturnItem,
   UserBookings,
   StockBookings,
+  StockItem,
+  StockItemExpanded,
 
   Map,
   UserContainer,
@@ -67,6 +73,8 @@ const Components = {
   ExpenseAnalytics,
   NewPayment,
   UserSales,
+
+  Motivations,
 };
 
 Object.keys(Components).forEach((name) => {

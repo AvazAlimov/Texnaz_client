@@ -41,21 +41,12 @@
           :loading="loading"
           hide-actions)
           template(v-slot:items="props")
-              tr.selectable(
-                v-if="readOnly ? true : (props.item.quantity - props.item.booked > 0)"
-                @click="props.expanded = !props.expanded"
-                :class="{'grey': props.expanded, 'lighten-2': props.expanded}")
-                td(v-if="!readOnly")
-                  v-icon(v-if="isSelected(props.item)" small) check
-                td {{ props.item.product.code || '-' }}
-                td {{ props.item.product.Brand.name }}
-                td {{ props.item.product.Brand.manufacturer }}
-                td {{ props.item.product.name }}
-                td {{ props.item.product.packing }}
-                td {{ props.item.product.color || '-' }}
-                td {{ props.item.quantity }}
-                td {{ props.item.booked }}
-                td {{(props.item.quantity-props.item.booked)*props.item.product.packing}}
+            StockItem(
+              :expand="() => {props.expanded = !props.expanded}"
+              :selected="isSelected(props.item)"
+              :readOnly="readOnly"
+              :item="props.item"
+            )
           template(v-slot:expand="props")
             .pb-4.grey.lighten-2
               v-data-table(
@@ -64,20 +55,13 @@
                 :loading="loading"
                 hide-actions)
                 template(v-slot:items="stocks")
-                  tr.selectable(@click="readOnly ? null : select(stocks.item)")
-                    td
-                      v-icon(v-if="indexOf(stocks.item.id) != null" small) check
-                    td {{ stocks.item.arrival_date | moment('YYYY-MM-DD') }}
-                    td {{ stocks.item.expiry_date | moment('YYYY-MM-DD') }}
-                    td {{ stocks.item.quantity }}
-                    td {{ stocks.item.booked }}
-                    td {{(stocks.item.quantity-stocks.item.booked)*props.item.product.packing}}
-                    td
-                      v-btn.ma-0(
-                        v-if="props.item.booked"
-                        flat icon color="secondary"
-                        @click="showBookings(stocks.item)")
-                        v-icon(small) visibility
+                  StockItemExpanded(
+                    :item="props.item"
+                    :readOnly="readOnly"
+                    :select="() => select(stocks.item)"
+                    :selected="indexOf(stocks.item.id) != null"
+                    :show="() => showBookings(stocks.item)"
+                  )
         v-divider
         StockBookings(v-model="dialog" ref="stockBookings")
 </template>
@@ -221,21 +205,13 @@ export default {
           let stocks;
           [stocks, this.brands, this.types] = warehouse;
           stocks.forEach((stock) => {
-            // eslint-disable-next-line no-param-reassign
-            stock.booked = stock.bookings.map(a => a.quantity).reduce((a, b) => a + b, 0);
             const row = this.stocks.find(item => item.product.id === stock.product.id);
             if (row) {
-              row.quantity += stock.quantity;
-              row.booked += stock.booked;
               row.stocks.push(stock);
             } else {
-              this.stocks.push({
-                id: stock.id,
-                product: stock.product,
-                quantity: stock.quantity,
-                stocks: [stock],
-                booked: stock.booked,
-              });
+              // eslint-disable-next-line no-param-reassign
+              stock.stocks = [stock];
+              this.stocks.push(stock);
             }
           });
         });

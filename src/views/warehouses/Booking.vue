@@ -40,7 +40,7 @@
                       td {{ props.item.product.Brand.name }} {{ props.item.product.name }}
                       td {{ props.item.product.packing }}
                       td {{ props.item.product.color || '-' }}
-                      td {{ props.item.quantity - props.item.booked }}
+                      td {{ props.item.quantity - props.item.booked - props.item.sold }}
                       td {{ props.item.defected ? 'Поврежден' : 'Хорошо' }}
                       td {{ props.item.arrival_date | moment('YYYY-MM-DD') }}
                       td {{ props.item.expiry_date | moment('YYYY-MM-DD') }}
@@ -54,7 +54,7 @@
                             decimal: true,\
                             min_value: 0,\
                             excluded: '0',\
-                            max_value: props.item.quantity - props.item.booked\
+                            max_value: props.item.quantity - props.item.sold\
                           }"
                         )
                 v-divider
