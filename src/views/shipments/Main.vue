@@ -6,7 +6,7 @@
       flat color="secondary"
       :to="tab.to"
     ) {{ tab.name }}
-    v-flex.mt-3(xs12)
+    v-flex.mt-2(xs12)
       router-view
 </template>
 

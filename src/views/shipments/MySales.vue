@@ -1,5 +1,4 @@
 <template lang="pug">
-  v-layout(row wrap)
     UserSales(:userId="user.id")
 </template>
 
