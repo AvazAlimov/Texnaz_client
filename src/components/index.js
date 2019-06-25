@@ -27,7 +27,7 @@ import UserContainer from './analytics/UserContainer.vue';
 import UserDataContainer from './analytics/UserDataContainer.vue';
 import TotalBrandPie from './analytics/TotalBrandPie.vue';
 import Guage from './analytics/Guage.vue';
-import ManagerStatics from './analytics/ManagerStatics.vue';
+import ManagerStatistics from './analytics/ManagerStatistics.vue';
 import ClientData from './analytics/ClientData.vue';
 
 import ExpenseProperty from './expenses/ExpenseProperty.vue';
@@ -65,7 +65,7 @@ const Components = {
   UserDataContainer,
   TotalBrandPie,
   Guage,
-  ManagerStatics,
+  ManagerStatistics,
   ClientData,
 
   ExpenseProperty,

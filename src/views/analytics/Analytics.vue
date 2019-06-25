@@ -62,7 +62,7 @@
                 :percent="guage.currentMonthPlan.percent"
                 )
         v-flex(lg8 md8 xs8)
-          ManagerStatics(:dropdown="managerStatics.dropdown" :models="managerStatics.data")
+          ManagerStatistics(:dropdown="managerStatistics.dropdown" :models="managerStatistics.data")
         v-flex(lg4 md4 xs4)
           Guage(
             :id="guage.paymentDebt.id"
@@ -126,7 +126,7 @@ export default {
           icon: "person_outline",
           heading: "$1430",
           subheading: "Umumiy savdo",
-          value: [1, 2, 6, 3, 4, 1, 5, 2, 3, 2, 0, 5],
+          value: [10, 2, 6, 3, 4, 1, 5, 2, 3, 2, 0, 5],
           color: "#B7B1F7"
         },
         {
@@ -163,7 +163,7 @@ export default {
           { name: "Oxak", quantity: 35 }
         ]
       },
-      managerStatics: {
+      managerStatistics: {
         dropdown: [1, 2, 3, 4],
         data: [
           {
