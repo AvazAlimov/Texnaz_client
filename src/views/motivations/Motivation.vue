@@ -11,19 +11,27 @@
                 v-layout(row align-center)
                   v-flex(xs3)
                     .title ВЫБРАТЬ ВИД:
-                  v-flex.pa-0(xs3 v-for="type in motivationTypes" :key="type.id")
+                  v-flex.pa-0(extend v-for="type in motivationTypes" :key="type.id")
                     v-btn(block color="secondary" small
                       :outline="motivationType != type.id"
                       :depressed="motivationType == type.id"
                       @click="motivationType = type.id") {{ type.name }}
-                v-layout.mt-2(row align-center)
+                v-layout(row align-center)
                   v-flex(xs3)
                     .title ВЫБРАТЬ ТИП:
-                  v-flex.pa-0(xs3 v-for="element in types" :key="element.id")
+                  v-flex.pa-0(extend v-for="element in types" :key="element.id")
                     v-btn(block color="secondary" small
                       :outline="type != element.id"
                       :depressed="type == element.id"
                       @click="type = element.id") {{ element.name }}
+                v-layout(row align-center)
+                  v-flex(xs3)
+                    .title ВЫБРАТЬ МЕТОД:
+                  v-flex.pa-0(extend v-for="element in methods" :key="element.id")
+                    v-btn(block color="secondary" small
+                      :outline="method != element.id"
+                      :depressed="method == element.id"
+                      @click="method = element.id") {{ element.name }}
                 v-layout.mt-2(row align-center)
                   v-flex(xs3)
                     .title СРОК ОТ:
@@ -114,6 +122,17 @@ export default {
       {
         id: 2,
         name: 'Отгрузка',
+      },
+    ],
+    method: 0,
+    methods: [
+      {
+        id: 0,
+        name: 'Отдельно',
+      },
+      {
+        id: 1,
+        name: 'Накопительно',
       },
     ],
     value: 0,
