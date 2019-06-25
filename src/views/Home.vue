@@ -37,12 +37,12 @@ export default {
   name: 'Home',
   data() {
     return {
-      drawer: true,
+      drawer: false,
       user: {},
       items: [
         {
           icon: 'data_usage',
-          title: 'Статистика',
+          title: 'Мониторинг',
           to: '/',
           permission: this.$permissions.SHOW_STATISTICS.name,
         },
@@ -69,6 +69,12 @@ export default {
           title: 'Менеджеры',
           to: '/managers',
           permission: this.$permissions.SHOW_MANAGERS.name,
+        },
+        {
+          icon: 'timeline',
+          title: 'Мотивация',
+          to: '/motivations',
+          // permission: this.$permissions.SHOW_MANAGERS.name,
         },
         {
           icon: 'perm_identity',

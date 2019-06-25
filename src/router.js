@@ -88,13 +88,6 @@ const router = new Router({
               path: ':id',
               name: 'manager',
               component: () => import('./views/managers/Manager.vue'),
-              children: [
-                {
-                  path: 'motivation',
-                  name: 'motivation',
-                  component: () => import('./views/managers/Motivation.vue'),
-                },
-              ],
             },
             {
               path: 'template',
@@ -327,6 +320,27 @@ const router = new Router({
               path: 'themes',
               name: 'themes',
               component: () => import('./views/settings/Themes.vue'),
+            },
+          ],
+        },
+        {
+          path: 'motivations',
+          component: () => import('./views/motivations/Main.vue'),
+          children: [
+            {
+              path: '',
+              name: 'motivations',
+              component: () => import('./views/motivations/Motivations.vue'),
+            },
+            {
+              path: 'template',
+              name: 'motivation_create',
+              component: () => import('./views/motivations/Motivation.vue'),
+            },
+            {
+              path: 'template/:id',
+              name: 'motivation_update',
+              component: () => import('./views/motivations/Motivation.vue'),
             },
           ],
         },
