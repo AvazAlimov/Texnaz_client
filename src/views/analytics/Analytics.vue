@@ -50,37 +50,38 @@
             :value="item.value"
             :color="item.color"
           )
+          
         v-flex(lg4 md4 xs4)
           v-layout(row wrap)
             v-flex(xs12)
-              TotalBrandPie(title="Pie chart", :models="TotalBrandPieData.data").ma-2
+              TotalBrandPie(title="Pie chart", :models="totalBrandPieData.data")
               Guage(
-                :id="Guage.CurrentMonthPlan.id"
-                :title="Guage.CurrentMonthPlan.title"
-                :color="Guage.CurrentMonthPlan.color"
-                :percent="Guage.CurrentMonthPlan.percent"
-                ).ma-2
+                :id="guage.currentMonthPlan.id"
+                :title="guage.currentMonthPlan.title"
+                :color="guage.currentMonthPlan.color"
+                :percent="guage.currentMonthPlan.percent"
+                )
         v-flex(lg8 md8 xs8)
-          ManagerStatics(:dropdown="ManagerStatics.dropdown" :models="ManagerStatics.data")
+          ManagerStatics(:dropdown="managerStatics.dropdown" :models="managerStatics.data")
         v-flex(lg4 md4 xs4)
           Guage(
-            :id="Guage.PaymentDebt.id"
-            :title="Guage.PaymentDebt.title"
-            :color="Guage.PaymentDebt.color"
-            :percent="Guage.PaymentDebt.percent"
+            :id="guage.paymentDebt.id"
+            :title="guage.paymentDebt.title"
+            :color="guage.paymentDebt.color"
+            :percent="guage.paymentDebt.percent"
           )
         v-flex(lg4 md4 xs4)
           Guage(
-            :id="Guage.ActiveNoneActive.id"
-            :title="Guage.ActiveNoneActive.title"
-            :color="Guage.ActiveNoneActive.color"
-            :percent="Guage.ActiveNoneActive.percent"
+            :id="guage.activeNoneActive.id"
+            :title="guage.activeNoneActive.title"
+            :color="guage.activeNoneActive.color"
+            :percent="guage.activeNoneActive.percent"
           )
-        v-flex(lg4 md4 xs4)
+        v-flex(lg4 md4 xs4 d-flex)
           ClientData(
-            :title="ClientData.title",
-            :umumiy="ClientData.umumiy",
-            :oy="ClientData.oy"
+            :title="clientData.title",
+            :total="clientData.total",
+            :month="clientData.month"
           )
 </template>
 
@@ -150,19 +151,19 @@ export default {
           color: "#FF7F7F"
         }
       ],
-      ClientData: {
+      clientData: {
         title: "Client data",
-        umumiy: 150000,
-        oy: 150000
+        total: 150000,
+        month: 150000
       },
-      TotalBrandPieData: {
+      totalBrandPieData: {
         data: [
           { name: "Kraska", quantity: 13 },
           { name: "Shotka", quantity: 23 },
           { name: "Oxak", quantity: 35 }
         ]
       },
-      ManagerStatics: {
+      managerStatics: {
         dropdown: [1, 2, 3, 4],
         data: [
           {
@@ -209,20 +210,20 @@ export default {
           }
         ]
       },
-      Guage: {
-        CurrentMonthPlan: {
+      guage: {
+        currentMonthPlan: {
           id: 1,
           title: "Current month's plan",
           color: "#8FF272",
           percent: 85
         },
-        PaymentDebt: {
+        paymentDebt: {
           id: 2,
           title: "Payment/debt ratio",
           color: "#56D9FE",
           percent: 65
         },
-        ActiveNoneActive: {
+        activeNoneActive: {
           id: 3,
           title: "Non Active / Active Clients",
           color: "#FF8373",
@@ -230,6 +231,11 @@ export default {
         }
       }
     };
+  },
+  computed:{
+    loadClients(){
+      
+    }
   }
 };
 </script>

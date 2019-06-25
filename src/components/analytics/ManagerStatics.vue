@@ -1,9 +1,9 @@
 <template lang="pug">
-    v-card(elevation="0").mt-2.border
-      v-card-text
+    v-card(elevation="0").border
+      v-card-text.pt-4
         //Removed for data selector as pipeline
           v-overflow-btn(:items="dropdown" class="btn-viewer" label="Select")
-        .title.text-md-center.my-4 Manager Statics
+        .title.text-md-center.mb-5 Manager Statics
         canvas#ManagerLineChart
 </template>
 
