@@ -61,7 +61,6 @@
                 :percent="Guage.CurrentMonthPlan.percent"
                 ).ma-2
         v-flex(lg8 md8 xs8)
-          .title.ma-3.text-md-center.display-2 Managers statics
           ManagerStatics(:dropdown="ManagerStatics.dropdown" :models="ManagerStatics.data")
         v-flex(lg4 md4 xs4)
           Guage(
@@ -90,6 +89,7 @@ export default {
   name: "Analytics",
   data() {
     return {
+      show:true,
       showDashboard: true,
       showPreDashboard: false,
       userContainerData: [

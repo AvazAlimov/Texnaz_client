@@ -1,5 +1,5 @@
 <template lang="pug">
-    v-card(elevation="5").mx-2.mt-4
+    v-card(elevation="5").mx-2.my-4
       v-container
         v-layout(row wrap)
             v-flex(xs12 md12 lg12 sm12).text-md-center
@@ -30,7 +30,6 @@ export default {
           ]
         },
         options:{
-          responsive:true,
           circumference: Math.PI,
           rotation: -Math.PI,
         }

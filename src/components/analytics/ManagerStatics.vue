@@ -1,7 +1,9 @@
 <template lang="pug">
-    v-card
+    v-card(elevation="10").mt-2
       v-card-text
-        v-overflow-btn(:items="dropdown" class="btn-viewer" label="Select")
+        //Removed for data selector as pipeline
+          v-overflow-btn(:items="dropdown" class="btn-viewer" label="Select")
+        .title.text-md-center.my-4 Manager Statics
         canvas#ManagerLineChart
 </template>
 
@@ -41,7 +43,7 @@ export default {
         data: {
           labels: isEmpty ? ["Empty"] : [...this.models[0].data.map(el => el.date)],
           datasets: this.dataSets(this.models)
-        }
+        },
       });
     }
   },
