@@ -14,6 +14,7 @@
           }")
           td {{ props.item.id }}
           td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
+          td {{ props.item.approved == 1 ? 'Согласованные' : 'Не согласованные' }}
           td {{ props.item.warehouse.name }} {{ props.item.warehouse.company }}
           td {{ props.item.client.icc }}
           td {{ props.item.client.name }}
@@ -61,6 +62,10 @@ export default {
       {
         text: 'Дата',
         value: 'createdAt',
+      },
+      {
+        text: 'Статус',
+        value: 'approved',
       },
       {
         text: 'Склад',
