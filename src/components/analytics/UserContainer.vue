@@ -1,5 +1,5 @@
 <template lang="pug">
-        v-card(elevation="5").ma-2
+        v-card(elevation="0").my-2.border
             span(v-if="duration").subtitle.grey--text {{ duration }}
             v-card-text
                 v-layout(row align-center)
@@ -16,10 +16,6 @@ export default {
 </script>
 
 <style scoped>
-.v-card {
-  border-radius: 8%;
-}
-
 .color-blue {
   background: #d5d1fb;
   border-radius: 50%;

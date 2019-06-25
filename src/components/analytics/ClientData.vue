@@ -1,5 +1,5 @@
 <template lang="pug">
-    v-card().mt-4
+    v-card(elevation="0").mt-4.border
         v-card-text
             .title.grey--text.text--darken-2 {{ title }}
             v-layout(row wrap)

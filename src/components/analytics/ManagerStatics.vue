@@ -1,5 +1,5 @@
 <template lang="pug">
-    v-card(elevation="10").mt-2
+    v-card(elevation="0").mt-2.border
       v-card-text
         //Removed for data selector as pipeline
           v-overflow-btn(:items="dropdown" class="btn-viewer" label="Select")
@@ -54,9 +54,6 @@ export default {
 </script>
 
 <style scoped>
-.v-card{
-  border-radius: 2%;
-}
 .btn-viewer {
   float: right;
   width: 100px;

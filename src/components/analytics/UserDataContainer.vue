@@ -1,5 +1,5 @@
 <template lang="pug">
-    v-card(elevation="5").mx-2.mb-4
+    v-card(elevation="0").mb-4.border
       v-card-text.pa-0
         .px-4.pt-4
           v-icon().color-blue {{ icon }}
@@ -40,7 +40,6 @@ export default {
 <style scoped>
 .v-card{
   overflow: hidden;
-  border-radius: 8%;
 }
 .color-blue {
   background: #d5d1fb;

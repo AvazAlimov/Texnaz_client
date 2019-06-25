@@ -1,5 +1,5 @@
 <template lang="pug">
-    v-card(elevation="5").mx-2.mt-2
+    v-card(elevation="0").mt-2.border
       v-card-text.pa-2
           .title.grey--text.text--darken-2.mt-2.text-md-center  {{ title }}
           canvas#totalBrandPie
