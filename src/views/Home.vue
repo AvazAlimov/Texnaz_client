@@ -47,6 +47,11 @@ export default {
           permission: this.$permissions.SHOW_STATISTICS.name,
         },
         {
+          icon: 'table_chart',
+          title: 'Таблицы',
+          to: '/tables',
+        },
+        {
           icon: 'money',
           title: 'Ценообразование',
           to: '/calculator',

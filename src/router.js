@@ -421,6 +421,19 @@ const router = new Router({
           component: () => import('./views/expanses/MyExpanses'),
         },
         {
+          path: 'tables',
+          name: 'tables',
+          // redirect: { name: 'mysales' },
+          component: () => import('./views/tables/Main.vue'),
+          // children: [
+          //   {
+          //     path: 'mysales',
+          //     name: 'mysales',
+          //     component: () => import('./views/shipments/MySales.vue'),
+          //   },
+          // ],
+        },
+        {
           path: 'shipments',
           name: 'shipments',
           redirect: { name: 'mysales' },
