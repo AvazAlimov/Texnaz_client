@@ -8,10 +8,22 @@
         td {{ item.defected ? 'Поврежден' : 'Хорошо' }}
         td {{ item.arrival_date | moment('YYYY-MM-DD') }}
         td {{ item.expiry_date | moment('YYYY-MM-DD') }}
-        td {{ item.product.prices[0].firstPrice }} сум
-        td {{ item.product.prices[0].mixPriceNonCash }} сум
-            |  / {{ item.product.prices[0].mixPriceCash }} $
-        td {{ item.product.prices[0].secondPrice }} $
+        td
+          span(v-if="type.id == 1") {{ item.product.prices[0].firstPrice }}
+          span(v-if="type.id == 2") {{ item.product.prices[0].mixPriceNonCash }}
+          span(v-if="type.id == 3") {{ item.product.prices[0].item.product.prices[0].mixPriceCash }}
+          v-text-field(
+            v-if="type.id == 4"
+            v-model="price"
+            color="secondary"
+            name="price"
+            v-validate="{\
+                    required: true,\
+                    decimal: true,\
+                    min_value: 0,\
+                }"
+          )
+
         td
             v-text-field(
                 color="secondary"
@@ -49,10 +61,14 @@ export default {
     exchangeRate: {
       required: true,
     },
+    type: {
+      required: true,
+    },
   },
   data: () => ({
     discount: 0,
     sale: 0,
+    price: 0,
   }),
   methods: {
     calculateFirstPrice() {
@@ -88,6 +104,9 @@ export default {
       this.calculateSecondPrice();
       this.calculateMixPrice();
     },
+    price(value) {
+      this.item.price = parseFloat(value) / this.exchangeRate;
+    },
   },
   created() {
     if (!this.item.sale) this.item.sale = 0;
@@ -97,6 +116,7 @@ export default {
     this.calculateFirstPrice();
     this.calculateSecondPrice();
     this.calculateMixPrice();
+    this.price = this.item.product.prices[0] ? this.item.product.prices[0].firstPrice : 0;
   },
   mounted() {
     this.$validator.validate();

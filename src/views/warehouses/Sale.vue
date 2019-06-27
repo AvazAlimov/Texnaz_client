@@ -84,6 +84,7 @@
                     hide-actions)
                     template(v-slot:items="props")
                       SaleItem(
+                        :type="type"
                         :item="props.item"
                         :exchangeRate="exchangeRate"
                         :officialRate="officialRate")
@@ -137,67 +138,10 @@ export default {
         name: 'B2B',
         key: 'secondPrice',
       },
-    ],
-    headers: [
       {
-        text: 'Код товара',
-        value: 'product.code',
-      },
-      {
-        text: 'Наименование',
-        value: 'product.name',
-      },
-      {
-        text: 'Фасовка',
-        value: 'product.packing',
-      },
-      {
-        text: 'Цвет',
-        value: 'product.color',
-      },
-      {
-        text: 'Количество на складе',
-        value: 'quantity',
-      },
-      {
-        text: 'Состояние',
-        value: 'defected',
-      },
-      {
-        text: 'Дата прибытия',
-        value: 'arrival_date',
-      },
-      {
-        text: 'Срок действия',
-        value: 'expiry_date',
-      },
-      {
-        text: 'B2C',
-        value: 'price',
-        sortable: false,
-        width: 1,
-      },
-      {
-        text: 'Цена с наценкой',
-        value: 'price',
-        sortable: false,
-        width: 1,
-      },
-      {
-        text: 'B2B',
-        value: 'price',
-        sortable: false,
-        width: 1,
-      },
-      {
-        text: 'Скидка %',
-        value: 'discount',
-        width: 1,
-      },
-      {
-        text: 'Количество',
-        value: 'quantity',
-        width: 1,
+        id: 4,
+        name: 'Оплаты по комиссии',
+        key: 'price',
       },
     ],
     configurations: [],
@@ -205,6 +149,57 @@ export default {
     officialRate: 1,
   }),
   computed: {
+    headers() {
+      return [
+        {
+          text: 'Код товара',
+          value: 'product.code',
+        },
+        {
+          text: 'Наименование',
+          value: 'product.name',
+        },
+        {
+          text: 'Фасовка',
+          value: 'product.packing',
+        },
+        {
+          text: 'Цвет',
+          value: 'product.color',
+        },
+        {
+          text: 'Количество на складе',
+          value: 'quantity',
+        },
+        {
+          text: 'Состояние',
+          value: 'defected',
+        },
+        {
+          text: 'Дата прибытия',
+          value: 'arrival_date',
+        },
+        {
+          text: 'Срок действия',
+          value: 'expiry_date',
+        },
+        {
+          text: this.type.name,
+          sortable: false,
+          width: 1,
+        },
+        {
+          text: 'Скидка %',
+          value: 'discount',
+          width: 1,
+        },
+        {
+          text: 'Количество',
+          value: 'quantity',
+          width: 1,
+        },
+      ];
+    },
     dueDate() {
       return this.$moment(new Date()).add(this.days, 'd').format('YYYY-MM-DD');
     },
