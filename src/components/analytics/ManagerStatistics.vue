@@ -1,64 +1,51 @@
 <template lang="pug">
-    v-card(elevation="0").border
-      v-card-text.pt-4
-        //Removed for data selector as pipeline
-          v-overflow-btn(:items="dropdown" class="btn-viewer" label="Select")
-        .title.text-md-center.mb-5 Manager Statics
-        canvas#ManagerLineChart
+    v-card.border.elevation-0
+      v-container(fill-height)
+        v-layout(align-space-between justify-space-between column fill-height)
+          .title.text-sm-center Показатели менеджеров
+          canvas
 </template>
 
 <script>
-/** 
- * Expected Model
- * {
- *    name: 'ManagerName',
- *    data: [
- *      {
- *        value: 'Number',
- *        date: 'Date When Achieved To The Value'
- *      }
- *      ...
- *    ]
- * }
- */
-import Chart from "chart.js";
-import ColorGenerator from "../../utils/ColorGenerator";
+import Chart from 'chart.js';
 
 export default {
-  props: ['dropdown','models'],
+  props: ['dropdown', 'models', 'color'],
   methods: {
-    dataSets(managers) {
-      return managers.map(manager => {
+    hexToRgb(hex) {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      } : null;
+    },
+    renderChart() {
+      const ctx = this.$el.querySelector('canvas').getContext('2d');
+      const isEmpty = typeof this.models === 'undefined' || this.models.length === 0;
+      const datasets = this.models.map((manager, index) => {
+        const range = (255 * (index + 1) / this.models.length).toFixed(0);
+        const alpha = range / 255;
+        const rgb = this.hexToRgb(this.color);
         return {
           label: manager.name,
           data: manager.data.map(el => el.value),
-          backgroundColor: [ColorGenerator.getRandomRGBA()]
+          backgroundColor: `rgba(${rgb.r},${rgb.g},${rgb.b},${alpha})`,
         };
       });
-    },
-    renderChart() {
-      const isEmpty = typeof this.models === "undefined" || this.models.length === 0;
-      new Chart("ManagerLineChart", {
-        type: "line",
+
+      // eslint-disable-next-line no-new
+      new Chart(ctx, {
+        type: 'line',
         data: {
-          labels: isEmpty ? ["Empty"] : [...this.models[0].data.map(el => el.date)],
-          datasets: this.dataSets(this.models)
+          labels: isEmpty ? ['Empty'] : [...this.models[0].data.map(el => el.date)],
+          datasets,
         },
       });
-    }
+    },
   },
   mounted() {
     this.renderChart();
-  }
+  },
 };
 </script>
-
-<style scoped>
-.btn-viewer {
-  float: right;
-  width: 100px;
-}
-canvas{
-  height: 80%;
-}
-</style>

@@ -23,9 +23,9 @@ import StockItem from './warehouse/StockItem.vue';
 import StockItemExpanded from './warehouse/StockItemExpanded.vue';
 
 import Map from './analytics/Map.vue';
-import UserContainer from './analytics/UserContainer.vue';
-import UserDataContainer from './analytics/UserDataContainer.vue';
-import TotalBrandPie from './analytics/TotalBrandPie.vue';
+import GraphCard from './analytics/GraphCard.vue';
+import PieChart from './analytics/PieChart.vue';
+
 import Guage from './analytics/Guage.vue';
 import ManagerStatistics from './analytics/ManagerStatistics.vue';
 import ClientData from './analytics/ClientData.vue';
@@ -61,9 +61,9 @@ const Components = {
   StockItemExpanded,
 
   Map,
-  UserContainer,
-  UserDataContainer,
-  TotalBrandPie,
+  GraphCard,
+  PieChart,
+
   Guage,
   ManagerStatistics,
   ClientData,
