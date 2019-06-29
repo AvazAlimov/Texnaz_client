@@ -29,6 +29,7 @@ import PieChart from './analytics/PieChart.vue';
 import Guage from './analytics/Guage.vue';
 import ManagerStatistics from './analytics/ManagerStatistics.vue';
 import ClientData from './analytics/ClientData.vue';
+import RateCard from './analytics/RateCard.vue';
 
 import ExpenseProperty from './expenses/ExpenseProperty.vue';
 import EditExpense from './expenses/EditExpense.vue';
@@ -63,6 +64,7 @@ const Components = {
   Map,
   GraphCard,
   PieChart,
+  RateCard,
 
   Guage,
   ManagerStatistics,

@@ -36,6 +36,8 @@
             :month="clientData.month")
         v-flex(xs12 md8 d-flex)
           ManagerStatistics(:models="managerStatistics.data" :color="color")
+        v-flex(xs3 d-flex v-for="rate in rateCards")
+          RateCard(:title="rate.title" :rate="rate.rate" :delta="rate.delta")
 </template>
 
 <script>
@@ -100,7 +102,6 @@ export default {
           { name: 'Polchem', quantity: 35 },
         ],
       },
-
       clientData: {
         total: 15000,
         month: 12500,
@@ -151,6 +152,48 @@ export default {
           },
         ],
       },
+      rateCards: [
+        {
+          title: 'Задолженность / Коэффициент оплаты',
+          rate: '48 %',
+          delta: 15,
+        },
+        {
+          title: 'Склад',
+          rate: '$ 150 000',
+          delta: 15,
+        },
+        {
+          title: 'Деятельность клиента',
+          rate: '53 %',
+          delta: -10,
+        },
+        {
+          title: 'Общая прибыль',
+          rate: '$ 200 000',
+          delta: -25,
+        },
+        {
+          title: 'Задолженность / Коэффициент оплаты',
+          rate: '53 %',
+          delta: 12,
+        },
+        {
+          title: 'Склад',
+          rate: '$ 125 000',
+          delta: 10,
+        },
+        {
+          title: 'Деятельность клиента',
+          rate: '48 %',
+          delta: -11,
+        },
+        {
+          title: 'Общая прибыль',
+          rate: '$ 100 000',
+          delta: -5,
+        },
+      ],
     };
   },
 };
