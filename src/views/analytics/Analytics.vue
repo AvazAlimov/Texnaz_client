@@ -1,10 +1,10 @@
 <template lang="pug">
   v-layout(row wrap)
     v-flex.mb-3(xs12)
-      v-btn.ma-0(small color="secondary" @click="tab = 0"
+      v-btn.ma-0(small color="dashboardTertiary" @click="tab = 0"
         :flat="tab != 0" :outline="tab == 0"
       ) Статистика
-      v-btn.ma-0(small color="secondary" @click="tab = 1"
+      v-btn.ma-0(small color="dashboardTertiary" @click="tab = 1"
         :flat="tab != 1" :outline="tab == 1"
       ) Менеджер
 

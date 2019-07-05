@@ -1,6 +1,6 @@
 <template lang="pug">
-  v-card.border.elevation-0.secondary--text
-    v-card-text.pa-3
+  v-card.border.dashboardBorder.elevation-0.dashboardTertiary--text
+    v-card-text.pa-3.primary
       .title.text-md-center  {{ title }}
       canvas(height="200")
 </template>
@@ -37,7 +37,7 @@ export default {
                 : this.models.map((model, index) => {
                   const range = (255 * (index + 1) / this.models.length).toFixed(0);
                   const alpha = range / 255;
-                  const rgb = this.hexToRgb(this.color);
+                  const rgb = this.hexToRgb(this.$vuetify.theme.dashboardSecondary);
                   return `rgba(${rgb.r},${rgb.g},${rgb.b},${alpha})`;
                 }),
             },

@@ -18,68 +18,102 @@
 
 <script>
 export default {
-  name: 'Themes',
+  name: "Themes",
   data() {
     return {
       themes: [
         {
-          title: 'По умолчанию',
-          primary: '#FFFFFF',
-          secondary: '#424242',
-          accent: '#82B1FF',
+          title: "По умолчанию",
+          primary: "#FFFFFF",
+          secondary: "#424242",
+          accent: "#82B1FF",
+          dashboardPrimary: "#2B2B38",
+          dashboardSecondary: "#00A4EB",
+          dashboardTertiary: "#FFF",
+          dashboardBorder: "#3E3E4D"
         },
         {
-          title: 'Золотой',
-          primary: '#FFDE03',
-          secondary: '#424242',
-          accent: '#82B1FF',
+          title: "Золотой",
+          primary: "#FFDE03",
+          secondary: "#424242",
+          accent: "#82B1FF",
+          dashboardPrimary: "#2B2B38",
+          dashboardSecondary: "#00A4EB",
+          dashboardTertiary: "#FFF",
+          dashboardBorder: "#3E3E4D"
         },
         {
-          title: 'Храм розовый',
-          primary: '#FEDBD0',
-          secondary: '#442C2E',
-          accent: '#82B1FF',
+          title: "Храм розовый",
+          primary: "#FEDBD0",
+          secondary: "#442C2E",
+          accent: "#82B1FF",
+          dashboardPrimary: "#2B2B38",
+          dashboardSecondary: "#00A4EB",
+          dashboardTertiary: "#FFF",
+          dashboardBorder: "#3E3E4D"
         },
         {
-          title: 'Чирок',
-          primary: '#03DAC5',
-          secondary: '#424242',
-          accent: '#FD5523',
+          title: "Чирок",
+          primary: "#03DAC5",
+          secondary: "#424242",
+          accent: "#FD5523",
+          dashboardPrimary: "#2B2B38",
+          dashboardSecondary: "#00A4EB",
+          dashboardTertiary: "#FFF",
+          dashboardBorder: "#3E3E4D"
         },
         {
-          title: 'Зелень',
-          primary: '#37966F',
-          secondary: '#000000',
-          accent: '#FD5523',
+          title: "Зелень",
+          primary: "#37966F",
+          secondary: "#000000",
+          accent: "#FD5523",
+          dashboardPrimary: "#2B2B38",
+          dashboardSecondary: "#00A4EB",
+          dashboardTertiary: "#FFF",
+          dashboardBorder: "#3E3E4D"
         },
         {
-          title: 'Базилик грин',
-          primary: '#FFFBE6',
-          secondary: '#356859',
-          accent: '#FD5523',
+          title: "Базилик грин",
+          primary: "#FFFBE6",
+          secondary: "#356859",
+          accent: "#FD5523"
         },
         {
-          title: 'Серый',
-          primary: '#BDBDBD',
-          secondary: '#707070',
-          accent: '#FFFFFF',
+          title: "Серый",
+          primary: "#BDBDBD",
+          secondary: "#707070",
+          accent: "#FFFFFF",
+          dashboardPrimary: "#2B2B38",
+          dashboardSecondary: "#00A4EB",
+          dashboardTertiary: "#FFF",
+          dashboardBorder: "#3E3E4D"
         },
-      ],
+        {
+          title: "Ночной режим",
+          primary: "#343445",
+          secondary: "#424242",
+          accent: "#00A3EA",
+          dashboardPrimary: "#2B2B38",
+          dashboardSecondary: "#00A4EB",
+          dashboardTertiary: "#FFF",
+          dashboardBorder: "#3E3E4D"
+        }
+      ]
     };
   },
   methods: {
     apply(theme) {
-      localStorage.setItem('primary', theme.primary);
-      localStorage.setItem('secondary', theme.secondary);
-      localStorage.setItem('accent', theme.accent);
+      Object.keys(theme).forEach((name) => {
+        localStorage.setItem(name, theme[name]);
+      });
       window.location.reload();
-    },
-  },
+    }
+  }
 };
 </script>
 <style scoped>
 .fill {
-    min-width: 100px;
-    height: 20px;
+  min-width: 100px;
+  height: 20px;
 }
 </style>

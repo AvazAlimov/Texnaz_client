@@ -7,24 +7,24 @@
             v-list-tile-avatar
               img(:src="require('../assets/logo.svg')")
             v-list-tile-content
-              v-list-tile-title.font-weight-bold DIGMAN
+              v-list-tile-title.font-weight-bold.dashboardTertiary--text DIGMAN
       v-list.pt-0(two-line)
         template(v-for="(item, index) in items")
           v-divider(v-if="item.divider").divider
           v-list-tile(
             :to="item.to"
-            active-class="bordered"
+            active-class="bordered dashboardTertiary--text"
             :class="item.path === $route.path ? 'bordered' : ''"
             v-if="item.permission ? $hasPermission(item.permission) : true"
           )
             v-list-tile-action
-              v-icon(color="secondary") {{item.icon}}
+              v-icon {{item.icon}}
             v-list-tile-content
               v-list-tile-title {{ item.title }}
     v-toolbar.elevation-0.toolbar__border(app color="primary")
-      v-toolbar-side-icon(@click.stop="drawer = !drawer")
-      v-toolbar-title {{ user.name }}
-    v-content
+      v-toolbar-side-icon.dashboardTertiary--text(@click.stop="drawer = !drawer")
+      v-toolbar-title.dashboardTertiary--text {{ user.name }}
+    v-content(:class="$route.path === '/'? 'dashboardPrimary': ''")
       v-container(grid-list-md fluid)
         router-view
 </template>
@@ -129,6 +129,7 @@ export default {
       localStorage.setItem('user', JSON.stringify(user));
     });
   },
+  
 };
 </script>
 <style scoped>
