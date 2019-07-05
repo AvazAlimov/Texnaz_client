@@ -18,87 +18,47 @@
 
 <script>
 export default {
-  name: "Themes",
+  name: 'Themes',
   data() {
     return {
       themes: [
         {
-          title: "По умолчанию",
-          primary: "#FFFFFF",
-          secondary: "#424242",
-          accent: "#82B1FF",
-          dashboardPrimary: "#2B2B38",
-          dashboardSecondary: "#00A4EB",
-          dashboardTertiary: "#FFF",
-          dashboardBorder: "#3E3E4D"
+          title: 'Базилик грин',
+          primary: '#7F886B',
+          secondary: '#636363',
+          accent: '#74583C',
+          tertiary: '#FFF',
+          dashboardCard: '#F3ECDA',
+          dashboardPrimary: '#3E4F3C',
+          dashboardSecondary: '#3E4F3C',
+          dashboardTertiary: '#000',
+          dashboardBorder: '#7F886B',
         },
         {
-          title: "Золотой",
-          primary: "#FFDE03",
-          secondary: "#424242",
-          accent: "#82B1FF",
-          dashboardPrimary: "#2B2B38",
-          dashboardSecondary: "#00A4EB",
-          dashboardTertiary: "#FFF",
-          dashboardBorder: "#3E3E4D"
+          title: 'Серый',
+          primary: '#BDBDBD',
+          secondary: '#636363',
+          accent: '#000',
+          tertiary: '#000',
+          dashboardCard: '#FFFFFF',
+          dashboardPrimary: '#FAFAFA',
+          dashboardSecondary: '#BDBDBD',
+          dashboardTertiary: '#000',
+          dashboardBorder: '#E3E3E3',
         },
         {
-          title: "Храм розовый",
-          primary: "#FEDBD0",
-          secondary: "#442C2E",
-          accent: "#82B1FF",
-          dashboardPrimary: "#2B2B38",
-          dashboardSecondary: "#00A4EB",
-          dashboardTertiary: "#FFF",
-          dashboardBorder: "#3E3E4D"
+          title: 'Ночной режим',
+          primary: '#343445',
+          secondary: '#424242',
+          accent: '#00A3EA',
+          tertiary: '#FFF',
+          dashboardCard: '#343445',
+          dashboardPrimary: '#2B2B38',
+          dashboardSecondary: '#00A4EB',
+          dashboardTertiary: '#FFF',
+          dashboardBorder: '#3E3E4D',
         },
-        {
-          title: "Чирок",
-          primary: "#03DAC5",
-          secondary: "#424242",
-          accent: "#FD5523",
-          dashboardPrimary: "#2B2B38",
-          dashboardSecondary: "#00A4EB",
-          dashboardTertiary: "#FFF",
-          dashboardBorder: "#3E3E4D"
-        },
-        {
-          title: "Зелень",
-          primary: "#37966F",
-          secondary: "#000000",
-          accent: "#FD5523",
-          dashboardPrimary: "#2B2B38",
-          dashboardSecondary: "#00A4EB",
-          dashboardTertiary: "#FFF",
-          dashboardBorder: "#3E3E4D"
-        },
-        {
-          title: "Базилик грин",
-          primary: "#FFFBE6",
-          secondary: "#356859",
-          accent: "#FD5523"
-        },
-        {
-          title: "Серый",
-          primary: "#BDBDBD",
-          secondary: "#707070",
-          accent: "#FFFFFF",
-          dashboardPrimary: "#2B2B38",
-          dashboardSecondary: "#00A4EB",
-          dashboardTertiary: "#FFF",
-          dashboardBorder: "#3E3E4D"
-        },
-        {
-          title: "Ночной режим",
-          primary: "#343445",
-          secondary: "#424242",
-          accent: "#00A3EA",
-          dashboardPrimary: "#2B2B38",
-          dashboardSecondary: "#00A4EB",
-          dashboardTertiary: "#FFF",
-          dashboardBorder: "#3E3E4D"
-        }
-      ]
+      ],
     };
   },
   methods: {
@@ -107,8 +67,8 @@ export default {
         localStorage.setItem(name, theme[name]);
       });
       window.location.reload();
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

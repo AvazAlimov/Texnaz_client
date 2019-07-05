@@ -1,6 +1,6 @@
 <template lang="pug">
     v-card.border.dashboardBorder.elevation-0
-      v-container(fill-height).primary
+      v-container(fill-height).dashboardCard
         v-layout(align-space-between justify-space-between column fill-height)
           .title.text-sm-center.dashboardTertiary--text Показатели менеджеров
           canvas
@@ -10,7 +10,7 @@
 import Chart from 'chart.js';
 
 export default {
-  props: ['dropdown', 'models', 'color'],
+  props: ['dropdown', 'models', 'colorSecondary'],
   methods: {
     hexToRgb(hex) {
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -26,7 +26,7 @@ export default {
       const datasets = this.models.map((manager, index) => {
         const range = (255 * (index + 1) / this.models.length).toFixed(0);
         const alpha = range / 255;
-        const rgb = this.hexToRgb(this.$vuetify.theme.dashboardSecondary);
+        const rgb = this.hexToRgb(this.colorSecondary);
         return {
           label: manager.name,
           data: manager.data.map(el => el.value),
