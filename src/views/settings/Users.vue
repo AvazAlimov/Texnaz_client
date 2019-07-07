@@ -1,8 +1,8 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon :to="{ name: 'settings' }")
+        v-btn(icon :to="{ name: 'settings' }").tertiary--text
             v-icon arrow_back
-        .title ПОЛЬЗОВАТЕЛИ
+        .title.tertiary--text ПОЛЬЗОВАТЕЛИ
         v-flex(xs12).mt-3
             .border.white
                 v-data-table(:headers="headers" :items="users" hide-actions :loading="loading")

@@ -2,7 +2,7 @@
   div
     v-layout(row wrap v-if="path == 'managers'")
         v-flex(xs12).mb-3
-            .title МЕНЕДЖЕРЫ
+            .title.tertiary--text МЕНЕДЖЕРЫ
         v-flex(xs4 v-for="(manager, index) in managers" :key="index")
           Card(
             :title="manager.name"

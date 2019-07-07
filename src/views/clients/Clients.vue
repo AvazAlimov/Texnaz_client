@@ -2,7 +2,7 @@
   div
     v-layout(row wrap v-if="$route.name == 'clients'")
         v-flex(xs12).mb-3
-            .title КЛИЕНТЫ
+            .title.tertiary--text КЛИЕНТЫ
         v-flex(xs12)
           .border.white
             v-data-table(

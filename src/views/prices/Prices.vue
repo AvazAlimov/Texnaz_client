@@ -2,18 +2,18 @@
     v-layout(row wrap)
         v-flex(xs12).mb-3
             v-layout(row align-center)
-                .title.ml-1 ЦЕНЫ
+                .title.ml-1.tertiary--text ЦЕНЫ
                 v-spacer
                 v-btn.mx-0(
                     small
-                    color="secondary" flat
+                    color="tertiary" flat
                     :to="{name: 'priced'}"
                     v-if="$hasPermission($permissions.SHOW_PRICES_PRICED.name)"
                 ) Продукты с ценами
                     v-icon.ml-2(small) check
                 v-btn.mx-0(
                     small
-                    color="secondary" flat
+                    color="tertiary" flat
                     :to="{name: 'unpriced'}"
                     v-if="$hasPermission($permissions.SHOW_PRICES_UNPRICED.name)"
                 ) Продукты без цен

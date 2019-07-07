@@ -1,8 +1,8 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon :to="{ name: 'purposes' }")
+        v-btn(icon :to="{ name: 'purposes' }").tertiary--text
             v-icon arrow_back
-        .title {{ id == null ? 'Добавить' : 'Сохранить' }} назначение
+        .title.tertiary--text {{ id == null ? 'Добавить' : 'Сохранить' }} назначение
         v-flex(xs12).mt-3
             .border.white.pa-4
                 v-text-field(

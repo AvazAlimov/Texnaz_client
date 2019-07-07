@@ -1,8 +1,8 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon :to="{ name: 'settings' }")
+        v-btn(icon :to="{ name: 'settings' }").tertiary--text
             v-icon arrow_back
-        .title Темы
+        .title.tertiary--text Темы
         v-flex(xs12).mt-3
         v-flex(xs4 v-for="(theme, index) in themes" :key="index")
             v-list.pa-0.border(two-line)
@@ -23,55 +23,97 @@ export default {
     return {
       themes: [
         {
-          title: 'По умолчанию',
-          primary: '#FFFFFF',
+          title: 'Зажигалка с высокой контрастностью',
+          primary: '#EFF3F4',
           secondary: '#424242',
-          accent: '#82B1FF',
+          accent: '#7A776D',
+          tertiary: '#333333',
+          dashboardCard: '#FAFAFA',
+          dashboardPrimary: '#FFFFFF',
+          dashboardSecondary: '#90A4AE',
+          dashboardTertiary: '#90A4AE',
+          dashboardBorder: '#C0C8CD',
         },
         {
-          title: 'Золотой',
-          primary: '#FFDE03',
+          title: 'Чистый свет',
+          primary: '#DCDCDC',
           secondary: '#424242',
-          accent: '#82B1FF',
+          accent: '#7A776D',
+          tertiary: '#333333',
+          dashboardCard: '#DCDCDC',
+          dashboardPrimary: '#E4E6F1',
+          dashboardSecondary: '#AAD2EE',
+          dashboardTertiary: '#333333',
+          dashboardBorder: '#B4B0AA',
         },
         {
-          title: 'Храм розовый',
-          primary: '#FEDBD0',
-          secondary: '#442C2E',
-          accent: '#82B1FF',
-        },
-        {
-          title: 'Чирок',
-          primary: '#03DAC5',
+          title: 'Солнечный свет',
+          primary: '#EEE8D5',
           secondary: '#424242',
-          accent: '#FD5523',
+          accent: '#7A776D',
+          tertiary: '#333333',
+          dashboardCard: '#EEE8D5',
+          dashboardPrimary: '#D9D2C2',
+          dashboardSecondary: '#828282',
+          dashboardTertiary: '#333333',
+          dashboardBorder: '#FDF6E3',
         },
         {
-          title: 'Зелень',
-          primary: '#37966F',
-          secondary: '#000000',
-          accent: '#FD5523',
+          title: 'Монокай потускнел',
+          primary: '#505050',
+          secondary: '#424242',
+          accent: '#519BDF',
+          tertiary: '#FFF',
+          dashboardCard: '#505050',
+          dashboardPrimary: '#303030',
+          dashboardSecondary: '#C5C5C5',
+          dashboardTertiary: '#FFF',
+          dashboardBorder: '#3E3E4D',
         },
         {
-          title: 'Базилик грин',
-          primary: '#FFFBE6',
-          secondary: '#356859',
-          accent: '#FD5523',
+          title: 'Высокий контраст',
+          primary: '#263238',
+          secondary: '#424242',
+          accent: '#519BDF',
+          tertiary: '#FFF',
+          dashboardCard: '#263238',
+          dashboardPrimary: '#192227',
+          dashboardSecondary: '#80CBC4',
+          dashboardTertiary: '#FFF',
+          dashboardBorder: '#3E3E4D',
         },
         {
-          title: 'Серый',
-          primary: '#BDBDBD',
-          secondary: '#707070',
-          accent: '#FFFFFF',
+          title: 'Tемно',
+          primary: '#212121',
+          secondary: '#424242',
+          accent: '#519BDF',
+          tertiary: '#FFF',
+          dashboardCard: '#212121',
+          dashboardPrimary: '#171717',
+          dashboardSecondary: '#0B4E8D',
+          dashboardTertiary: '#FFF',
+          dashboardBorder: '#3E3E4D',
+        },
+        {
+          title: 'Tемно-синий',
+          primary: '#343445',
+          secondary: '#424242',
+          accent: '#00A3EA',
+          tertiary: '#FFF',
+          dashboardCard: '#343445',
+          dashboardPrimary: '#2B2B38',
+          dashboardSecondary: '#00A4EB',
+          dashboardTertiary: '#FFF',
+          dashboardBorder: '#3E3E4D',
         },
       ],
     };
   },
   methods: {
     apply(theme) {
-      localStorage.setItem('primary', theme.primary);
-      localStorage.setItem('secondary', theme.secondary);
-      localStorage.setItem('accent', theme.accent);
+      Object.keys(theme).forEach((name) => {
+        localStorage.setItem(name, theme[name]);
+      });
       window.location.reload();
     },
   },
@@ -79,7 +121,7 @@ export default {
 </script>
 <style scoped>
 .fill {
-    min-width: 100px;
-    height: 20px;
+  min-width: 100px;
+  height: 20px;
 }
 </style>
