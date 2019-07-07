@@ -2,7 +2,7 @@
   div
     v-layout(row wrap v-if="$route.name == 'payments'")
       v-flex(xs12).mb-3
-        .title ОПЛАТЫ
+        .title.tertiary--text ОПЛАТЫ
       v-flex(xs12)
         NewPayment(:postAction="getAll")
       v-flex(xs12)

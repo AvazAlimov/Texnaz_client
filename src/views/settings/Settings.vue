@@ -2,7 +2,7 @@
   div
     v-layout(row wrap v-if="path == 'settings'")
       v-flex(xs12).mb-1
-        .title НАСТРОЙКИ
+        .title.tertiary--text НАСТРОЙКИ
       v-flex(xs6 v-for="(section, index) in cards" :key="index")
         template(v-for="card in section")
           v-list.pa-0.border.my-2(

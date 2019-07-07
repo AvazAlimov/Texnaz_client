@@ -24,7 +24,7 @@
     v-toolbar.elevation-0.toolbar__border(app color="primary")
       v-toolbar-side-icon.tertiary--text(@click.stop="drawer = !drawer")
       v-toolbar-title.tertiary--text {{ user.name }}
-    v-content(:class="$route.path === '/'? 'dashboardPrimary': ''")
+    v-content.dashboardPrimary
       v-container(grid-list-md fluid)
         router-view
 </template>
@@ -129,7 +129,7 @@ export default {
       localStorage.setItem('user', JSON.stringify(user));
     });
   },
-  
+
 };
 </script>
 <style scoped>

@@ -1,12 +1,12 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon :to="{ name: 'settings' }")
+        v-btn(icon :to="{ name: 'settings' }").tertiary--text
             v-icon arrow_back
-        .title ТОВАРЫ
+        .title.tertiary--text ТОВАРЫ
         v-spacer
         v-btn(flat color="secondary"
             :to="{ name: 'product' }"
-          ) Добавить
+          ).tertiary--text Добавить
         v-flex(xs12).mt-3
             .border.white
                 v-data-table(:headers="headers" :items="products" hide-actions :loading="loading")

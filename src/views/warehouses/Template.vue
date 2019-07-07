@@ -1,8 +1,8 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon @click="$router.go(-1)")
+        v-btn(icon @click="$router.go(-1)").tertiary--text
             v-icon arrow_back
-        .title {{ id == null ? 'Добавить' : 'Сохранить' }} склад
+        .title.tertiary--text {{ id == null ? 'Добавить' : 'Сохранить' }} склад
         v-flex(xs12).mt-3
             .border.white.pa-4
                 v-text-field(

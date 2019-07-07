@@ -28,7 +28,7 @@
             :colorSecondary="colorSecondary"
             :colorCard="colorCard")
         v-flex(xs12 md4)
-          PieChart.mb-2(:color="color"
+          PieChart.mb-2(
             title="Диаграмма Брендов"
             :colorSecondary="colorSecondary"
             :models="brandsData.data")
@@ -37,9 +37,10 @@
             :total="clientData.total",
             :month="clientData.month")
         v-flex(xs12 md8 d-flex)
-          ManagerStatistics(:models="managerStatistics.data" :color="color" :colorSecondary="colorSecondary")
+          ManagerStatistics(:models="managerStatistics.data" :colorSecondary="colorSecondary")
         v-flex(xs3 d-flex v-for="rate in rateCards")
-          RateCard(:title="rate.title" :rate="rate.rate" :delta="rate.delta" :colorBorder="colorBorder" :colorCard="colorCard")
+          RateCard(:title="rate.title" :rate="rate.rate"
+          :delta="rate.delta" :colorBorder="colorBorder" :colorCard="colorCard")
 </template>
 
 <script>

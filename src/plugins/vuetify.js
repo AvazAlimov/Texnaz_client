@@ -15,7 +15,7 @@ Vue.use(Vuetify, {
     dashboardPrimary: localStorage.getItem('dashboardPrimary') || '#2B2B38', // Dashboard background color
     dashboardSecondary: localStorage.getItem('dashboardSecondary') || '#00A4EB', // Dashboard charts color
     dashboardTertiary: localStorage.getItem('dashboardTertiary') || '#FFF', // Dashboard subtitles color
-    dashboardBorder: localStorage.getItem('dashboardBorder') || '#3E3E4D', // Dashboard card border color  
+    dashboardBorder: localStorage.getItem('dashboardBorder') || '#3E3E4D', // Dashboard card border color
   },
   iconfont: 'md',
 });
