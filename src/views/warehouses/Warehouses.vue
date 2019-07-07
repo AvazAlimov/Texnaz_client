@@ -2,7 +2,7 @@
   div
     v-layout(row wrap v-if="path == 'warehouses'")
         v-flex(xs12).mb-3
-            .title СКЛАДЫ
+            .title.tertiary--text СКЛАДЫ
         v-flex(xs4 v-for="(warehouse, index) in warehouses" :key="index")
           Card(
             :title="`${warehouse.name} ${warehouse.company}`"

@@ -1,10 +1,10 @@
 <template lang="pug">
   v-layout(row wrap)
     v-flex.mb-3(xs12)
-      v-btn.ma-0(small color="secondary" @click="tab = 0"
+      v-btn.ma-0(small color="tertiary" @click="tab = 0"
         :flat="tab != 0" :outline="tab == 0"
       ) Статистика
-      v-btn.ma-0(small color="secondary" @click="tab = 1"
+      v-btn.ma-0(small color="tertiary" @click="tab = 1"
         :flat="tab != 1" :outline="tab == 1"
       ) Менеджер
 
@@ -25,19 +25,22 @@
             :subtitle="item.subtitle"
             :caption="item.caption"
             :value="item.value"
-            :color="color")
+            :colorSecondary="colorSecondary"
+            :colorCard="colorCard")
         v-flex(xs12 md4)
-          PieChart.mb-2(:color="color"
+          PieChart.mb-2(
             title="Диаграмма Брендов"
+            :colorSecondary="colorSecondary"
             :models="brandsData.data")
           ClientData(
             :title="clientData.title",
             :total="clientData.total",
             :month="clientData.month")
         v-flex(xs12 md8 d-flex)
-          ManagerStatistics(:models="managerStatistics.data" :color="color")
+          ManagerStatistics(:models="managerStatistics.data" :colorSecondary="colorSecondary")
         v-flex(xs3 d-flex v-for="rate in rateCards")
-          RateCard(:title="rate.title" :rate="rate.rate" :delta="rate.delta")
+          RateCard(:title="rate.title" :rate="rate.rate"
+          :delta="rate.delta" :colorBorder="colorBorder" :colorCard="colorCard")
 </template>
 
 <script>
@@ -46,7 +49,9 @@ export default {
   data() {
     return {
       tab: 0,
-      color: this.$vuetify.theme.primary,
+      colorSecondary: this.$vuetify.theme.dashboardSecondary,
+      colorCard: this.$vuetify.theme.dashboardCard,
+      colorBorder: this.$vuetify.theme.dashboardBorder,
       cards: [
         {
           icon: 'person_outline',

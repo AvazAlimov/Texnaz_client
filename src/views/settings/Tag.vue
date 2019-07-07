@@ -1,8 +1,8 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon :to="{ name: 'tags' }")
+        v-btn(icon :to="{ name: 'tags' }").tertiary--text
             v-icon arrow_back
-        .title {{ id == null ? 'Добавить' : 'Сохранить' }} тег
+        .title.tertiary--text {{ id == null ? 'Добавить' : 'Сохранить' }} тег
         v-flex(xs12).mt-3
             .border.white.pa-4
                 v-text-field(

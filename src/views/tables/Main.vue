@@ -3,7 +3,7 @@
     v-spacer
     v-btn.ma-0(
       v-for="(tab, index) in tabs" :key="index"
-      flat color="secondary"
+      flat color="tertiary"
       :to="tab.to"
     ) {{ tab.name }}
     v-flex.mt-2(xs12)

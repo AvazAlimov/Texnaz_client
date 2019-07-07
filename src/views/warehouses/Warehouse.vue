@@ -1,13 +1,13 @@
 <template lang="pug">
   div
     v-layout(row wrap align-center)
-      v-btn(icon :to="{ name: 'warehouses' }" flat color="secondary")
+      v-btn(icon :to="{ name: 'warehouses' }" flat color="secondary").tertiary--text
           v-icon arrow_back
-      .title {{ warehouse.name }} {{ warehouse.company }}
+      .title.tertiary--text {{ warehouse.name }} {{ warehouse.company }}
       v-spacer
       v-menu(bottom left v-if="$hasRole(1)")
         template(v-slot:activator="{ on }")
-          v-btn(icon v-on="on" flat color="secondary")
+          v-btn(icon v-on="on" flat color="secondary").tertiary--text
             v-icon more_vert
         v-list.border.pa-0
           v-list-tile(:to="{ name: 'template_warehouse', params: { id: warehouse.id }}")
@@ -33,7 +33,7 @@
           small flat
           color="secondary"
           :to="card.to"
-        ) {{ card.title }}
+        ).tertiary--text {{ card.title }}
 
       v-flex(xs12).mt-2
         router-view

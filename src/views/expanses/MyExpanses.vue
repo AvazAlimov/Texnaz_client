@@ -2,7 +2,7 @@
   div
     v-layout(row wrap v-if="!data")
       v-flex(xs12).mb-3
-        .title МОИ РАСХОДЫ
+        .title.tertiary--text МОИ РАСХОДЫ
       v-flex(xs12)
         v-layout(row wrap)
           v-flex(xs3 v-for="(card, index) in cards" :key="index")
@@ -113,9 +113,9 @@
             :postUpdate="getAll"
           )
     v-layout(row wrap v-if="data" align-center)
-      v-btn(icon @click="data=null;getAll()")
+      v-btn(icon @click="data=null;getAll()").tertiary--text
             v-icon arrow_back
-      .title {{ data.title }}
+      .title.tertiary--text {{ data.title }}
       v-flex(xs12)
         ExpenseProperty(:data="data")
 </template>
