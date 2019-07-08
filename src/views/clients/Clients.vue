@@ -10,6 +10,7 @@
               hide-actions
               :headers="headers"
               :items="myClients"
+              :pagination.sync="pagination"
             )
               template(v-slot:items="props")
                 td {{ props.item.icc }}
@@ -29,6 +30,9 @@
                           v-icon(color="secondary" small) edit
                       v-btn(icon @click="remove(props.item.id)").mx-0
                           v-icon(color="red" small) delete
+            v-divider
+            .text-xs-center.py-2
+              v-pagination(v-model="pagination.page" :length="pages")
             v-divider
             v-layout(row v-if="$hasRole(1)")
               v-spacer
@@ -89,12 +93,23 @@ export default {
           width: 100,
         },
       ],
+      pagination: {
+        descending: false,
+        page: 1,
+        rowsPerPage: 50,
+        // sortBy: string",
+        totalItems: 0,
+      },
       clients: [],
     };
   },
   computed: {
     myClients() {
       return this.$getClients(this.clients);
+    },
+    pages() {
+      if (this.pagination.rowsPerPage == null || this.pagination.totalItems == null) { return 0; }
+      return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage);
     },
   },
   methods: {
@@ -104,6 +119,7 @@ export default {
       Client.getAll()
         .then((clients) => {
           this.clients = clients;
+          this.pagination.totalItems = clients.length;
         }).catch((error) => {
           this.$store.commit('setMessage', error.message);
         })

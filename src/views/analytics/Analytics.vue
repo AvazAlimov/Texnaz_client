@@ -38,7 +38,7 @@
             :month="clientData.month")
         v-flex(xs12 md8 d-flex)
           ManagerStatistics(:models="managerStatistics.data" :colorSecondary="colorSecondary")
-        v-flex(xs3 d-flex v-for="rate in rateCards")
+        v-flex(xs3 d-flex v-for="(rate, index) in rateCards" :key="index")
           RateCard(:title="rate.title" :rate="rate.rate"
           :delta="rate.delta" :colorBorder="colorBorder" :colorCard="colorCard")
 </template>

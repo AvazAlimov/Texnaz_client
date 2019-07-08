@@ -8,7 +8,7 @@
           .ma-2
             .display-1.font-weight-light.accent--text {{ title }}
             .subtitle.dashboardTertiary--text {{ subtitle }}
-        div(v-if="value") 
+        div(v-if="value")
           canvas(width="100vw")
 </template>
 

@@ -26,6 +26,7 @@
         color="red"
         overlap
         :value="card.counter"
+        :key="index"
       )
         template(v-slot:badge)
           span {{ card.counter }}
