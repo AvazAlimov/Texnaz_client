@@ -44,7 +44,7 @@
                 v-validate="'required'"
                 clearable
             )
-            v-select(
+            v-combobox(
                 color="secondary"
                 v-model="clientId"
                 label="Клиент"
@@ -115,7 +115,7 @@ export default {
     filteredClients() {
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.clientId = null;
-      return this.managerId ? this.clients.filter(item => item.managerId === this.managerId) : [];
+      return this.managerId ? this.clients.filter(item => item.managerId === this.managerId).map(item => ({ name: `${item.icc} - ${item.name}` })) : [];
     },
   },
   methods: {
