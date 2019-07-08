@@ -32,14 +32,12 @@
               .subheading Расчет конвертации
               v-spacer
                 v-divider.mx-4
-              .subheading {{ conversion | roundUp }}
-                |  сум
+              .subheading {{ formedBatch.conversion | roundUp }} сум
             v-layout.mb-1(align-center v-if="step > 2")
               .subheading Затраты на банк
               v-spacer
                 v-divider.mx-4
-              .subheading {{ bankTransfer | roundUp }}
-                |  сум
+              .subheading {{ formedBatch.bankTransfer | roundUp }} сум
         v-flex(xs6)
           .pa-2.white
             v-layout.mb-1(align-center)
@@ -81,32 +79,32 @@
               .subheading Расходы периода (н)
               v-spacer
                 v-divider.mx-4
-              .subheading {{ period_expanses_cash | roundUp }} %
+              .subheading {{ formedBatch.periodExpansesCash | roundUp }} %
             v-layout.mb-1(align-center v-if="step > 1")
               .subheading Расходы периода (бн)
               v-spacer
                 v-divider.mx-4
-              .subheading {{ period_expanses_non_cash | roundUp }} %
+              .subheading {{ formedBatch.periodExpansesNonCash | roundUp }} %
             v-layout.mb-1(align-center v-if="step > 1")
               .subheading Затраты на поставку (н)
               v-spacer
                 v-divider.mx-4
-              .subheading {{ transport_expanses_cash | roundUp }} $
+              .subheading {{ formedBatch.transportExpansesCash | roundUp }} $
             v-layout.mb-1(align-center v-if="step > 1")
               .subheading Затраты на поставку (бн)
               v-spacer
                 v-divider.mx-4
-              .subheading {{ transport_expanses_non_cash | roundUp }} $
+              .subheading {{ formedBatch.transportExpansesNonCash | roundUp }} $
             v-layout.mb-1(align-center v-if="step > 2")
               .subheading Транспорт БН за кг
               v-spacer
                 v-divider.mx-4
-              .subheading {{ transport_expanses_per_unit_non_cash | roundUp }} $/кг
+              .subheading {{ formedBatch.transportExpansesPerUnitNonCash | roundUp }} $/кг
             v-layout.mb-1(align-center v-if="step > 2")
               .subheading Транспорт Н за кг
               v-spacer
                 v-divider.mx-4
-              .subheading {{ transport_expanses_per_unit_cash | roundUp }} $/кг
+              .subheading {{ formedBatch.transportExpansesPerUnitCash | roundUp }} $/кг
             v-layout.mb-1(align-center v-if="step > 2")
               .subheading Общий вес
               v-spacer
@@ -131,6 +129,9 @@ export default {
     };
   },
   computed: {
+    formedBatch() {
+      return this.$batch(this.batch);
+    },
     // Расходы периода (н)
     period_expanses_cash() {
       let sum = 0;
@@ -178,26 +179,6 @@ export default {
     // Транспорт БН за кг
     transport_expanses_per_unit_non_cash() {
       return this.batch.transport_non_cash / this.totalWeight;
-    },
-    customsPrice() {
-      let total = 0;
-      this.batch.items.forEach((item) => { total += item.customs_price * item.quantity; });
-      return total;
-    },
-    contractPrice() {
-      let total = 0;
-      this.batch.items.forEach((item) => { total += item.contract_price * item.quantity; });
-      return total;
-    },
-    conversion() {
-      return this.batch.official_rate
-                * this.customsPrice
-                * this.batch.conversion / 100;
-    },
-    bankTransfer() {
-      return this.batch.exchange_rate
-                * (this.contractPrice - this.customsPrice)
-                * this.batch.bank_transfer / 100;
     },
   },
 };

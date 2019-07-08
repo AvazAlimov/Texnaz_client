@@ -1,6 +1,9 @@
 import Vue from 'vue';
 import router from '../router';
 import Permissions from '../utils/Permissions';
+import batch from './prototypes/batch';
+
+Vue.prototype.$batch = data => batch(data);
 
 Vue.prototype.$permissions = Permissions;
 
