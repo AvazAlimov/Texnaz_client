@@ -52,24 +52,28 @@ function transportExpansesPerUnitNonCash(batch) {
   return batch.transport_non_cash / totalWeight(batch);
 }
 
+// Цена таможенная
 function customsPrice(batch) {
   let total = 0;
   batch.items.forEach((item) => { total += item.customs_price * item.quantity; });
   return total;
 }
 
+// Цена контрактная
 function contractPrice(batch) {
   let total = 0;
   batch.items.forEach((item) => { total += item.contract_price * item.quantity; });
   return total;
 }
 
+// Конвертация
 function conversion(batch) {
   return batch.official_rate
               * customsPrice(batch)
               * batch.conversion / 100;
 }
 
+// Затраты на банк
 function bankTransfer(batch) {
   return batch.exchange_rate
               * (contractPrice(batch) - customsPrice(batch))

@@ -78,19 +78,19 @@ export default {
         {
           icon: 'trending_up',
           title: '$ 1430',
-          subtitle: 'Общая продажа',
+          subtitle: 'Общие отгрузки',
           value: [10, 2, 6, 3, 4, 1, 5, 2, 3, 2, 0, 5],
         },
         {
           icon: 'swap_vert',
           title: '$ 1830',
-          subtitle: 'Общий доход',
+          subtitle: ' Общее поступление',
           value: [2, 2, 3, 3, 7, 1, 3, 4, 3, 5, 1, 5],
         },
         {
           icon: 'work_outline',
           title: '$ 1930',
-          subtitle: 'Общий задолженность',
+          subtitle: 'Общая задолженность',
           value: [10, 12, 16, 13, 4, 9, 9, 3, 2, 4, 8, 5],
         },
         {
