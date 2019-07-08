@@ -26,6 +26,20 @@
               v-spacer
                 v-divider.mx-4
               .subheading {{ batch.Warehouse ? batch.Warehouse.name : '-' }}
+            v-layout.mt-3.mb-3(align-center v-if="step > 2")
+              .title Расходы на партию
+            v-layout.mb-1(align-center v-if="step > 2")
+              .subheading Расчет конвертации
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ conversion | roundUp }}
+                |  сум
+            v-layout.mb-1(align-center v-if="step > 2")
+              .subheading Затраты на банк
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ bankTransfer | roundUp }}
+                |  сум
         v-flex(xs6)
           .pa-2.white
             v-layout.mb-1(align-center)
@@ -164,6 +178,26 @@ export default {
     // Транспорт БН за кг
     transport_expanses_per_unit_non_cash() {
       return this.batch.transport_non_cash / this.totalWeight;
+    },
+    customsPrice() {
+      let total = 0;
+      this.batch.items.forEach((item) => { total += item.customs_price * item.quantity; });
+      return total;
+    },
+    contractPrice() {
+      let total = 0;
+      this.batch.items.forEach((item) => { total += item.contract_price * item.quantity; });
+      return total;
+    },
+    conversion() {
+      return this.batch.official_rate
+                * this.customsPrice
+                * this.batch.conversion / 100;
+    },
+    bankTransfer() {
+      return this.batch.exchange_rate
+                * (this.contractPrice - this.customsPrice)
+                * this.batch.bank_transfer / 100;
     },
   },
 };
