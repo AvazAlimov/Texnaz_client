@@ -15,11 +15,11 @@
               template(v-slot:items="props")
                 td {{ props.item.icc }}
                 td {{ props.item.name }}
-                td {{ props.item.itn }}
-                td {{ props.item.contactPerson }}
-                td {{ props.item.phone }}
+                td {{ props.item.itn || '-' }}
+                td {{ props.item.contactPerson || '-' }}
+                td {{ props.item.phone || '-' }}
                 td {{ props.item.region.province.name }} / {{ props.item.region.name }}
-                td {{ props.item.sphere }}
+                td {{ props.item.sphere || '-' }}
                 td {{ props.item.manager.name }}
                 td {{ props.item.createdAt | moment('YYYY-MM-DD') }}
                 td

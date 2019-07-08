@@ -33,10 +33,16 @@
           PriceItem(:item="props.item" :batch="batch")
       v-divider
       v-layout(wrap row justify-end)
-        v-btn.ma-0.mb-1(
-          flat color="secondary"
-          :disabled="errors.items.length > 0"
-          @click="approve") Утвердить
+        v-menu(offset-y)
+          template(v-slot:activator="{ on }")
+            v-btn.ma-0.mb-1.mr-1(
+              color="secondary" flat v-on="on" :disabled="errors.items.length > 0"
+            ) Утвердить
+          v-list
+            v-list-tile(@click="approve(false)")
+              v-list-tile-title Обновить цену
+            v-list-tile(@click="approve(true)")
+              v-list-tile-title Обновить цену и добавить в склад
         v-btn.ma-0.mb-1.mr-1(flat color="secondary" @click="print") Распечатать
 </template>
 
@@ -123,11 +129,11 @@ export default {
         item[name] = value;
       });
     },
-    approve() {
+    approve(createPrestock) {
       const preStocks = [];
       this.batch.approved = true;
 
-      if (this.batch.Warehouse) {
+      if (this.batch.Warehouse && createPrestock) {
         this.items.forEach((item) => {
           preStocks.push({
             productId: item.product.id,
@@ -138,7 +144,7 @@ export default {
       }
 
       Promise.all([
-        PreStock.createMultiple(preStocks),
+        createPrestock ? PreStock.createMultiple(preStocks) : null,
         Price.createMultiple(this.items.map(item => ({
           productId: item.product.id,
           firstPrice: item.firstPrice || 0,
