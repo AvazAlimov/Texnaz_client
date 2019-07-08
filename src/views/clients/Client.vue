@@ -26,21 +26,18 @@
                   label="ИНН"
                   color="secondary"
                   name="ИНН"
-                  v-validate="'required'"
               )
               v-text-field(
                   v-model="client.contactPerson"
                   label="Контактное лицо"
                   color="secondary"
                   name="Контактное лицо"
-                  v-validate="'required'"
               )
               v-text-field(
                   v-model="client.phone"
                   label="Номер телефон"
                   color="secondary"
                   name="Номер телефон"
-                  v-validate="'required'"
               )
             v-flex(xs6)
               v-text-field(
@@ -48,7 +45,6 @@
                   label="Направление деятельности"
                   color="secondary"
                   name="Направление деятельности"
-                  v-validate="'required'"
               )
               v-select(
                       v-model="province"
