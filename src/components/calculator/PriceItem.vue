@@ -1,5 +1,10 @@
 <template lang="pug">
   tr
+    td
+      v-checkbox(
+        @click.stop="props.selected = !props.selected"
+        :input-value="props.selected" color="secondary" hide-details
+      )
     td {{ item.product.Brand.name }}
     td {{ item.product.Brand.manufacturer }}
     td {{ item.product.name }}
@@ -50,6 +55,7 @@
 export default {
   name: 'Item',
   props: {
+    props: { required: true },
     item: { required: true },
     batch: { required: true },
   },

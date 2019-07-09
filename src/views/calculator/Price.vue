@@ -24,19 +24,22 @@
         )
       v-divider
       v-data-table(
+        v-model="selected"
+        select-all
         :headers="headers"
         :items="items"
         no-data-text="Ничего не выбрано"
         fixed-headers
         hide-actions)
         template(v-slot:items="props")
-          PriceItem(:item="props.item" :batch="batch")
+          PriceItem(:item="props.item" :props="props" :batch="batch")
       v-divider
       v-layout(wrap row justify-end)
         v-menu(offset-y)
           template(v-slot:activator="{ on }")
             v-btn.ma-0.mb-1.mr-1(
-              color="secondary" flat v-on="on" :disabled="errors.items.length > 0"
+              color="secondary" flat v-on="on"
+              :disabled="errors.items.length > 0"
             ) Утвердить
           v-list
             v-list-tile(@click="approve(false)")
@@ -62,6 +65,7 @@ export default {
         items: [],
       },
       items: [],
+      selected: [],
       incomeTax: 0,
       cashProfitability: 0,
       nonCashProfitability: 0,
@@ -120,6 +124,7 @@ export default {
         [this.batch] = results;
         this.batch.items.forEach((item) => {
           this.items.push(item);
+          this.selected.push(item);
         });
       });
     },
@@ -134,7 +139,7 @@ export default {
       this.batch.approved = true;
 
       if (this.batch.Warehouse && createPrestock) {
-        this.items.forEach((item) => {
+        this.selected.forEach((item) => {
           preStocks.push({
             productId: item.product.id,
             warehouseId: this.batch.warehouse,
@@ -145,7 +150,7 @@ export default {
 
       Promise.all([
         createPrestock ? PreStock.createMultiple(preStocks) : null,
-        Price.createMultiple(this.items.map(item => ({
+        Price.createMultiple(this.selected.map(item => ({
           productId: item.product.id,
           firstPrice: item.firstPrice || 0,
           mixPriceNonCash: item.mixPriceNonCash,
@@ -163,7 +168,7 @@ export default {
         });
     },
     print() {
-      const jsonData = this.items.map(item => ({
+      const jsonData = this.selected.map(item => ({
         name: item.product.name,
         packing: item.product.packing,
         firstPrice: item.firstPrice,
