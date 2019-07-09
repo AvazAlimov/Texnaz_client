@@ -9,9 +9,9 @@
         td {{ item.arrival_date | moment('YYYY-MM-DD') }}
         td {{ item.expiry_date | moment('YYYY-MM-DD') }}
         td
-          span(v-if="type.id == 1") {{ item.product.prices[0].firstPrice }}
-          span(v-if="type.id == 2") {{ item.product.prices[0].mixPriceNonCash }}
-          span(v-if="type.id == 3") {{ item.product.prices[0].item.product.prices[0].mixPriceCash }}
+          span(v-if="type.id == 1") {{ productPrice.firstPrice }}
+          span(v-if="type.id == 2") {{ productPrice.mixPriceNonCash }}
+          span(v-if="type.id == 3") {{ productPrice.mixPriceCash }}
           v-text-field(
             v-if="type.id == 4"
             v-model="price"
@@ -70,6 +70,11 @@ export default {
     sale: 0,
     price: 0,
   }),
+  computed: {
+    productPrice() {
+      return this.$price(this.item.product.prices[0], this.exchangeRate || 1);
+    },
+  },
   methods: {
     calculateFirstPrice() {
       this.item.firstPrice = this.item.product.prices[0].secondPrice
@@ -116,7 +121,7 @@ export default {
     this.calculateFirstPrice();
     this.calculateSecondPrice();
     this.calculateMixPrice();
-    this.price = this.item.product.prices[0] ? this.item.product.prices[0].firstPrice : 0;
+    this.price = this.productPrice.firstPrice;
   },
   mounted() {
     this.$validator.validate();

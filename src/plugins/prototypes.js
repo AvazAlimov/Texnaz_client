@@ -2,8 +2,10 @@ import Vue from 'vue';
 import router from '../router';
 import Permissions from '../utils/Permissions';
 import batch from './prototypes/batch';
+import price from './prototypes/price';
 
 Vue.prototype.$batch = data => batch(data);
+Vue.prototype.$price = (data, rate) => price(data, rate);
 
 Vue.prototype.$permissions = Permissions;
 
