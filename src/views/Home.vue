@@ -24,6 +24,19 @@
     v-toolbar.elevation-0.toolbar__border(app color="primary")
       v-toolbar-side-icon.tertiary--text(@click.stop="drawer = !drawer")
       v-toolbar-title.tertiary--text {{ user.name }}
+      v-spacer
+      v-menu(offset-y :close-on-content-click="false")
+        template(v-slot:activator="{ on }")
+          v-btn(flat icon v-on="on")
+            v-icon settings
+        v-list
+          v-list-tile(v-for="(item, index) in configurations" :key="index")
+            v-list-tile-title {{ item.name }}
+            v-list-tile-content
+              v-text-field.my-2(v-model="item.value" color="secondary")
+            v-list-tile-action
+              v-btn(flat icon @click="update(item.id, item.value)")
+                v-icon save
     v-content.dashboardPrimary
       v-container(grid-list-md fluid)
         router-view
@@ -32,6 +45,7 @@
 <script>
 import { AXIOS } from '../services/Api';
 import Auth from '../services/Auth';
+import Configuration from '../services/Configuration';
 
 export default {
   name: 'Home',
@@ -118,7 +132,25 @@ export default {
           to: '/logout',
         },
       ],
+      configurations: [],
     };
+  },
+  methods: {
+    getAll() {
+      Configuration.getAll().then((configurations) => {
+        this.configurations = configurations.filter(item => item.id > 3 && item.id < 7);
+      });
+    },
+    update(id, value) {
+      Configuration.update(id, value).then(() => {
+        this.$store.commit('setMessage', 'Обновлено');
+      }).catch((error) => {
+        this.$store.commit('setMessage', error.message);
+      });
+    },
+  },
+  created() {
+    this.getAll();
   },
   mounted() {
     AXIOS.interceptors.response.use(undefined, (error) => {

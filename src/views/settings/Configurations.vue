@@ -62,7 +62,7 @@ export default {
     },
     update(id, value) {
       Configuration.update(id, value).then(() => {
-        this.$store.commit('setMessage', 'Updated');
+        this.$store.commit('setMessage', 'Обновлено');
       }).catch((error) => {
         this.$store.commit('setMessage', error.message);
       });

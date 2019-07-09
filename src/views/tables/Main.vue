@@ -23,6 +23,10 @@ export default {
         // to: { name: 'mysales' },
         name: 'Оплаты',
       },
+      {
+        // to: { name: 'mysales' },
+        name: 'Долги клиентов',
+      },
     ],
   }),
 };
