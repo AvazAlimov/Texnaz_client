@@ -9,7 +9,12 @@
           ).tertiary--text Добавить
         v-flex(xs12).mt-3
             .border.white
-                v-data-table(:headers="headers" :items="products" hide-actions :loading="loading")
+                v-data-table(
+                  hide-actions
+                  :headers="headers"
+                  :items="products"
+                  :pagination.sync="pagination"
+                  :loading="loading")
                     template(v-slot:items="props")
                         td {{ props.item.Brand.name }}
                         td {{ props.item.Brand.manufacturer }}
@@ -34,6 +39,9 @@
                                     v-icon(color="secondary" small) edit
                                 v-btn(icon @click="remove(props.item.id)").mx-0
                                     v-icon(color="red" small) delete
+                v-divider
+                .text-xs-center.py-2
+                  v-pagination(v-model="pagination.page" color="secondary" :length="pages")
                 v-divider
                 v-layout
                     v-spacer
@@ -131,7 +139,19 @@ export default {
       purposes: [],
       tags: [],
       loading: false,
+      pagination: {
+        descending: false,
+        page: 1,
+        rowsPerPage: 50,
+        totalItems: 0,
+      },
     };
+  },
+  computed: {
+    pages() {
+      if (this.pagination.rowsPerPage == null || this.pagination.totalItems == null) { return 0; }
+      return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage);
+    },
   },
   methods: {
     getAll() {
@@ -146,6 +166,7 @@ export default {
       ])
         .then((result) => {
           [this.units, this.types, this.purposes, this.tags, this.products] = result;
+          this.pagination.totalItems = this.products.length;
         })
         .finally(() => { this.loading = false; });
     },

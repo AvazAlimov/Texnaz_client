@@ -32,7 +32,7 @@
                           v-icon(color="red" small) delete
             v-divider
             .text-xs-center.py-2
-              v-pagination(v-model="pagination.page" :length="pages")
+              v-pagination(v-model="pagination.page" color="secondary" :length="pages")
             v-divider
             v-layout(row v-if="$hasRole(1)")
               v-spacer
