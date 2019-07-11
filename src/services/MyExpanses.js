@@ -21,7 +21,7 @@ export default {
   deletePurpose: id => execute(Api().delete(`myexpanses/purposes/${id}`)),
   deletePerson: id => execute(Api().delete(`myexpanses/people/${id}`)),
 
-  getAll: () => execute(Api().get('myexpanses')),
+  getAll: userId => execute(Api().get(`myexpanses/?userId=${userId}`)),
   create: expense => execute(Api().post('myexpanses', expense)),
   update: (id, expense) => execute(Api().post(`myexpanses/${id}`, expense)),
   delete: id => execute(Api().delete(`myexpanses/${id}`)),

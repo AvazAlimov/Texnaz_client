@@ -231,7 +231,7 @@ export default {
     getAll() {
       this.loading = true;
       Promise.all([
-        MyExpanses.getAll(),
+        MyExpanses.getAll(this.$getUserId()),
         MyExpanses.getAllForms(),
         MyExpanses.getAllPurposes(),
         MyExpanses.getAllTypes(),
@@ -260,6 +260,7 @@ export default {
           .then((results) => {
             const [typeId, formId, purposeId, personId] = results;
             MyExpanses.create({
+              userId: this.$getUserId(),
               value: this.value,
               typeId,
               purposeId,
