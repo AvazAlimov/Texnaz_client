@@ -45,12 +45,13 @@
                 clearable
             )
             v-combobox(
-                color="secondary"
-                v-model="clientId"
-                label="Клиент"
+                v-model="client"
                 :items="filteredClients"
-                item-text="name"
+                auto-select-first
                 item-value="id"
+                item-text="name"
+                color="secondary"
+                label="Клиент"
                 name="Клиент"
                 v-validate="'required'"
                 clearable
@@ -103,7 +104,7 @@ export default {
         ratio: 1,
       },
     ],
-    clientId: null,
+    client: null,
     clients: [],
     brandId: null,
     brands: [],
@@ -114,8 +115,10 @@ export default {
   computed: {
     filteredClients() {
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      this.clientId = null;
-      return this.managerId ? this.clients.filter(item => item.managerId === this.managerId).map(item => ({ name: `${item.icc} - ${item.name}` })) : [];
+      this.client = null;
+      return this.managerId ? this.clients
+        .filter(item => item.managerId === this.managerId)
+        .map(item => ({ name: `${item.icc} - ${item.name}`, id: item.id })) : [];
     },
   },
   methods: {
@@ -147,14 +150,14 @@ export default {
           userId: user.id,
           ratio: this.currency.ratio,
           managerId: this.managerId,
-          clientId: this.clientId,
+          clientId: this.client.id,
           brandId: this.brandId,
           sum: this.sum,
         })
           .then(() => {
             this.sum = 0;
             this.managerId = null;
-            this.clientId = null;
+            this.client = null;
             this.brandId = null;
             this.$validator.validate();
             this.postAction();
