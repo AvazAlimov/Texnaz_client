@@ -11,7 +11,7 @@
                           .title Номер оплаты
                           v-spacer
                             v-divider.mx-4
-                          .subheading {{ payment.id }}
+                          .subheading {{ payment.number }}
                         v-layout.my-2(align-center)
                           .title Дата приема
                           v-spacer

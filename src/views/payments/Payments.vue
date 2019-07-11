@@ -16,7 +16,7 @@
           )
             template(v-slot:items="props")
               td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
-              td {{ props.item.id }}
+              td {{ props.item.number }}
               td {{ props.item.client.name }}
               td {{ props.item.client.icc }}
               td {{ props.item.brand ? `${props.item.brand.name} ` : '-' }}
@@ -39,7 +39,7 @@
           )
             template(v-slot:items="props")
               td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
-              td {{ props.item.id }}
+              td {{ props.item.number }}
               td {{ props.item.client.name }}
               td {{ props.item.client.icc }}
               td {{ props.item.brand ? `${props.item.brand.name} ` : '-' }}
@@ -64,7 +64,7 @@ export default {
       },
       {
         text: 'Номер оплаты',
-        value: 'id',
+        value: 'number',
       },
       {
         text: 'Клиент',

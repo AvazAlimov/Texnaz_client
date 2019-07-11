@@ -3,6 +3,13 @@
     .title Новая оплата
     v-layout(row wrap)
         v-flex(xs6)
+            v-text-field(
+                v-model="number"
+                label="Номер"
+                name="Номер"
+                color="secondary"
+                v-validate="'required'"
+            )
             v-select(
                 color="secondary"
                 v-model="currency"
@@ -23,6 +30,7 @@
                     decimal: true,\
                 }"
             )
+        v-flex(xs6)
             v-select(
                 color="secondary"
                 v-model="brandId"
@@ -32,7 +40,6 @@
                 item-value="id"
                 clearable
             )
-        v-flex(xs6)
             v-select(
                 color="secondary"
                 v-model="managerId"
@@ -104,6 +111,7 @@ export default {
         ratio: 1,
       },
     ],
+    number: '',
     client: null,
     clients: [],
     brandId: null,
@@ -147,6 +155,7 @@ export default {
       if (user) {
         this.loading = true;
         Payment.create({
+          number: this.number,
           userId: user.id,
           ratio: this.currency.ratio,
           managerId: this.managerId,
@@ -155,6 +164,7 @@ export default {
           sum: this.sum,
         })
           .then(() => {
+            this.number = '';
             this.sum = 0;
             this.managerId = null;
             this.client = null;
