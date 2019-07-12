@@ -9,6 +9,7 @@
                 name="Номер"
                 color="secondary"
                 v-validate="'required'"
+                :error="!isUnique"
             )
             v-select(
                 color="secondary"
@@ -70,7 +71,7 @@
                     flat
                     color="secondary"
                     :loading="loading"
-                    :disabled="errors.items.length > 0"
+                    :disabled="errors.items.length > 0 || !isUnique"
                     @click="submit()"
                 ) На согласование
 </template>
@@ -112,6 +113,7 @@ export default {
       },
     ],
     number: '',
+    isUnique: true,
     client: null,
     clients: [],
     brandId: null,
@@ -176,6 +178,18 @@ export default {
             this.$store.commit('setMessage', error.message);
           })
           .finally(() => { this.loading = false; });
+      }
+    },
+  },
+  watch: {
+    number(value) {
+      this.isUnique = true;
+      if (value) {
+        Payment.getByNumber(value).then((payments) => {
+          if (payments.length) {
+            this.isUnique = false;
+          }
+        });
       }
     },
   },
