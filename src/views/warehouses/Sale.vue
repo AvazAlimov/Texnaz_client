@@ -72,9 +72,16 @@
                   v-spacer
                   v-btn.ma-0.mt-1(
                     flat color="secondary"
-                    :disabled="errors.items.length > 0"
+                    :disabled="errors.items.length > 0 || !isUnique"
                     @click="submit()") Завершить
                 .pa-4
+                  v-text-field(
+                    color="secondary"
+                    v-model="number"
+                    :error="!isUnique"
+                    label="Номер"
+                    name="Номер"
+                    v-validate="'required'")
                   .subheading Баланс клиента: {{ balance.toFixed(2) }} $
                   .subheading Итоговая цена: {{ getTotalPrice().toFixed(2) }} $
                 v-divider
@@ -122,6 +129,8 @@ export default {
       },
     ],
     type: null,
+    number: '',
+    isUnique: true,
     types: [
       {
         id: 1,
@@ -239,6 +248,7 @@ export default {
     submit() {
       this.loading = true;
       const sale = {
+        number: this.number,
         type: this.type.id,
         form: this.payment,
         clientId: this.client.id,
@@ -268,6 +278,16 @@ export default {
         this.selected.forEach((item) => { price += item[this.type.key]; });
       }
       return price;
+    },
+  },
+  watch: {
+    number(value) {
+      this.isUnique = true;
+      if (value) {
+        Sale.getByNumber(value).then((sales) => {
+          this.isUnique = !(sales.length);
+        });
+      }
     },
   },
   created() {
