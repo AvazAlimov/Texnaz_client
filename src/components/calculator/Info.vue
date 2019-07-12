@@ -38,6 +38,31 @@
               v-spacer
                 v-divider.mx-4
               .subheading {{ formedBatch.bankTransfer | roundUp }} сум
+            v-layout.mb-1(align-center v-if="step > 2")
+              .subheading НДС
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ formedBatch.totalVat | roundUp }} сум
+            v-layout.mb-1(align-center v-if="step > 2")
+              .subheading Пошлина
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ formedBatch.totalTax | roundUp }} сум
+            v-layout.mb-1(align-center v-if="step > 2")
+              .subheading Акциз
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ formedBatch.totalExcise | roundUp }} сум
+            v-layout.mb-1(align-center v-if="step > 2")
+              .subheading Очистка
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ formedBatch.totalCleaning | roundUp }} сум
+            v-layout(align-center v-if="step > 2")
+              .subheading Итого
+              v-spacer
+                v-divider.mx-4
+              .subheading {{ formedBatch.totalVat + formedBatch.totalTax + formedBatch.totalExcise + formedBatch.totalCleaning }} сум
         v-flex(xs6)
           .pa-2.white
             v-layout.mb-1(align-center)
