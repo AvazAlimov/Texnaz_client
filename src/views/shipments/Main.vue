@@ -27,10 +27,10 @@ export default {
         to: { name: 'pendingsales' },
         name: 'На согласовании',
       },
-      // {
-      //   to: { name: 'approvedsales' },
-      //   name: 'Согласованные',
-      // },
+      {
+        to: { name: 'approvedsales' },
+        name: 'Согласованные',
+      },
     ],
   }),
 };
