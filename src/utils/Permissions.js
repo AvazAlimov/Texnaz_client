@@ -106,3 +106,21 @@ module.exports.SHOW_SETTINGS_REGIONS = {
   name: 'show settings regions',
   id: 25,
 };
+
+// Sales
+module.exports.SHOW_SALES_MY_SALES = {
+  name: 'show my sales',
+  id: 26,
+};
+module.exports.SHOW_SALES_INFORMATION = {
+  name: 'show sales information',
+  id: 27,
+};
+module.exports.SHOW_SALES_PENDING = {
+  name: 'show sales pending',
+  id: 28,
+};
+module.exports.SHOW_SALES_APPROVED = {
+  name: 'show sales approved',
+  id: 29,
+};
