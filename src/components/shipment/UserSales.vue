@@ -6,15 +6,16 @@
       hide-actions
       :headers="headers"
       :items="sales"
-      :loading="loading")
+      :loading="loading"
+      disable-initial-sort)
       template(v-slot:items="props")
         tr(:class="{\
-          'green lighten-3': props.item.approved > 0,\
-          'red lighten-3': props.item.approved < 0\
+            'green lighten-3': props.item.approved > 0,\
+            'red lighten-3': props.item.approved < 0\
           }")
-          td {{ props.item.id }}
           td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
-          td {{ props.item.approved == 1 ? 'Согласованные' : 'Не согласованные' }}
+          td {{ props.item.number }}
+          td {{ props.item.approved == 1 ? 'Согласован' : 'Не согласован' }}
           td {{ props.item.warehouse.name }} {{ props.item.warehouse.company }}
           td {{ props.item.client.icc }}
           td {{ props.item.client.name }}
@@ -35,6 +36,10 @@
                 flat icon color="secondary"
                 :to="{ name: 'shipment', params: {id: props.item.id} }")
                 v-icon(small) visibility
+              v-btn.ma-0(@click="remove(props.item.id)"
+                v-if="props.item.approved < 1"
+                flat icon color="red")
+                v-icon(small) delete
 </template>
 
 <script>
@@ -58,12 +63,12 @@ export default {
     sales: [],
     headers: [
       {
-        text: 'Номер',
-        value: 'id',
-      },
-      {
         text: 'Дата',
         value: 'createdAt',
+      },
+      {
+        text: 'Номер',
+        value: 'id',
       },
       {
         text: 'Статус',
@@ -114,12 +119,12 @@ export default {
     getAll() {
       this.loading = true;
       Promise.all([
-        Sale.getAll(),
+        Sale.getByManagerId(this.$getUserId()),
         Configuration.getAll(),
       ])
         .then((results) => {
           [this.sales, this.configurations] = results;
-          this.sales = this.sales.filter(sale => sale.managerId === parseInt(this.userId, 10));
+          this.sales = this.sales.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
           this.exchangeRate = (this.configurations.find(conf => conf.id === 4)).value;
           this.officialRate = (this.configurations.find(conf => conf.id === 5)).value;
         })
@@ -151,6 +156,13 @@ export default {
                       * (100 - item.discount) / 100;
           });
           break;
+        case 4:
+          sale.items.forEach((item) => {
+            price += item.commissionPrice / this.exchangeRate
+                      * item.quantity
+                      * (100 - item.discount) / 100;
+          });
+          break;
         default:
           break;
       }
@@ -164,6 +176,14 @@ export default {
         });
       }
       return balance;
+    },
+    remove(id) {
+      // eslint-disable-next-line no-alert, no-restricted-globals
+      if (confirm('Это действие удалит элемент навсегда, вы уверены?')) {
+        Sale.delete(id)
+          .then(() => this.getAll())
+          .catch(error => this.$store.commit('setMessage', error.message));
+      }
     },
   },
   created() {

@@ -19,18 +19,18 @@ export default {
         to: { name: 'mysales' },
         name: 'Мои отгрузки',
       },
-      {
-        to: { name: 'salesinformation' },
-        name: 'Отгрузки',
-      },
-      {
-        to: { name: 'pendingsales' },
-        name: 'На согласовании',
-      },
-      {
-        to: { name: 'approvedsales' },
-        name: 'Согласованные',
-      },
+      // {
+      //   to: { name: 'salesinformation' },
+      //   name: 'Отгрузки',
+      // },
+      // {
+      //   to: { name: 'pendingsales' },
+      //   name: 'На согласовании',
+      // },
+      // {
+      //   to: { name: 'approvedsales' },
+      //   name: 'Согласованные',
+      // },
     ],
   }),
 };
