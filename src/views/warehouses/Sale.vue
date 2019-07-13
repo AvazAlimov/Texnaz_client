@@ -130,7 +130,7 @@ export default {
     ],
     type: null,
     number: '',
-    isUnique: true,
+    isUnique: false,
     types: [
       {
         id: 1,
@@ -262,6 +262,7 @@ export default {
           priceId: item.product.prices[0].id,
           quantity: item.sale,
           discount: item.discount,
+          commissionPrice: item.commissionPrice,
         });
       });
       Sale.create(sale)

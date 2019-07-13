@@ -9,9 +9,10 @@
         td {{ item.arrival_date | moment('YYYY-MM-DD') }}
         td {{ item.expiry_date | moment('YYYY-MM-DD') }}
         td
-          span(v-if="type.id == 1") {{ productPrice.firstPrice }}
-          span(v-if="type.id == 2") {{ productPrice.mixPriceNonCash }}
-          span(v-if="type.id == 3") {{ productPrice.mixPriceCash }}
+          span(v-if="type.id == 1") {{ productPrice.firstPrice | ceil }} сум
+          span(v-if="type.id == 2") {{ productPrice.mixPriceNonCash | ceil }} сум
+            |  - {{ productPrice.mixPriceCash | roundUp }}$
+          span(v-if="type.id == 3") {{ productPrice.secondPrice | roundUp }}$
           v-text-field(
             v-if="type.id == 4"
             v-model="price"
@@ -95,6 +96,13 @@ export default {
                       * parseFloat(this.item.sale)
                       * parseFloat((100 - this.item.discount) / 100);
     },
+
+    calculateComissionPrice() {
+      this.item.commissionPrice = parseFloat(this.price) || 0;
+      this.item.price = (this.item.commissionPrice / this.exchangeRate)
+                      * parseFloat(this.item.sale)
+                      * parseFloat((100 - this.item.discount) / 100);
+    },
   },
   watch: {
     discount(value) {
@@ -108,9 +116,10 @@ export default {
       this.calculateFirstPrice();
       this.calculateSecondPrice();
       this.calculateMixPrice();
+      this.calculateComissionPrice();
     },
-    price(value) {
-      this.item.price = parseFloat(value) / this.exchangeRate;
+    price() {
+      this.calculateComissionPrice();
     },
   },
   created() {
@@ -121,7 +130,7 @@ export default {
     this.calculateFirstPrice();
     this.calculateSecondPrice();
     this.calculateMixPrice();
-    this.price = this.productPrice.firstPrice;
+    this.price = this.$options.filters.ceil(this.productPrice.firstPrice);
   },
   mounted() {
     this.$validator.validate();
