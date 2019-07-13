@@ -5,6 +5,7 @@ export default {
   get: id => execute(Api().get(`sales/${id}`)),
   getByNumber: number => execute(Api().get(`sales/?number=${number}`)),
   getByManagerId: managerId => execute(Api().get(`sales/?managerId=${managerId}`)),
+  getByStatus: status => execute(Api().get(`sales/?approved=${status}`)),
   create: sale => execute(Api().post('sales', sale)),
   approve: id => execute(Api().post(`sales/approve/${id}`)),
   disapprove: id => execute(Api().post(`sales/disapprove/${id}`)),

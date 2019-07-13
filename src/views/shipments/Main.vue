@@ -23,10 +23,10 @@ export default {
         to: { name: 'salesinformation' },
         name: 'Отгрузки',
       },
-      // {
-      //   to: { name: 'pendingsales' },
-      //   name: 'На согласовании',
-      // },
+      {
+        to: { name: 'pendingsales' },
+        name: 'На согласовании',
+      },
       // {
       //   to: { name: 'approvedsales' },
       //   name: 'Согласованные',
