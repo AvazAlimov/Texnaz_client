@@ -72,13 +72,14 @@
                   v-spacer
                   v-btn.ma-0.mt-1(
                     flat color="secondary"
-                    :disabled="errors.items.length > 0 || !isUnique"
+                    :disabled="errors.items.length > 0 ||\
+                    (oldNumber == number ? !$route.params.saleId : !isUnique)"
                     @click="submit()") Завершить
                 .pa-4
                   v-text-field(
                     color="secondary"
                     v-model="number"
-                    :error="!isUnique"
+                    :error="(oldNumber == number ? !$route.params.saleId : !isUnique)"
                     label="Номер"
                     name="Номер"
                     v-validate="'required'")
@@ -99,6 +100,7 @@
 
 <script>
 import Sale from '@/services/Sale';
+import Stock from '@/services/Stock';
 import Client from '@/services/Client';
 import Configuration from '@/services/Configuration';
 import shipmentTypes from '@/assets/shipment_types.json';
@@ -110,6 +112,7 @@ export default {
     step: 1,
     days: 1,
     loading: false,
+    oldNumber: '',
     number: '',
     isUnique: false,
     stock: null,
@@ -208,6 +211,33 @@ export default {
         [this.clients, this.configurations] = results;
         this.exchangeRate = (this.configurations.find(conf => conf.id === 4)).value;
         this.officialRate = (this.configurations.find(conf => conf.id === 5)).value;
+
+        if (this.$route.params.saleId) {
+          Sale.get(this.$route.params.saleId).then((sale) => {
+            this.oldNumber = sale.number;
+            this.number = sale.number;
+            this.days = sale.days;
+            this.type = shipmentTypes.find(item => item.id === sale.type);
+            this.payment = sale.form;
+            this.client = this.clients.find(client => client.id === sale.clientId);
+            sale.items.forEach(async (item) => {
+              const stock = await Stock.get(item.stock.id);
+              stock.sale = item.quantity;
+              stock.discount = item.discount;
+              stock.commissionPrice = item.commissionPrice;
+              stock.booked = 0;
+              stock.bookings.forEach((booking) => {
+                stock.booked += booking.quantity;
+              });
+              stock.sold = 0;
+              stock.sales.forEach((saleItem) => {
+                if (saleItem.approved === 0) { stock.sold += saleItem.quantity; }
+              });
+              this.selected.push(stock);
+            });
+            this.isUnique = true;
+          }).catch(() => this.$router.push({ name: 'sale' }));
+        }
       })
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });
@@ -221,6 +251,7 @@ export default {
         clientId: this.client.id,
         managerId: this.$getUserId(),
         warehouseId: parseInt(this.$route.params.id, 10),
+        days: this.days,
         items: [],
       };
       this.selected.forEach((item) => {
@@ -232,7 +263,10 @@ export default {
           commissionPrice: item.commissionPrice,
         });
       });
-      Sale.create(sale)
+      (this.$route.params.saleId
+        ? Sale.update(this.$route.params.saleId, sale)
+        : Sale.create(sale)
+      )
         .then(() => {
           this.$router.push({ name: 'information' });
           window.location.reload();

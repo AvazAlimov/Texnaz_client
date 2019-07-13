@@ -111,10 +111,12 @@ const router = new Router({
               path: 'client',
               name: 'client',
               component: () => import('./views/clients/Client.vue'),
-              children: [{
-                path: ':id',
-                component: () => import('./views/clients/Client.vue'),
-              }],
+              children: [
+                {
+                  path: ':id',
+                  component: () => import('./views/clients/Client.vue'),
+                },
+              ],
             },
           ],
         },
@@ -400,6 +402,11 @@ const router = new Router({
                   name: 'sale',
                   component: () => import('./views/warehouses/Sale.vue'),
                 },
+                {
+                  path: 'sale/:saleId',
+                  name: 'sale_edit',
+                  component: () => import('./views/warehouses/Sale.vue'),
+                },
               ],
             },
             {
@@ -423,15 +430,7 @@ const router = new Router({
         {
           path: 'tables',
           name: 'tables',
-          // redirect: { name: 'mysales' },
           component: () => import('./views/tables/Main.vue'),
-          // children: [
-          //   {
-          //     path: 'mysales',
-          //     name: 'mysales',
-          //     component: () => import('./views/shipments/MySales.vue'),
-          //   },
-          // ],
         },
         {
           path: 'shipments',

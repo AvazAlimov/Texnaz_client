@@ -110,6 +110,7 @@ export default {
       this.calculateFirstPrice();
       this.calculateSecondPrice();
       this.calculateMixPrice();
+      this.calculateComissionPrice();
     },
     sale(value) {
       this.item.sale = parseFloat(value) || 0;

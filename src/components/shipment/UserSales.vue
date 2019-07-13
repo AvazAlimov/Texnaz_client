@@ -29,7 +29,7 @@
               v-btn.ma-0(
                 v-if="props.item.approved < 1"
                 flat icon color="secondary"
-                :to="{ name: 'shipment', params: {id: props.item.id} }")
+                :to="{ name: 'sale_edit', params:{id:props.item.warehouseId,saleId:props.item.id}}")
                 v-icon(small) edit
               v-btn.ma-0(
                 v-if="props.item.approved == 1"
