@@ -32,37 +32,37 @@
               .subheading Расчет конвертации
               v-spacer
                 v-divider.mx-4
-              .subheading {{ formedBatch.conversion | roundUp }} сум
+              .subheading {{ formedBatch.conversion | roundUp | readable}} сум
             v-layout.mb-1(align-center v-if="step > 2")
               .subheading Затраты на банк
               v-spacer
                 v-divider.mx-4
-              .subheading {{ formedBatch.bankTransfer | roundUp }} сум
+              .subheading {{ formedBatch.bankTransfer | roundUp | readable}} сум
             v-layout.mb-1(align-center v-if="step > 2")
               .subheading НДС
               v-spacer
                 v-divider.mx-4
-              .subheading {{ formedBatch.totalVat | roundUp }} сум
+              .subheading {{ formedBatch.totalVat | roundUp | readable}} $
             v-layout.mb-1(align-center v-if="step > 2")
               .subheading Пошлина
               v-spacer
                 v-divider.mx-4
-              .subheading {{ formedBatch.totalTax | roundUp }} сум
+              .subheading {{ formedBatch.totalTax | roundUp | readable}} $
             v-layout.mb-1(align-center v-if="step > 2")
               .subheading Акциз
               v-spacer
                 v-divider.mx-4
-              .subheading {{ formedBatch.totalExcise | roundUp }} сум
+              .subheading {{ formedBatch.totalExcise | roundUp | readable}} $
             v-layout.mb-1(align-center v-if="step > 2")
               .subheading Очистка
               v-spacer
                 v-divider.mx-4
-              .subheading {{ formedBatch.totalCleaning | roundUp }} сум
+              .subheading {{ formedBatch.totalCleaning | roundUp | readable}} $
             v-layout(align-center v-if="step > 2")
               .subheading Итого
               v-spacer
                 v-divider.mx-4
-              .subheading {{ formedBatch.totalVat + formedBatch.totalTax + formedBatch.totalExcise + formedBatch.totalCleaning }} сум
+              .subheading {{ (formedBatch.totalVat + formedBatch.totalTax + formedBatch.totalExcise + formedBatch.totalCleaning) | roundUp | readable}} $
         v-flex(xs6)
           .pa-2.white
             v-layout.mb-1(align-center)

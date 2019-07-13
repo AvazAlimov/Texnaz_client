@@ -80,42 +80,42 @@ function bankTransfer(batch) {
               * batch.bank_transfer / 100;
 }
 
-// Oбщий акциз
+// Oбщий акциз в долларах
 function totalExcise(batch) {
   return batch.items
-    .map(item => item.customs_price * item.excise * item.quantity)
-    .reduce((a, b) => a + b, 0);
+    .map(item => item.customs_price * item.quantity * (item.excise / 100))
+    .reduce((a, b) => a + b, 0) / batch.official_rate;
 }
 
-// Oбщий Пошлина
+// Oбщий Пошлина в долларах
 function totalTax(batch) {
   return batch.items
-    .map(item => item.customs_price * item.tax * item.quantity)
-    .reduce((a, b) => a + b, 0);
+    .map(item => item.customs_price * item.quantity * (item.tax / 100))
+    .reduce((a, b) => a + b, 0) / batch.official_rate;
 }
 
-// Oбщий НДС
+// Oбщий НДС в долларах
 function totalVat(batch) {
   return batch.items
     .map((item) => {
       const totalPr = item.customs_price * item.quantity;
-      const excise = totalPr * item.excise;
-      const tax = totalPr * item.tax;
-      return (totalPr + excise + tax) * item.vat;
+      const excise = totalPr * (item.excise / 100);
+      const tax = totalPr * (item.tax / 100);
+      return (totalPr + excise + tax) * (item.vat / 100);
     })
-    .reduce((a, b) => a + b, 0);
+    .reduce((a, b) => a + b, 0) / batch.official_rate;
 }
 
-// Oбщий Очистка
+// Oбщий Очистка в долларах
 function totalCleaning(batch) {
   return batch.items
     .map((item) => {
       const totalPr = item.customs_price * item.quantity;
-      const excise = totalPr * item.excise;
-      const tax = totalPr * item.tax;
-      return (totalPr + excise + tax) * item.cleaning;
+      const excise = totalPr * (item.excise / 100);
+      const tax = totalPr * (item.tax / 100);
+      return (totalPr + excise + tax) * (item.cleaning / 100);
     })
-    .reduce((a, b) => a + b, 0);
+    .reduce((a, b) => a + b, 0) / batch.official_rate;
 }
 
 export default batch => ({
