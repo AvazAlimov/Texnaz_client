@@ -1,97 +1,105 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon :to="{ name: 'shipments' }")
-            v-icon arrow_back
-        .title Отгрузка
-        v-flex(xs12)
-            .white.border.mt-3
-                v-layout(row wrap).pa-4
-                    v-flex(xs12)
-                        v-layout.mb-2(align-center)
-                          .title Номер отгрузки
-                          v-spacer
-                            v-divider.mx-4
-                          .subheading {{ sale.id }}
-                        v-layout.mb-2(align-center)
-                          .title Дата заказа
-                          v-spacer
-                            v-divider.mx-4
-                          .subheading {{ sale.createdAt | moment('HH:mm DD-MM-YYYY') }}
-                        v-layout.mb-2(align-center)
-                          .title Склад
-                          v-spacer
-                            v-divider.mx-4
-                          .subheading {{ sale.warehouse.name }} {{ sale.warehouse.company }}
-                        v-layout.mb-2(align-center)
-                          .title ИКК клиента
-                          v-spacer
-                            v-divider.mx-4
-                          .subheading {{ sale.client.icc }}
-                        v-layout.mb-2(align-center)
-                          .title Клиент
-                          v-spacer
-                            v-divider.mx-4
-                          .subheading {{ sale.client.name }}
-                        v-layout.mb-2(align-center)
-                          .title Менеджер
-                          v-spacer
-                            v-divider.mx-4
-                          .subheading {{ sale.manager.name }}
-                        v-layout.mb-2(align-center)
-                          .title Тип оплаты
-                          v-spacer
-                            v-divider.mx-4
-                          .subheading {{ types.find(type => type.id == sale.type).name }}
-                        v-layout.mb-2(align-center)
-                          .title Тип расчета
-                          v-spacer
-                            v-divider.mx-4
-                          .subheading {{ payments.find(payment => payment.id == sale.form).name }}
-                        v-layout.mb-2(align-center)
-                          .title Баланс клиента
-                          v-spacer
-                            v-divider.mx-4
-                          .subheading {{ getClientBalance().toFixed(2) }} $
-                        v-layout.mb-2(align-center)
-                          .title Сумма отгрузки
-                          v-spacer
-                            v-divider.mx-4
-                          .subheading {{ getTotalPrice().toFixed(2) }} $
-                v-divider
-                v-data-table(
-                    :loading="loading"
-                    hide-actions
-                    :headers="headers"
-                    :items="sale.items")
-                    template(v-slot:items="props")
-                        td {{ props.item.stock.product.id }}
-                        td {{ props.item.stock.product.name }}
-                        td {{ props.item.stock.product.packing }}
-                        td {{ props.item.stock.product.color || '-' }}
-                        td {{ props.item.stock.defected ? 'поврежден' : 'хорошо'}}
-                        td {{ props.item.stock.arrival_date | moment('YYYY-MM-DD') }}
-                        td {{ props.item.stock.expiry_date | moment('YYYY-MM-DD') }}
-                        td {{ props.item.discount }} %
-                        td {{ props.item.quantity }}
-                        td {{ getPrice(props.item).toFixed(2) }} $
-                v-divider
-                v-layout(row v-if="sale.approved < 1")
-                    v-spacer
-                    v-btn.ma-0.mb-1.mr-1(
-                      :loading="loading"
-                      flat color="secondary"
-                      @click="approve()"
-                    ) Подтвердить
-                    v-btn.ma-0.mb-1.mr-1(
-                      :loading="loading"
-                      flat color="secondary"
-                      @click="disapprove()"
-                    ) Отменить
+      v-btn(icon :to="{ name: 'shipments' }")
+          v-icon arrow_back
+      .title Отгрузка
+      v-flex(xs12)
+        .white.border.mt-3
+          v-layout(row wrap).pa-4
+            v-flex(xs12)
+              v-layout.mb-2(align-center)
+                .title Номер отгрузки
+                v-spacer
+                  v-divider.mx-4
+                .subheading {{ sale.id }}
+              v-layout.mb-2(align-center)
+                .title Дата заказа
+                v-spacer
+                  v-divider.mx-4
+                .subheading {{ sale.createdAt | moment('HH:mm DD-MM-YYYY') }}
+              v-layout.mb-2(align-center)
+                .title Статус
+                v-spacer
+                  v-divider.mx-4
+                .subheading {{ sale.approved > 0 ? 'согласованный' : 'не согласованный' }}
+              v-layout.mb-2(align-center)
+                .title Склад
+                v-spacer
+                  v-divider.mx-4
+                .subheading {{ sale.warehouse.name }} {{ sale.warehouse.company }}
+              v-layout.mb-2(align-center)
+                .title ИКК клиента
+                v-spacer
+                  v-divider.mx-4
+                .subheading {{ sale.client.icc }}
+              v-layout.mb-2(align-center)
+                .title Клиент
+                v-spacer
+                  v-divider.mx-4
+                .subheading {{ sale.client.name }}
+              v-layout.mb-2(align-center)
+                .title Менеджер
+                v-spacer
+                  v-divider.mx-4
+                .subheading {{ sale.manager.name }}
+              v-layout.mb-2(align-center)
+                .title Тип оплаты
+                v-spacer
+                  v-divider.mx-4
+                .subheading {{ types.find(type => type.id == sale.type).name }}
+              v-layout.mb-2(align-center)
+                .title Тип расчета
+                v-spacer
+                  v-divider.mx-4
+                .subheading {{ payments.find(payment => payment.id == sale.form).name }}
+              v-layout.mb-2(align-center)
+                .title Баланс клиента
+                v-spacer
+                  v-divider.mx-4
+                .subheading {{ $getClientBalance(sale.client) | roundUp }} $
+              v-layout.mb-2(align-center)
+                .title Сумма отгрузки
+                v-spacer
+                  v-divider.mx-4
+                .subheading {{ $getTotalPrice(sale, exchangeRate, officialRate) | roundUp }} $
+          v-divider
+          v-data-table(
+              :loading="loading"
+              hide-actions
+              :headers="headers"
+              :items="sale.items")
+              template(v-slot:items="props")
+                td {{ props.item.stock.product.id }}
+                td {{ props.item.stock.product.name }}
+                td {{ props.item.stock.product.packing }}
+                td {{ props.item.stock.product.color || '-' }}
+                td {{ props.item.stock.defected ? 'поврежден' : 'хорошо'}}
+                td {{ props.item.stock.arrival_date | moment('YYYY-MM-DD') }}
+                td {{ props.item.stock.expiry_date | moment('YYYY-MM-DD') }}
+                td {{ props.item.discount }}%
+                td {{ props.item.quantity }}
+                td {{ getPrice(props.item) | roundUp }}$
+          v-divider
+          v-layout(row v-if="sale.approved < 1 && ($hasRole(1) || $hasRole(3))")
+            v-spacer
+            v-btn.ma-0.mb-1.mr-1(
+              :loading="loading"
+              flat color="secondary"
+              @click="approve()"
+            ) Подтвердить
+            v-btn.ma-0.mb-1.mr-1(
+              v-if="sale.approved != -1"
+              :loading="loading"
+              flat color="secondary"
+              @click="disapprove()"
+            ) Отменить
 </template>
 
 <script>
 import Sale from '@/services/Sale';
 import Configuration from '@/services/Configuration';
+import shipmentTypes from '@/assets/shipment_types.json';
+import shipmentPayments from '@/assets/shipment_payments.json';
 
 export default {
   name: 'Shipment',
@@ -157,37 +165,8 @@ export default {
       form: 1,
       createdAt: new Date(),
     },
-    payments: [
-      {
-        id: 1,
-        name: 'Предоплата',
-      },
-      {
-        id: 2,
-        name: 'Частичная',
-      },
-      {
-        id: 3,
-        name: 'Реализация',
-      },
-    ],
-    types: [
-      {
-        id: 1,
-        name: 'B2C',
-        key: 'firstPrice',
-      },
-      {
-        id: 2,
-        name: 'Цена с наценкой',
-        key: 'mixPrice',
-      },
-      {
-        id: 3,
-        name: 'B2B',
-        key: 'secondPrice',
-      },
-    ],
+    payments: shipmentPayments,
+    types: shipmentTypes,
   }),
   methods: {
     getAll() {
@@ -219,39 +198,13 @@ export default {
           return item.price.secondPrice
                       * item.quantity
                       * (100 - item.discount) / 100;
+        case 4:
+          return item.commissionPrice / this.exchangeRate
+                  * item.quantity
+                  * (100 - item.discount) / 100;
         default:
           return 0;
       }
-    },
-    getTotalPrice() {
-      let price = 0;
-      switch (this.sale.type) {
-        case 1:
-          this.sale.items.forEach((item) => {
-            price += (item.price.firstPrice * item.quantity
-                      * (100 - item.discount) / 100)
-                      / this.officialRate;
-          });
-          break;
-        case 2:
-          this.sale.items.forEach((item) => {
-            price += (item.price.mixPriceNonCash / this.exchangeRate
-                      + item.price.mixPriceCash)
-                      * item.quantity
-                      * (100 - item.discount) / 100;
-          });
-          break;
-        case 3:
-          this.sale.items.forEach((item) => {
-            price += item.price.secondPrice
-                      * item.quantity
-                      * (100 - item.discount) / 100;
-          });
-          break;
-        default:
-          break;
-      }
-      return price;
     },
     getClientBalance() {
       let balance = 0;
