@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "name": "B2C",
+        "key": "firstPrice"
+    },
+    {
+        "id": 2,
+        "name": "Цена с наценкой",
+        "key": "mixPrice"
+    },
+    {
+        "id": 3,
+        "name": "B2B",
+        "key": "secondPrice"
+    },
+    {
+        "id": 4,
+        "name": "Оплаты по комиссии",
+        "key": "price"
+    }
+]

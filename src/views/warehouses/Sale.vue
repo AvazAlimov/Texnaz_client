@@ -101,58 +101,25 @@
 import Sale from '@/services/Sale';
 import Client from '@/services/Client';
 import Configuration from '@/services/Configuration';
+import shipmentTypes from '@/assets/shipment_types.json';
+import shipmentPayments from '@/assets/shipment_payments.json';
 
 export default {
   name: 'Sale',
   data: () => ({
     step: 1,
     days: 1,
-    user: JSON.parse(localStorage.getItem('user')),
     loading: false,
+    number: '',
+    isUnique: false,
     stock: null,
     client: null,
     selected: [],
     clients: [],
     payment: 1,
-    payments: [
-      {
-        id: 1,
-        name: 'Предоплата',
-      },
-      {
-        id: 2,
-        name: 'Частичная',
-      },
-      {
-        id: 3,
-        name: 'Реализация',
-      },
-    ],
-    type: null,
-    number: '',
-    isUnique: false,
-    types: [
-      {
-        id: 1,
-        name: 'B2C',
-        key: 'firstPrice',
-      },
-      {
-        id: 2,
-        name: 'Цена с наценкой',
-        key: 'mixPrice',
-      },
-      {
-        id: 3,
-        name: 'B2B',
-        key: 'secondPrice',
-      },
-      {
-        id: 4,
-        name: 'Оплаты по комиссии',
-        key: 'price',
-      },
-    ],
+    type: shipmentTypes[0],
+    types: shipmentTypes,
+    payments: shipmentPayments,
     configurations: [],
     exchangeRate: 1,
     officialRate: 1,
@@ -213,10 +180,10 @@ export default {
       return this.$moment(new Date()).add(this.days, 'd').format('YYYY-MM-DD');
     },
     filteredClients() {
-      if (this.user.id === 1) {
+      if (this.$getUserId() === 1) {
         return this.clients;
       }
-      return this.clients.filter(client => client.managerId === this.user.id);
+      return this.clients.filter(client => client.managerId === this.$getUserId());
     },
     balance() {
       if (this.client) {
@@ -252,7 +219,7 @@ export default {
         type: this.type.id,
         form: this.payment,
         clientId: this.client.id,
-        managerId: this.user.id,
+        managerId: this.$getUserId(),
         warehouseId: parseInt(this.$route.params.id, 10),
         items: [],
       };

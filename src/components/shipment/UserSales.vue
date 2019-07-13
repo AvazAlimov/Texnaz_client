@@ -40,6 +40,8 @@
 <script>
 import Sale from '@/services/Sale';
 import Configuration from '@/services/Configuration';
+import shipmentTypes from '@/assets/shipment_types.json';
+import shipmentPayments from '@/assets/shipment_payments.json';
 
 export default {
   name: 'UserSales',
@@ -105,37 +107,8 @@ export default {
         sortable: false,
       },
     ],
-    payments: [
-      {
-        id: 1,
-        name: 'Предоплата',
-      },
-      {
-        id: 2,
-        name: 'Частичная',
-      },
-      {
-        id: 3,
-        name: 'Реализация',
-      },
-    ],
-    types: [
-      {
-        id: 1,
-        name: 'B2C',
-        key: 'firstPrice',
-      },
-      {
-        id: 2,
-        name: 'Цена с наценкой',
-        key: 'mixPrice',
-      },
-      {
-        id: 3,
-        name: 'B2B',
-        key: 'secondPrice',
-      },
-    ],
+    payments: shipmentPayments,
+    types: shipmentTypes,
   }),
   methods: {
     getAll() {
