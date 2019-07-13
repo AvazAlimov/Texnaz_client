@@ -19,10 +19,10 @@ export default {
         to: { name: 'mysales' },
         name: 'Мои отгрузки',
       },
-      // {
-      //   to: { name: 'salesinformation' },
-      //   name: 'Отгрузки',
-      // },
+      {
+        to: { name: 'salesinformation' },
+        name: 'Отгрузки',
+      },
       // {
       //   to: { name: 'pendingsales' },
       //   name: 'На согласовании',

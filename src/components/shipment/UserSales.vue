@@ -20,7 +20,7 @@
           td {{ props.item.client.icc }}
           td {{ props.item.client.name }}
           td {{ props.item.manager.name }}
-          td {{ getTotalPrice(props.item).toFixed(2) }} $
+          td {{ $getTotalPrice(props.item, exchangeRate, officialRate) | roundUp }}$
           td {{ types.find(type => type.id == props.item.type).name }}
           td {{ payments.find(payment => payment.id == props.item.form).name }}
           td {{ getClientBalance(props.item.client) }} $
@@ -130,43 +130,6 @@ export default {
         })
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });
-    },
-    getTotalPrice(sale) {
-      let price = 0;
-      switch (sale.type) {
-        case 1:
-          sale.items.forEach((item) => {
-            price += (item.price.firstPrice * item.quantity
-                      * (100 - item.discount) / 100)
-                      / this.officialRate;
-          });
-          break;
-        case 2:
-          sale.items.forEach((item) => {
-            price += (item.price.mixPriceNonCash / this.exchangeRate
-                      + item.price.mixPriceCash)
-                      * item.quantity
-                      * (100 - item.discount) / 100;
-          });
-          break;
-        case 3:
-          sale.items.forEach((item) => {
-            price += item.price.secondPrice
-                      * item.quantity
-                      * (100 - item.discount) / 100;
-          });
-          break;
-        case 4:
-          sale.items.forEach((item) => {
-            price += item.commissionPrice / this.exchangeRate
-                      * item.quantity
-                      * (100 - item.discount) / 100;
-          });
-          break;
-        default:
-          break;
-      }
-      return price;
     },
     getClientBalance(client) {
       let balance = 0;

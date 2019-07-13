@@ -53,3 +53,51 @@ Vue.prototype.$getClients = (clients) => {
   }
   return [];
 };
+
+Vue.prototype.$getTotalPrice = (sale, exchangeRate, officialRate) => {
+  let total = 0;
+  switch (sale.type) {
+    case 1:
+      sale.items.forEach((item) => {
+        total += (item.price.firstPrice * item.quantity
+                  * (100 - item.discount) / 100)
+                  / officialRate;
+      });
+      break;
+    case 2:
+      sale.items.forEach((item) => {
+        total += (item.price.mixPriceNonCash / exchangeRate
+                  + item.price.mixPriceCash)
+                  * item.quantity
+                  * (100 - item.discount) / 100;
+      });
+      break;
+    case 3:
+      sale.items.forEach((item) => {
+        total += item.price.secondPrice
+                  * item.quantity
+                  * (100 - item.discount) / 100;
+      });
+      break;
+    case 4:
+      sale.items.forEach((item) => {
+        total += item.commissionPrice / exchangeRate
+                  * item.quantity
+                  * (100 - item.discount) / 100;
+      });
+      break;
+    default:
+      break;
+  }
+  return total;
+};
+
+Vue.prototype.$getClientBalance = (client) => {
+  let balance = 0;
+  if (client.payments) {
+    client.payments.forEach((payment) => {
+      if (payment.approved) { balance += payment.sum / payment.ratio; }
+    });
+  }
+  return balance;
+};
