@@ -80,6 +80,44 @@ function bankTransfer(batch) {
               * batch.bank_transfer / 100;
 }
 
+// Oбщий акциз в долларах
+function totalExcise(batch) {
+  return batch.items
+    .map(item => item.customs_price * item.quantity * (item.excise / 100))
+    .reduce((a, b) => a + b, 0) / batch.official_rate;
+}
+
+// Oбщий Пошлина в долларах
+function totalTax(batch) {
+  return batch.items
+    .map(item => item.customs_price * item.quantity * (item.tax / 100))
+    .reduce((a, b) => a + b, 0) / batch.official_rate;
+}
+
+// Oбщий НДС в долларах
+function totalVat(batch) {
+  return batch.items
+    .map((item) => {
+      const totalPr = item.customs_price * item.quantity;
+      const excise = totalPr * (item.excise / 100);
+      const tax = totalPr * (item.tax / 100);
+      return (totalPr + excise + tax) * (item.vat / 100);
+    })
+    .reduce((a, b) => a + b, 0) / batch.official_rate;
+}
+
+// Oбщий Очистка в долларах
+function totalCleaning(batch) {
+  return batch.items
+    .map((item) => {
+      const totalPr = item.customs_price * item.quantity;
+      const excise = totalPr * (item.excise / 100);
+      const tax = totalPr * (item.tax / 100);
+      return (totalPr + excise + tax) * (item.cleaning / 100);
+    })
+    .reduce((a, b) => a + b, 0) / batch.official_rate;
+}
+
 export default batch => ({
   conversion: conversion(batch),
   bankTransfer: bankTransfer(batch),
@@ -89,4 +127,8 @@ export default batch => ({
   transportExpansesNonCash: transportExpansesNonCash(batch),
   transportExpansesPerUnitCash: transportExpansesPerUnitCash(batch),
   transportExpansesPerUnitNonCash: transportExpansesPerUnitNonCash(batch),
+  totalExcise: totalExcise(batch),
+  totalTax: totalTax(batch),
+  totalVat: totalVat(batch),
+  totalCleaning: totalCleaning(batch),
 });
