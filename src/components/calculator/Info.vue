@@ -32,12 +32,12 @@
               .subheading Расчет конвертации
               v-spacer
                 v-divider.mx-4
-              .subheading {{ formedBatch.conversion | roundUp | readable}} сум
+              .subheading {{ formedBatch.conversion | ceil | readable}} сум
             v-layout.mb-1(align-center v-if="step > 2")
               .subheading Затраты на банк
               v-spacer
                 v-divider.mx-4
-              .subheading {{ formedBatch.bankTransfer | roundUp | readable}} сум
+              .subheading {{ formedBatch.bankTransfer | ceil | readable}} сум
             v-layout.mb-1(align-center v-if="step > 2")
               .subheading НДС
               v-spacer
@@ -62,7 +62,7 @@
               .subheading Итого
               v-spacer
                 v-divider.mx-4
-              .subheading {{ (formedBatch.totalVat + formedBatch.totalTax + formedBatch.totalExcise + formedBatch.totalCleaning) | roundUp | readable}} $
+              .subheading {{ totalExpense | roundUp | readable}} $
         v-flex(xs6)
           .pa-2.white
             v-layout.mb-1(align-center)
@@ -157,37 +157,11 @@ export default {
     formedBatch() {
       return this.$batch(this.batch);
     },
-    // Расходы периода (н)
-    period_expanses_cash() {
-      let sum = 0;
-      this.batch.expanses.forEach((expanse) => {
-        if (!expanse.is_transport && expanse.is_cash) sum += expanse.value;
-      });
-      return ((sum / this.batch.total) * 100) > 2 ? ((sum / this.batch.total) * 100) : 2;
-    },
-    // Расходы периода (бн)
-    period_expanses_non_cash() {
-      let sum = 0;
-      this.batch.expanses.forEach((expanse) => {
-        if (!expanse.is_transport && !expanse.is_cash) sum += expanse.value;
-      });
-      return ((sum / this.batch.total) * 100) > 4 ? ((sum / this.batch.total) * 100) : 4;
-    },
-    // Затраты на поставку (н)
-    transport_expanses_cash() {
-      let sum = 0;
-      this.batch.expanses.forEach((expanse) => {
-        if (expanse.is_transport && expanse.is_cash) sum += expanse.value;
-      });
-      return sum / this.batch.market_rate;
-    },
-    // Затраты на поставку (бн)
-    transport_expanses_non_cash() {
-      let sum = 0;
-      this.batch.expanses.forEach((expanse) => {
-        if (expanse.is_transport && !expanse.is_cash) sum += expanse.value;
-      });
-      return sum / this.batch.official_rate;
+    totalExpense() {
+      return this.formedBatch.totalVat
+            + this.formedBatch.totalTax
+            + this.formedBatch.totalExcise
+            + this.formedBatch.totalCleaning;
     },
     // Общий вес
     totalWeight() {
@@ -196,14 +170,6 @@ export default {
         sum += element.product.packing * element.quantity;
       });
       return sum;
-    },
-    // Транспорт Н за кг
-    transport_expanses_per_unit_cash() {
-      return this.batch.transport_cash / this.totalWeight;
-    },
-    // Транспорт БН за кг
-    transport_expanses_per_unit_non_cash() {
-      return this.batch.transport_non_cash / this.totalWeight;
     },
   },
 };
