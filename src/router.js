@@ -407,6 +407,11 @@ const router = new Router({
                   name: 'sale_edit',
                   component: () => import('./views/warehouses/Sale.vue'),
                 },
+                {
+                  path: 'shipments',
+                  name: 'shipping_sales',
+                  component: () => import('./views/warehouses/Shipments.vue'),
+                },
               ],
             },
             {

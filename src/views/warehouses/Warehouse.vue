@@ -46,6 +46,7 @@ import PreStock from '@/services/PreStock';
 import Move from '@/services/Move';
 import Return from '@/services/Return';
 import Lost from '@/services/Lost';
+import Sale from '@/services/Sale';
 
 export default {
   name: 'Warehouse',
@@ -92,6 +93,7 @@ export default {
           counter: 0,
           id: 'shipments',
           title: 'Отгрузки',
+          to: { name: 'shipping_sales' },
         },
         {
           counter: 0,
@@ -119,6 +121,7 @@ export default {
         Move.getAllPending(this.$route.params.id),
         Return.getAll(this.$route.params.id),
         Lost.getAll(this.$route.params.id),
+        Sale.getByShipped(this.$route.params.id, 0),
       ])
         .then((results) => {
           [this.warehouse] = results;
@@ -126,6 +129,7 @@ export default {
           this.setCounter('moves', results[2].length);
           this.setCounter('returns', results[3].length);
           this.setCounter('losts', results[4].length);
+          this.setCounter('shipments', results[5].length);
         })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
