@@ -7,7 +7,10 @@
         NewPayment(:postAction="getAll")
       v-flex(xs12)
         .white.border
-          .title.ma-3 На согласование
+          v-layout(wrap)
+            .title.ma-3 На согласование
+            v-spacer
+            .subheading.ma-3 Обший сумма: {{ totalPending }}
           v-divider
           v-data-table(
             :headers="headers"
@@ -30,7 +33,10 @@
                   v-icon(color="secondary" small) visibility
       v-flex(xs12)
         .white.border
-          .title.ma-3 Согласованные
+          v-layout(wrap)
+            .title.ma-3 Согласованные
+            v-spacer
+            .subheading.ma-3 Обший сумма: {{ totalApproved }}
           v-divider
           v-data-table(
             :headers="headers"
@@ -100,6 +106,8 @@ export default {
       },
     ],
     payments: [],
+    totalPending: 0,
+    totalApproved: 0,
   }),
   computed: {
     pending() {
@@ -115,6 +123,12 @@ export default {
       Payment.getAll()
         .then((payments) => {
           this.payments = payments;
+          this.totalPending = this.pending
+            .map(el => (el.sum / el.ratio).toFixed(2))
+            .reduce((a, b) => Number(a) + Number(b), 0);
+          this.totalApproved = this.approved
+            .map(el => (el.sum / el.ratio).toFixed(2))
+            .reduce((a, b) => Number(a) + Number(b), 0);
         })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
