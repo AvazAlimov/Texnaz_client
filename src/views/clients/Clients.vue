@@ -15,6 +15,7 @@
               template(v-slot:items="props")
                 td {{ props.item.icc }}
                 td {{ props.item.name }}
+                td {{ $getClientBalance(props.item) }}
                 td {{ props.item.itn || '-' }}
                 td {{ props.item.contactPerson || '-' }}
                 td {{ props.item.phone || '-' }}
@@ -59,6 +60,10 @@ export default {
         {
           text: 'Наименование',
           value: 'name',
+        },
+        {
+          text: 'Баланс',
+          value: 'balance',
         },
         {
           text: 'ИНН',
