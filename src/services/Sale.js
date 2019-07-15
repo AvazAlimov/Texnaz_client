@@ -6,7 +6,7 @@ export default {
   getByNumber: number => execute(Api().get(`sales/?number=${number}`)),
   getByManagerId: managerId => execute(Api().get(`sales/?managerId=${managerId}`)),
   getByStatus: status => execute(Api().get(`sales/?approved=${status}`)),
-  getByShipped: (warehouseId, shipped) => execute(Api().get(`sales/?warehouseId=${warehouseId}&shipped=${shipped}`)),
+  getByShipped: (warehouseId, shipped) => execute(Api().get(`sales/?warehouseId=${warehouseId}&shipped=${shipped}&approved=1`)),
   create: sale => execute(Api().post('sales', sale)),
   update: (id, sale) => execute(Api().post(`sales/${id}`, sale)),
   delete: id => execute(Api().delete(`sales/${id}`)),

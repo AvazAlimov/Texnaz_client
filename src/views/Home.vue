@@ -7,7 +7,7 @@
             v-list-tile-avatar
               img(:src="require('../assets/logo.svg')")
             v-list-tile-content
-              v-list-tile-title.font-weight-bold.tertiary--text DIGMAN
+              v-list-tile-title.font-weight-bold.tertiary--text TEXNAZ
       v-list.pt-0(two-line)
         template(v-for="(item, index) in items")
           v-divider(v-if="item.divider").divider

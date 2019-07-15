@@ -34,8 +34,18 @@ export default {
         },
         {
           to: { name: 'approvedsales' },
-          name: 'Согласованные',
+          name: 'На складе',
           visible: this.$hasPermission(this.$permissions.SHOW_SALES_APPROVED.name),
+        },
+        {
+          to: { name: 'finished' },
+          name: 'Завершенные',
+          visible: true || this.$hasPermission(this.$permissions.SHOW_SALES_APPROVED.name),
+        },
+        {
+          to: { name: 'accounting' },
+          name: 'Бухгалтерия',
+          visible: true || this.$hasPermission(this.$permissions.SHOW_SALES_APPROVED.name),
         },
       ],
     };

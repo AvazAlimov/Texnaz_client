@@ -464,6 +464,11 @@ const router = new Router({
               component: () => import('./views/shipments/ApprovedSales.vue'),
             },
             {
+              path: 'accounting',
+              name: 'accounting',
+              component: () => import('./views/shipments/Accounting.vue'),
+            },
+            {
               path: ':id',
               name: 'shipment',
               component: () => import('./views/shipments/Shipment.vue'),
