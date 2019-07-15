@@ -1,6 +1,9 @@
 <template lang="pug">
   .white.border
-    .title.mx-4.my-3 МОИ ОТГРУЗКИ
+    v-layout(wrap)
+      .title.mx-4.my-3 МОИ ОТГРУЗКИ
+      v-spacer
+      .subheading.mx-4.my-3 Oбщий cумма: {{ totalPrice }}
     v-divider
     v-data-table(
       hide-actions
@@ -60,6 +63,7 @@ export default {
     configurations: [],
     exchangeRate: 1,
     officialRate: 1,
+    totalPrice: 0,
     sales: [],
     headers: [
       {
@@ -127,6 +131,9 @@ export default {
           this.sales = this.sales.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
           this.exchangeRate = (this.configurations.find(conf => conf.id === 4)).value;
           this.officialRate = (this.configurations.find(conf => conf.id === 5)).value;
+          this.totalPrice = this.sales
+            .map(el => this.$getTotalPrice(el, this.exchangeRate, this.officialRate))
+            .reduce((a, b) => a + b, 0);
         })
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });

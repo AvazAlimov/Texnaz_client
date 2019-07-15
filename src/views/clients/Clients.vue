@@ -2,7 +2,10 @@
   div
     v-layout(row wrap v-if="$route.name == 'clients'")
         v-flex(xs12).mb-3
+          v-layout(wrap)
             .title.tertiary--text КЛИЕНТЫ
+            v-spacer
+            .subheading.tertiary--text Обший баланс: {{ totalBalance }}
         v-flex(xs12)
           .border.white
             v-data-table(
@@ -15,6 +18,7 @@
               template(v-slot:items="props")
                 td {{ props.item.icc }}
                 td {{ props.item.name }}
+                td {{ $getClientBalance(props.item) }}
                 td {{ props.item.itn || '-' }}
                 td {{ props.item.contactPerson || '-' }}
                 td {{ props.item.phone || '-' }}
@@ -61,6 +65,10 @@ export default {
           value: 'name',
         },
         {
+          text: 'Баланс',
+          value: 'balance',
+        },
+        {
           text: 'ИНН',
           value: 'itn',
         },
@@ -93,6 +101,7 @@ export default {
           width: 100,
         },
       ],
+      totalBalance: 0,
       pagination: {
         descending: false,
         page: 1,
