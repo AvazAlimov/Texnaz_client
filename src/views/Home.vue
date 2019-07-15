@@ -27,7 +27,7 @@
       v-spacer
       v-menu(offset-y :close-on-content-click="false")
         template(v-slot:activator="{ on }")
-          v-btn(flat icon v-on="on")
+          v-btn(flat icon v-on="on").dashboardTertiary--text
             v-icon settings
         v-list
           v-list-tile(v-for="(item, index) in configurations" :key="index")

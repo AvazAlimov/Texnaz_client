@@ -1,8 +1,8 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-        v-btn(icon :to="{ name: 'payments' }")
+        v-btn(icon :to="{ name: 'payments' }").dashboardTertiary--text
             v-icon arrow_back
-        .title Оплата
+        .title.dashboardTertiary--text Оплата
         v-flex(xs12)
             .white.border.pa-4.mt-3
                 v-layout(row wrap)
