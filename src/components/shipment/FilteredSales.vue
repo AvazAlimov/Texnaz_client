@@ -22,13 +22,24 @@
         td {{ payments.find(payment => payment.id == props.item.form).name }}
         td {{ $getClientBalance(props.item.client) }}$
         td
-          v-btn.ma-0(
-            flat icon color="secondary"
-            :to="{ name: 'shipment', params: {id: props.item.id} }")
-            v-icon(small) visibility
+          v-layout(row)
+            v-btn.ma-0(
+              flat icon color="secondary"
+              :to="{ name: 'shipment', params: {id: props.item.id} }")
+              v-icon(small) visibility
+            v-btn.ma-0(
+              v-if="props.item.approved < 1"
+              flat icon color="secondary"
+              :to="{ name: 'sale_edit', params:{id:props.item.warehouseId,saleId:props.item.id}}")
+              v-icon(small) edit
+            v-btn.ma-0(@click="remove(props.item.id)"
+              v-if="props.item.approved < 1"
+              flat icon color="red")
+              v-icon(small) delete
 </template>
 
 <script>
+import Sale from '@/services/Sale';
 import shipmentTypes from '@/assets/shipment_types.json';
 import shipmentPayments from '@/assets/shipment_payments.json';
 
@@ -136,6 +147,14 @@ export default {
           break;
       }
       return total;
+    },
+    remove(id) {
+      // eslint-disable-next-line no-alert, no-restricted-globals
+      if (confirm('Это действие удалит элемент навсегда, вы уверены?')) {
+        Sale.delete(id)
+          .then(() => window.location.reload())
+          .catch(error => this.$store.commit('setMessage', error.message));
+      }
     },
   },
 };

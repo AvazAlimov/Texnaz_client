@@ -13,6 +13,9 @@ export default {
       shipped != null ? `shipped=${shipped}` : ''
     }`)),
 
+  approveShipment: id => execute(Api().post(`sales/shipment/approve/${id}`)),
+  rejectShipment: id => execute(Api().post(`sales/shipment/reject/${id}`)),
+
   getByNumber: number => execute(Api().get(`sales/?number=${number}`)),
   getByManagerId: managerId => execute(Api().get(`sales/?managerId=${managerId}`)),
   getByStatus: status => execute(Api().get(`sales/?approved=${status}`)),

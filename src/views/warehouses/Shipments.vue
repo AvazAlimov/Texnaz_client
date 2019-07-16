@@ -13,8 +13,14 @@
             td {{ props.item.client.name }}
             td {{ props.item.createdAt | moment('YYYY-MM-DD') }}
             td
-              v-btn.ma-0(flat icon color="secondary")
-                v-icon(small) visibility
+              v-layout(row)
+                v-spacer
+                v-btn.ma-0(flat icon color="secondary")
+                  v-icon(small) visibility
+                v-btn.ma-0(flat icon color="green" @click="approve(props.item.id)")
+                  v-icon(small) check
+                v-btn.ma-0(flat icon color="red" @click="reject(props.item.id)")
+                  v-icon(small) close
 </template>
 
 <script>
@@ -52,6 +58,18 @@ export default {
       this.loading = true;
       Sale.getByShipped(this.$route.params.id, 0)
         .then((sales) => { this.sales = sales; })
+        .catch(error => this.$emit('setMessage', error.message))
+        .finally(() => { this.loading = false; });
+    },
+    approve(saleId) {
+      this.loading = true;
+      Sale.approveShipment(saleId).then(() => this.getAll())
+        .catch(error => this.$emit('setMessage', error.message))
+        .finally(() => { this.loading = false; });
+    },
+    reject(saleId) {
+      this.loading = true;
+      Sale.rejectShipment(saleId).then(() => this.getAll())
         .catch(error => this.$emit('setMessage', error.message))
         .finally(() => { this.loading = false; });
     },
