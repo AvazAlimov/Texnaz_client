@@ -1,98 +1,29 @@
 <template lang="pug">
   v-layout(row wrap)
     v-flex(xs12)
-      .white.border
-        v-data-table(
-          hide-actions
-          :headers="headers"
-          :items="sales"
-          :loading="loading"
-          disable-initial-sort)
-          template(v-slot:items="props")
-              td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
-              td {{ props.item.number }}
-              td {{ props.item.warehouse.name }} {{ props.item.warehouse.company }}
-              td {{ props.item.client.icc }}
-              td {{ props.item.client.name }}
-              td {{ props.item.manager.name }}
-              td {{ $getTotalPrice(props.item, exchangeRate, officialRate) | roundUp }}$
-              td {{ types.find(type => type.id == props.item.type).name }}
-              td {{ payments.find(payment => payment.id == props.item.form).name }}
-              td {{ $getClientBalance(props.item.client) }} $
-              td
-                v-btn.ma-0(flat icon color="secondary")
-                  v-icon(small) visibility
+      FilteredSales(:sales="sales" :exchangeRate="exchangeRate" :officialRate="officialRate")
 </template>
 
 <script>
 import Sale from '@/services/Sale';
 import Configuration from '@/services/Configuration';
-import shipmentTypes from '@/assets/shipment_types.json';
-import shipmentPayments from '@/assets/shipment_payments.json';
 
 export default {
-  name: 'ApprovedSales',
+  name: 'Accounting',
   data: () => ({
-    loading: false,
-    configurations: [],
     exchangeRate: 1,
     officialRate: 1,
-    payments: shipmentPayments,
-    types: shipmentTypes,
     sales: [],
-    headers: [
-      {
-        text: 'Дата',
-        value: 'createdAt',
-      },
-      {
-        text: 'Номер',
-        value: 'id',
-      },
-      {
-        text: 'Склад',
-        value: 'warehouse.name',
-      },
-      {
-        text: 'ИКК',
-        value: 'client.icc',
-      },
-      {
-        text: 'Клиент',
-        value: 'client.name',
-      },
-      {
-        text: 'Менеджер',
-        value: 'manager.name',
-      },
-      {
-        text: 'Сумма',
-        value: 'price',
-        sortable: false,
-      },
-      {
-        text: 'Тип оплаты',
-        value: 'type',
-      },
-      {
-        text: 'Тип расчета',
-        value: 'form',
-      },
-      {
-        text: 'Баланс',
-        value: 'balance',
-        sortable: false,
-      },
-      {
-        sortable: false,
-      },
-    ],
   }),
   methods: {
     getAll() {
       this.loading = true;
       Promise.all([
-        Sale.getByStatus(1),
+        Sale.getByProperty({
+          approved: 1,
+          managerId: (this.$hasRole(1) || this.$hasRole(3)) ? null : this.$getUserId(),
+          shipped: 1,
+        }),
         Configuration.getAll(),
       ])
         .then((results) => {
