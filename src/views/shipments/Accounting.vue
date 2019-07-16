@@ -1,7 +1,11 @@
 <template lang="pug">
   v-layout(row wrap)
     v-flex(xs12)
-      FilteredSales(:sales="sales" :exchangeRate="exchangeRate" :officialRate="officialRate")
+      FilteredSales(
+        :sales="sales"
+        :exchangeRate="exchangeRate"
+        :officialRate="officialRate"
+        accounting)
 </template>
 
 <script>

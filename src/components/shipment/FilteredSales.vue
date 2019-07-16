@@ -13,10 +13,14 @@
         td {{ props.item.client.icc }}
         td {{ props.item.client.name }}
         td {{ props.item.manager.name }}
-        td {{ $getTotalPrice(props.item, exchangeRate, officialRate) | roundUp }}$
+        td
+          div(v-if="!accounting")
+            | {{ $getTotalPrice(props.item, exchangeRate, officialRate) | roundUp }}$
+          div(v-if="accounting")
+            | {{ getAccountingPrice(props.item) }}сум
         td {{ types.find(type => type.id == props.item.type).name }}
         td {{ payments.find(payment => payment.id == props.item.form).name }}
-        td {{ $getClientBalance(props.item.client) }} $
+        td {{ $getClientBalance(props.item.client) }}$
         td
           v-btn.ma-0(
             flat icon color="secondary"
@@ -37,11 +41,12 @@ export default {
     },
     exchangeRate: {
       required: true,
-      types: Number,
     },
     officialRate: {
       required: true,
-      types: Number,
+    },
+    accounting: {
+      type: Boolean,
     },
   },
   data: () => ({
@@ -96,5 +101,42 @@ export default {
       },
     ],
   }),
+  methods: {
+    getAccountingPrice(sale) {
+      let total = 0;
+      switch (sale.type) {
+        case 1:
+          sale.items.forEach((item) => {
+            total += (item.price.firstPrice * item.quantity
+                  * (100 - item.discount) / 100);
+          });
+          break;
+        case 2:
+          // mixPriceNonCash
+          sale.items.forEach((item) => {
+            total += (item.price.mixPriceNonCash * item.quantity
+                  * (100 - item.discount) / 100);
+          });
+          break;
+        case 3:
+          // mixPriceNonCash
+          sale.items.forEach((item) => {
+            total += (item.price.mixPriceNonCash * item.quantity
+                        * (100 - item.discount) / 100);
+          });
+          break;
+        case 4:
+          // commissionPrice
+          sale.items.forEach((item) => {
+            total += (item.commissionPrice * item.quantity
+                              * (100 - item.discount) / 100);
+          });
+          break;
+        default:
+          break;
+      }
+      return total;
+    },
+  },
 };
 </script>
