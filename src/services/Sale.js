@@ -3,6 +3,16 @@ import Api, { execute } from './Api';
 export default {
   getAll: () => execute(Api().get('sales')),
   get: id => execute(Api().get(`sales/${id}`)),
+
+  getByProperty: ({ approved, managerId, shipped }) => execute(Api()
+    .get(`sales/?${
+      approved != null ? `approved=${approved}` : ''
+    }&${
+      managerId != null ? `managerId=${managerId}` : ''
+    }&${
+      shipped != null ? `shipped=${shipped}` : ''
+    }`)),
+
   getByNumber: number => execute(Api().get(`sales/?number=${number}`)),
   getByManagerId: managerId => execute(Api().get(`sales/?managerId=${managerId}`)),
   getByStatus: status => execute(Api().get(`sales/?approved=${status}`)),

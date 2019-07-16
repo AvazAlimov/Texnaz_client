@@ -35,7 +35,9 @@ import ExpenseProperty from './expenses/ExpenseProperty.vue';
 import EditExpense from './expenses/EditExpense.vue';
 import ExpenseAnalytics from './expenses/ExpenseAnalytics.vue';
 import NewPayment from './payments/NewPayment.vue';
+
 import UserSales from './shipment/UserSales.vue';
+import FilteredSales from './shipment/FilteredSales.vue';
 
 import Motivations from './managers/Motivations.vue';
 
@@ -74,7 +76,9 @@ const Components = {
   EditExpense,
   ExpenseAnalytics,
   NewPayment,
+
   UserSales,
+  FilteredSales,
 
   Motivations,
 };
