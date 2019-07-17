@@ -46,6 +46,7 @@
 import { AXIOS } from '../services/Api';
 import Auth from '../services/Auth';
 import Configuration from '../services/Configuration';
+import Rate from '../services/Rate';
 
 export default {
   name: 'Home',
@@ -142,6 +143,11 @@ export default {
       });
     },
     update(id, value) {
+      Rate.create({
+        marketRate: this.configurations[0].value,
+        exchangeRate: this.configurations[1].value,
+        officialRate: this.configurations[2].value,
+      });
       Configuration.update(id, value).then(() => {
         this.$store.commit('setMessage', 'Обновлено');
       }).catch((error) => {

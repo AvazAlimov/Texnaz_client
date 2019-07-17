@@ -16,6 +16,7 @@ import DebtClient from './tabels/DebtClient.vue';
 import LateDebt from './tabels/LateDebt.vue';
 import Sale from './tabels/Sale.vue';
 import Payment from './tabels/Payment.vue';
+import Rate from './tabels/Rate.vue';
 
 // WAREHOUSE
 import SearchStock from './warehouse/SearchStock.vue';
@@ -63,6 +64,7 @@ const Components = {
   LateDebt,
   Sale,
   Payment,
+  Rate,
 
   SaleItem,
   PreStockItem,

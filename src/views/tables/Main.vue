@@ -31,7 +31,7 @@ export default {
         name: 'ПДЗ',
       },
       {
-        // to: { name: 'mysales' },
+        to: { name: 'rates' },
         name: 'Курсы',
       },
     ],

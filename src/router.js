@@ -467,6 +467,11 @@ const router = new Router({
               name: 'sales',
               component: () => import('./views/tables/Sales.vue'),
             },
+            {
+              path: 'rates',
+              name: 'rates',
+              component: () => import('./views/tables/Rates.vue'),
+            },
           ],
         },
         {
