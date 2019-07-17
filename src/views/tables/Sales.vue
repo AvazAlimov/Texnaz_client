@@ -34,7 +34,7 @@ export default {
           value: 'sum',
         },
         {
-          text: 'Дней',
+          text: 'Консигнация',
           value: 'duration',
         },
         {
