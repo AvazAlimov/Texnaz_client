@@ -1,6 +1,5 @@
 <template lang="pug">
   v-layout(row wrap)
-    v-spacer
     v-btn.ma-0(
       v-for="(tab, index) in tabs" :key="index"
       flat color="tertiary"
@@ -17,7 +16,7 @@ export default {
     tabs: [
       {
         // to: { name: 'mysales' },
-        name: 'Транзакции',
+        name: 'Отгрузки',
       },
       {
         // to: { name: 'mysales' },
@@ -25,7 +24,15 @@ export default {
       },
       {
         to: { name: 'debtclients' },
-        name: 'Долги клиентов',
+        name: 'Баланс клиентов',
+      },
+      {
+        // to: { name: 'mysales' },
+        name: 'ПДЗ',
+      },
+      {
+        // to: { name: 'mysales' },
+        name: 'Курсы',
       },
     ],
   }),

@@ -1,7 +1,11 @@
 <template lang="pug">
   v-layout(row wrap)
     v-flex(xs12)
-      FilteredSales(:sales="sales" :exchangeRate="exchangeRate" :officialRate="officialRate")
+      FilteredSales(
+        :sales="sales"
+        :exchangeRate="exchangeRate"
+        :officialRate="officialRate"
+        accounting)
 </template>
 
 <script>
@@ -9,7 +13,7 @@ import Sale from '@/services/Sale';
 import Configuration from '@/services/Configuration';
 
 export default {
-  name: 'PendingSales',
+  name: 'Accounting',
   data: () => ({
     exchangeRate: 1,
     officialRate: 1,
@@ -20,8 +24,9 @@ export default {
       this.loading = true;
       Promise.all([
         Sale.getByProperty({
-          approved: 0,
+          approved: 1,
           managerId: (this.$hasRole(1) || this.$hasRole(3)) ? null : this.$getUserId(),
+          shipped: 1,
         }),
         Configuration.getAll(),
       ])

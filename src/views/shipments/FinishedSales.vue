@@ -9,7 +9,7 @@ import Sale from '@/services/Sale';
 import Configuration from '@/services/Configuration';
 
 export default {
-  name: 'PendingSales',
+  name: 'FinishedSales',
   data: () => ({
     exchangeRate: 1,
     officialRate: 1,
@@ -20,8 +20,9 @@ export default {
       this.loading = true;
       Promise.all([
         Sale.getByProperty({
-          approved: 0,
+          approved: 1,
           managerId: (this.$hasRole(1) || this.$hasRole(3)) ? null : this.$getUserId(),
+          shipped: 1,
         }),
         Configuration.getAll(),
       ])

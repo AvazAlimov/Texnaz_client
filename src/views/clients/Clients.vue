@@ -82,7 +82,7 @@ export default {
         },
         {
           text: 'Область-регион',
-          value: 'region',
+          value: 'region.province.name',
         },
         {
           text: 'Направление деятельности',
@@ -128,9 +128,8 @@ export default {
       Client.getAll()
         .then((clients) => {
           this.clients = clients;
-          this.pagination.totalItems = clients.length;
-          this.totalBalance = this.myClients
-            .map(el => this.$getClientBalance(el)).reduce((a, b) => a + b);
+
+          this.pagination.totalItems = this.myClients.length;
         }).catch((error) => {
           this.$store.commit('setMessage', error.message);
         })

@@ -24,7 +24,7 @@
                       :outline="type != element.id"
                       :depressed="type == element.id"
                       @click="type = element.id") {{ element.name }}
-                v-layout(row align-center)
+                v-layout(row align-center v-if="motivationType == 0")
                   v-flex(xs3)
                     .title ВЫБРАТЬ МЕТОД:
                   v-flex.pa-0(extend v-for="element in methods" :key="element.id")
@@ -64,7 +64,7 @@
                     v-date-picker(color="secondary"
                         v-model="endDate"
                         @input="end = false")
-                v-layout.mt-2(row align-center)
+                v-layout.mt-2(row align-center v-if="motivationType == 0")
                   v-flex(xs3)
                     .title РАЗМЕР:
                   v-text-field.ma-0.pa-0(
@@ -72,12 +72,12 @@
                     color="secondary"
                     v-model="value"
                     suffix="$")
-                v-layout.mt-2(row align-center)
+                v-layout.mt-2(row align-center v-if="type == 0")
                   v-flex(xs3)
                     .title БРЕНД:
                   v-select.ma-0.pa-0(v-model="brand"
+                      multiple
                       :items="brands"
-                      item-value="id"
                       name="brand"
                       v-validate="'required'"
                       color="secondary"
@@ -86,6 +86,28 @@
                         | {{ data.item.name }} - {{ data.item.manufacturer }}
                       template(slot="selection" slot-scope="data")
                         | {{ data.item.name }} - {{ data.item.manufacturer }}
+              v-flex.pl-4(xs6)
+                v-layout(row wrap v-if="motivationType == 0")
+                  v-flex(xs12)
+                    .title ДИАПАЗОН:
+                  v-flex(xs12)
+                    v-slider.mb-0(v-model="slider"
+                      hide-details
+                      color="secondary"
+                      :label="slider"
+                      min="0" max="100")
+                    v-text-field.mt-0(
+                      hide-details
+                      color="secondary"
+                      :value="0"
+                      placeholder="значение")
+                  v-flex(xs12)
+                    v-btn(color="secondary" block outline) Добавить
+                v-layout(row wrap v-if="motivationType < 2 && type == 0")
+                  .caption Choose payment/sale
+                  v-flex(xs12 v-for="item in brand")
+                    .title {{ item.name }}
+                    v-text-field(label="%")
 </template>
 
 <script>
@@ -95,6 +117,7 @@ export default {
   name: 'Motivation',
   data: () => ({
     motivationType: 0,
+    slider: 10,
     motivationTypes: [
       {
         id: 0,

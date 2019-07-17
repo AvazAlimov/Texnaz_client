@@ -447,19 +447,9 @@ const router = new Router({
         {
           path: 'shipments',
           name: 'shipments',
-          redirect: { name: 'mysales' },
+          redirect: { name: 'pendingsales' },
           component: () => import('./views/shipments/Main.vue'),
           children: [
-            {
-              path: 'mysales',
-              name: 'mysales',
-              component: () => import('./views/shipments/MySales.vue'),
-            },
-            {
-              path: 'salesinformation',
-              name: 'salesinformation',
-              component: () => import('./views/shipments/Information.vue'),
-            },
             {
               path: 'pendingsales',
               name: 'pendingsales',
@@ -469,6 +459,21 @@ const router = new Router({
               path: 'approvedsales',
               name: 'approvedsales',
               component: () => import('./views/shipments/ApprovedSales.vue'),
+            },
+            {
+              path: 'finished',
+              name: 'finished',
+              component: () => import('./views/shipments/FinishedSales.vue'),
+            },
+            {
+              path: 'rejected',
+              name: 'rejected',
+              component: () => import('./views/shipments/RejectedSales.vue'),
+            },
+            {
+              path: 'accounting',
+              name: 'accounting',
+              component: () => import('./views/shipments/Accounting.vue'),
             },
             {
               path: ':id',
