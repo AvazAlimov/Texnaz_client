@@ -335,13 +335,23 @@ const router = new Router({
               component: () => import('./views/motivations/Motivations.vue'),
             },
             {
-              path: 'template',
-              name: 'motivation_create',
-              component: () => import('./views/motivations/Motivation.vue'),
+              path: 'plan',
+              name: 'plan',
+              component: () => import('./views/motivations/Plan.vue'),
             },
             {
-              path: 'template/:id',
-              name: 'motivation_update',
+              path: 'percentage',
+              name: 'percentage',
+              component: () => import('./views/motivations/Percentage.vue'),
+            },
+            {
+              path: 'mix',
+              name: 'mix',
+              component: () => import('./views/motivations/Mix.vue'),
+            },
+            {
+              path: 'template',
+              name: 'motivation_create',
               component: () => import('./views/motivations/Motivation.vue'),
             },
           ],
