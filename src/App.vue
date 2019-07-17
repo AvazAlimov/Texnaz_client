@@ -1,7 +1,7 @@
 <template lang="pug">
   v-app
     router-view
-    v-snackbar(v-model="snackbar" color="white")
+    v-snackbar(v-model="snackbar" color="red")
       .black--text {{ text }}
 </template>
 
