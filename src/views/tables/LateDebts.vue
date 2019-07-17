@@ -7,7 +7,7 @@
                 hide-actions
             )
                 template(v-slot:items="props")
-                    DebtClient(:user="props.item")
+                    LateDebt(:user="props.item")
 </template>
 
 <script>
@@ -31,30 +31,36 @@ export default {
           value: 'saleDate',
         },
         {
-          text: 'Сумма отгрузки',
+          text: 'Сумма долги',
           value: 'salePrice',
-        },
-        {
-          text: 'Дата оплаты',
-          value: 'paymentDate',
-        },
-        {
-          text: 'Сумма оплаты',
-          value: 'paymentPrice',
         },
         {
           text: 'Менеджер',
           value: 'manager',
         },
         {
-          text: 'Обшая сумма',
+          text: 'количество дней',
           value: 'debt',
         },
       ],
-      users: [],
+      users: [
+        {
+          icc: 12,
+          name: 12,
+          saleDate: 12,
+          salePrice: 12,
+          manager: 12,
+          daysLate: 12,
+        },
+      ],
     };
   },
   methods: {
+    getDuration(startTime, duration) {
+      const mm = (new Date()).getTime() - (new Date(startTime)).getTime();
+      const days = Math.round(mm / (3600000 * 24));
+      return duration < days ? days : '';
+    },
     getAll() {
       this.users = [];
       Promise.all([
@@ -63,17 +69,18 @@ export default {
         Configuration.getOfficialRate(),
       ]).then((result) => {
         result[0].forEach((el) => {
-          this.users.push({
-            icc: el.client.icc,
-            name: el.client.name,
-            saleDate: el.createdAt,
-            salePrice: this.$getTotalPrice(el, result[1].value, result[2].value),
-            paymentDate: el.client.payments.reduce((first, next) => next.createdAt, '-'),
-            paymentPrice: el.client.payments.reduce((first, next) => next.sum, '-'),
-            manager: el.manager.name,
-            debt: el.client.payments.map(payment => payment.sum).reduce((a, b) => a + b, 0)
-              - this.$getTotalPrice(el, result[1].value, result[2].value),
-          });
+          const duration = this.getDuration(el.createdAt, el.days);
+          if (duration) {
+            this.users.push({
+              icc: el.client.icc,
+              name: el.client.name,
+              saleDate: el.createdAt,
+              salePrice: this.$getTotalPrice(el, result[1].value, result[2].value)
+               - el.client.payments.map(payment => payment.sum).reduce((a, b) => a + b, 0),
+              manager: el.manager.name,
+              daysLate: duration,
+            });
+          }
         });
       });
     },

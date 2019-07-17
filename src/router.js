@@ -442,6 +442,21 @@ const router = new Router({
               name: 'debtclients',
               component: () => import('./views/tables/DebtClients.vue'),
             },
+            {
+              path: 'latedebts',
+              name: 'latedebts',
+              component: () => import('./views/tables/LateDebts.vue'),
+            },
+            {
+              path: 'payments',
+              name: 'payments',
+              component: () => import('./views/tables/Payments.vue'),
+            },
+            {
+              path: 'sales',
+              name: 'sales',
+              component: () => import('./views/tables/Sales.vue'),
+            },
           ],
         },
         {
