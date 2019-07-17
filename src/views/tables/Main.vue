@@ -24,7 +24,7 @@ export default {
         name: 'Оплаты',
       },
       {
-        // to: { name: 'mysales' },
+        to: { name: 'debtclients' },
         name: 'Долги клиентов',
       },
     ],

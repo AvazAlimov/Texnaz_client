@@ -436,6 +436,13 @@ const router = new Router({
           path: 'tables',
           name: 'tables',
           component: () => import('./views/tables/Main.vue'),
+          children: [
+            {
+              path: 'debtclients',
+              name: 'debtclients',
+              component: () => import('./views/tables/DebtClients.vue'),
+            },
+          ],
         },
         {
           path: 'shipments',

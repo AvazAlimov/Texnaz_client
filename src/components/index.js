@@ -11,6 +11,9 @@ import SearchProduct from './calculator/SearchProduct.vue';
 import FirstCostItem from './calculator/FirstCostItem.vue';
 import SecondCostItem from './calculator/SecondCostItem.vue';
 
+// Tabels
+import DebtClients from './tabels/DebtClients.vue';
+
 // WAREHOUSE
 import SearchStock from './warehouse/SearchStock.vue';
 import PreStockItem from './warehouse/PreStockItem.vue';
@@ -50,6 +53,8 @@ const Components = {
   SearchProduct,
   FirstCostItem,
   SecondCostItem,
+
+  DebtClients,
 
   SaleItem,
   PreStockItem,
