@@ -198,6 +198,24 @@ export default {
             }))
             .sort((a, b) => (a.name > b.name ? 1 : -1))
             .forEach(brand => this.brands.push(brand));
+          if (this.$route.params.id) {
+            Plan.get(this.$route.params.id)
+              .then((plan) => {
+                this.managerId = plan.managerId;
+                this.type = plan.type;
+                this.method = plan.method;
+                this.startDate = this.$moment(plan.start).format('YYYY-MM-DD');
+                this.endDate = this.$moment(plan.end).format('YYYY-MM-DD');
+                this.total = plan.total;
+                this.brand = plan.allBrands ? [0] : plan.brands;
+                this.min = plan.min;
+                this.ranges = plan.ranges.map(range => ({
+                  from: range.from,
+                  percentage: range.percentage,
+                })).sort((a, b) => (a.from > b.from ? 1 : -1));
+              })
+              .catch(error => this.$$emit('setMessage', error.message));
+          }
         })
         .catch(error => this.$$emit('setMessage', error.message))
         .finally(() => { this.loading = false; });
@@ -222,7 +240,7 @@ export default {
         brands: this.brand.includes(0) ? [] : this.brand,
         ranges: this.ranges,
       };
-      Plan.create(plan)
+      (this.$route.params.id ? Plan.update(this.$route.params.id, plan) : Plan.create(plan))
         .then(() => this.$router.push({ name: 'motivations' }))
         .catch(error => this.$emit('setMessage', error.message))
         .finally(() => { this.loading = false; });
