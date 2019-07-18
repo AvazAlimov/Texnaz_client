@@ -10,8 +10,5 @@
 <script>
 export default {
   name: 'Percentage',
-  data: () => ({
-
-  }),
 };
 </script>
