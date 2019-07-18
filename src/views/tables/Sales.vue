@@ -18,6 +18,10 @@ export default {
     return {
       headers: [
         {
+          text: 'Номер',
+          value: 'number',
+        },
+        {
           text: 'Икк',
           value: 'icc',
         },
@@ -48,6 +52,7 @@ export default {
       ],
       items: [
         {
+          number: 1,
           icc: 12,
           name: 12,
           date: 12,
@@ -69,6 +74,7 @@ export default {
       ]).then((result) => {
         result[0].forEach((el) => {
           this.items.push({
+            number: el.number ? el.number : '-',
             icc: el.client.icc,
             name: el.client.name,
             date: el.createdAt,

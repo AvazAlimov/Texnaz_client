@@ -17,6 +17,10 @@ export default {
     return {
       headers: [
         {
+          text: 'Номер',
+          value: 'number',
+        },
+        {
           text: 'Икк',
           value: 'icc',
         },
@@ -47,6 +51,7 @@ export default {
       ],
       items: [
         {
+          number: 1,
           icc: 12,
           name: 7,
           manager: 7,
@@ -64,6 +69,7 @@ export default {
       Payment.getAll().then((data) => {
         data.forEach((el) => {
           this.items.push({
+            number: el.number ? el.number : '-',
             icc: el.client.icc,
             name: el.client.name,
             manager: el.manager.name,

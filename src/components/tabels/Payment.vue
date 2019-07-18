@@ -1,5 +1,6 @@
 <template lang="pug">
   tr
+    td {{ items.number }}
     td {{ items.icc }}
     td {{ items.name }}
     td {{ items.manager }}
