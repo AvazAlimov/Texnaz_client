@@ -340,6 +340,11 @@ const router = new Router({
               component: () => import('./views/motivations/Plan.vue'),
             },
             {
+              path: 'plan/:id',
+              name: 'plan_edit',
+              component: () => import('./views/motivations/Plan.vue'),
+            },
+            {
               path: 'percentage',
               name: 'percentage',
               component: () => import('./views/motivations/Percentage.vue'),
