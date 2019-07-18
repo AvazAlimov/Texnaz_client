@@ -75,8 +75,8 @@ export default {
             manager: el.manager.name,
             date: el.createdAt,
             sum: el.sum,
-            brand: el.brand.name,
-            country: el.brand.country,
+            brand: el.brand ? el.brand.name : '-',
+            country: el.brand ? el.brand.country : '-',
           });
         });
       });
