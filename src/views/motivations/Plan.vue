@@ -7,7 +7,7 @@
             .title.mb-3 План
 
             v-select(
-              v-model="manager"
+              v-model="managerId"
               :items="managers"
               item-value="id"
               item-text="name"
@@ -71,7 +71,7 @@
                 @input="end = false")
 
             v-text-field(
-              v-model="value"
+              v-model="total"
               color="secondary"
               label="Сумма плана в $"
               name="Сумма плана в $"
@@ -126,18 +126,20 @@
                 flat
                 color="secondary"
                 :loading="loading"
-                :disabled="errors.items.length > 0") Завершить
+                :disabled="errors.items.length > 0"
+                @click="submit()") Завершить
 </template>
 
 <script>
 import User from '@/services/User';
 import Brand from '@/services/Brand';
+import Plan from '@/services/Plan';
 
 export default {
   name: 'Plan',
   data: () => ({
     loading: true,
-    manager: null,
+    managerId: null,
     managers: [],
     brand: [0],
     brands: [
@@ -172,7 +174,7 @@ export default {
     end: false,
     startDate: (new Date()).toISOString().substring(0, 10),
     endDate: (new Date()).toISOString().substring(0, 10),
-    value: 0,
+    total: 0,
     min: 0,
     max: 0,
     ranges: [],
@@ -205,6 +207,24 @@ export default {
         ? (parseFloat(this.ranges[this.ranges.length - 1].from) || 0) + 1
         : 0;
       this.ranges.push({ from, percentage: 0 });
+    },
+    submit() {
+      this.loading = true;
+      const plan = {
+        managerId: this.managerId,
+        type: this.type,
+        method: this.method,
+        start: this.startDate,
+        end: this.endDate,
+        total: this.total,
+        min: this.min,
+        allBrands: this.brand.includes(0),
+        brands: this.brand.includes(0) ? [] : this.brand,
+      };
+      Plan.create(plan)
+        .then(() => this.$router.push({ name: 'motivations' }))
+        .catch(error => this.$$emit('setMessage', error.message))
+        .finally(() => { this.loading = false; });
     },
   },
   created() {
