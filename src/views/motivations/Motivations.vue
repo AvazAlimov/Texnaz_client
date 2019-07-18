@@ -13,7 +13,8 @@
             td {{ props.item.manager.name }}
             td {{ props.item.start | moment('YYYY-MM-DD') }}
             td {{ props.item.end | moment('YYYY-MM-DD') }}
-            td {{ 0 / props.item.total }} %
+            td
+              v-progress-linear(:value="(0 / props.item.total) * 100" color="secondary")
             td {{ 0 }} $
             td {{ props.item.createdAt | moment('YYYY-MM-DD') }}
         v-divider
