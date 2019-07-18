@@ -445,6 +445,7 @@ const router = new Router({
         {
           path: 'tables',
           name: 'tables',
+          redirect: { name: 'sales' },
           component: () => import('./views/tables/Main.vue'),
           children: [
             {

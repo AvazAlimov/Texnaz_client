@@ -11,7 +11,7 @@
                 .title Номер отгрузки
                 v-spacer
                   v-divider.mx-4
-                .subheading {{ sale.id }}
+                .subheading {{ sale.number? sale.number : '-' }}
               v-layout.mb-2(align-center)
                 .title Дата заказа
                 v-spacer
