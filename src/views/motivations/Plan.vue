@@ -220,10 +220,11 @@ export default {
         min: this.min,
         allBrands: this.brand.includes(0),
         brands: this.brand.includes(0) ? [] : this.brand,
+        ranges: this.ranges,
       };
       Plan.create(plan)
         .then(() => this.$router.push({ name: 'motivations' }))
-        .catch(error => this.$$emit('setMessage', error.message))
+        .catch(error => this.$emit('setMessage', error.message))
         .finally(() => { this.loading = false; });
     },
   },
