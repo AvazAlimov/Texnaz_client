@@ -51,7 +51,7 @@
                           :name="props.item.id"
                           v-validate="{\
                             required: true,\
-                            decimal: true,\
+                            numeric: true,\
                             min_value: 0,\
                             excluded: '0',\
                             max_value: props.item.quantity - props.item.sold\

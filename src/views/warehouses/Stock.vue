@@ -61,7 +61,7 @@
                     color="secondary"
                     v-model="props.item.quantity"
                     name="quantity"
-                    v-validate="'required|decimal|min_value:0|is_not:0'")
+                    v-validate="'required|numeric|min_value:0|is_not:0'")
               td
                   v-dialog(
                     v-model="props.item.arrival_date_modal"

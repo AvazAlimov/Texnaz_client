@@ -11,6 +11,13 @@ import SearchProduct from './calculator/SearchProduct.vue';
 import FirstCostItem from './calculator/FirstCostItem.vue';
 import SecondCostItem from './calculator/SecondCostItem.vue';
 
+// Tabels
+import DebtClient from './tabels/DebtClient.vue';
+import LateDebt from './tabels/LateDebt.vue';
+import Sale from './tabels/Sale.vue';
+import Payment from './tabels/Payment.vue';
+import Rate from './tabels/Rate.vue';
+
 // WAREHOUSE
 import SearchStock from './warehouse/SearchStock.vue';
 import PreStockItem from './warehouse/PreStockItem.vue';
@@ -52,6 +59,12 @@ const Components = {
   SearchProduct,
   FirstCostItem,
   SecondCostItem,
+
+  DebtClient,
+  LateDebt,
+  Sale,
+  Payment,
+  Rate,
 
   SaleItem,
   PreStockItem,

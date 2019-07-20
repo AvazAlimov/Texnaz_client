@@ -18,7 +18,7 @@
         name="arrived"
         v-validate="{\
           required: true,\
-          decimal: true,\
+          numeric: true,\
           min_value: 0,\
           max_value: item.quantity,\
         }"

@@ -455,7 +455,35 @@ const router = new Router({
         {
           path: 'tables',
           name: 'tables',
+          redirect: { name: 'sales' },
           component: () => import('./views/tables/Main.vue'),
+          children: [
+            {
+              path: 'debtclients',
+              name: 'debtclients',
+              component: () => import('./views/tables/DebtClients.vue'),
+            },
+            {
+              path: 'latedebts',
+              name: 'latedebts',
+              component: () => import('./views/tables/LateDebts.vue'),
+            },
+            {
+              path: 'paymentInfo',
+              name: 'paymentInfo',
+              component: () => import('./views/tables/Payments.vue'),
+            },
+            {
+              path: 'sales',
+              name: 'sales',
+              component: () => import('./views/tables/Sales.vue'),
+            },
+            {
+              path: 'rates',
+              name: 'rates',
+              component: () => import('./views/tables/Rates.vue'),
+            },
+          ],
         },
         {
           path: 'shipments',

@@ -15,23 +15,23 @@ export default {
   data: () => ({
     tabs: [
       {
-        // to: { name: 'mysales' },
+        to: { name: 'sales' },
         name: 'Отгрузки',
       },
       {
-        // to: { name: 'mysales' },
+        to: { name: 'paymentInfo' },
         name: 'Оплаты',
       },
       {
-        // to: { name: 'mysales' },
+        to: { name: 'debtclients' },
         name: 'Баланс клиентов',
       },
       {
-        // to: { name: 'mysales' },
+        to: { name: 'latedebts' },
         name: 'ПДЗ',
       },
       {
-        // to: { name: 'mysales' },
+        to: { name: 'rates' },
         name: 'Курсы',
       },
     ],
