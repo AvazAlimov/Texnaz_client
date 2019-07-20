@@ -19,7 +19,7 @@ export default {
         name: 'Отгрузки',
       },
       {
-        to: { name: 'payments' },
+        to: { name: 'paymentInfo' },
         name: 'Оплаты',
       },
       {

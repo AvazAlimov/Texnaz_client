@@ -464,8 +464,8 @@ const router = new Router({
               component: () => import('./views/tables/LateDebts.vue'),
             },
             {
-              path: 'payments',
-              name: 'payments',
+              path: 'paymentInfo',
+              name: 'paymentInfo',
               component: () => import('./views/tables/Payments.vue'),
             },
             {
