@@ -6,7 +6,7 @@
         v-divider
         v-data-table(
           :headers="headers"
-          :items="plans"
+          :items="motivations"
           :loading="loading"
           hide-actions)
           template(v-slot:items="props")
@@ -14,16 +14,22 @@
             td {{ props.item.start | moment('YYYY-MM-DD') }}
             td {{ props.item.end | moment('YYYY-MM-DD') }}
             td
-              v-progress-linear(:value="(0 / props.item.total) * 100" color="secondary")
+              v-progress-linear(value="0" color="secondary")
             td {{ 0 }} $
             td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
             td
               v-layout(row)
                 v-spacer
                 v-btn.ma-0(flat color="secondary" icon
-                  :to="{ name: 'plan_edit', params: {id: props.item.id} }")
+                  :to="{\
+                    name: props.item.motivationType == 0\
+                      ? 'plan_edit'\
+                      : 'percentage_edit',\
+                      params: {id: props.item.id}\
+                    }")
                   v-icon(small) edit
-                v-btn.ma-0(flat color="red" icon @click="remove(props.item.id)")
+                v-btn.ma-0(flat color="red" icon
+                  @click="remove(props.item.id, props.item.motivationType)")
                   v-icon(small) delete
         v-divider
         v-layout(row)
@@ -44,12 +50,13 @@
 
 <script>
 import Plan from '@/services/Plan';
+import Percentage from '@/services/Percentage';
 
 export default {
   name: 'Motivations',
   data: () => ({
     loading: false,
-    plans: [],
+    motivations: [],
     headers: [
       {
         text: 'Менеджер',
@@ -82,17 +89,30 @@ export default {
   }),
   methods: {
     getAll() {
+      this.motivations = [];
       Promise.all([
         Plan.getAll(),
+        Percentage.getAll(),
       ])
-        .then((results) => { [this.plans] = results; })
+        .then((results) => {
+          results.forEach((collections, index) => {
+            collections.forEach((item) => {
+              // eslint-disable-next-line no-param-reassign
+              item.motivationType = index;
+              this.motivations.push(item);
+            });
+          });
+          console.log(this.motivations);
+          // [this.motivations] = results;
+          // this.motivations.concat(results[1]);
+        })
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });
     },
-    remove(id) {
+    remove(id, type) {
       // eslint-disable-next-line no-alert, no-restricted-globals
       if (confirm('Это действие удалит элемент навсегда, вы уверены?')) {
-        Plan.delete(id)
+        (type === 0 ? Plan.delete(id) : Percentage.delete(id))
           .then(() => { this.getAll(); })
           .catch(error => this.$store.commit('setMessage', error.message));
       }

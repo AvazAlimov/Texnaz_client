@@ -109,6 +109,7 @@
 <script>
 import User from '@/services/User';
 import Brand from '@/services/Brand';
+import Percentage from '@/services/Percentage';
 
 export default {
   name: 'Percentage',
@@ -162,14 +163,41 @@ export default {
             .forEach(brand => this.brands.push(brand));
           this.brand = [0];
           if (this.$route.params.id) {
-            //
+            Percentage.get(this.$route.params.id)
+              .then((percentage) => {
+                this.managerId = percentage.managerId;
+                this.type = percentage.type;
+                this.startDate = this.$moment(percentage.start).format('YYYY-MM-DD');
+                this.endDate = this.$moment(percentage.end).format('YYYY-MM-DD');
+                this.min = percentage.min;
+                this.brand = percentage.brands.map(item => item.brandId);
+                this.percentages = percentage.brands.map(item => ({
+                  brandId: item.brandId,
+                  percentage: item.percentage,
+                }));
+              })
+              .catch(error => this.$$emit('setMessage', error.message));
           }
         })
         .catch(error => this.$$emit('setMessage', error.message))
         .finally(() => { this.loading = false; });
     },
     submit() {
-      //
+      this.loading = true;
+      const percentage = {
+        managerId: this.managerId,
+        type: this.type,
+        start: this.startDate,
+        end: this.endDate,
+        min: this.min,
+        brands: this.percentages,
+      };
+      (this.$route.params.id
+        ? Percentage.update(this.$route.params.id, percentage)
+        : Percentage.create(percentage))
+        .then(() => this.$router.push({ name: 'motivations' }))
+        .catch(error => this.$emit('setMessage', error.message))
+        .finally(() => { this.loading = false; });
     },
   },
   watch: {
