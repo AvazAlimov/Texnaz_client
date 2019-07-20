@@ -20,7 +20,7 @@
             name="price"
             v-validate="{\
                     required: true,\
-                    decimal: true,\
+                    numeric: true,\
                     min_value: 0,\
                 }"
           )
@@ -32,7 +32,7 @@
                 name="discount"
                 v-validate="{\
                     required: true,\
-                    decimal: true,\
+                    numeric: true,\
                     min_value: 0,\
                     max_value: 100,\
                 }"
@@ -44,7 +44,7 @@
                 :name="item.id"
                 v-validate="{\
                     required: true,\
-                    decimal: true,\
+                    numeric: true,\
                     min_value: 0,\
                     excluded: '0',\
                     max_value: item.quantity - item.booked - item.sold\
