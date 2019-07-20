@@ -84,6 +84,14 @@ export default {
     },
 
     calculateMixPrice() {
+      console.log((this.item.product.prices[0].secondPrice
+                      - this.item.product.prices[0].mixPriceNonCash / this.exchangeRate
+                      + this.item.product.prices[0].mixPriceCash));
+
+      console.log((this.productPrice.secondPrice
+                      - this.productPrice.mixPriceNonCash / this.exchangeRate
+                      + this.productPrice.mixPriceCash));
+
       this.item.mixPrice = (this.item.product.prices[0].secondPrice
                       - this.item.product.prices[0].mixPriceNonCash / this.exchangeRate
                       + this.item.product.prices[0].mixPriceCash)
