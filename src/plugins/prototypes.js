@@ -59,22 +59,25 @@ Vue.prototype.$getTotalPrice = (sale, exchangeRate, officialRate) => {
   switch (sale.type) {
     case 1:
       sale.items.forEach((item) => {
-        total += (item.price.firstPrice * item.quantity
-                  * (100 - item.discount) / 100)
-                  / officialRate;
+        const itemPrice = price(item.price, exchangeRate);
+        total += (itemPrice.firstPrice * item.quantity
+          * (100 - item.discount) / 100)
+          / officialRate;
       });
       break;
     case 2:
       sale.items.forEach((item) => {
-        total += (item.price.mixPriceNonCash / exchangeRate
-                  + item.price.mixPriceCash)
-                  * item.quantity
-                  * (100 - item.discount) / 100;
+        const itemPrice = price(item.price, exchangeRate);
+        total += (itemPrice.mixPriceNonCash / exchangeRate
+          + itemPrice.mixPriceCash)
+          * item.quantity
+          * (100 - item.discount) / 100;
       });
       break;
     case 3:
       sale.items.forEach((item) => {
-        total += item.price.secondPrice
+        const itemPrice = price(item.price, exchangeRate);
+        total += itemPrice.secondPrice
                   * item.quantity
                   * (100 - item.discount) / 100;
       });

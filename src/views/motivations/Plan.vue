@@ -104,8 +104,8 @@
               v-flex(extend)
                 v-text-field(
                   v-model="range.from"
-                  label="От части размера (0-100 %)"
-                  name="От части размера (0-100 %)"
+                  label="Выше (0-100 %)"
+                  name="Выше (0-100 %)"
                   v-validate="'required|decimal|min_value:0|max_value:100'"
                   color="secondary")
               v-flex(extend)
