@@ -144,6 +144,7 @@ export default {
   }),
   methods: {
     getAll() {
+      this.loading = true;
       Promise.all([
         User.getAll(),
         Brand.getAll(),
