@@ -24,7 +24,9 @@
                   :to="{\
                     name: props.item.motivationType == 0\
                       ? 'plan_edit'\
-                      : 'percentage_edit',\
+                      : (props.item.motivationType == 1\
+                      ? 'percentage_edit'\
+                      : 'mix_edit'),\
                       params: {id: props.item.id}\
                     }")
                   v-icon(small) edit
@@ -51,6 +53,7 @@
 <script>
 import Plan from '@/services/Plan';
 import Percentage from '@/services/Percentage';
+import Mix from '@/services/Mix';
 
 export default {
   name: 'Motivations',
@@ -93,6 +96,7 @@ export default {
       Promise.all([
         Plan.getAll(),
         Percentage.getAll(),
+        Mix.getAll(),
       ])
         .then((results) => {
           results.forEach((collections, index) => {
@@ -102,9 +106,6 @@ export default {
               this.motivations.push(item);
             });
           });
-          console.log(this.motivations);
-          // [this.motivations] = results;
-          // this.motivations.concat(results[1]);
         })
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });
@@ -112,7 +113,21 @@ export default {
     remove(id, type) {
       // eslint-disable-next-line no-alert, no-restricted-globals
       if (confirm('Это действие удалит элемент навсегда, вы уверены?')) {
-        (type === 0 ? Plan.delete(id) : Percentage.delete(id))
+        let model = null;
+        switch (type) {
+          case 0:
+            model = Plan;
+            break;
+          case 1:
+            model = Percentage;
+            break;
+          case 2:
+            model = Mix;
+            break;
+          default:
+            return;
+        }
+        model.delete(id)
           .then(() => { this.getAll(); })
           .catch(error => this.$store.commit('setMessage', error.message));
       }

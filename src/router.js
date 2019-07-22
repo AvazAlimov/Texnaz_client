@@ -360,9 +360,9 @@ const router = new Router({
               component: () => import('./views/motivations/Mix.vue'),
             },
             {
-              path: 'template',
-              name: 'motivation_create',
-              component: () => import('./views/motivations/Motivation.vue'),
+              path: 'mix/:id',
+              name: 'mix_edit',
+              component: () => import('./views/motivations/Mix.vue'),
             },
           ],
         },
