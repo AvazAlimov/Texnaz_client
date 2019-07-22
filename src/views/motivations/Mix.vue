@@ -115,7 +115,7 @@
                       v-validate="'required|decimal|min_value:0|max_value:100'"
                       color="secondary")
 
-            v-btn(outline color="secondary" block @click="addRange()") Добавить предел
+            v-btn(outline color="secondary" block @click="addRange()") Управление брендами
           v-flex(xs12)
             v-layout(row)
               v-spacer
