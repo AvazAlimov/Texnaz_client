@@ -115,7 +115,7 @@
                       v-validate="'required|decimal|min_value:0|max_value:100'"
                       color="secondary")
 
-            v-btn(outline color="secondary" block @click="addRange()") Добавить предел
+            v-btn(outline color="secondary" block @click="addRange()") Управление брендами
           v-flex(xs12)
             v-layout(row)
               v-spacer
@@ -130,6 +130,7 @@
 <script>
 import User from '@/services/User';
 import Brand from '@/services/Brand';
+import Mix from '@/services/Mix';
 
 export default {
   name: 'Mix',
@@ -184,6 +185,25 @@ export default {
             .sort((a, b) => (a.name > b.name ? 1 : -1))
             .forEach(brand => this.brands.push(brand));
           this.brand = [0];
+          if (this.$route.params.id) {
+            Mix.get(this.$route.params.id)
+              .then((mix) => {
+                this.managerId = mix.managerId;
+                this.type = mix.type;
+                this.startDate = this.$moment(mix.start).format('YYYY-MM-DD');
+                this.endDate = this.$moment(mix.end).format('YYYY-MM-DD');
+                this.total = mix.total;
+                this.brand = mix.ranges.length
+                  ? mix.ranges[0].brands.map(brand => brand.brandId)
+                  : [0];
+                this.min = mix.min;
+                this.ranges = mix.ranges.map(range => ({
+                  from: range.from,
+                  percentages: range.brands,
+                })).sort((a, b) => (a.from > b.from ? 1 : -1));
+              })
+              .catch(error => this.$emit('setMessage', error.message));
+          }
         })
         .catch(error => this.$$emit('setMessage', error.message))
         .finally(() => { this.loading = false; });
@@ -206,7 +226,23 @@ export default {
       });
     },
     submit() {
-
+      this.loading = true;
+      const mix = {
+        managerId: this.managerId,
+        type: this.type,
+        start: this.startDate,
+        end: this.endDate,
+        total: this.total,
+        min: this.min,
+        ranges: this.ranges.map(range => ({
+          from: range.from,
+          brands: range.percentages,
+        })),
+      };
+      (this.$route.params.id ? Mix.update(this.$route.params.id, mix) : Mix.create(mix))
+        .then(() => this.$router.push({ name: 'motivations' }))
+        .catch(error => this.$emit('setMessage', error.message))
+        .finally(() => { this.loading = false; });
     },
   },
   watch: {
