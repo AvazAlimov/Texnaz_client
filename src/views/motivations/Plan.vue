@@ -215,7 +215,7 @@ export default {
                   percentage: range.percentage,
                 })).sort((a, b) => (a.from > b.from ? 1 : -1));
               })
-              .catch(error => this.$$emit('setMessage', error.message));
+              .catch(error => this.$emit('setMessage', error.message));
           }
         })
         .catch(error => this.$$emit('setMessage', error.message))
