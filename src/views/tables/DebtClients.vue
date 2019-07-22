@@ -80,8 +80,8 @@ export default {
             saleDate: el.ratio ? '-' : el.createdAt,
             salePrice: el.ratio ? '-' : this.$getTotalPrice(el, result[1].value, result[2].value),
             // In order to get last date and price of payment .reduce function used
-            paymentDate: el.client.payments.reduce((first, next) => next.createdAt, '-'),
-            paymentPrice: el.client.payments.reduce((first, next) => next.sum, '-'),
+            paymentDate: el.client.payments.reduce((first, next) => next.createdAt, ''),
+            paymentPrice: el.client.payments.reduce((first, next) => next.sum, ''),
             manager: el.manager.name,
             debt: el.client.payments.map(payment => payment.sum).reduce((a, b) => a + b, 0)
                - (el.ratio ? 0 : this.$getTotalPrice(el, result[1].value, result[2].value)),

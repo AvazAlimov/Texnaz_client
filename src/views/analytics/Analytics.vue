@@ -44,6 +44,12 @@
 </template>
 
 <script>
+import Client from '@/services/Client';
+import Sale from '@/services/Sale';
+import Payment from '@/services/Payment';
+import Configuration from '@/services/Configuration';
+import Warehouse from '@/services/Warehouse';
+
 export default {
   name: 'Analytics',
   data() {
@@ -56,12 +62,12 @@ export default {
         {
           icon: 'person_outline',
           subtitle: 'Общее количество клиентов',
-          title: 1250,
+          title: '~',
         },
         {
           icon: 'person_outline',
           subtitle: 'Количество новых клиентов за последний месяц',
-          title: 250,
+          title: '~',
         },
         {
           icon: 'timeline',
@@ -77,15 +83,15 @@ export default {
         },
         {
           icon: 'trending_up',
-          title: '$ 1430',
+          title: '~',
           subtitle: 'Общие отгрузки',
-          value: [10, 2, 6, 3, 4, 1, 5, 2, 3, 2, 0, 5],
+          value: [],
         },
         {
           icon: 'swap_vert',
-          title: '$ 1830',
-          subtitle: ' Общее поступление',
-          value: [2, 2, 3, 3, 7, 1, 3, 4, 3, 5, 1, 5],
+          title: '~',
+          subtitle: 'Общее поступление',
+          value: [],
         },
         {
           icon: 'work_outline',
@@ -95,9 +101,9 @@ export default {
         },
         {
           icon: 'update',
-          title: '$ 2430',
+          title: '~',
           subtitle: 'Общая просроченная задолженность',
-          value: [11, 21, 16, 13, 14, 11, 19, 17, 23, 12, 10, 15],
+          value: [],
         },
       ],
       brandsData: {
@@ -165,7 +171,7 @@ export default {
         },
         {
           title: 'Склад',
-          rate: '$ 150 000',
+          rate: '~',
           delta: 15,
         },
         {
@@ -185,7 +191,7 @@ export default {
         },
         {
           title: 'Склад',
-          rate: '$ 125 000',
+          rate: '~',
           delta: 10,
         },
         {
@@ -200,6 +206,86 @@ export default {
         },
       ],
     };
+  },
+  methods: {
+    // For Last month clients and managers
+    getLastMonthData(clients) {
+      return clients.filter((el) => {
+        const lastMonth = new Date();
+        lastMonth.setMonth(lastMonth.getMonth() - 1);
+        return (new Date(el.createdAt)).getTime() > lastMonth.getTime();
+      });
+    },
+    // Checks whether the sale is late
+    getDuration(startTime, duration) {
+      const mm = (new Date()).getTime() - (new Date(startTime)).getTime();
+      const days = Math.round(mm / (3600000 * 24));
+      return duration < days;
+    },
+    // Gets total sale amount and sales array to show diagram
+    getSales(sales, exchangeRate, officialRate) {
+      return [
+        `$ ${sales.map(el => this.$getTotalPrice(el, exchangeRate, officialRate))
+          .reduce((a, b) => a + b)}`,
+        sales.map(el => this.$getTotalPrice(el, exchangeRate, officialRate)),
+      ];
+    },
+    // Gets total payment amount and payments array to show diagram
+    getPayments(payments) {
+      return [
+        `$ ${payments.map(el => el.sum).reduce((a, b) => a + b)}`,
+        payments.map(el => el.sum),
+      ];
+    },
+    // Gets total Late debt amount and its array to show diagram
+    getLateDebt(sales, exR, ofR) {
+      return [
+        `$ ${sales.filter(el => this.getDuration(el.createdAt, el.days))
+          .reduce((a, b) => this.$getTotalPrice(a, exR, ofR) + this.$getTotalPrice(b, exR, ofR), 0)}`,
+        sales.filter(el => this.getDuration(el.createdAt, el.days))
+          .map(el => this.$getTotalPrice(el, exR, ofR)),
+      ];
+    },
+    getAll() {
+      Promise.all([
+        Client.getAll(),
+        Sale.getAll(),
+        Configuration.getExchangeRate(),
+        Configuration.getOfficialRate(),
+        Payment.getAll(),
+        Warehouse.getAll(),
+      ]).then((data) => {
+        const clients = this.$getClients(data[0]);
+        // Общее количество клиентов
+        this.cards[0].title = clients.length;
+        // Количество новых клиентов за последний месяц
+        this.cards[1].title = this.getLastMonthData(clients).length;
+
+        // Лидер продаж: в прошлом месяце
+        //    Task Empty
+        // Лидер продаж: за все время
+        //    Task Empty
+
+        // Общие отгрузки
+        [this.cards[4].title, this.cards[4].value] = this.getSales(data[1],
+          data[2].value, data[3].value);
+        // Общее поступление
+        [this.cards[5].title, this.cards[5].value] = this.getPayments(data[4]);
+
+        // Общая задолженность
+        //    Task Empty
+
+        // Общая просроченная задолженность
+        [this.cards[7].title, this.cards[7].value] = this
+          .getLateDebt(data[1], data[2].value, data[3].value);
+
+        this.rateCards[1].rate = data[5].reduce((a, b) => a.totalPrice + b.totalPrice);
+        this.rateCards[5].rate = this.rateCards[1].rate;
+      });
+    },
+  },
+  beforeMount() {
+    this.getAll();
   },
 };
 </script>
