@@ -93,7 +93,7 @@ export default {
           counter: 0,
           id: 'shipments',
           title: 'Отгрузки',
-          to: { name: 'shipping_sales' },
+          to: { name: 'shipping_info' },
         },
         {
           counter: 0,

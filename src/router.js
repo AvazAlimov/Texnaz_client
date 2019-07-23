@@ -429,14 +429,21 @@ const router = new Router({
                 },
                 {
                   path: 'shipments',
-                  name: 'shipping_sales',
                   component: () => import('./views/warehouses/Shipments.vue'),
+                  children: [
+                    {
+                      path: '',
+                      name: 'shipping_info',
+                      component: () => import('./views/warehouses/ShipmentInfo.vue'),
+                    },
+                    {
+                      path: ':itemId',
+                      name: 'shipping_details',
+                      component: () => import('./views/warehouses/ShipmentDetails.vue'),
+                    },
+                  ],
                 },
-                {
-                  path: 'shipment',
-                  name: 'shipment_details',
-                  component: () => import('./views/warehouses/Shipment.vue'),
-                },
+
               ],
             },
             {
