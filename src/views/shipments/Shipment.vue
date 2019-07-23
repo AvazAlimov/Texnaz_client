@@ -179,6 +179,7 @@ export default {
           [this.sale, this.configurations] = results;
           this.exchangeRate = (this.configurations.find(conf => conf.id === 4)).value;
           this.officialRate = (this.configurations.find(conf => conf.id === 5)).value;
+          console.log(this.sale);
         })
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });

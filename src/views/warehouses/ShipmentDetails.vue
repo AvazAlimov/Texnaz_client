@@ -1,8 +1,8 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-      v-btn(icon :to="{ name: 'shipping_sales' }")
+      v-btn(icon :to="{ name: 'shipping_info' }").dashboardTertiary--text
           v-icon arrow_back
-      .title Отгрузка
+      .title.dashboardTertiary--text Отгрузка
       v-flex(xs12)
         .white.border.mt-3
           v-layout(row wrap).pa-4
@@ -158,7 +158,7 @@ export default {
     getAll() {
       this.loading = true;
       Promise.all([
-        Sale.get(this.$route.params.id),
+        Sale.get(this.$route.params.itemId),
         Configuration.getAll(),
       ])
         .then((results) => {
