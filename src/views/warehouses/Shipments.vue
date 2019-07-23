@@ -15,7 +15,8 @@
             td
               v-layout(row)
                 v-spacer
-                v-btn.ma-0(flat icon color="secondary")
+                v-btn.ma-0(flat icon color="secondary"
+                  :to="{ name: 'shipment_details' }")
                   v-icon(small) visibility
                 v-btn.ma-0(flat icon color="green" @click="approve(props.item.id)")
                   v-icon(small) check

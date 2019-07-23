@@ -3,7 +3,7 @@
       :style="`border: 1px solid ${colorBorder}; background: ${colorCard}`"
     )
         .title {{ title }}
-        .display-2.my-4.accent--text.font-weight-light {{ rate }}
+        .display-2.my-4.accent--text.font-weight-light {{ Number(rate) ? `$ ${$options.filters.roundUp(rate)}` : rate}}
         v-layout(justify-center align-center)
             v-icon.dashboardTertiary--text(
               small
