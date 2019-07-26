@@ -211,13 +211,13 @@ export default {
     },
     getPaymentStatistics(payments) {
       return payments.map(el => ({
-        value: el.sum,
+        value: this.$options.filters.roundUp(el.sum),
         date: this.$moment(el.createdAt).format('DD-MM'),
       }));
     },
     getSalesStatistics(sales, exRate, offRate) {
       return sales.map(el => ({
-        value: this.$getTotalPrice(el, exRate, offRate),
+        value: this.$options.filters.roundUp(this.$getTotalPrice(el, exRate, offRate)),
         date: this.$moment(el.createdAt).format('DD-MM'),
       }));
     },
