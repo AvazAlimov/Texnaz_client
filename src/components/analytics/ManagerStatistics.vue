@@ -1,8 +1,8 @@
 <template lang="pug">
-    v-card.border.dashboardBorder.elevation-0
-      v-container(fill-height).dashboardCard
+    v-layout.border.dashboardBorder
+      v-flex(xs12).dashboardCard
         v-layout(align-space-between justify-space-between column fill-height)
-          .title.text-sm-center.dashboardTertiary--text Показатели менеджеров
+          .title.text-sm-center.dashboardTertiary--text Показатели статистика
           canvas
 </template>
 
@@ -10,7 +10,7 @@
 import Chart from 'chart.js';
 
 export default {
-  props: ['dropdown', 'models', 'colorSecondary'],
+  props: ['dropdown', 'models', 'data', 'colorSecondary'],
   methods: {
     hexToRgb(hex) {
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -44,8 +44,10 @@ export default {
       });
     },
   },
-  mounted() {
-    this.renderChart();
+  watch: {
+    data() {
+      this.renderChart();
+    },
   },
 };
 </script>

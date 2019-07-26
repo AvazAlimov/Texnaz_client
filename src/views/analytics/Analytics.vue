@@ -27,20 +27,10 @@
             :value="item.value"
             :colorSecondary="colorSecondary"
             :colorCard="colorCard")
-        v-flex(xs12 md4)
-          PieChart.mb-2(
-            title="Диаграмма Брендов"
-            :colorSecondary="colorSecondary"
-            :models="brandsData.data")
-          ClientData(
-            :title="clientData.title",
-            :total="clientData.total",
-            :month="clientData.month")
-        v-flex(xs12 md8 d-flex)
-          ManagerStatistics(:models="managerStatistics.data" :colorSecondary="colorSecondary")
-        v-flex(xs3 d-flex v-for="(rate, index) in rateCards" :key="index")
-          RateCard(:title="rate.title" :rate="rate.rate"
-          :delta="rate.delta" :colorBorder="colorBorder" :colorCard="colorCard")
+        v-flex(xs12 d-flex)
+          ManagerStatistics(:models="managerStatistics"
+          :data="managerStatistics[0].data"
+          :colorSecondary="colorSecondary")
 </template>
 
 <script>
@@ -71,14 +61,14 @@ export default {
         },
         {
           icon: 'timeline',
-          subtitle: 'Лидер продаж: в прошлом месяце',
-          title: '$ 1.2 млн',
+          subtitle: 'Задолженность / Коэффициент оплаты', // Old one 'Лидер продаж: в прошлом месяце',
+          title: '~',
           caption: 'ПМ',
         },
         {
           icon: 'timeline',
-          subtitle: 'Лидер продаж: за все время',
-          title: '$ 15 млн',
+          subtitle: 'Склад', // Old one 'Лидер продаж: за все время',
+          title: '~',
           caption: 'ВВ',
         },
         {
@@ -95,9 +85,9 @@ export default {
         },
         {
           icon: 'work_outline',
-          title: '$ 1930',
+          title: '~',
           subtitle: 'Общая задолженность',
-          value: [10, 12, 16, 13, 4, 9, 9, 3, 2, 4, 8, 5],
+          value: [],
         },
         {
           icon: 'update',
@@ -117,52 +107,16 @@ export default {
         total: 15000,
         month: 12500,
       },
-      managerStatistics: {
-        data: [
-          {
-            name: 'Manager1',
-            data: [
-              {
-                value: 9,
-                date: '19.05',
-              },
-              {
-                value: 11,
-                date: '20.05',
-              },
-              {
-                value: 4,
-                date: '21.05',
-              },
-              {
-                value: 15,
-                date: '22.05',
-              },
-            ],
-          },
-          {
-            name: 'Manager2',
-            data: [
-              {
-                value: 22,
-                date: '19.05',
-              },
-              {
-                value: 12,
-                date: '20.05',
-              },
-              {
-                value: 8,
-                date: '21.05',
-              },
-              {
-                value: 10,
-                date: '22.05',
-              },
-            ],
-          },
-        ],
-      },
+      managerStatistics: [
+        {
+          name: 'Общие отгрузки',
+          data: [],
+        },
+        {
+          name: 'Общее поступление',
+          data: [],
+        },
+      ],
       rateCards: [
         {
           title: 'Задолженность / Коэффициент оплаты',
@@ -224,27 +178,48 @@ export default {
     },
     // Gets total sale amount and sales array to show diagram
     getSales(sales, exchangeRate, officialRate) {
+      let sale = sales.map(el => this.$getTotalPrice(el, exchangeRate, officialRate))
+        .reduce((a, b) => a + b);
+      sale = this.$options.filters.roundUp(sale);
       return [
-        `$ ${sales.map(el => this.$getTotalPrice(el, exchangeRate, officialRate))
-          .reduce((a, b) => a + b)}`,
+        `$ ${this.$options.filters.readable(sale)}`,
         sales.map(el => this.$getTotalPrice(el, exchangeRate, officialRate)),
+        sales.map(el => this.$getTotalPrice(el, exchangeRate, officialRate))
+          .reduce((a, b) => a + b),
       ];
     },
     // Gets total payment amount and payments array to show diagram
     getPayments(payments) {
+      let payment = payments.map(el => el.sum).reduce((a, b) => a + b);
+      payment = this.$options.filters.roundUp(payment);
       return [
-        `$ ${payments.map(el => el.sum).reduce((a, b) => a + b)}`,
+        `$ ${this.$options.filters.readable(payment)}`,
         payments.map(el => el.sum),
+        payments.map(el => el.sum).reduce((a, b) => a + b),
       ];
     },
     // Gets total Late debt amount and its array to show diagram
     getLateDebt(sales, exR, ofR) {
+      let debt = sales.filter(el => this.getDuration(el.createdAt, el.days))
+        .reduce((a, b) => this.$getTotalPrice(a, exR, ofR) + this.$getTotalPrice(b, exR, ofR), 0);
+      debt = this.$options.filters.roundUp(debt);
       return [
-        `$ ${sales.filter(el => this.getDuration(el.createdAt, el.days))
-          .reduce((a, b) => this.$getTotalPrice(a, exR, ofR) + this.$getTotalPrice(b, exR, ofR), 0)}`,
+        `$ ${this.$options.filters.readable(debt)}`,
         sales.filter(el => this.getDuration(el.createdAt, el.days))
           .map(el => this.$getTotalPrice(el, exR, ofR)),
       ];
+    },
+    getPaymentStatistics(payments) {
+      return payments.map(el => ({
+        value: el.sum,
+        date: this.$moment(el.createdAt).format('DD-MM'),
+      }));
+    },
+    getSalesStatistics(sales, exRate, offRate) {
+      return sales.map(el => ({
+        value: this.$getTotalPrice(el, exRate, offRate),
+        date: this.$moment(el.createdAt).format('DD-MM'),
+      }));
     },
     getAll() {
       Promise.all([
@@ -256,31 +231,32 @@ export default {
         Warehouse.getAll(),
       ]).then((data) => {
         const clients = this.$getClients(data[0]);
+        const warehouseSum = this.$options.filters.roundUp(data[5]
+          .reduce((a, b) => a.totalPrice + b.totalPrice));
+        const totalDebt = this.getSales(data[1],
+          data[2].value, data[3].value)[2] - this.getPayments(data[4])[2];
         // Общее количество клиентов
         this.cards[0].title = clients.length;
         // Количество новых клиентов за последний месяц
         this.cards[1].title = this.getLastMonthData(clients).length;
-
-        // Лидер продаж: в прошлом месяце
-        //    Task Empty
-        // Лидер продаж: за все время
-        //    Task Empty
-
+        // Задолженность / Коэффициент оплаты
+        this.cards[2].title = `% ${totalDebt > 0 ? totalDebt / this.getPayments(data[4])[2] : 0}`;
+        // Склад
+        this.cards[3].title = `$ ${this.$options.filters.readable(warehouseSum)}`;
         // Общие отгрузки
         [this.cards[4].title, this.cards[4].value] = this.getSales(data[1],
           data[2].value, data[3].value);
         // Общее поступление
         [this.cards[5].title, this.cards[5].value] = this.getPayments(data[4]);
-
         // Общая задолженность
-        //    Task Empty
-
+        this.cards[6].title = `$ ${this.$options.filters.readable(totalDebt > 0 ? totalDebt : 0)}`;
+        this.cards[6].value = this.cards[4].value;
         // Общая просроченная задолженность
         [this.cards[7].title, this.cards[7].value] = this
           .getLateDebt(data[1], data[2].value, data[3].value);
-
-        this.rateCards[1].rate = data[5].reduce((a, b) => a.totalPrice + b.totalPrice);
-        this.rateCards[5].rate = this.rateCards[1].rate;
+        // Показатели статистика
+        this.managerStatistics[0].data = this.getSalesStatistics(data[1], data[2], data[3]);
+        this.managerStatistics[1].data = this.getPaymentStatistics(data[4]);
       });
     },
   },

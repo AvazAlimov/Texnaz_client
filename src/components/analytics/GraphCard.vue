@@ -83,7 +83,7 @@ export default {
     this.drawChart();
   },
   watch: {
-    value(value) {
+    value() {
       this.drawChart();
     },
   },
