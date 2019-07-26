@@ -65,6 +65,7 @@ export default {
           icon: 'table_chart',
           title: 'Таблицы',
           to: '/tables',
+          permission: this.$permissions.SHOW_TABELS.name,
         },
         {
           icon: 'money',
@@ -94,6 +95,7 @@ export default {
           icon: 'timeline',
           title: 'Мотивация',
           to: '/motivations',
+          permission: this.$permissions.SHOW_MOTIVATIONS.name,
           // permission: this.$permissions.SHOW_MANAGERS.name,
         },
         {

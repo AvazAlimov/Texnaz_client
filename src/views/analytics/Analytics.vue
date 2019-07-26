@@ -255,8 +255,10 @@ export default {
         [this.cards[7].title, this.cards[7].value] = this
           .getLateDebt(data[1], data[2].value, data[3].value);
         // Показатели статистика
-        this.managerStatistics[0].data = this.getSalesStatistics(data[1], data[2], data[3]);
-        this.managerStatistics[1].data = this.getPaymentStatistics(data[4]);
+        this.managerStatistics[0].data = this.getSalesStatistics(data[1]
+          .sort((a, b) => (a.id > b.id ? 1 : -1)), data[2].value, data[3].value);
+        this.managerStatistics[1].data = this.getPaymentStatistics(data[4]
+          .sort((a, b) => (a.id > b.id ? 1 : -1)));
       });
     },
   },

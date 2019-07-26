@@ -44,6 +44,14 @@ module.exports.SHOW_SETTINGS = {
   name: 'show settings',
   id: 11,
 };
+module.exports.SHOW_TABELS = {
+  name: 'show tabels',
+  id: 12,
+};
+module.exports.SHOW_MOTIVATIONS = {
+  name: 'show motivations',
+  id: 13,
+};
 
 // Calculator
 module.exports.SHOW_CALCULATOR_NON_APPROVED = {
