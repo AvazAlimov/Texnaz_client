@@ -47,17 +47,17 @@
                 v-spacer
                   v-divider.mx-4
                 .subheading {{ types.find(type => type.id == sale.type).name }}
-              v-layout.mb-2(align-center)
+              v-layout.mb-2(align-center v-if="!$route.query.accounting")
                 .title Тип расчета
                 v-spacer
                   v-divider.mx-4
                 .subheading {{ payments.find(payment => payment.id == sale.form).name }}
-              v-layout.mb-2(align-center)
+              v-layout.mb-2(align-center v-if="!$route.query.accounting")
                 .title Баланс клиента
                 v-spacer
                   v-divider.mx-4
                 .subheading {{ $getClientBalance(sale.client) | roundUp }} $
-              v-layout.mb-2(align-center)
+              v-layout.mb-2(align-center v-if="!$route.query.accounting")
                 .title Сумма отгрузки
                 v-spacer
                   v-divider.mx-4

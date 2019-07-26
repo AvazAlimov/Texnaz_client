@@ -25,7 +25,7 @@
           v-layout(row)
             v-btn.ma-0(
               flat icon color="secondary"
-              :to="{ name: 'shipment', params: {id: props.item.id} }")
+              :to="{ name: 'shipment', params: {id: props.item.id},query:{ accounting }}")
               v-icon(small) visibility
             v-btn.ma-0(
               v-if="props.item.approved < 1"
