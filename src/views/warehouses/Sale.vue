@@ -277,7 +277,7 @@ export default {
     getTotalPrice() {
       let price = 0;
       if (this.type) {
-        this.selected.forEach((item) => { price += item[this.type.key]; });
+        this.selected.forEach((item) => { price += this.type.key === 'firstPrice' ? item[this.type.key] / this.officialRate : item[this.type.key]; });
       }
       return price;
     },

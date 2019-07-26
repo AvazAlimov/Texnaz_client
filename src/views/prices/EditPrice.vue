@@ -32,7 +32,7 @@
           .subheading B2C
           v-spacer
             v-divider.mx-4
-          .subheading {{ price.secondPrice * exchangeRate | ceil }} сум
+          .subheading {{ $b2c(price, officialRate, exchangeRate) | ceil }} сум
         v-layout.ma-4(align-center)
           .subheading Наценка ($)
           v-spacer
@@ -89,16 +89,19 @@ export default {
     loading: true,
     price: null,
     exchangeRate: 1,
+    officialRate: 1,
   }),
   methods: {
     getAll() {
       Promise.all([
         Price.get(this.$route.params.id),
         Configuration.getExchangeRate(),
+        Configuration.getOfficialRate(),
       ])
         .then((results) => {
           [this.price] = results;
           this.exchangeRate = results[1].value;
+          this.officialRate = results[2].value;
         })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);

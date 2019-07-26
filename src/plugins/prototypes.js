@@ -2,13 +2,17 @@ import Vue from 'vue';
 import router from '../router';
 import Permissions from '../utils/Permissions';
 import batch from './prototypes/batch';
-import price from './prototypes/price';
+import price, { B2C, PriceCash } from './prototypes/price';
 
 Vue.prototype.$permissions = Permissions;
 
 Vue.prototype.$batch = data => batch(data);
 
-Vue.prototype.$price = (data, rate) => price(data, rate);
+Vue.prototype.$price = (data, offRate, exRate) => price(data, offRate, exRate);
+
+Vue.prototype.$b2c = (prices, offRate, exRate) => B2C(prices, offRate, exRate);
+
+Vue.prototype.$priceCash = (prices, exRate) => PriceCash(prices, exRate);
 
 Vue.prototype.$hasPermission = (key) => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -59,7 +63,7 @@ Vue.prototype.$getTotalPrice = (sale, exchangeRate, officialRate) => {
   switch (sale.type) {
     case 1:
       sale.items.forEach((item) => {
-        const itemPrice = price(item.price, exchangeRate);
+        const itemPrice = price(item.price, officialRate, exchangeRate);
         total += (itemPrice.firstPrice * item.quantity
           * (100 - item.discount) / 100)
           / officialRate;
@@ -67,7 +71,7 @@ Vue.prototype.$getTotalPrice = (sale, exchangeRate, officialRate) => {
       break;
     case 2:
       sale.items.forEach((item) => {
-        const itemPrice = price(item.price, exchangeRate);
+        const itemPrice = price(item.price, officialRate, exchangeRate);
         total += (itemPrice.mixPriceNonCash / exchangeRate
           + itemPrice.mixPriceCash)
           * item.quantity
@@ -76,7 +80,7 @@ Vue.prototype.$getTotalPrice = (sale, exchangeRate, officialRate) => {
       break;
     case 3:
       sale.items.forEach((item) => {
-        const itemPrice = price(item.price, exchangeRate);
+        const itemPrice = price(item.price, officialRate, exchangeRate);
         total += itemPrice.secondPrice
                   * item.quantity
                   * (100 - item.discount) / 100;

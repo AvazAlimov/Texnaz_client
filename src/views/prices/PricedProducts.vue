@@ -15,8 +15,8 @@
           td.text-xs-center {{ props.item.product.packing }}
           td.orange.lighten-4 {{ props.item.mixPriceNonCash }}
           td.green.lighten-4 {{ props.item.secondPrice }}
-          td {{ props.item.secondPrice * exchangeRate | ceil }}
-          td {{ props.item.secondPrice - props.item.mixPriceNonCash / exchangeRate | roundUp }}
+          td {{ $b2c(props.item, officialRate, exchangeRate) | ceil }}
+          td {{ $priceCash(props.item, exchangeRate) | roundUp }}
           td {{ props.item.createdAt | moment("HH:mm DD-MM-YYYY") }}
           td
             v-layout
@@ -43,7 +43,7 @@
               td
               td.orange.lighten-5 {{ prices.item.mixPriceNonCash }}
               td.green.lighten-5 {{ prices.item.secondPrice }}
-              td {{ prices.item.secondPrice * exchangeRate | ceil }}
+              td {{ $b2c(prices.item, officialRate, exchangeRate) | ceil }}
               td {{ prices.item.secondPrice - prices.item.mixPriceNonCash/ exchangeRate | roundUp }}
               td {{ prices.item.createdAt | moment("HH:mm DD-MM-YYYY") }}
               td
@@ -127,6 +127,7 @@ export default {
         }],
       prices: [],
       exchangeRate: 1,
+      officialRate: 1,
     };
   },
   computed: {
@@ -151,11 +152,13 @@ export default {
       Promise.all([
         Price.getAll(),
         Configuration.getExchangeRate(),
+        Configuration.getOfficialRate(),
       ])
         .then((results) => {
-          const [prices, configuration] = results;
+          const [prices, exchangeRate, officialRate] = results;
           this.prices = this.group(prices.sort((a, b) => (a.id < b.id ? 0 : -1)));
-          this.exchangeRate = configuration.value;
+          this.exchangeRate = exchangeRate.value;
+          this.officialRate = officialRate.value;
         })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);

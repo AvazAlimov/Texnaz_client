@@ -62,6 +62,9 @@ export default {
     exchangeRate: {
       required: true,
     },
+    officialRate: {
+      required: true,
+    },
     type: {
       required: true,
     },
@@ -73,14 +76,21 @@ export default {
   }),
   computed: {
     productPrice() {
-      return this.$price(this.item.product.prices[0], this.exchangeRate || 1);
+      return this.$price(this.item.product.prices[0],
+        this.officialRate || 1, this.exchangeRate || 1);
     },
   },
   methods: {
     calculateFirstPrice() {
+      this.item.firstPrice = this
+        .$b2c(this.item.product.prices[0], this.officialRate, this.exchangeRate)
+                      * parseFloat(this.item.sale)
+                      * parseFloat((100 - this.item.discount) / 100);
+      /*
       this.item.firstPrice = this.item.product.prices[0].secondPrice
                       * parseFloat(this.item.sale)
                       * parseFloat((100 - this.item.discount) / 100);
+                      * */
     },
 
     calculateMixPrice() {

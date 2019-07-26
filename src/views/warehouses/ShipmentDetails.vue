@@ -172,7 +172,7 @@ export default {
     getPrice(item) {
       switch (this.sale.type) {
         case 1:
-          return (item.price.firstPrice * item.quantity
+          return (this.$b2c(item.price, this.officialRate, this.exchangeRate) * item.quantity
                       * (100 - item.discount) / 100)
                       / this.officialRate;
         case 2:
