@@ -1,12 +1,56 @@
 <template lang="pug">
   v-layout(wrap)
-    v-data-table(
-      :headers="headers"
-      :items="items"
-      hide-actions
-    )
-      template(v-slot:items="props")
-        Payment(:items="props.item")
+    v-flex(xs12)
+      .border.white
+        v-layout(wrap).pa-3
+          v-menu(
+            v-model="start"
+            :clost-on-content-click="false"
+            min-width="290px"
+          ).ma-3
+            template(v-slot:activator="{ on }")
+              v-text-field(
+                v-model="startDate"
+                readonly
+                v-on="on"
+                label="От"
+              )
+            v-date-picker(
+              v-model="startDate"
+              @input="start = false"
+              :max="maximum"
+            )
+          v-menu(
+            v-model="end"
+            :clost-on-content-click="false"
+            min-width="290px"
+          ).ma-3
+            template(v-slot:activator="{ on }")
+              v-text-field(
+                v-model="endDate"
+                readonly
+                v-on="on"
+                label="До"
+              )
+            v-date-picker(
+              v-model="endDate"
+              @input="end = false"
+              :max="maximum"
+            )
+          v-spacer
+          v-text-field(
+            v-model="search"
+            label="Поиск"
+            append-icon="search"
+          )
+        v-data-table(
+          :headers="headers"
+          :items="filteredData"
+          :search="search"
+          hide-actions
+        )
+          template(v-slot:items="props")
+            Payment(:items="props.item")
 </template>
 
 <script>
@@ -15,6 +59,11 @@ import Payment from '@/services/Payment';
 export default {
   data() {
     return {
+      search: '',
+      startDate: (new Date()).toISOString().substring(0, 10),
+      start: false,
+      endDate: (new Date()).toISOString().substring(0, 10),
+      end: false,
       headers: [
         {
           text: 'Номер',
@@ -63,10 +112,24 @@ export default {
       ],
     };
   },
+  computed: {
+    maximum() {
+      return (new Date()).toISOString().substring(0, 10);
+    },
+    filteredData() {
+      const start = new Date(this.startDate);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(this.endDate);
+      end.setHours(23, 59, 59, 59);
+      return this.items.filter(el => new Date(el.date).getTime() >= start.getTime()
+        && new Date(el.date).getTime() <= end.getTime());
+    },
+  },
   methods: {
     getAll() {
       this.items = [];
       Payment.getAll().then((data) => {
+        this.startDate = (new Date(data[0].createdAt)).toISOString().substring(0, 10);
         data.forEach((el) => {
           this.items.push({
             number: el.number ? el.number : '-',

@@ -1,12 +1,57 @@
 <template lang="pug">
   v-layout(wrap)
-    v-data-table(
-      :headers="headers"
-      :items="items"
-      hide-actions
-    )
-      template(v-slot:items="prop")
-        Sale(:items="prop.item")
+    v-flex(xs12)
+      .border.white
+        v-layout(wrap).pa-3
+          v-menu(
+            v-model="start"
+            :close-on-content-click="false"
+            min-width="290px"
+          ).ma-3
+            template(v-slot:activator="{ on }")
+              v-text-field(
+                readonly
+                v-on="on"
+                v-model="startDate"
+                label="От"
+              )
+            v-date-picker(
+              v-model="startDate"
+              @input="start = false"
+              :max="maximum"
+            )
+          v-menu(
+            v-model="end"
+            :close-on-content-click="false"
+            full-width
+            min-width="290px"
+          ).ma-3
+            template(v-slot:activator="{ on }")
+              v-text-field(
+                readonly
+                v-on="on"
+                v-model="endDate"
+                label="До"
+              )
+            v-date-picker(
+              v-model="endDate"
+              @input="end = false"
+              :max="maximum"
+            )
+          v-spacer
+          v-text-field(
+            v-model="search"
+            append-icon="search"
+            label="Поиск"
+          )
+        v-data-table(
+          :headers="headers"
+          :search="search"
+          :items="filteredData"
+          hide-actions
+        )
+          template(v-slot:items="prop")
+            Sale(:items="prop.item")
 </template>
 
 <script>
@@ -16,6 +61,11 @@ import Configuration from '@/services/Configuration';
 export default {
   data() {
     return {
+      search: '',
+      startDate: (new Date()).toISOString().substring(0, 10),
+      start: false,
+      endDate: (new Date()).toISOString().substring(0, 10),
+      end: false,
       headers: [
         {
           text: 'Номер',
@@ -64,6 +114,19 @@ export default {
       ],
     };
   },
+  computed: {
+    maximum() {
+      return (new Date()).toISOString().substring(0, 10);
+    },
+    filteredData() {
+      const start = new Date(this.startDate);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(this.endDate);
+      end.setHours(23, 59, 59, 59);
+      return this.items.filter(el => new Date(el.date).getTime() >= start.getTime()
+          && new Date(el.date).getTime() <= end.getTime());
+    },
+  },
   methods: {
     getAll() {
       this.items = [];
@@ -72,6 +135,7 @@ export default {
         Configuration.getExchangeRate(),
         Configuration.getOfficialRate(),
       ]).then((result) => {
+        this.startDate = (new Date(result[0][0].createdAt)).toISOString().substring(0, 10);
         result[0].forEach((el) => {
           this.items.push({
             number: el.number ? el.number : '-',

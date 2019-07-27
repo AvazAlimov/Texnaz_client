@@ -1,5 +1,6 @@
 <template lang="pug">
     v-layout(wrap)
+      v-flex(xs12)
         v-data-table(
             :headers="headers"
             :items="items"

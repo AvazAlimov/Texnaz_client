@@ -8,11 +8,17 @@
             .subheading.tertiary--text Обший баланс: {{ totalBalance }}
         v-flex(xs12)
           .border.white
+            v-text-field(
+              v-model="search"
+              append-icon="search"
+              label="Search"
+            ).ma-4
             v-data-table(
               :loading="loading"
               hide-actions
               :headers="headers"
               :items="myClients"
+              :search="search"
               :pagination.sync="pagination"
             )
               template(v-slot:items="props")
@@ -54,6 +60,7 @@ export default {
   name: 'Clients',
   data() {
     return {
+      search: '',
       loading: false,
       headers: [
         {

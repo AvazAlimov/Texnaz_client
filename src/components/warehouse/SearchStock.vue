@@ -39,6 +39,7 @@
           :headers="headers"
           :items="filteredStocks"
           :loading="loading"
+          fixed-height
           hide-actions)
           template(v-slot:items="props")
             StockItem(
