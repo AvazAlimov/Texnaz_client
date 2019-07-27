@@ -50,6 +50,8 @@ export default {
       ])
         .then((reslut) => {
           [this.warehouses, this.types] = reslut;
+          this.warehouses = this.$hasRole(4) ? this.warehouses
+            .filter(item => item.ownerId === this.$getUserId()) : this.warehouses;
         })
         .finally(() => { this.loading = false; });
     },
