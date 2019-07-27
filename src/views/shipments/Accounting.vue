@@ -25,7 +25,7 @@ export default {
       Promise.all([
         Sale.getByProperty({
           approved: 1,
-          managerId: (this.$hasRole(1) || this.$hasRole(3)) ? null : this.$getUserId(),
+          managerId: (this.$hasRole(1) || this.$hasRole(5)) ? null : this.$getUserId(),
           shipped: 1,
         }),
         Configuration.getAll(),

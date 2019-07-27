@@ -5,7 +5,7 @@
       v-for="(tab, index) in tabs" :key="index"
       flat color="tertiary"
       :to="tab.to"
-      v-if="tab.visible == null ? true : tab.visible"
+      v-if="$hasPermission(tab.permission)"
     ) {{ tab.name }}
     v-flex.mt-2(xs12)
       router-view
@@ -20,23 +20,27 @@ export default {
         {
           to: { name: 'pendingsales' },
           name: 'На согласовании',
+          permission: this.$permissions.SHOW_SHIPMENTS_PENDING_SALES.name,
         },
         {
           to: { name: 'approvedsales' },
           name: 'На складе',
+          permission: this.$permissions.SHOW_SHIPMENTS_APPROVED_SALES.name,
         },
         {
           to: { name: 'finished' },
           name: 'Завершенные',
+          permission: this.$permissions.SHOW_SHIPMENTS_FINISHED.name,
         },
         {
           to: { name: 'rejected' },
           name: 'Отмененные',
+          permission: this.$permissions.SHOW_SHIPMENTS_REJECTED.name,
         },
         {
           to: { name: 'accounting' },
           name: 'Бухгалтерия',
-          visible: this.$hasRole(1) || this.$hasRole(3),
+          permission: this.$permissions.SHOW_SHIPMENTS_ACCOUNTING.name,
         },
       ],
     };

@@ -107,7 +107,7 @@ export default {
         {
           icon: 'local_shipping',
           title: 'Отгрузки',
-          to: '/shipments',
+          to: this.$hasRole(5) ? { name: 'accounting' } : '/shipments',
           permission: this.$permissions.SHOW_SHIPMENTS.name,
         },
         {

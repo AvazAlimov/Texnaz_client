@@ -23,6 +23,7 @@
     v-layout(row wrap justify-end)
       v-badge(
         v-for="(card, index) in cards"
+        v-if="$hasPermission(card.permission)"
         color="red"
         overlap
         :value="card.counter"
@@ -58,54 +59,63 @@ export default {
           id: 'information',
           title: 'Информация',
           to: { name: 'information' },
+          permission: this.$permissions.SHOW_WAREHOUSE_INFORMATION.name,
         },
         {
           counter: 0,
           id: 'move',
           title: 'Перемещение',
           to: { name: 'move' },
+          permission: this.$permissions.SHOW_WAREHOUSE_MOVE.name,
         },
         {
           counter: 0,
           id: 'booking',
           title: 'Бронирование',
           to: { name: 'booking' },
+          permission: this.$permissions.SHOW_WAREHOUSE_BOOKING.name,
         },
         {
           counter: 0,
           id: 'returns',
           title: 'Возврат',
           to: { name: 'return' },
+          permission: this.$permissions.SHOW_WAREHOUSE_RETURN.name,
         },
         {
           counter: 0,
           id: 'losts',
           title: 'Потерянные продукты',
           to: { name: 'loststocks' },
+          permission: this.$permissions.SHOW_WAREHOUSE_LOST_STOCKS.name,
         },
         {
           counter: 0,
           id: 'sale',
           title: 'Реализация',
           to: { name: 'sale' },
+          permission: this.$permissions.SHOW_WAREHOUSE_SALE.name,
         },
         {
           counter: 0,
           id: 'shipments',
           title: 'Отгрузки',
           to: { name: 'shipping_info' },
+          permission: this.$permissions.SHOW_WAREHOUSE_SHIPMENTS.name,
         },
         {
           counter: 0,
           id: 'prestocks',
           title: 'Новое поступление',
           to: { name: 'prestocks' },
+          permission: this.$permissions.SHOW_WAREHOUSE_PRE_STOCKS.name,
         },
         {
           counter: 0,
           id: 'moves',
           title: 'Прием',
           to: { name: 'acceptance' },
+          permission: this.$permissions.SHOW_WAREHOUSE_ACCEPTANCE.name,
         },
       ],
       warehouse: {

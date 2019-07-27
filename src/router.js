@@ -33,6 +33,19 @@ const router = new Router({
         {
           path: '',
           component: () => import('./views/analytics/Analytics.vue'),
+          beforeEnter(_, __, next) {
+            if (Vue.prototype.$hasRole(4)) {
+              next({
+                name: 'warehouses',
+              });
+            } else if (Vue.prototype.$hasRole(5)) {
+              next({
+                name: 'accounting',
+              });
+            } else {
+              next();
+            }
+          },
         },
         {
           path: 'calculator',

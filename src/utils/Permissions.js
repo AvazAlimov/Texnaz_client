@@ -56,79 +56,152 @@ module.exports.SHOW_MOTIVATIONS = {
 // Calculator
 module.exports.SHOW_CALCULATOR_NON_APPROVED = {
   name: 'show calculator non approved',
-  id: 12,
+  id: 14,
 };
 module.exports.SHOW_CALCULATOR_APPROVED = {
   name: 'show calculator approved',
-  id: 13,
+  id: 15,
 };
 
 // Prices
 module.exports.SHOW_PRICES_PRICED = {
   name: 'show priced prices',
-  id: 14,
+  id: 16,
 };
 module.exports.SHOW_PRICES_UNPRICED = {
   name: 'show unpriced prices',
-  id: 15,
+  id: 17,
 };
 
 // Settings
 module.exports.SHOW_SETTINGS_PRODUCTS = {
   name: 'show settings products',
-  id: 16,
+  id: 18,
 };
 module.exports.SHOW_SETTINGS_BRANDS = {
   name: 'show settings brands',
-  id: 17,
+  id: 19,
 };
 module.exports.SHOW_SETTINGS_PRODUCT_TYPES = {
   name: 'show settings product types',
-  id: 18,
+  id: 20,
 };
 module.exports.SHOW_SETTINGS_UNITS = {
   name: 'show settings untis',
-  id: 19,
+  id: 21,
 };
 module.exports.SHOW_SETTINGS_PURPOSES = {
   name: 'show settings purposes',
-  id: 20,
+  id: 22,
 };
 module.exports.SHOW_SETTINGS_TAGS = {
   name: 'show settings tags',
-  id: 21,
+  id: 23,
 };
 module.exports.SHOW_SETTINGS_USERS = {
   name: 'show settings users',
-  id: 22,
+  id: 24,
 };
 module.exports.SHOW_SETTINGS_EXPANSES = {
   name: 'show settings expanses',
-  id: 23,
+  id: 25,
 };
 module.exports.SHOW_SETTINGS_CONFIGURATIONS = {
   name: 'show settings configurations',
-  id: 24,
+  id: 26,
 };
 module.exports.SHOW_SETTINGS_REGIONS = {
   name: 'show settings regions',
-  id: 25,
+  id: 27,
 };
 
 // Sales
 module.exports.SHOW_SALES_MY_SALES = {
   name: 'show my sales',
-  id: 26,
+  id: 28,
 };
 module.exports.SHOW_SALES_INFORMATION = {
   name: 'show sales information',
-  id: 27,
+  id: 29,
 };
 module.exports.SHOW_SALES_PENDING = {
   name: 'show sales pending',
-  id: 28,
+  id: 30,
 };
 module.exports.SHOW_SALES_APPROVED = {
   name: 'show sales approved',
-  id: 29,
+  id: 31,
+};
+
+// Warehouse
+module.exports.SHOW_WAREHOUSE_INFORMATION = {
+  name: 'show information',
+  id: 32,
+};
+
+module.exports.SHOW_WAREHOUSE_MOVE = {
+  name: 'show move',
+  id: 33,
+};
+
+module.exports.SHOW_WAREHOUSE_BOOKING = {
+  name: 'show booking',
+  id: 34,
+};
+
+module.exports.SHOW_WAREHOUSE_RETURN = {
+  name: 'show return',
+  id: 35,
+};
+
+module.exports.SHOW_WAREHOUSE_LOST_STOCKS = {
+  name: 'show lost stocks',
+  id: 36,
+};
+
+module.exports.SHOW_WAREHOUSE_SALE = {
+  name: 'show warehouse sales',
+  id: 37,
+};
+
+module.exports.SHOW_WAREHOUSE_SHIPMENTS = {
+  name: 'show warehouse shipments',
+  id: 38,
+};
+
+module.exports.SHOW_WAREHOUSE_PRE_STOCKS = {
+  name: 'show pre stocks',
+  id: 39,
+};
+
+module.exports.SHOW_WAREHOUSE_ACCEPTANCE = {
+  name: 'show acceptance',
+  id: 40,
+};
+
+// Shipments
+
+module.exports.SHOW_SHIPMENTS_PENDING_SALES = {
+  name: 'show pending sales',
+  id: 41,
+};
+
+module.exports.SHOW_SHIPMENTS_APPROVED_SALES = {
+  name: 'show approved sales',
+  id: 42,
+};
+
+module.exports.SHOW_SHIPMENTS_FINISHED = {
+  name: 'show finished',
+  id: 43,
+};
+
+module.exports.SHOW_SHIPMENTS_REJECTED = {
+  name: 'show rejected',
+  id: 44,
+};
+
+module.exports.SHOW_SHIPMENTS_ACCOUNTING = {
+  name: 'show accounting',
+  id: 45,
 };
