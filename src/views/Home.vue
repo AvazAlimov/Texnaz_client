@@ -25,7 +25,7 @@
       v-toolbar-side-icon.tertiary--text(@click.stop="drawer = !drawer")
       v-toolbar-title.tertiary--text {{ user.name }}
       v-spacer
-      v-menu(offset-y :close-on-content-click="false")
+      v-menu(offset-y :close-on-content-click="false" v-if="$hasRole(1)")
         template(v-slot:activator="{ on }")
           v-btn(flat icon v-on="on").dashboardTertiary--text
             v-icon settings
