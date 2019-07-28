@@ -1,6 +1,10 @@
 <template lang="pug">
   v-layout(row wrap)
     v-flex(xs12)
+      v-layout(wrap align-center).ma-2
+        v-btn(flat icon :to="{ name: 'motivations' }").dashboardTertiary--text
+          v-icon arrow_back
+        .title.dashboardTertiary--text Мотивация
       .white.border.pa-4
         v-layout(row wrap)
           v-flex(xs12 sm6)
@@ -104,8 +108,10 @@
               v-flex(extend)
                 v-text-field(
                   v-model="range.from"
-                  label="Выше (0-100 %)"
-                  name="Выше (0-100 %)"
+                  :label="`Выше (${ range.from }-${ ranges[index + 1] \
+                    ? ranges[index + 1].from : '~' } %)`"
+                  :name="`Выше (${ range.from }-${ ranges[index + 1] \
+                    ? ranges[index + 1].from : '~' } %)`"
                   v-validate="'required|decimal|min_value:0|max_value:100'"
                   color="secondary")
               v-flex(extend)
@@ -126,7 +132,7 @@
                 flat
                 color="secondary"
                 :loading="loading"
-                :disabled="errors.items.length > 0"
+                :disabled="errors.items.length > 0 || !!!ranges.length"
                 @click="submit()") Завершить
 </template>
 
@@ -208,7 +214,7 @@ export default {
                 this.startDate = this.$moment(plan.start).format('YYYY-MM-DD');
                 this.endDate = this.$moment(plan.end).format('YYYY-MM-DD');
                 this.total = plan.total;
-                this.brand = plan.allBrands ? [0] : plan.brands;
+                this.brand = plan.allBrands ? [0] : plan.brands.map(el => el.id);
                 this.min = plan.min;
                 this.ranges = plan.ranges.map(range => ({
                   from: range.from,

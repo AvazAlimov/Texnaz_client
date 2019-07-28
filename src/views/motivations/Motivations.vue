@@ -14,8 +14,9 @@
             td {{ props.item.start | moment('YYYY-MM-DD') }}
             td {{ props.item.end | moment('YYYY-MM-DD') }}
             td
-              v-progress-linear(value="0" color="secondary")
-            td {{ 0 }} $
+              v-progress-linear(:value="props.item.progress \
+              ? props.item.progress: 0" color="secondary")
+            td {{ props.item.earned ? props.item.earned: 0 | roundUp | readable}} $
             td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
             td
               v-layout(row)
@@ -54,6 +55,8 @@
 import Plan from '@/services/Plan';
 import Percentage from '@/services/Percentage';
 import Mix from '@/services/Mix';
+import Sale from '@/services/Sale';
+import Payment from '@/services/Payment';
 
 export default {
   name: 'Motivations',
@@ -97,18 +100,104 @@ export default {
         Plan.getAll(),
         Percentage.getAll(),
         Mix.getAll(),
+        Sale.getAll(),
+        Payment.getAll(),
       ])
         .then((results) => {
           results.forEach((collections, index) => {
-            collections.forEach((item) => {
-              // eslint-disable-next-line no-param-reassign
-              item.motivationType = index;
-              this.motivations.push(item);
-            });
+            if (index <= 2) {
+              collections.forEach((item) => {
+                // eslint-disable-next-line no-param-reassign
+                item.motivationType = index;
+                this.calculate(index, item, [results[3], results[4]]);
+                this.motivations.push(item);
+              });
+            }
           });
         })
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });
+    },
+    calculate(type, motivation, result) {
+      switch (type) {
+        case 0:
+          this.plan(motivation, result);
+          break;
+        case 1:
+          this.percent();
+          break;
+        case 2:
+          this.mix();
+          break;
+        default:
+          break;
+      }
+    },
+    plan(motivation, [sales, payments]) {
+      let total = 0;
+      const brands = motivation.brands ? motivation.brands.map(el => el.id) : [];
+      // Оплата или Отгрузка
+      switch (motivation.type) {
+        // Оплата
+        case 0: {
+          total = payments.filter(el => el.managerId === motivation.managerId)
+            .filter((el) => {
+              if (brands.length) {
+                return brands.includes(el.brandId);
+              }
+              return true;
+            })
+            .map(el => (el.ratio === 1 ? el.sum : (el.sum / el.ratio)))
+            .reduce((a, b) => a + b, 0);
+          // eslint-disable-next-line no-param-reassign
+          motivation.progress = (total * 100) / motivation.total;
+          break;
+        }
+        // Отгрузка
+        case 1: {
+          total = sales.filter(el => el.managerId === motivation.managerId)
+            .map((el) => {
+              if (brands.length) {
+                return el.items.filter(item => brands.includes(item.stock.product.brand));
+              }
+              return el;
+            })
+            .map(el => this.$getTotalPrice(el, el.exchangeRate, el.officialRate))
+            .reduce((a, b) => a + b, 0);
+          // eslint-disable-next-line no-param-reassign
+          motivation.progress = (total * 100) / motivation.total;
+          break;
+        }
+        default:
+          break;
+      }
+      console.log(`Total: ${total}`);
+      const range = motivation.ranges.length ? motivation.ranges
+        .filter(el => el.from < motivation.progress).pop() : null;
+      // Отдельно или Накопительно
+      switch (motivation.method) {
+        // Отдельно
+        case 0: {
+          // eslint-disable-next-line no-param-reassign
+          motivation.earned = (total - (motivation.total
+            * ((range ? range.from : 0) / 100))) * ((range ? range.percentage : 0) / 100);
+          break;
+        }
+        // Накопительно
+        case 1: {
+          // eslint-disable-next-line no-param-reassign
+          motivation.earned = total * ((range ? range.percentage : 0) / 100);
+          break;
+        }
+        default:
+          break;
+      }
+    },
+    percent() {
+
+    },
+    mix() {
+
     },
     remove(id, type) {
       // eslint-disable-next-line no-alert, no-restricted-globals
