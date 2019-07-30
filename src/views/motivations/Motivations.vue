@@ -124,7 +124,7 @@ export default {
           this.plan(motivation, result);
           break;
         case 1:
-          this.percent();
+          this.percent(motivation, result);
           break;
         case 2:
           this.mix();
@@ -135,7 +135,7 @@ export default {
     },
     plan(motivation, [sales, payments]) {
       let total = 0;
-      const brands = motivation.brands ? motivation.brands.map(el => el.id) : [];
+      const brands = motivation.brands.length ? motivation.brands.map(el => el.id) : [];
       // Оплата или Отгрузка
       switch (motivation.type) {
         // Оплата
@@ -143,7 +143,8 @@ export default {
           total = payments.filter(el => el.managerId === motivation.managerId)
             .filter((el) => {
               if (brands.length) {
-                return brands.includes(el.brandId);
+                // When no brand selected at the time payment, Take as done for required brand
+                return el.brandId ? true : brands.includes(el.brandId);
               }
               return true;
             })
@@ -193,8 +194,50 @@ export default {
           break;
       }
     },
-    percent() {
-
+    percent(motivation, [sales, payments]) {
+      // Оплата или Отгрузка
+      switch (motivation.type) {
+        // Оплата
+        case 0: {
+          let total = 0;
+          // Payments have only required brands.
+          const filtered = payments.filter(el => (motivation.managerId === el.managerId))
+            .filter(el => el.approved)
+            .filter(payment => motivation.brands.map(el => el.brandId).includes(payment.brandId));
+          // For every brand calculates its total payment
+          motivation.brands.forEach((el) => {
+            total += filtered.filter(payment => el.brandId === payment.brandId)
+              .reduce((a, b) => {
+                const first = a.ratio === 1 ? a.sum : (a.sum / a.ratio);
+                const second = b.ratio === 1 ? b.sum : (b.sum / b.ratio);
+                return (Number.isNaN(first) ? 0 : first) + (Number.isNaN(second) ? 0 : second);
+              }, 0) * (el.percentage / 100);
+          });
+          // eslint-disable-next-line no-param-reassign
+          motivation.earned = total;
+          break;
+        }
+        // Отгрузкаs
+        case 1: {
+          let total = 0;
+          sales.filter(sale => motivation.managerId === sale.managerId)
+            .filter(el => el.approved)
+            .forEach((sale) => {
+              const filteredItem = { ...sale };
+              motivation.brands.forEach((el) => {
+                filteredItem.items = sale.items
+                  .filter(item => item.stock.product.brand === el.brandId);
+                total += this.$getTotalPrice(filteredItem, filteredItem.exchangeRate,
+                  filteredItem.officialRate) * (el.percentage / 100);
+              });
+            });
+          // eslint-disable-next-line no-param-reassign
+          motivation.earned = total;
+          break;
+        }
+        default:
+          break;
+      }
     },
     mix() {
 

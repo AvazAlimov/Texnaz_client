@@ -1,6 +1,10 @@
 <template lang="pug">
   v-layout(row wrap)
     v-flex(xs12)
+      v-layout(row align-center)
+        v-btn(icon flat :to="{ name: 'motivations' }").dashboardTertiary--text
+          v-icon arrow_back
+        .title.dashboardTertiary--text Мотивация
       .white.border.pa-4
         v-layout(row wrap)
           v-flex(xs12 sm6)
@@ -170,7 +174,7 @@ export default {
                 this.type = percentage.type;
                 this.startDate = this.$moment(percentage.start).format('YYYY-MM-DD');
                 this.endDate = this.$moment(percentage.end).format('YYYY-MM-DD');
-                this.min = percentage.min;
+                // this.min = percentage.min;
                 this.brand = percentage.brands.map(item => item.brandId);
                 this.percentages = percentage.brands.map(item => ({
                   brandId: item.brandId,
@@ -220,6 +224,14 @@ export default {
             this.percentages.splice(index, 1);
           }
         }
+      }
+    },
+    min(value) {
+      if (this.percentages.length) {
+        this.percentages.forEach((el) => {
+          // eslint-disable-next-line no-param-reassign
+          el.percentage = parseFloat(value) || 0;
+        });
       }
     },
   },
