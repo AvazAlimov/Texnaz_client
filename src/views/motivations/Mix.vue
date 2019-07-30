@@ -1,6 +1,10 @@
 <template lang="pug">
   v-layout(row wrap)
     v-flex(xs12)
+      v-layout(row align-center).ma-2
+        v-btn(icon flat :to="{ name: 'motivations' }").dashboardTertiary--text
+          v-icon arrow_back
+        .title.dashboardTertiary--text Мотивация
       .white.border.pa-4
         v-layout(row wrap)
           v-flex(xs12 sm6)
