@@ -79,7 +79,7 @@ export default {
           counter: 0,
           id: 'returns',
           title: 'Возврат',
-          to: { name: 'return' },
+          to: { name: 'returns' },
           permission: this.$permissions.SHOW_WAREHOUSE_RETURN.name,
         },
         {

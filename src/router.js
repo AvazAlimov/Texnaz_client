@@ -421,9 +421,20 @@ const router = new Router({
                   component: () => import('./views/warehouses/Acceptance.vue'),
                 },
                 {
-                  path: 'return',
-                  name: 'return',
-                  component: () => import('./views/warehouses/Return.vue'),
+                  path: 'returns',
+                  component: () => import('./views/warehouses/Returns.vue'),
+                  children: [
+                    {
+                      name: 'returns',
+                      path: '',
+                      component: () => import('./views/warehouses/Return.vue'),
+                    },
+                    {
+                      name: 'returnInfo',
+                      path: ':returnId',
+                      component: () => import('./views/warehouses/ReturnInfo.vue'),
+                    },
+                  ],
                 },
                 {
                   path: 'booking',
