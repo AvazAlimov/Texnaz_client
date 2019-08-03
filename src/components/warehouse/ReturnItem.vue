@@ -20,7 +20,7 @@
             required: true,\
             numeric: true,\
             min_value: 0,\
-            max_value: item.quantity,\
+            max_value: item.initial,\
           }"
         )
 </template>
