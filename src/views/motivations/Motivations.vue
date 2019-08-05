@@ -30,14 +30,15 @@
                       : 'mix_edit'),\
                       params: {id: props.item.id}\
                     }")
-                  v-icon(small) edit
+                  v-icon(small v-if="$hasRole(1)") edit
+                  v-icon(small v-else) visibility
                 v-btn.ma-0(flat color="red" icon
                   @click="remove(props.item.id, props.item.motivationType)")
                   v-icon(small) delete
         v-divider
         v-layout(row)
           v-spacer
-          v-menu(offset-y)
+          v-menu(offset-y v-if="$hasRole(1)")
             template(v-slot:activator="{ on }")
               v-btn.ma-0.mr-1(
                 flat color="secondary"

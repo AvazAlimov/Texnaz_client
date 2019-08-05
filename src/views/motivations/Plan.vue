@@ -130,6 +130,7 @@
               v-spacer
               v-btn(
                 flat
+                v-if="$hasRole(1)"
                 color="secondary"
                 :loading="loading"
                 :disabled="errors.items.length > 0 || !!!ranges.length"

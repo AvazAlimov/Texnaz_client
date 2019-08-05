@@ -11,7 +11,7 @@
             v-text-field(
               v-model="search"
               append-icon="search"
-              label="Search"
+              label="Поиск"
             ).ma-4
             v-data-table(
               :loading="loading"

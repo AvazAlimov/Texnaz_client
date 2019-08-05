@@ -77,7 +77,8 @@
 
 
           v-flex(xs12 sm6)
-            .title.mb-3 Показатели
+            // Commented for required
+              .title.mb-3 Показатели
 
             v-text-field(
               v-model="min"
@@ -104,6 +105,7 @@
               v-spacer
               v-btn(
                 flat
+                v-if="$hasRole(1)"
                 color="secondary"
                 :loading="loading"
                 :disabled="errors.items.length > 0"

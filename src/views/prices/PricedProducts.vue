@@ -1,23 +1,48 @@
 <template lang="pug">
   .border.white
+    v-layout(row wrap align-center)
+      v-combobox(
+        v-model="brand"
+        :items="brands"
+        item-text="name"
+        label="Бренд"
+        clearable
+        color="secondary"
+      ).ma-4
+      v-combobox(
+        v-model="type"
+        :items="types"
+        item-text="name"
+        label="Тип продукта"
+        clearable
+        color="secondary"
+      ).ma-4
+      v-text-field(
+        v-model="search"
+        prepend-inner-icon="search"
+        label="Поиск"
+        color="secondary"
+        clearable
+      ).ma-4
     v-data-table(
       :headers="headers"
-      :items="prices"
+      :items="filteredItems"
+      :search="search"
       :loading="loading"
       hide-actions)
       template(v-slot:items="props")
         tr
           td {{ props.index + 1 }}
-          td {{ props.item.product.Brand.name }}
-          td {{ props.item.product.Brand.manufacturer }}
-          td {{ props.item.product.name }}
-          td.text-xs-center {{ props.item.product.color || '-' }}
-          td.text-xs-center {{ props.item.product.packing }}
+          td {{ props.item.brand }}
+          td {{ props.item.manufacturer }}
+          td {{ props.item.name }}
+          td.text-xs-center {{ props.item.color || '-' }}
+          td.text-xs-center {{ props.item.packing }}
           td.orange.lighten-4 {{ props.item.mixPriceNonCash }}
           td.green.lighten-4 {{ props.item.secondPrice }}
-          td {{ $b2c(props.item, officialRate, exchangeRate) | ceil }}
-          td {{ $priceCash(props.item, exchangeRate) | roundUp }}
-          td {{ props.item.createdAt | moment("HH:mm DD-MM-YYYY") }}
+          td {{ props.item.b2c | ceil }}
+          td {{ props.item.mixPriceCash | roundUp }}
+          td {{ props.item.date | moment("HH:mm DD-MM-YYYY") }}
           td
             v-layout
               v-btn.ma-0(
@@ -54,12 +79,19 @@
 <script>
 import Price from '@/services/Price';
 import Configuration from '@/services/Configuration';
+import ProductType from '@/services/ProductType';
+import Brand from '@/services/Brand';
 
 export default {
   name: 'PricedProducts',
   data() {
     return {
       loading: true,
+      brands: [],
+      types: [],
+      brand: null,
+      type: null,
+      search: '',
       headers: [
         {
           text: '#',
@@ -69,29 +101,29 @@ export default {
         },
         {
           text: 'Бренд',
-          value: 'product.Brand.name',
+          value: 'brand',
           invisible: true,
         },
         {
           text: 'Производитель',
-          value: 'product.Brand.manufacturer',
+          value: 'manufacturer',
           invisible: true,
         },
         {
           text: 'Наименование',
-          value: 'product.name',
+          value: 'name',
           invisible: true,
         },
         {
           text: 'Цвет',
-          value: 'product.color',
+          value: 'color',
           align: 'center',
           width: 1,
           invisible: true,
         },
         {
           text: 'Фасовка',
-          value: 'product.packing',
+          value: 'packing',
           align: 'center',
           width: 1,
           invisible: true,
@@ -99,27 +131,32 @@ export default {
         {
           text: 'Наценка (сум)',
           width: 1,
+          value: 'mixPriceNonCash',
           sortable: false,
         },
         {
           text: 'B2B ($)',
           width: 1,
           sortable: false,
+          value: 'secondPrice',
         },
         {
           text: 'B2C',
           width: 1,
+          value: 'b2c',
           sortable: false,
         },
         {
           text: 'Наценка ($)',
           width: 1,
           sortable: false,
+          value: 'mixPriceCash',
         },
         {
           text: 'Дата генерации',
           width: 1,
           sortable: false,
+          value: 'date',
         },
         {
           width: 1,
@@ -144,6 +181,12 @@ export default {
       });
       return columns;
     },
+    filteredItems() {
+      return this.prices.filter(item => (
+        (this.brand ? item.brandId === this.brand.id : true)
+        && (this.type ? item.type === this.type.id : true)
+      ));
+    },
   },
   methods: {
     getAll() {
@@ -153,12 +196,32 @@ export default {
         Price.getAll(),
         Configuration.getExchangeRate(),
         Configuration.getOfficialRate(),
+        Brand.getAll(),
+        ProductType.getAll(),
       ])
         .then((results) => {
-          const [prices, exchangeRate, officialRate] = results;
-          this.prices = this.group(prices.sort((a, b) => (a.id < b.id ? 0 : -1)));
+          const [prices, exchangeRate, officialRate, brands, types] = results;
+          this.prices = this.group(prices.sort((a, b) => (a.id < b.id ? 0 : -1)))
+            .map(price => ({
+              id: price.id,
+              brandId: price.product.brand,
+              type: price.product.type,
+              brand: price.product.Brand.name,
+              manufacturer: price.product.Brand.manufacturer,
+              name: price.product.name,
+              color: price.product.color,
+              packing: price.product.packing,
+              mixPriceNonCash: price.mixPriceNonCash,
+              secondPrice: price.secondPrice,
+              b2c: this.$b2c(price, officialRate.value, exchangeRate.value),
+              mixPriceCash: this.$priceCash(price, exchangeRate.value),
+              date: price.createdAt,
+              prices: price.prices,
+            }));
           this.exchangeRate = exchangeRate.value;
           this.officialRate = officialRate.value;
+          this.brands = brands;
+          this.types = types;
         })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
@@ -177,6 +240,11 @@ export default {
         }
       });
       return groupedPrices;
+    },
+  },
+  watch: {
+    brand(value) {
+      console.log(value);
     },
   },
   created() {

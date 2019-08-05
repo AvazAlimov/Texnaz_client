@@ -10,7 +10,7 @@
           v-layout(wrap)
             .title.ma-3 На согласование
             v-spacer
-            .subheading.ma-3 Обший сумма: {{ totalPending }}
+            .subheading.ma-3 Oбщая сумма: {{ totalPending }}
           v-divider
           v-data-table(
             :headers="headers"
@@ -23,7 +23,7 @@
               td {{ props.item.client.name }}
               td {{ props.item.client.icc }}
               td {{ props.item.brand ? `${props.item.brand.name} ` : '-' }}
-                | {{ props.item.brand ? `${props.item.brand.manufacturer}` : '' }}
+                | {{ props.item.manufacturer ? `${props.item.brand.manufacturer}` : '' }}
               td {{ props.item.manager.name }}
               td {{ balance(props.item.client).toFixed(2) }} $
               td {{ (props.item.sum / props.item.ratio).toFixed(2) }} $
@@ -36,7 +36,7 @@
           v-layout(wrap)
             .title.ma-3 Согласованные
             v-spacer
-            .subheading.ma-3 Обший сумма: {{ totalApproved }}
+            .subheading.ma-3 Oбщая сумма: {{ totalApproved }}
           v-divider
           v-data-table(
             :headers="headers"
@@ -49,7 +49,7 @@
               td {{ props.item.client.name }}
               td {{ props.item.client.icc }}
               td {{ props.item.brand ? `${props.item.brand.name} ` : '-' }}
-                | {{ props.item.brand ? `${props.item.brand.manufacturer}` : '' }}
+                | {{ props.item.manufacturer ? `${props.item.brand.manufacturer}` : '' }}
               td {{ props.item.manager.name }}
               td {{ balance(props.item.client).toFixed(2) }} $
               td {{ (props.item.sum / props.item.ratio).toFixed(2) }} $
