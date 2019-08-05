@@ -56,7 +56,10 @@ export default {
       this.loading = true;
       this.configurations = [];
       Configuration.getAll()
-        .then((configurations) => { this.configurations = configurations; })
+        .then((configurations) => {
+          this.configurations = configurations
+            .filter(item => item.id !== 6);
+        })
         .catch(() => this.getAll())
         .finally(() => { this.loading = false; });
     },

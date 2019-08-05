@@ -141,7 +141,7 @@ export default {
   methods: {
     getAll() {
       Configuration.getAll().then((configurations) => {
-        this.configurations = configurations.filter(item => item.id > 3 && item.id < 7);
+        this.configurations = configurations.filter(item => item.id > 3 && item.id < 6);
       });
     },
     update(id, value) {

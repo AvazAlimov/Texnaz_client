@@ -4,6 +4,7 @@
       :headers="headers"
       :items="products"
       :loading="loading"
+      :pagination.sync="pagination"
       hide-actions)
       template(v-slot:items="props")
         tr(@click="props.expanded = !props.expanded")
@@ -40,6 +41,10 @@
                 @click="save(props.item)"
               )
                 v-icon(small) save
+
+    v-divider
+    .text-xs-center.py-2
+      v-pagination(v-model="pagination.page" color="secondary" :length="pageLength")
 </template>
 
 <script>
@@ -51,6 +56,12 @@ export default {
   name: 'UnpricedProducts',
   data() {
     return {
+      pagination: {
+        descending: false,
+        page: 1,
+        rowsPerPage: 30,
+        totalItems: 0,
+      },
       loading: false,
       exchangeRate: 1,
       headers: [
@@ -102,6 +113,11 @@ export default {
       products: [],
     };
   },
+  computed: {
+    pageLength() {
+      return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage);
+    },
+  },
   methods: {
     getAll() {
       this.loading = true;
@@ -120,6 +136,7 @@ export default {
             product.secondPrice = '0';
           });
           this.products = products;
+          this.pagination.totalItems = products.length;
           new Promise(resolve => setTimeout(resolve, 100)).then(() => {
             this.$validator.validate();
           });
