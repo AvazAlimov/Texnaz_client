@@ -28,6 +28,7 @@ import SaleItem from './warehouse/SaleItem.vue';
 import StockBookings from './warehouse/StockBookings.vue';
 import StockItem from './warehouse/StockItem.vue';
 import StockItemExpanded from './warehouse/StockItemExpanded.vue';
+import ReturnWarehouseItem from './warehouse/ReturnWarehouseItem.vue';
 
 import Map from './analytics/Map.vue';
 import GraphCard from './analytics/GraphCard.vue';
@@ -75,6 +76,7 @@ const Components = {
   StockBookings,
   StockItem,
   StockItemExpanded,
+  ReturnWarehouseItem,
 
   Map,
   GraphCard,

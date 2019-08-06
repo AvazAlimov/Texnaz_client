@@ -421,6 +421,11 @@ const router = new Router({
                   component: () => import('./views/warehouses/Acceptance.vue'),
                 },
                 {
+                  path: 'warehouseReturn',
+                  name: 'warehouseReturn',
+                  component: () => import('./views/warehouses/ReturnWarehouse.vue'),
+                },
+                {
                   path: 'returns',
                   component: () => import('./views/warehouses/Returns.vue'),
                   children: [

@@ -84,6 +84,13 @@ export default {
         },
         {
           counter: 0,
+          id: 'returnWarehouse',
+          title: 'Возврат на склад',
+          to: { name: 'warehouseReturn' },
+          permission: this.$permissions.SHOW_WAREHOUSE_RETURN.name,
+        },
+        {
+          counter: 0,
           id: 'losts',
           title: 'Потерянные продукты',
           to: { name: 'loststocks' },
@@ -137,7 +144,7 @@ export default {
           [this.warehouse] = results;
           this.setCounter('prestocks', results[1].length);
           this.setCounter('moves', results[2].length);
-          this.setCounter('returns', results[3].length);
+          this.setCounter('returnWarehouse', results[3].length);
           this.setCounter('losts', results[4].length);
           this.setCounter('shipments', results[5].length);
         })
