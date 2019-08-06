@@ -139,6 +139,7 @@ export default {
         Return.getAll(this.$route.params.id),
         Lost.getAll(this.$route.params.id),
         Sale.getByShipped(this.$route.params.id, 0),
+        Sale.getAll(),
       ])
         .then((results) => {
           [this.warehouse] = results;
@@ -147,6 +148,7 @@ export default {
           this.setCounter('returnWarehouse', results[3].length);
           this.setCounter('losts', results[4].length);
           this.setCounter('shipments', results[5].length);
+          this.setCounter('returns', results[6].filter(sale => !!sale.shipped).length);
         })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
