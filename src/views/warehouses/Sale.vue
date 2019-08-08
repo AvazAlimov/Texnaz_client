@@ -83,8 +83,8 @@
                     label="Номер"
                     name="Номер"
                     v-validate="'required'")
-                  .subheading Баланс клиента: {{ balance.toFixed(2) }} $
-                  .subheading Итоговая цена: {{ getTotalPrice().toFixed(2) }} $
+                  .subheading Баланс клиента: {{ balance | roundUp | readable }} $
+                  .subheading Итоговая цена: {{ getTotalPrice() | roundUp | readable }} $
                 v-divider
                 v-data-table(
                     :headers="headers"
@@ -116,7 +116,8 @@ export default {
     number: '',
     isUnique: false,
     stock: null,
-    client: null,
+    sales: [],
+    client: {},
     selected: [],
     clients: [],
     payment: 1,
@@ -189,16 +190,8 @@ export default {
       return this.clients.filter(client => client.managerId === this.$getUserId());
     },
     balance() {
-      if (this.client) {
-        let balance = 0;
-        this.client.payments.forEach((payment) => {
-          if (payment.approved) {
-            balance += payment.sum / payment.ratio;
-          }
-        });
-        return balance;
-      }
-      return 0;
+      return this.$getClientBalance(this.client, this.sales
+        .filter(sale => sale.clientId === this.client.id));
     },
   },
   methods: {
@@ -207,8 +200,9 @@ export default {
       Promise.all([
         Client.getAll(),
         Configuration.getAll(),
+        Sale.getAll(),
       ]).then((results) => {
-        [this.clients, this.configurations] = results;
+        [this.clients, this.configurations, this.sales] = results;
         this.exchangeRate = (this.configurations.find(conf => conf.id === 4)).value;
         this.officialRate = (this.configurations.find(conf => conf.id === 5)).value;
 
