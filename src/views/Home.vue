@@ -146,9 +146,8 @@ export default {
     },
     update(id, value) {
       Rate.create({
-        marketRate: this.configurations[0].value,
-        exchangeRate: this.configurations[1].value,
-        officialRate: this.configurations[2].value,
+        exchangeRate: this.configurations[0].value,
+        officialRate: this.configurations[1].value,
       });
       Configuration.update(id, value).then(() => {
         this.$store.commit('setMessage', 'Обновлено');
