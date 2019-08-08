@@ -29,6 +29,7 @@
       :items="filteredItems"
       :search="search"
       :loading="loading"
+      :pagination.sync="pagination"
       hide-actions)
       template(v-slot:items="props")
         tr
@@ -74,6 +75,11 @@
               td
                 div(style="width: 72px;")
         v-divider
+    v-divider
+    .text-xs-center.py-2
+      v-pagination(v-model="pagination.page"
+    color="secondary"
+    :length="Math.ceil(pagination.totalItems / pagination.rowsPerPage)")
 </template>
 
 <script>
@@ -89,6 +95,12 @@ export default {
       loading: true,
       brands: [],
       types: [],
+      pagination: {
+        descending: false,
+        page: 1,
+        rowsPerPage: 30,
+        totalItems: 0,
+      },
       brand: null,
       type: null,
       search: '',
@@ -218,6 +230,7 @@ export default {
               date: price.createdAt,
               prices: price.prices,
             }));
+          this.pagination.totalItems = this.prices.length;
           this.exchangeRate = exchangeRate.value;
           this.officialRate = officialRate.value;
           this.brands = brands;
