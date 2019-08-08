@@ -26,16 +26,12 @@ export default {
           value: 'name',
         },
         {
-          text: 'Курс доллара (обмен)',
+          text: 'Курс доллара (Продажа)',
           value: 'exchangeRate',
         },
         {
-          text: 'Курс доллара (официальный)',
+          text: 'Курс доллара (Покупка)',
           value: 'officialRate',
-        },
-        {
-          text: 'Курс доллара (рыночный)',
-          value: 'marketRate',
         },
       ],
       items: [
@@ -60,7 +56,6 @@ export default {
               name: el.user.name,
               exchangeRate: el.exchangeRate,
               officialRate: el.officialRate,
-              marketRate: el.marketRate,
             });
           });
         }).catch(err => this.$store.commit('setMessage', err.message));
