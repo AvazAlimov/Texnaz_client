@@ -57,12 +57,12 @@
                         .title Баланс клиента
                         v-spacer
                           v-divider.mx-4
-                        .subheading {{ $getClientBalance(sale.client) | roundUp }} $
+                        .subheading {{ $getClientBalance(sale.client, sales) | roundUp }} $
                       v-layout.mb-2(align-center v-if="!$route.query.accounting")
                         .title Сумма отгрузки
                         v-spacer
                           v-divider.mx-4
-                        .subheading {{ $getTotalPrice(sale, sale.exchangeRate, sale.officialRate) | roundUp | readable}} $
+                        .subheading {{ salePrice  | roundUp | readable}} $
                     v-flex(xs12)
                       v-data-table(
                         :headers="headers"
@@ -98,6 +98,7 @@ export default {
       loading: false,
       types: shipmentTypes,
       payments: shipmentPayments,
+      sales: [],
       sale: {
         items: [],
         client: {
@@ -157,14 +158,25 @@ export default {
       ],
     };
   },
+  computed: {
+    salePrice() {
+      return this.$getTotalPrice(this.sale, this.sale.exchangeRate, this.sale.officialRate);
+    },
+  },
   methods: {
     getAll() {
       this.loading = true;
-      Sale.get(this.$route.params.returnId)
-        .then((sale) => {
-          this.sale = { ...sale };
+      Sale.getAll()
+        .then((sales) => {
+          this.sales = sales;
+          this.sale = { ...this.sales.find(el => el.id === this.$route.params.returnId) };
+
+          this.sale.items.forEach((item, index) => {
           // eslint-disable-next-line no-param-reassign
-          this.sale.items.forEach((item, index) => { item.initial = sale.items[index].quantity; });
+            item.initial = sales
+              .find(el => el.id === this.$route.params.returnId)
+              .items[index].quantity;
+          });
         })
         .catch((err) => { this.$store.commit('setMessage', err.messages); })
         .finally(() => { this.loading = false; });
