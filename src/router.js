@@ -524,6 +524,11 @@ const router = new Router({
               name: 'rates',
               component: () => import('./views/tables/Rates.vue'),
             },
+            {
+              path: 'returnclient',
+              name: 'returnclient',
+              component: () => import('./views/tables/ReturnClient.vue'),
+            },
           ],
         },
         {

@@ -31,6 +31,10 @@ export default {
         name: 'ПДЗ',
       },
       {
+        to: { name: 'returnclient' },
+        name: 'Возврат истории',
+      },
+      {
         to: { name: 'rates' },
         name: 'Курсы',
       },
