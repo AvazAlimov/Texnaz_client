@@ -99,11 +99,22 @@ Vue.prototype.$getTotalPrice = (sale, exchangeRate, officialRate) => {
   return total;
 };
 
-Vue.prototype.$getClientBalance = (client) => {
+Vue.prototype.$getClientBalance = (client, sales) => {
   let balance = 0;
-  if (client.payments) {
+  if (client.payments ? client.payments.length : false) {
     client.payments.forEach((payment) => {
-      if (payment.approved) { balance += payment.sum / payment.ratio; }
+      if (payment.approved) {
+        balance += payment.ratio === 1 ? payment.sum
+          : payment.sum / payment.ratio;
+      }
+    });
+  }
+  if (sales ? sales.length : false) {
+    sales.forEach((sale) => {
+      if (sale.approved) {
+        balance -= Vue.prototype
+          .$getTotalPrice(sale, sale.exchangeRate, sale.officialRate);
+      }
     });
   }
   return balance;
