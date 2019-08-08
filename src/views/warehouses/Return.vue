@@ -121,7 +121,8 @@ export default {
               amount: this.$getTotalPrice(sale, sale.exchangeRate, sale.officialRate),
               type: sale.type,
               form: sale.form,
-              clientBalance: this.$getClientBalance(sale.client),
+              clientBalance: this.$getClientBalance(sale.client, sales
+                .filter(el => el.clientId === sale.clientId)),
             }));
         })
         .catch(err => this.$store.commit('setMessage', err.message))
