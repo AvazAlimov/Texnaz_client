@@ -21,24 +21,24 @@
               :search="search"
               :pagination.sync="pagination"
             )
-              template(v-slot:items="props")
-                td {{ props.item.icc }}
-                td {{ props.item.name }}
-                td {{ $getClientBalance(props.item) }}
-                td {{ props.item.itn || '-' }}
-                td {{ props.item.contactPerson || '-' }}
-                td {{ props.item.phone || '-' }}
-                td {{ props.item.region.province.name }} / {{ props.item.region.name }}
-                td {{ props.item.sphere || '-' }}
-                td {{ props.item.manager.name }}
-                td {{ props.item.createdAt | moment('YYYY-MM-DD') }}
+              template(v-slot:items="{ item }")
+                td {{ item.icc }}
+                td {{ item.name }}
+                td {{ $getClientBalance(item, sales.filter(el => el.clientId === item.id)) | roundUp | readable }}
+                td {{ item.itn || '-' }}
+                td {{ item.contactPerson || '-' }}
+                td {{ item.phone || '-' }}
+                td {{ item.region.province.name }} / {{ item.region.name }}
+                td {{ item.sphere || '-' }}
+                td {{ item.manager.name }}
+                td {{ item.createdAt | moment('YYYY-MM-DD') }}
                 td
                   v-layout(v-if="$hasRole(1)")
                       v-btn(icon
-                        :to="{ name: 'client', params: { id: props.item.id }}"
+                        :to="{ name: 'client', params: { id: item.id }}"
                       ).mx-0
                           v-icon(color="secondary" small) edit
-                      v-btn(icon @click="remove(props.item.id)").mx-0
+                      v-btn(icon @click="remove(item.id)").mx-0
                           v-icon(color="red" small) delete
             v-divider
             .text-xs-center.py-2
@@ -55,6 +55,7 @@
 
 <script>
 import Client from '@/services/Client';
+import Sale from '@/services/Sale';
 
 export default {
   name: 'Clients',
@@ -62,6 +63,7 @@ export default {
     return {
       search: '',
       loading: false,
+      sales: [],
       headers: [
         {
           text: 'ИКК',
@@ -132,14 +134,16 @@ export default {
     getAll() {
       this.loading = true;
       this.clients = [];
-      Client.getAll()
-        .then((clients) => {
-          this.clients = clients;
 
-          this.pagination.totalItems = this.myClients.length;
-        }).catch((error) => {
-          this.$store.commit('setMessage', error.message);
-        })
+      Promise.all([
+        Client.getAll(),
+        Sale.getAll(),
+      ]).then((result) => {
+        [this.clients, this.sales] = result;
+        this.pagination.totalItems = this.clients.length;
+      }).catch((error) => {
+        this.$store.commit('setMessage', error.message);
+      })
         .finally(() => { this.loading = false; });
     },
     remove(id) {
