@@ -29,6 +29,8 @@
                 v-validate="{\
                     required: true,\
                     decimal: true,\
+                    min_value: 0,\
+                    excluded: '0',\
                 }"
             )
         v-flex(xs6)
