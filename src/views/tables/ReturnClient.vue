@@ -2,9 +2,51 @@
     v-layout(row wrap)
         v-flex(xs12)
             .border.white
+                v-layout(wrap).pa-3
+                  v-menu(
+                    v-model="start"
+                    :clost-on-content-click="false"
+                    min-width="290px"
+                  ).ma-3
+                    template(v-slot:activator="{ on }")
+                      v-text-field(
+                        v-model="startDate"
+                        v-on="on"
+                        label="От"
+                        readonly
+                      )
+                    v-date-picker(
+                      v-model="startDate"
+                      @input="start = !start"
+                      :max="maximum"
+                    )
+                  v-menu(
+                    v-model="end"
+                    :clost-on-content-click="false"
+                    min-width="290px"
+                  ).ma-3
+                    template(v-slot:activator="{ on }")
+                      v-text-field(
+                        v-model="endDate"
+                        v-on="on"
+                        label="До"
+                        readonly
+                      )
+                    v-date-picker(
+                      v-model="endDate"
+                      @input="end = !end"
+                      :max="maximum"
+                    )
+                  v-spacer
+                  v-text-field(
+                    v-model="search"
+                    label="Поиск"
+                    append-icon="search"
+                  )
                 v-data-table(
                     :headers="headers"
-                    :items="items"
+                    :items="filteredData"
+                    :search="search"
                     hide-actions
                 )
                     template(v-slot:items ="{ item }")
@@ -16,17 +58,24 @@
                         td {{ item.managername }}
                         td {{ types.find(el => el.id === item.type).name }}
                         td {{ forms.find(el => el.id === item.form).name }}
-                        td {{ item.balance }}
+                        td {{ item.balance | roundUp | readable}}
 
 </template>
 
 <script>
+import Sale from '@/services/Sale';
 import ReturnClient from '@/services/ReturnClient';
 import ShipmentTypes from '@/assets/shipment_types.json';
 import ShipmentPayments from '@/assets/shipment_payments.json';
 
 export default {
   data: () => ({
+    start: false,
+    end: false,
+    startDate: (new Date()).toISOString().substring(0, 10),
+    endDate: (new Date()).toISOString().substring(0, 10),
+    maximum: (new Date()).toISOString().substring(0, 10),
+    search: '',
     items: [],
     headers: [
       {
@@ -69,11 +118,24 @@ export default {
     types: ShipmentTypes,
     forms: ShipmentPayments,
   }),
+  computed: {
+    filteredData() {
+      const start = new Date(this.startDate);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(this.endDate);
+      end.setHours(23, 59, 59, 59);
+      return this.items.filter(el => new Date(el.date).getTime() >= start.getTime()
+        && new Date(el.date).getTime() <= end.getTime());
+    },
+  },
   methods: {
     getAll() {
-      ReturnClient.getAll()
-        .then((returns) => {
-          this.items.push(...returns.map(item => ({
+      Promise.all([
+        ReturnClient.getAll(),
+        Sale.getAll(),
+      ])
+        .then((result) => {
+          this.items.push(...result[0].map(item => ({
             date: item.createdAt,
             number: item.sale.number,
             warehouse: item.sale.warehouse.name,
@@ -82,7 +144,7 @@ export default {
             managername: item.sale.manager.name,
             type: item.sale.type,
             form: item.sale.form,
-            balance: this.$getClientBalance(item.sale.client),
+            balance: this.$getClientBalance(item.sale.client, result[1]),
           })));
         })
         .catch((err) => { this.$store.setMessage('setMessage', err.message); });

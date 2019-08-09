@@ -48,6 +48,7 @@
                 :headers="headers"
                 :items="filteredData"
                 hide-actions
+                disable-initial-sort
                 :search="search"
             )
             template(v-slot:items="props")
@@ -57,7 +58,7 @@
 <script>
 import Sale from '@/services/Sale';
 import Payment from '@/services/Payment';
-import Configuration from '@/services/Configuration';
+import ReturnClient from '@/services/ReturnClient';
 
 export default {
   data() {
@@ -68,14 +69,6 @@ export default {
       endDate: (new Date()).toISOString().substring(0, 10),
       end: false,
       headers: [
-        {
-          text: 'Икк',
-          value: 'icc',
-        },
-        {
-          text: 'Наименование',
-          value: 'name',
-        },
         {
           text: 'Дата отгрузки',
           value: 'saleDate',
@@ -93,15 +86,15 @@ export default {
           value: 'paymentPrice',
         },
         {
-          text: 'Менеджер',
-          value: 'manager',
+          text: 'Дата возврат',
+          value: 'returnDate',
         },
         {
-          text: 'Обшая сумма',
-          value: 'debt',
+          text: 'Количество возврат',
+          value: 'returnQuantity',
         },
       ],
-      users: [],
+      items: [],
     };
   },
   computed: {
@@ -109,13 +102,15 @@ export default {
       return (new Date()).toISOString().substring(0, 10);
     },
     filteredData() {
+      return this.items;
+      /*
       const start = new Date(this.startDate);
       start.setHours(0, 0, 0, 0);
       const end = new Date(this.endDate);
       end.setHours(23, 59, 59, 59);
-      return this.users.filter(el => new Date(el.saleDate !== '-' ? el.saleDate : el.paymentDate)
-        .getTime() >= start.getTime() && new Date(el.saleDate !== '-' ? el.saleDate : el.paymentDate)
-        .getTime() <= end.getTime());
+      return this.items.filter(el => new Date(el.saleDate !== '-' ? el.saleDate : el.paymentDate)
+      .getTime() >= start.getTime() && new Date(el.saleDate !== '-' ? el.saleDate : el.paymentDate)
+        .getTime() <= end.getTime()); */
     },
   },
   methods: {
@@ -126,35 +121,40 @@ export default {
       this.users = [];
       Promise.all([
         Sale.getAll(),
-        Configuration.getExchangeRate(),
-        Configuration.getOfficialRate(),
         Payment.getAll(),
+        ReturnClient.getAll(),
       ]).then((result) => {
-        this.startDate = (new Date(this.getDate(result[0][0]
-          .createdAt, result[3][0].createdAt))).toISOString().substring(0, 10);
-        // Main task: Remove objects from Payments if it exist in Sale then bind two array
-        // and loop it to display on tabel
-        let holder = result[3];
-        result[0].forEach((element) => {
-          // Removing, objects if the client in it exist in Sale also, from Payments array
-          holder = holder.filter(el => element.client.id !== el.client.id);
-        });
-        // Connecting two types of Objects, Sale and Payment
-        result[0].concat(holder).forEach((el) => {
-          this.users.push({
-            icc: el.client.icc,
-            name: el.client.name,
-            // To diffirentiate which object Sale or Payment .ratio prop added
-            saleDate: el.ratio ? '-' : el.createdAt,
-            salePrice: el.ratio ? '-' : this.$getTotalPrice(el, result[1].value, result[2].value),
-            // In order to get last date and price of payment .reduce function used
-            paymentDate: el.client.payments.reduce((first, next) => next.createdAt, ''),
-            paymentPrice: el.client.payments.reduce((first, next) => next.sum, ''),
-            manager: el.manager.name,
-            debt: el.client.payments.map(payment => payment.sum).reduce((a, b) => a + b, 0)
-               - (el.ratio ? 0 : this.$getTotalPrice(el, result[1].value, result[2].value)),
-          });
-        });
+        this.items = [];
+        const [sales, payments, returns] = result;
+        sales.filter(sale => sale.approved).forEach(sale => this.items.push({
+          saleDate: sale.createdAt,
+          salePrice: this.$getTotalPrice(sale, sale.exchangeRate, sale.officialRate),
+          paymentDate: '-',
+          paymentPrice: '-',
+          returnDate: '-',
+          returnQuantity: '-',
+          date: sale.createdAt,
+        }));
+        payments.forEach(({ createdAt, ratio, sum }) => this.items.push({
+          saleDate: '-',
+          salePrice: '-',
+          paymentDate: createdAt,
+          paymentPrice: ratio === 1 ? sum : (sum / ratio),
+          returnDate: '-',
+          returnQuantity: '-',
+          date: createdAt,
+        }));
+        returns.forEach(({ sale, createdAt }) => this.items.push({
+          saleDate: '-',
+          salePrice: '-',
+          paymentDate: '-',
+          paymentPrice: '-',
+          returnDate: createdAt,
+          returnQuantity: sale.items.reduce((a, b) => (a ? a.quantity : 0)
+            + (b ? b.quantity : 0), 0),
+          date: createdAt,
+        }));
+        this.items.sort((a, b) => (a.date > b.date ? 1 : -1));
       });
     },
   },

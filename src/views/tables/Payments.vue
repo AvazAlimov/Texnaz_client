@@ -64,6 +64,7 @@ export default {
       start: false,
       endDate: (new Date()).toISOString().substring(0, 10),
       end: false,
+      maximum: (new Date()).toISOString().substring(0, 10),
       headers: [
         {
           text: 'Номер',
@@ -113,9 +114,6 @@ export default {
     };
   },
   computed: {
-    maximum() {
-      return (new Date()).toISOString().substring(0, 10);
-    },
     filteredData() {
       const start = new Date(this.startDate);
       start.setHours(0, 0, 0, 0);

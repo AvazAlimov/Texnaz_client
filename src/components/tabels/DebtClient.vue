@@ -1,13 +1,11 @@
 <template lang="pug">
     tr
-      td {{ user.icc }}
-      td {{ user.name }}
       td {{ user.saleDate | moment('YYYY-MM-DD HH:mm')}}
       td {{ user.salePrice }}
       td {{ user.paymentDate | moment('YYYY-MM-DD HH:mm')}}
       td {{ user.paymentPrice }}
-      td {{ user.manager }}
-      td {{ user.debt }}
+      td {{ user.returnDate | moment('YYYY-MM-DD HH:mm')}}
+      td {{ user.returnQuantity }}
 </template>
 
 <script>
