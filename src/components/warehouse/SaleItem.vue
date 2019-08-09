@@ -21,7 +21,7 @@
             v-validate="{\
                     required: true,\
                     numeric: true,\
-                    min_value: 0,\
+                    min_value: $b2c(item.product.prices[0], officialRate, exchangeRate),\
                 }"
           )
 
