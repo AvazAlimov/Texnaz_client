@@ -1,7 +1,10 @@
 <template lang="pug">
   v-layout(row wrap)
     v-flex(xs12)
-      FilteredSales(:sales="sales" :exchangeRate="exchangeRate" :officialRate="officialRate")
+      FilteredSales(:sales="sales"
+      :allSales="allSales"
+      :exchangeRate="exchangeRate"
+      :officialRate="officialRate")
 </template>
 
 <script>
@@ -13,6 +16,7 @@ export default {
   data: () => ({
     exchangeRate: 1,
     officialRate: 1,
+    allSales: [],
     sales: [],
   }),
   methods: {
@@ -25,9 +29,10 @@ export default {
           shipped: 1,
         }),
         Configuration.getAll(),
+        Sale.getAll(),
       ])
         .then((results) => {
-          [this.sales, this.configurations] = results;
+          [this.sales, this.configurations, this.allSales] = results;
           this.sales = this.sales.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
           this.exchangeRate = (this.configurations.find(conf => conf.id === 4)).value;
           this.officialRate = (this.configurations.find(conf => conf.id === 5)).value;

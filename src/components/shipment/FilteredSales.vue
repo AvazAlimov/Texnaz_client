@@ -20,7 +20,7 @@
             | {{ getAccountingPrice(props.item) }}сум
         td {{ types.find(type => type.id == props.item.type).name }}
         td {{ payments.find(payment => payment.id == props.item.form).name }}
-        td {{ $getClientBalance(props.item.client) }}$
+        td {{ balance(props.item.client) |roundUp | readable }}$
         td
           v-layout(row)
             v-btn.ma-0(
@@ -49,6 +49,10 @@ export default {
     sales: {
       required: true,
       type: Array,
+    },
+    allSales: {
+      type: Array,
+      required: true,
     },
     exchangeRate: {
       required: true,
@@ -113,6 +117,9 @@ export default {
     ],
   }),
   methods: {
+    balance(client) {
+      return this.$getClientBalance(client, this.allSales.filter(el => el.id === client.id));
+    },
     getAccountingPrice(sale) {
       let total = 0;
       switch (sale.type) {

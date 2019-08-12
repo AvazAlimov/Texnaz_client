@@ -174,7 +174,8 @@ export default {
           paymentDate: '-',
           paymentPrice: '-',
           returnDate: returnItem.createdAt,
-          returnQuantity: this.$getTotalPrice(returnItem, returnItem.exchangeRate, returnItem.officialRate),
+          returnQuantity: this
+            .$getTotalPrice(returnItem, returnItem.exchangeRate, returnItem.officialRate),
           date: returnItem.createdAt,
           clienticc: returnItem.client.icc,
           clientname: returnItem.client.name,

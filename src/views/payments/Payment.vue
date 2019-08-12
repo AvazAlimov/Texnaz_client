@@ -55,11 +55,13 @@
 
 <script>
 import Payment from '@/services/Payment';
+import Sale from '@/services/Sale';
 
 export default {
   name: 'Payment',
   data: () => ({
     loading: false,
+    sales: [],
     payment: {
       manager: {},
       user: {},
@@ -69,25 +71,19 @@ export default {
   }),
   computed: {
     balance() {
-      if (this.payment.client.payments) {
-        let balance = 0;
-        this.payment.client.payments.forEach((payment) => {
-          if (payment.approved) {
-            balance += payment.sum / payment.ratio;
-          }
-        });
-        return balance;
-      }
-      return 0;
+      return this.$getClientBalance(this.payment.client, this.sales
+        .filter(el => el.id === this.payment.client.id));
     },
   },
   methods: {
     getAll() {
       this.loading = true;
-      Payment.get(this.$route.params.id)
-        .then((payment) => {
-          this.payment = payment;
-        })
+      Promise.all([
+        Payment.get(this.$route.params.id),
+        Sale.getAll(),
+      ]).then((result) => {
+        [this.payment, this.sales] = result;
+      })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
         })
