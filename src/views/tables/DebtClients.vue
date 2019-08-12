@@ -90,8 +90,24 @@ export default {
           value: 'returnDate',
         },
         {
-          text: 'Количество возврат',
-          value: 'returnQuantity',
+          text: 'Return price',
+          value: 'return price',
+        },
+        {
+          text: 'Client icc',
+          value: 'clienticc',
+        },
+        {
+          text: 'Client name',
+          value: 'clientname',
+        },
+        {
+          text: 'Manager name',
+          value: 'managername',
+        },
+        {
+          text: 'Client balance',
+          value: 'clientbalance',
         },
       ],
       items: [],
@@ -134,25 +150,36 @@ export default {
           returnDate: '-',
           returnQuantity: '-',
           date: sale.createdAt,
+          clienticc: sale.client.icc,
+          clientname: sale.client.name,
+          clientbalance: this.$getClientBalance(sale.client, sales),
+          managername: sale.manager.name,
         }));
-        payments.forEach(({ createdAt, ratio, sum }) => this.items.push({
+        payments.forEach(payment => this.items.push({
           saleDate: '-',
           salePrice: '-',
-          paymentDate: createdAt,
-          paymentPrice: ratio === 1 ? sum : (sum / ratio),
+          paymentDate: payment.createdAt,
+          paymentPrice: payment.ratio === 1 ? payment.sum : (payment.sum / payment.ratio),
           returnDate: '-',
           returnQuantity: '-',
-          date: createdAt,
+          date: payment.createdAt,
+          clienticc: payment.client.icc,
+          clientname: payment.client.name,
+          clientbalance: this.$getClientBalance(payment.client, sales),
+          managername: payment.manager.name,
         }));
-        returns.forEach(({ sale, createdAt }) => this.items.push({
+        returns.forEach(returnItem => this.items.push({
           saleDate: '-',
           salePrice: '-',
           paymentDate: '-',
           paymentPrice: '-',
-          returnDate: createdAt,
-          returnQuantity: sale.items.reduce((a, b) => (a ? a.quantity : 0)
-            + (b ? b.quantity : 0), 0),
-          date: createdAt,
+          returnDate: returnItem.createdAt,
+          returnQuantity: this.$getTotalPrice(returnItem, returnItem.exchangeRate, returnItem.officialRate),
+          date: returnItem.createdAt,
+          clienticc: returnItem.client.icc,
+          clientname: returnItem.client.name,
+          clientbalance: this.$getClientBalance(returnItem.client, sales),
+          managername: returnItem.manager.name,
         }));
         this.items.sort((a, b) => (a.date > b.date ? 1 : -1));
       });

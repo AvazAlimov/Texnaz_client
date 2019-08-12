@@ -6,6 +6,10 @@
       td {{ user.paymentPrice }}
       td {{ user.returnDate | moment('YYYY-MM-DD HH:mm')}}
       td {{ user.returnQuantity }}
+      td {{ user.clienticc }}
+      td {{ user.clientname }}
+      td {{ user.managername }}
+      td {{ user.clientbalance | roundUp | readable}}
 </template>
 
 <script>
