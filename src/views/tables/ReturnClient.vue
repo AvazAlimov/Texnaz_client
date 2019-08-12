@@ -58,6 +58,7 @@
                         td {{ item.managername }}
                         td {{ types.find(el => el.id === item.type).name }}
                         td {{ forms.find(el => el.id === item.form).name }}
+                        td {{ item.returnPrice | roundUp | readable }}
                         td {{ item.balance | roundUp | readable}}
 
 </template>
@@ -111,6 +112,10 @@ export default {
         value: 'form',
       },
       {
+        text: 'Return price',
+        value: 'returnPrice',
+      },
+      {
         text: 'Баланс клиента',
         value: 'balance',
       },
@@ -137,17 +142,19 @@ export default {
         .then((result) => {
           this.items.push(...result[0].map(item => ({
             date: item.createdAt,
-            number: item.sale.number,
-            warehouse: item.sale.warehouse.name,
-            icc: item.sale.client.icc,
-            clientname: item.sale.client.name,
-            managername: item.sale.manager.name,
-            type: item.sale.type,
-            form: item.sale.form,
-            balance: this.$getClientBalance(item.sale.client, result[1]),
+            number: item.number,
+            warehouse: item.warehouse.name,
+            icc: item.client.icc,
+            clientname: item.client.name,
+            managername: item.manager.name,
+            type: item.type,
+            form: item.form,
+            returnPrice: this.$getTotalPrice(item, item.exchangeRate, item.officialRate),
+            balance: this.$getClientBalance(item.client, result[1]
+              .filter(el => el.clientId === item.clientId)),
           })));
         })
-        .catch((err) => { this.$store.setMessage('setMessage', err.message); });
+        .catch((err) => { this.$store.commit('setMessage', err.message); });
     },
   },
   created() {

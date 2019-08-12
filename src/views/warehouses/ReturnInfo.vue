@@ -75,6 +75,8 @@
                           :item="item"
                           :type="sale.type"
                           :form="sale.form"
+                          :quantity="quantity"
+                          :listener="(value) => { quantity = value }"
                           :officialRate="sale.officialRate"
                           :exchangeRate="sale.exchangeRate")
                     v-flex(xs12)
@@ -88,6 +90,7 @@
 
 <script>
 import Sale from '@/services/Sale';
+import ReturnClient from '@/services/ReturnClient';
 import shipmentTypes from '@/assets/shipment_types.json';
 import shipmentPayments from '@/assets/shipment_payments.json';
 
@@ -99,6 +102,7 @@ export default {
       types: shipmentTypes,
       payments: shipmentPayments,
       sales: [],
+      quantity: 0,
       sale: {
         items: [],
         client: {
@@ -182,7 +186,32 @@ export default {
         .finally(() => { this.loading = false; });
     },
     submit() {
-      Sale.return(this.sale.items)
+      const returnItem = {
+        number: this.sale.number,
+        days: this.sale.days,
+        clientId: this.sale.clientId,
+        userId: this.sale.userId,
+        managerId: this.sale.managerId,
+        warehouseId: this.sale.warehouseId,
+        exchangeRate: this.sale.exchangeRate,
+        officialRate: this.sale.officialRate,
+        form: this.sale.form,
+        type: this.sale.type,
+        items: [],
+      };
+      this.sale.items.forEach((item) => {
+        returnItem.items.push({
+          id: item.id,
+          returnQuantity: this.quantity,
+          returnClientId: 1,
+          stockId: item.stockId,
+          priceId: item.priceId,
+          quantity: item.quantity,
+          discount: item.discount,
+          commissionPrice: item.commissionPrice,
+        });
+      });
+      ReturnClient.create(returnItem)
         .then(() => { this.$router.push({ name: 'returns' }); })
         .catch((err) => { this.$store.commit('setMessage', err.message); });
     },

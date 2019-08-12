@@ -49,6 +49,10 @@ export default {
       type: String,
       required: true,
     },
+    listener: {
+      type: Function,
+      required: true,
+    },
   },
   data() {
     return {
@@ -58,6 +62,7 @@ export default {
   watch: {
     quantity(value) {
       this.item.quantity = this.item.initial - value;
+      this.listener(value);
     },
   },
   methods: {

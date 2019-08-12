@@ -32,7 +32,7 @@ export default {
       },
       {
         to: { name: 'returnclient' },
-        name: 'Возврат истории',
+        name: 'Возврат',
       },
       {
         to: { name: 'rates' },
