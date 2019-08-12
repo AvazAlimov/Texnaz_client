@@ -3,7 +3,7 @@
     v-layout(wrap)
       .title.mx-4.my-3 МОИ ОТГРУЗКИ
       v-spacer
-      .subheading.mx-4.my-3 Oбщий cумма: {{ totalPrice }}
+      .subheading.mx-4.my-3 Oбщий cумма: {{ totalPrice | roundUp | readable }}
     v-divider
     v-data-table(
       hide-actions
