@@ -118,7 +118,7 @@ export default {
         },
         {
           icon: 'import_contacts',
-          title: 'Мои расходы',
+          title: 'Pасходы',
           to: { name: 'myexpanses' },
           permission: this.$permissions.SHOW_MY_EXPANSES.name,
         },

@@ -2,7 +2,7 @@
   div
     v-layout(row wrap v-if="!data")
       v-flex(xs12).mb-3
-        .title.tertiary--text МОИ РАСХОДЫ
+        .title.tertiary--text РАСХОДЫ
       v-flex(xs12)
         v-layout(row wrap)
           v-flex(xs3 v-for="(card, index) in cards" :key="index")
