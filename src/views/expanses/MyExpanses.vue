@@ -61,6 +61,22 @@
               item-text="name"
               clearable
             )
+            v-menu(
+              v-model="opened"
+              :close-on-content-click="false"
+              min-width="290px"
+            ).mx-1
+              template(v-slot:activator="{ on }")
+                v-text-field(
+                  readonly
+                  v-on="on"
+                  label="Дата"
+                  v-model="date"
+                )
+              v-date-picker(
+                v-model="date"
+                @input="opened = !opened"
+              )
             v-btn.mx-1(
               flat
               color="secondary"
@@ -112,6 +128,10 @@
             :people="people"
             :postUpdate="getAll"
           )
+        div(v-if="showTable").white.border.mt-2
+          Revenue(
+            :expanses="expanses"
+          )
     v-layout(row wrap v-if="data" align-center)
       v-btn(icon @click="data=null;getAll()").tertiary--text
             v-icon arrow_back
@@ -126,6 +146,8 @@ import MyExpanses from '@/services/MyExpanses';
 export default {
   name: 'MyExpanses',
   data: () => ({
+    date: (new Date()).toISOString().substring(0, 10),
+    opened: false,
     data: null,
     value: 0,
     showTable: true,
@@ -266,6 +288,7 @@ export default {
               purposeId,
               formId,
               personId,
+              createdAt: this.date,
             }).then(() => {
               this.value = 0;
               this.type = null;
@@ -273,6 +296,7 @@ export default {
               this.purpose = null;
               this.person = null;
               this.getAll();
+              window.location.reload();
             })
               .catch(error => this.$store.commit('setMessage', error.message))
               .finally(() => { this.loading = false; });

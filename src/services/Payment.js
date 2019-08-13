@@ -5,6 +5,7 @@ export default {
   getAll: () => execute(Api().get('payments')),
   get: id => execute(Api().get(`payments/${id}`)),
   getByNumber: number => execute(Api().get(`payments/?number=${number}`)),
+  getByUser: userId => execute(Api().get(`payments?userId=${userId}`)),
   approve: id => execute(Api().post(`payments/approve/${id}`)),
   delete: id => execute(Api().delete(`payments/${id}`)),
 };

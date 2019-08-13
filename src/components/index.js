@@ -42,6 +42,7 @@ import RateCard from './analytics/RateCard.vue';
 import ExpenseProperty from './expenses/ExpenseProperty.vue';
 import EditExpense from './expenses/EditExpense.vue';
 import ExpenseAnalytics from './expenses/ExpenseAnalytics.vue';
+import Revenue from './expenses/Revenue.vue';
 import NewPayment from './payments/NewPayment.vue';
 
 import UserSales from './shipment/UserSales.vue';
@@ -90,6 +91,7 @@ const Components = {
   ExpenseProperty,
   EditExpense,
   ExpenseAnalytics,
+  Revenue,
   NewPayment,
 
   UserSales,
