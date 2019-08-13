@@ -296,7 +296,6 @@ export default {
               this.purpose = null;
               this.person = null;
               this.getAll();
-              window.location.reload();
             })
               .catch(error => this.$store.commit('setMessage', error.message))
               .finally(() => { this.loading = false; });
