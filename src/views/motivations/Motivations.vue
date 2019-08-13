@@ -248,13 +248,19 @@ export default {
           const filtered = payments.filter(payment => (motivation.managerId === payment.managerId))
             .filter(payment => payment.approved);
 
+          const totalPrice = filtered
+            .map(payment => (payment.ratio === 1 ? payment.sum : (payment.sum / payment.ratio)))
+            .reduce((a, b) => a + b, 0);
           motivation.ranges.forEach((range) => {
+            const decide = totalPrice >= motivation.total * (range.from / 100);
             range.brands.forEach((brand) => {
               filtered.forEach((payment) => {
                 if (payment.brandId === brand.brandId) {
                   percent += (payment.ratio === 1 ? payment.sum : payment.sum / payment.ratio);
-                  total += (payment.ratio === 1 ? payment.sum : payment.sum / payment.ratio)
+                  if (decide) {
+                    total += (payment.ratio === 1 ? payment.sum : payment.sum / payment.ratio)
                     * (brand.percentage / 100);
+                  }
                 }
               });
             });
@@ -284,7 +290,7 @@ export default {
           break;
       }
       // eslint-disable-next-line no-param-reassign
-      motivation.earned = total;
+      motivation.earned = total === 0 ? percent * (motivation.min / 100) : total;
       // eslint-disable-next-line no-param-reassign
       motivation.progress = (percent * 100) / motivation.total;
     },
