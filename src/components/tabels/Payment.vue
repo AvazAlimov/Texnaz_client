@@ -5,7 +5,7 @@
     td {{ items.name }}
     td {{ items.manager }}
     td {{ items.date | moment('YYYY-MM-DD HH:mm')}}
-    td {{ items.sum }}
+    td {{ items.sum | roundUp | readable}}
     td {{ items.brand }}
     td {{ items.country }}
 </template>

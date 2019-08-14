@@ -47,7 +47,6 @@
           v-data-table(
             :headers="headers"
             :items="filteredData"
-            :search="search"
             hide-actions
           )
             template(v-slot:items="props")
@@ -66,32 +65,6 @@ export default {
       start: false,
       endDate: (new Date()).toISOString().substring(0, 10),
       end: false,
-      headers: [
-        {
-          text: 'Икк',
-          value: 'icc',
-        },
-        {
-          text: 'Наименование',
-          value: 'name',
-        },
-        {
-          text: 'Дата отгрузки',
-          value: 'saleDate',
-        },
-        {
-          text: 'Сумма долга',
-          value: 'salePrice',
-        },
-        {
-          text: 'Менеджер',
-          value: 'manager',
-        },
-        {
-          text: 'количество дней',
-          value: 'debt',
-        },
-      ],
       users: [
         {
           icc: 12,
@@ -105,6 +78,37 @@ export default {
     };
   },
   computed: {
+    headers() {
+      return [
+        {
+          text: 'Икк',
+          value: 'icc',
+        },
+        {
+          text: 'Наименование',
+          value: 'name',
+        },
+        {
+          text: 'Дата отгрузки',
+          value: 'saleDate',
+        },
+        {
+          text: `Сумма долга $${0}`,
+          value: 'salePrice',
+        },
+        {
+          text: 'Менеджер',
+          value: 'manager',
+        },
+        {
+          text: 'количество дней',
+          value: 'debt',
+        },
+      ];
+    },
+    readable(value) {
+      return this.$options.filters.readable(this.$options.filters.roundUp(value));
+    },
     maximum() {
       return (new Date()).toISOString().substring(0, 10);
     },
@@ -114,15 +118,18 @@ export default {
       const end = new Date(this.endDate);
       end.setHours(23, 59, 59, 59);
       return this.users.filter(el => new Date(el.saleDate).getTime() >= start.getTime()
-          && new Date(el.saleDate).getTime() <= end.getTime());
+          && new Date(el.saleDate).getTime() <= end.getTime()
+          && ((el.icc.toString()).includes(this.search)
+          || (el.name.toString()).includes(this.search)
+          || (el.saleDate.toString()).includes(this.search)
+          || (el.salePrice.toString()).includes(this.search)
+          || (el.manager.toString()).includes(this.search)
+          || (el.daysLate.toString()).includes(this.search)));
     },
   },
   methods: {
     getDuration(startTime, duration) {
-      const now = new Date();
-      now.setHours(23, 59, 59, 59);
-      startTime.setHours(0, 0, 0, 0);
-      const mm = now.getTime() - (new Date(startTime)).getTime();
+      const mm = (new Date()).getTime() - (new Date(startTime)).getTime();
       const days = Math.round(mm / (3600000 * 24));
       return duration < days ? days : '';
     },

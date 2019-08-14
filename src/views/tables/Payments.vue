@@ -46,7 +46,6 @@
         v-data-table(
           :headers="headers"
           :items="filteredData"
-          :search="search"
           hide-actions
         )
           template(v-slot:items="props")
@@ -65,7 +64,23 @@ export default {
       endDate: (new Date()).toISOString().substring(0, 10),
       end: false,
       maximum: (new Date()).toISOString().substring(0, 10),
-      headers: [
+      items: [
+        {
+          number: 1,
+          icc: 12,
+          name: 7,
+          manager: 7,
+          date: 7,
+          sum: 7,
+          brand: 7,
+          country: 7,
+        },
+      ],
+    };
+  },
+  computed: {
+    headers() {
+      return [
         {
           text: 'Номер',
           value: 'number',
@@ -87,7 +102,7 @@ export default {
           value: 'date',
         },
         {
-          text: 'Суммв',
+          text: `Суммa ($${this.readable(this.filteredData.map(el => el.sum).reduce((a, b) => a + b, 0))})`,
           value: 'sum',
         },
         {
@@ -98,32 +113,29 @@ export default {
           text: 'Страна',
           value: 'country',
         },
-      ],
-      items: [
-        {
-          number: 1,
-          icc: 12,
-          name: 7,
-          manager: 7,
-          date: 7,
-          sum: 7,
-          brand: 7,
-          country: 7,
-        },
-      ],
-    };
-  },
-  computed: {
+      ];
+    },
     filteredData() {
       const start = new Date(this.startDate);
       start.setHours(0, 0, 0, 0);
       const end = new Date(this.endDate);
       end.setHours(23, 59, 59, 59);
       return this.items.filter(el => new Date(el.date).getTime() >= start.getTime()
-        && new Date(el.date).getTime() <= end.getTime());
+        && new Date(el.date).getTime() <= end.getTime()
+        && ((el.number.toString()).includes(this.search)
+        || (el.icc.toString()).includes(this.search)
+        || (el.name.toString()).includes(this.search)
+        || (el.manager.toString()).includes(this.search)
+        || (el.date.toString()).includes(this.search)
+        || (el.sum.toString()).includes(this.search)
+        || (el.brand.toString()).includes(this.search)
+        || (el.country.toString()).includes(this.search)));
     },
   },
   methods: {
+    readable(value) {
+      return this.$options.filters.readable(this.$options.filters.roundUp(value));
+    },
     getAll() {
       this.items = [];
       Payment.getAll().then((data) => {

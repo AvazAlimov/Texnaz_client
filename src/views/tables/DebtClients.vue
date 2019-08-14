@@ -49,7 +49,6 @@
                 :items="filteredData"
                 hide-actions
                 disable-initial-sort
-                :search="search"
             )
             template(v-slot:items="props")
               DebtClient(:user="props.item")
@@ -68,31 +67,12 @@ export default {
       start: false,
       endDate: (new Date()).toISOString().substring(0, 10),
       end: false,
-      headers: [
-        {
-          text: 'Дата отгрузки',
-          value: 'saleDate',
-        },
-        {
-          text: 'Сумма отгрузки',
-          value: 'salePrice',
-        },
-        {
-          text: 'Дата оплаты',
-          value: 'paymentDate',
-        },
-        {
-          text: 'Сумма оплаты',
-          value: 'paymentPrice',
-        },
-        {
-          text: 'Дата возврат',
-          value: 'returnDate',
-        },
-        {
-          text: 'Return price',
-          value: 'return price',
-        },
+      items: [],
+    };
+  },
+  computed: {
+    headers() {
+      return [
         {
           text: 'Client icc',
           value: 'clienticc',
@@ -106,30 +86,57 @@ export default {
           value: 'managername',
         },
         {
+          text: 'Дата отгрузки',
+          value: 'saleDate',
+        },
+        {
+          text: `Сумма отгрузки ($${this.readable(this.filteredData.map(el => el.salePrice).filter(el => el !== '-').reduce((a, b) => a + b, 0))})`,
+          value: 'salePrice',
+        },
+        {
+          text: 'Дата оплаты',
+          value: 'paymentDate',
+        },
+        {
+          text: `Сумма оплаты ($${this.readable(this.filteredData.map(el => el.paymentPrice).filter(el => el !== '-').reduce((a, b) => a + b, 0))})`,
+          value: 'paymentPrice',
+        },
+        {
+          text: 'Дата возврат',
+          value: 'returnDate',
+        },
+        {
+          text: 'Return price',
+          value: 'return price',
+        },
+        {
           text: 'Client balance',
           value: 'clientbalance',
         },
-      ],
-      items: [],
-    };
-  },
-  computed: {
+      ];
+    },
     maximum() {
       return (new Date()).toISOString().substring(0, 10);
     },
     filteredData() {
-      return this.items;
-      /*
-      const start = new Date(this.startDate);
-      start.setHours(0, 0, 0, 0);
-      const end = new Date(this.endDate);
-      end.setHours(23, 59, 59, 59);
-      return this.items.filter(el => new Date(el.saleDate !== '-' ? el.saleDate : el.paymentDate)
-      .getTime() >= start.getTime() && new Date(el.saleDate !== '-' ? el.saleDate : el.paymentDate)
-        .getTime() <= end.getTime()); */
+      return this.items.filter(el => (
+        (el.saleDate.toString()).includes(this.search)
+        || (el.salePrice.toString()).includes(this.search)
+        || (el.paymentDate.toString()).includes(this.search)
+        || (el.paymentPrice.toString()).includes(this.search)
+        || (el.returnDate.toString()).includes(this.search)
+        || (el.returnQuantity.toString()).includes(this.search)
+        || (el.date.toString()).includes(this.search)
+        || (el.clienticc.toString()).includes(this.search)
+        || (el.clientname.toString()).includes(this.search)
+        || (el.clientbalance.toString()).includes(this.search)
+        || (el.managername.toString()).includes(this.search)));
     },
   },
   methods: {
+    readable(value) {
+      return this.$options.filters.readable(this.$options.filters.roundUp(value));
+    },
     getDate(dateA, dateB) {
       return (new Date(dateA)).getTime() > (new Date(dateB)).getTime() ? dateB : dateA;
     },
@@ -152,7 +159,8 @@ export default {
           date: sale.createdAt,
           clienticc: sale.client.icc,
           clientname: sale.client.name,
-          clientbalance: this.$getClientBalance(sale.client, sales),
+          clientbalance: this.$getClientBalance(sale.client, sales
+            .filter(el => el.clientId === sale.clientId && el.approved)),
           managername: sale.manager.name,
         }));
         payments.forEach(payment => this.items.push({

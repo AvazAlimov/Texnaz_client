@@ -46,7 +46,6 @@
                 v-data-table(
                     :headers="headers"
                     :items="filteredData"
-                    :search="search"
                     hide-actions
                 )
                     template(v-slot:items ="{ item }")
@@ -78,62 +77,75 @@ export default {
     maximum: (new Date()).toISOString().substring(0, 10),
     search: '',
     items: [],
-    headers: [
-      {
-        text: 'Дата возвращения',
-        value: 'date',
-      },
-      {
-        text: 'Номер',
-        value: 'number',
-      },
-      {
-        text: 'Склады',
-        value: 'warehouse',
-      },
-      {
-        text: 'Икк',
-        value: 'icc',
-      },
-      {
-        text: 'Имя клиента',
-        value: 'clientname',
-      },
-      {
-        text: 'Имя менеджера',
-        value: 'managername',
-      },
-      {
-        text: 'Способ оплаты',
-        value: 'type',
-      },
-      {
-        text: 'Тип расчета',
-        value: 'form',
-      },
-      {
-        text: 'Return price',
-        value: 'returnPrice',
-      },
-      {
-        text: 'Баланс клиента',
-        value: 'balance',
-      },
-    ],
     types: ShipmentTypes,
     forms: ShipmentPayments,
   }),
   computed: {
+    headers() {
+      return [
+        {
+          text: 'Дата возвращения',
+          value: 'date',
+        },
+        {
+          text: 'Номер',
+          value: 'number',
+        },
+        {
+          text: 'Склады',
+          value: 'warehouse',
+        },
+        {
+          text: 'Икк',
+          value: 'icc',
+        },
+        {
+          text: 'Имя клиента',
+          value: 'clientname',
+        },
+        {
+          text: 'Имя менеджера',
+          value: 'managername',
+        },
+        {
+          text: 'Способ оплаты',
+          value: 'type',
+        },
+        {
+          text: 'Тип расчета',
+          value: 'form',
+        },
+        {
+          text: `Return price ($${this.readable(this.filteredData.map(el => el.returnPrice).reduce((a, b) => a + b, 0))})`,
+          value: 'returnPrice',
+        },
+        {
+          text: 'Баланс клиента',
+          value: 'balance',
+        },
+      ];
+    },
     filteredData() {
       const start = new Date(this.startDate);
       start.setHours(0, 0, 0, 0);
       const end = new Date(this.endDate);
       end.setHours(23, 59, 59, 59);
       return this.items.filter(el => new Date(el.date).getTime() >= start.getTime()
-        && new Date(el.date).getTime() <= end.getTime());
+        && new Date(el.date).getTime() <= end.getTime()
+        && ((el.number.toString()).includes(this.search)
+        || (el.warehouse.toString()).includes(this.search)
+        || (el.icc.toString()).includes(this.search)
+        || (el.date.toString()).includes(this.search)
+        || (el.clientname.toString()).includes(this.search)
+        || (el.managername.toString()).includes(this.search)
+        || (el.returnPrice.toString()).includes(this.search)
+        || (el.balance.toString()).includes(this.search)));
     },
   },
   methods: {
+    readable(value) {
+      return this.$options.filters.readable(this.$options.filters.roundUp(value));
+    },
     getAll() {
       Promise.all([
         ReturnClient.getAll(),
