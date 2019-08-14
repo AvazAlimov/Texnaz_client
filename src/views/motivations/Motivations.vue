@@ -173,27 +173,32 @@ export default {
         default:
           break;
       }
-      console.log(`Total: ${total}`);
-      const range = motivation.ranges.length ? motivation.ranges
-        .filter(el => el.from < motivation.progress).pop() : null;
       // Отдельно или Накопительно
+      let earned = 0;
       switch (motivation.method) {
-        // Отдельно
+        // Накопительно
         case 0: {
+          const range = motivation.ranges.length ? motivation.ranges
+            .filter(el => el.from < motivation.progress).pop() : null;
           // eslint-disable-next-line no-param-reassign
-          motivation.earned = (total - (motivation.total
-            * ((range ? range.from : 0) / 100))) * ((range ? range.percentage : 0) / 100);
+          earned = total * ((range ? range.percentage : 0) / 100);
           break;
         }
-        // Накопительно
+        // Отдельно
         case 1: {
-          // eslint-disable-next-line no-param-reassign
-          motivation.earned = total * ((range ? range.percentage : 0) / 100);
+          const ranges = motivation.ranges.length ? motivation.ranges
+            .filter(el => el.from < motivation.progress) : null;
+          ranges.forEach((range) => {
+            earned += (total - (motivation.total
+            * ((range ? range.from : 0) / 100))) * ((range ? range.percentage : 0) / 100);
+          });
           break;
         }
         default:
           break;
       }
+      // eslint-disable-next-line no-param-reassign
+      motivation.earned = earned || total * (motivation.min / 100);
     },
     percent(motivation, [sales, payments]) {
       let total = 0;
@@ -269,21 +274,29 @@ export default {
         }
         // Отгрузка
         case 1: {
-          sales.filter(sale => motivation.managerId === sale.managerId)
-            .filter(el => el.approved)
-            .forEach((sale) => {
-              const filteredItem = { ...sale };
-              motivation.ranges.forEach((range) => {
-                range.brands.forEach((brand) => {
-                  filteredItem.items = sale.items
-                    .filter(item => item.stock.product.brand === brand.brandId);
-                  const money = this.$getTotalPrice(filteredItem,
-                    filteredItem.exchangeRate, filteredItem.officialRate);
+          const filtered = sales.filter(sale => motivation.managerId === sale.managerId)
+            .filter(el => el.approved);
+
+          const totalPrice = filtered
+            .map(sale => this.$getTotalPrice(sale, sale.exchangeRate, sale.officialRate))
+            .reduce((a, b) => a + b, 0);
+
+          filtered.forEach((sale) => {
+            const filteredItem = { ...sale };
+            motivation.ranges.forEach((range) => {
+              const decide = totalPrice >= motivation.total * (range.from / 100);
+              range.brands.forEach((brand) => {
+                filteredItem.items = sale.items
+                  .filter(item => item.stock.product.brand === brand.brandId);
+                const money = this.$getTotalPrice(filteredItem,
+                  filteredItem.exchangeRate, filteredItem.officialRate);
+                percent += money;
+                if (decide) {
                   total += money * (brand.percentage / 100);
-                  percent += money;
-                });
+                }
               });
             });
+          });
           break;
         }
         default:

@@ -170,11 +170,11 @@ export default {
     methods: [
       {
         id: 0,
-        name: 'Отдельно',
+        name: 'Накопительно',
       },
       {
         id: 1,
-        name: 'Накопительно',
+        name: 'Отдельно',
       },
     ],
     start: false,
