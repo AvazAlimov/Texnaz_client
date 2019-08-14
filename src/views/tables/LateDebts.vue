@@ -119,7 +119,10 @@ export default {
   },
   methods: {
     getDuration(startTime, duration) {
-      const mm = (new Date()).getTime() - (new Date(startTime)).getTime();
+      const now = new Date();
+      now.setHours(23, 59, 59, 59);
+      startTime.setHours(0, 0, 0, 0);
+      const mm = now.getTime() - (new Date(startTime)).getTime();
       const days = Math.round(mm / (3600000 * 24));
       return duration < days ? days : '';
     },
