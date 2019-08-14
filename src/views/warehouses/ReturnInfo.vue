@@ -156,7 +156,7 @@ export default {
           value: 'quantity',
         },
         {
-          text: 'Количество возврат',
+          text: 'Количество к возврату',
           sortable: false,
         },
       ],

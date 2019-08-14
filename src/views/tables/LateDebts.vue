@@ -80,7 +80,7 @@ export default {
           value: 'saleDate',
         },
         {
-          text: 'Сумма долги',
+          text: 'Сумма долга',
           value: 'salePrice',
         },
         {

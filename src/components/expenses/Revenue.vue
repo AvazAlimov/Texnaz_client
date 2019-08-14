@@ -37,17 +37,11 @@
                 type="month"
               )
             v-spacer
-            v-text-field(
-              v-model="search"
-              append-icon="search"
-              label="Поиск"
-            )
         v-layout
             v-flex(xs12)
                 v-data-table(
                     :headers="headers"
                     hide-actions
-                    :search="search"
                     :items="filteredData"
                 )
                   template(v-slot:items="{ item }")
