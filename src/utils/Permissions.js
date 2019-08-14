@@ -179,29 +179,33 @@ module.exports.SHOW_WAREHOUSE_ACCEPTANCE = {
   id: 40,
 };
 
-// Shipments
+module.exports.SHOW_WAREHOUSE_RETURN_CLIENT = {
+  name: 'Show warehouse return client',
+  id: 41,
+};
 
+// Shipments
 module.exports.SHOW_SHIPMENTS_PENDING_SALES = {
   name: 'show pending sales',
-  id: 41,
+  id: 42,
 };
 
 module.exports.SHOW_SHIPMENTS_APPROVED_SALES = {
   name: 'show approved sales',
-  id: 42,
+  id: 43,
 };
 
 module.exports.SHOW_SHIPMENTS_FINISHED = {
   name: 'show finished',
-  id: 43,
+  id: 44,
 };
 
 module.exports.SHOW_SHIPMENTS_REJECTED = {
   name: 'show rejected',
-  id: 44,
+  id: 45,
 };
 
 module.exports.SHOW_SHIPMENTS_ACCOUNTING = {
   name: 'show accounting',
-  id: 45,
+  id: 46,
 };

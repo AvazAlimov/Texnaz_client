@@ -80,7 +80,7 @@ export default {
           id: 'returns',
           title: 'Возврат',
           to: { name: 'returns' },
-          permission: this.$permissions.SHOW_WAREHOUSE_RETURN.name,
+          permission: this.$permissions.SHOW_WAREHOUSE_RETURN_CLIENT.name,
         },
         {
           counter: 0,

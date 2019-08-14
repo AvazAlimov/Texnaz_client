@@ -24,7 +24,7 @@
               template(v-slot:items="{ item }")
                 td {{ item.icc }}
                 td {{ item.name }}
-                td {{ $getClientBalance(item, sales.filter(el => el.clientId === item.id)) | roundUp | readable }}
+                td {{ balance(item) | roundUp | readable }}
                 td {{ item.itn || '-' }}
                 td {{ item.contactPerson || '-' }}
                 td {{ item.phone || '-' }}
@@ -44,7 +44,7 @@
             .text-xs-center.py-2
               v-pagination(v-model="pagination.page" color="secondary" :length="pages")
             v-divider
-            v-layout(row v-if="$hasRole(1)")
+            v-layout(row v-if="$hasRole(1) || $hasRole(3) || $hasRole(6)")
               v-spacer
               v-btn.ma-2(
                 flat color="secondary"
@@ -131,6 +131,9 @@ export default {
     },
   },
   methods: {
+    balance(client) {
+      return this.$getClientBalance(client, this.sales.filter(el => el.clientId === client.id));
+    },
     getAll() {
       this.loading = true;
       this.clients = [];
