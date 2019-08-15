@@ -123,7 +123,7 @@ export default {
     getAll() {
       this.loading = true;
       Promise.all([
-        Sale.getByManagerId(this.$getUserId()),
+        Sale.getByManagerId(this.userId),
         Configuration.getAll(),
       ])
         .then((results) => {

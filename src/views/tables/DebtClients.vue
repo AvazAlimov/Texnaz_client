@@ -78,11 +78,11 @@ export default {
           value: 'clienticc',
         },
         {
-          text: 'Имя клиента',
+          text: 'Kлиент',
           value: 'clientname',
         },
         {
-          text: 'Mенеджера',
+          text: 'Mенеджер',
           value: 'managername',
         },
         {

@@ -100,7 +100,7 @@ export default {
           value: 'icc',
         },
         {
-          text: 'Имя клиента',
+          text: 'Kлиент',
           value: 'clientname',
         },
         {
