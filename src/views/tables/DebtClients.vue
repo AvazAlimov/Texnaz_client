@@ -74,7 +74,7 @@ export default {
     headers() {
       return [
         {
-          text: 'Клиент ICC',
+          text: 'Икк',
           value: 'clienticc',
         },
         {
@@ -82,7 +82,7 @@ export default {
           value: 'clientname',
         },
         {
-          text: 'Имя менеджера',
+          text: 'Mенеджера',
           value: 'managername',
         },
         {
@@ -102,11 +102,11 @@ export default {
           value: 'paymentPrice',
         },
         {
-          text: 'Дата возврат',
+          text: 'Дата возвратa',
           value: 'returnDate',
         },
         {
-          text: 'Возврат цены',
+          text: 'Суммма Возвратa',
           value: 'return price',
         },
         {

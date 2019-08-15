@@ -127,6 +127,7 @@ export default {
         Configuration.getAll(),
       ])
         .then((results) => {
+          console.log('Hey I got data');
           [this.sales, this.configurations] = results;
           this.sales = this.sales.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
           this.exchangeRate = (this.configurations.find(conf => conf.id === 4)).value;
