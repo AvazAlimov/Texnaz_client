@@ -48,7 +48,7 @@ import NewPayment from './payments/NewPayment.vue';
 import UserSales from './shipment/UserSales.vue';
 import FilteredSales from './shipment/FilteredSales.vue';
 
-import Motivations from './managers/Motivations.vue';
+import Motivations from './motivations/Motivations.vue';
 
 const Components = {
   Card,

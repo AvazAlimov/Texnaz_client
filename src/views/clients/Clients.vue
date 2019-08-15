@@ -28,7 +28,8 @@
                 td {{ item.itn || '-' }}
                 td {{ item.contactPerson || '-' }}
                 td {{ item.phone || '-' }}
-                td {{ item.region.province.name }} / {{ item.region.name }}
+                td {{ item.region.province.name }}
+                td {{ item.region.name }}
                 td {{ item.sphere || '-' }}
                 td {{ item.manager.name }}
                 td {{ item.createdAt | moment('YYYY-MM-DD') }}
@@ -90,8 +91,12 @@ export default {
           value: 'phone',
         },
         {
-          text: 'Область-регион',
+          text: 'Область',
           value: 'region.province.name',
+        },
+        {
+          text: 'Pегион',
+          value: 'region.name',
         },
         {
           text: 'Направление деятельности',

@@ -147,7 +147,7 @@ export default {
             name: el.client.name,
             manager: el.manager.name,
             date: el.createdAt,
-            sum: el.sum,
+            sum: el.ratio === 1 ? el.sum : el.sum / el.ratio,
             brand: el.brand ? el.brand.name : '-',
             country: el.brand ? el.brand.country : '-',
           });

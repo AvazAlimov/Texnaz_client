@@ -6,7 +6,7 @@
       v-flex(xs12)
         UserSales(:userId="$route.params.id")
       v-flex(xs12)
-        Motivations
+        Motivations(:userId="$route.params.id")
     router-view
 </template>
 

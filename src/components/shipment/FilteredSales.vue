@@ -19,6 +19,7 @@
           div(v-if="accounting")
             | {{ getAccountingPrice(props.item) }}сум
         td {{ types.find(type => type.id == props.item.type).name }}
+        td {{ balance(props.item.client) }}
         td
           v-layout(row)
             v-btn.ma-0(
@@ -101,13 +102,21 @@ export default {
         value: 'type',
       },
       {
+        text: 'Баланс',
+        value: 'balance',
+        sortable: false,
+      },
+      {
         sortable: false,
       },
     ],
   }),
   methods: {
     balance(client) {
-      return this.$getClientBalance(client, this.allSales.filter(el => el.id === client.id));
+      return this.$options.filters.readable(this.$options.filters.roundUp(
+        this.$getClientBalance(client, this.allSales
+          .filter(el => el.id === client.id && el.approved)),
+      ));
     },
     getAccountingPrice(sale) {
       let total = 0;
