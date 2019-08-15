@@ -132,14 +132,14 @@ export default {
       end.setHours(23, 59, 59, 59);
       return this.items.filter(el => new Date(el.date).getTime() >= start.getTime()
         && new Date(el.date).getTime() <= end.getTime()
-        && ((el.number.toString()).includes(this.search)
-        || (el.warehouse.toString()).includes(this.search)
-        || (el.icc.toString()).includes(this.search)
-        || (el.date.toString()).includes(this.search)
-        || (el.clientname.toString()).includes(this.search)
-        || (el.managername.toString()).includes(this.search)
-        || (el.returnPrice.toString()).includes(this.search)
-        || (el.balance.toString()).includes(this.search)));
+        && ((el.number.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.warehouse.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.icc.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.date.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.clientname.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.managername.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.returnPrice.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.balance.toString().toLowerCase()).includes(this.search.toLowerCase())));
     },
   },
   methods: {

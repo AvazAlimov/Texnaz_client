@@ -121,16 +121,16 @@ export default {
     filteredData() {
       return this.items.filter(el => (
         (el.saleDate.toString()).includes(this.search)
-        || (el.salePrice.toString()).includes(this.search)
-        || (el.paymentDate.toString()).includes(this.search)
-        || (el.paymentPrice.toString()).includes(this.search)
-        || (el.returnDate.toString()).includes(this.search)
-        || (el.returnQuantity.toString()).includes(this.search)
-        || (el.date.toString()).includes(this.search)
-        || (el.clienticc.toString()).includes(this.search)
-        || (el.clientname.toString()).includes(this.search)
-        || (el.clientbalance.toString()).includes(this.search)
-        || (el.managername.toString()).includes(this.search)));
+        || (el.salePrice.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.paymentDate.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.paymentPrice.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.returnDate.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.returnQuantity.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.date.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.clienticc.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.clientname.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.clientbalance.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.managername.toString().toLowerCase()).includes(this.search.toLowerCase())));
     },
   },
   methods: {

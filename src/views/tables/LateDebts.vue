@@ -119,12 +119,12 @@ export default {
       end.setHours(23, 59, 59, 59);
       return this.users.filter(el => new Date(el.saleDate).getTime() >= start.getTime()
           && new Date(el.saleDate).getTime() <= end.getTime()
-          && ((el.icc.toString()).includes(this.search)
-          || (el.name.toString()).includes(this.search)
-          || (el.saleDate.toString()).includes(this.search)
-          || (el.salePrice.toString()).includes(this.search)
-          || (el.manager.toString()).includes(this.search)
-          || (el.daysLate.toString()).includes(this.search)));
+          && ((el.icc.toString().toLowerCase()).includes(this.search.toLowerCase())
+          || (el.name.toString().toLowerCase()).includes(this.search.toLowerCase())
+          || (el.saleDate.toString().toLowerCase()).includes(this.search.toLowerCase())
+          || (el.salePrice.toString().toLowerCase()).includes(this.search.toLowerCase())
+          || (el.manager.toString().toLowerCase()).includes(this.search.toLowerCase())
+          || (el.daysLate.toString().toLowerCase()).includes(this.search.toLowerCase())));
     },
   },
   methods: {
