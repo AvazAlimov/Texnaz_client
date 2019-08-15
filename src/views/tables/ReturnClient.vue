@@ -116,7 +116,7 @@ export default {
           value: 'form',
         },
         {
-          text: `Return price ($${this.readable(this.filteredData.map(el => el.returnPrice).reduce((a, b) => a + b, 0))})`,
+          text: `Возврат цены ($${this.readable(this.filteredData.map(el => el.returnPrice).reduce((a, b) => a + b, 0))})`,
           value: 'returnPrice',
         },
         {
