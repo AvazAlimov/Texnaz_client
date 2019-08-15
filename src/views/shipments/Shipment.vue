@@ -78,7 +78,7 @@
                 td {{ props.item.stock.expiry_date | moment('YYYY-MM-DD') }}
                 td {{ props.item.discount }}%
                 td {{ props.item.quantity }}
-                td {{ getPrice(props.item) | roundUp }}$
+                td(v-if="!$route.query.accounting") {{ getPrice(props.item) | roundUp }}$
           v-divider
           v-layout(row v-if="sale.approved < 1 && ($hasRole(1) || $hasRole(3))")
             v-spacer
@@ -108,52 +108,6 @@ export default {
     exchangeRate: 1,
     officialRate: 1,
     configurations: [],
-    headers: [
-      {
-        text: 'Код товара',
-        value: 'product.code',
-      },
-      {
-        text: 'Наименование',
-        value: 'product.name',
-      },
-      {
-        text: 'Фасовка',
-        value: 'product.packing',
-      },
-      {
-        text: 'Цвет',
-        value: 'product.color',
-      },
-      {
-        text: 'Состояние',
-        value: 'defected',
-      },
-      {
-        text: 'Дата прибытия',
-        value: 'arrival_date',
-      },
-      {
-        text: 'Срок действия',
-        value: 'expiry_date',
-      },
-      {
-        text: 'Скидка %',
-        value: 'discount',
-        width: 1,
-      },
-      {
-        text: 'Количество',
-        value: 'quantity',
-        width: 1,
-      },
-      {
-        text: 'Цена',
-        value: 'price',
-        sortable: false,
-        width: 1,
-      },
-    ],
     sale: {
       items: [],
       client: {
@@ -168,6 +122,56 @@ export default {
     payments: shipmentPayments,
     types: shipmentTypes,
   }),
+  computed: {
+    headers() {
+      return [
+        {
+          text: 'Код товара',
+          value: 'product.code',
+        },
+        {
+          text: 'Наименование',
+          value: 'product.name',
+        },
+        {
+          text: 'Фасовка',
+          value: 'product.packing',
+        },
+        {
+          text: 'Цвет',
+          value: 'product.color',
+        },
+        {
+          text: 'Состояние',
+          value: 'defected',
+        },
+        {
+          text: 'Дата прибытия',
+          value: 'arrival_date',
+        },
+        {
+          text: 'Срок действия',
+          value: 'expiry_date',
+        },
+        {
+          text: 'Скидка %',
+          value: 'discount',
+          width: 1,
+        },
+        {
+          text: 'Количество',
+          value: 'quantity',
+          width: 1,
+        },
+        {
+          text: this.$route.query.accounting ? '' : 'Цена',
+          value: 'price',
+          sortable: false,
+          width: 1,
+        },
+      ];
+    },
+  },
   methods: {
     getAll() {
       this.loading = true;

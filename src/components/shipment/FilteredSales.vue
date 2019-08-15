@@ -19,8 +19,6 @@
           div(v-if="accounting")
             | {{ getAccountingPrice(props.item) }}сум
         td {{ types.find(type => type.id == props.item.type).name }}
-        td {{ payments.find(payment => payment.id == props.item.form).name }}
-        td {{ balance(props.item.client) |roundUp | readable }}$
         td
           v-layout(row)
             v-btn.ma-0(
@@ -101,15 +99,6 @@ export default {
       {
         text: 'Тип оплаты',
         value: 'type',
-      },
-      {
-        text: 'Тип расчета',
-        value: 'form',
-      },
-      {
-        text: 'Баланс',
-        value: 'balance',
-        sortable: false,
       },
       {
         sortable: false,
