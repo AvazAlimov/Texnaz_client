@@ -81,9 +81,12 @@ export default {
     },
   },
   methods: {
+    getB2b() {
+      return this.$options.filters.ceil(this
+        .$b2c(this.item.product.prices[0], this.officialRate, this.exchangeRate));
+    },
     calculateFirstPrice() {
-      this.item.firstPrice = this
-        .$b2c(this.item.product.prices[0], this.officialRate, this.exchangeRate)
+      this.item.firstPrice = this.getB2b()
                       * parseFloat(this.item.sale)
                       * parseFloat((100 - this.item.discount) / 100);
       /*
@@ -117,9 +120,10 @@ export default {
 
     calculateComissionPrice() {
       this.item.commissionPrice = parseFloat(this.price) || 0;
-      this.item.price = (this.item.commissionPrice / this.exchangeRate)
+      this.item.price = this.item.commissionPrice
                       * parseFloat(this.item.sale)
-                      * parseFloat((100 - this.item.discount) / 100);
+                      * parseFloat((100 - this.item.discount) / 100)
+                      / this.officialRate;
     },
   },
   watch: {
