@@ -5,7 +5,7 @@
           v-layout(wrap)
             .title.tertiary--text КЛИЕНТЫ
             v-spacer
-            .subheading.tertiary--text Обший баланс: {{ totalBalance | roundUp | readable}}
+            .subheading.tertiary--text Общий баланс: {{ totalBalance | roundUp | readable}}
         v-flex(xs12)
           .border.white
             v-text-field(
