@@ -151,7 +151,7 @@ export default {
   methods: {
     balance(client) {
       return this
-        .$getClientBalance(client, this.sales.filter(el => el.clientId === client.id)) || 0;
+        .$getClientBalance(client, this.sales.filter(el => el.clientId === client.id && el.approved)) || 0;
     },
     getAll() {
       this.loading = true;
