@@ -163,6 +163,7 @@ export default {
       ]).then((result) => {
         [this.clients, this.sales] = result;
         this.clients = this.$getClients(this.clients).map(item => ({
+          id: item.id,
           icc: item.icc || 0,
           name: item.name || '-',
           balance: this.balance(item) || 0,
