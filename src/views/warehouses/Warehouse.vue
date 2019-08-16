@@ -149,7 +149,7 @@ export default {
           this.setCounter('losts', results[4].length);
           this.setCounter('shipments', results[5].length);
           this.setCounter('returns', results[6].filter(sale => !!sale.shipped
-          && (this.$hasRole(1) ? true : sale.managerId === this.$getUserId())).length);
+          && ((this.$hasRole(1) || this.$hasRole(6)) ? true : sale.managerId === this.$getUserId())).length);
         })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
