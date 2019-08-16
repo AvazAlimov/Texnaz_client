@@ -109,7 +109,8 @@ export default {
       this.loading = true;
       Sale.getAll()
         .then((sales) => {
-          this.returns = sales.filter(sale => !!sale.shipped)
+          this.returns = sales.filter(sale => !!sale.shipped
+            && (this.$hasRole(1) ? true : sale.managerId === this.$getUserId()))
             .map(sale => ({
               id: sale.id,
               date: sale.createdAt,
