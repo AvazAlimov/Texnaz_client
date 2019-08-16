@@ -81,12 +81,12 @@ export default {
     },
   },
   methods: {
-    getB2b() {
+    getB2C() {
       return this.$options.filters.ceil(this
         .$b2c(this.item.product.prices[0], this.officialRate, this.exchangeRate));
     },
     calculateFirstPrice() {
-      this.item.firstPrice = this.getB2b()
+      this.item.firstPrice = this.getB2C()
                       * parseFloat(this.item.sale)
                       * parseFloat((100 - this.item.discount) / 100);
       /*
@@ -97,17 +97,10 @@ export default {
     },
 
     calculateMixPrice() {
-      console.log((this.item.product.prices[0].secondPrice
-                      - this.item.product.prices[0].mixPriceNonCash / this.exchangeRate
-                      + this.item.product.prices[0].mixPriceCash));
-
-      console.log((this.productPrice.secondPrice
-                      - this.productPrice.mixPriceNonCash / this.exchangeRate
-                      + this.productPrice.mixPriceCash));
-
-      this.item.mixPrice = (this.item.product.prices[0].secondPrice
-                      - this.item.product.prices[0].mixPriceNonCash / this.exchangeRate
-                      + this.item.product.prices[0].mixPriceCash)
+      this.item.mixPrice = this.$options.filters.ceil(this.productPrice.mixPriceNonCash)
+                      / this.officialRate
+                      * parseFloat(this.item.sale)
+                      + this.$options.filters.roundUp(this.productPrice.mixPriceCash)
                       * parseFloat(this.item.sale)
                       * parseFloat((100 - this.item.discount) / 100);
     },

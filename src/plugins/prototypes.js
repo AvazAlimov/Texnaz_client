@@ -49,7 +49,8 @@ Vue.prototype.$getUserId = () => {
 
 Vue.prototype.$getClients = (clients) => {
   const user = JSON.parse(localStorage.getItem('user'));
-  if (Vue.prototype.$hasRole(1) || Vue.prototype.$hasRole(6)) {
+  if (Vue.prototype.$hasRole(1) || Vue.prototype.$hasRole(6)
+    || Vue.prototype.$hasRole(3)) {
     return clients;
   }
   if (Vue.prototype.$hasRole(2)) {

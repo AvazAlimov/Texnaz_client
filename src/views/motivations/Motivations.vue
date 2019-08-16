@@ -4,7 +4,7 @@
       .white.border
         .title.mx-4.my-3 Мотивации
         Motivations(
-          :userId="$hasRole(1) ? null : $getUserId()"
+          :userId="($hasRole(1) || $hasRole(3) || $hasRole(6)) ? null : $getUserId()"
         )
         v-divider
         v-layout(row)

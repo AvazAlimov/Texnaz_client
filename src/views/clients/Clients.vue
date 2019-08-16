@@ -5,7 +5,7 @@
           v-layout(wrap)
             .title.tertiary--text КЛИЕНТЫ
             v-spacer
-            .subheading.tertiary--text Обший баланс: {{ totalBalance }}
+            .subheading.tertiary--text Обший баланс: {{ totalBalance | roundUp | readable}}
         v-flex(xs12)
           .border.white
             v-text-field(
@@ -18,20 +18,19 @@
               hide-actions
               :headers="headers"
               :items="myClients"
-              :search="search"
               :pagination.sync="pagination"
             )
               template(v-slot:items="{ item }")
                 td {{ item.icc }}
                 td {{ item.name }}
-                td {{ balance(item) | roundUp | readable }}
-                td {{ item.itn || '-' }}
+                td {{ item.balance | roundUp | readable }}
+                td {{ item.inn || '-' }}
                 td {{ item.contactPerson || '-' }}
                 td {{ item.phone || '-' }}
-                td {{ item.region.province.name }}
-                td {{ item.region.name }}
+                td {{ item.province }}
+                td {{ item.region }}
                 td {{ item.sphere || '-' }}
-                td {{ item.manager.name }}
+                td {{ item.manager }}
                 td {{ item.createdAt | moment('YYYY-MM-DD') }}
                 td
                   v-layout(v-if="$hasRole(1)")
@@ -115,7 +114,6 @@ export default {
           width: 100,
         },
       ],
-      totalBalance: 0,
       pagination: {
         descending: false,
         page: 1,
@@ -127,8 +125,23 @@ export default {
     };
   },
   computed: {
+    totalBalance() {
+      return this.myClients.map(el => el.balance).reduce((a, b) => a + b, 0);
+    },
     myClients() {
-      return this.$getClients(this.clients);
+      return this.clients.filter(client => (
+        (client.icc.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (client.icc.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (client.name.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (client.balance.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (client.inn.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (client.contactPerson.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (client.phone.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (client.province.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (client.sphere.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (client.manager.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (client.createdAt.toString().toLowerCase()).includes(this.search.toLowerCase())
+      ));
     },
     pages() {
       if (this.pagination.rowsPerPage == null || this.pagination.totalItems == null) { return 0; }
@@ -137,7 +150,8 @@ export default {
   },
   methods: {
     balance(client) {
-      return this.$getClientBalance(client, this.sales.filter(el => el.clientId === client.id));
+      return this
+        .$getClientBalance(client, this.sales.filter(el => el.clientId === client.id)) || 0;
     },
     getAll() {
       this.loading = true;
@@ -148,6 +162,19 @@ export default {
         Sale.getAll(),
       ]).then((result) => {
         [this.clients, this.sales] = result;
+        this.clients = this.$getClients(this.clients).map(item => ({
+          icc: item.icc || 0,
+          name: item.name || '-',
+          balance: this.balance(item) || 0,
+          inn: item.itn || '-',
+          contactPerson: item.contactPerson || '-',
+          phone: item.phone || '-',
+          province: item.region.province.name || '-',
+          region: item.region.name || '-',
+          sphere: item.sphere || '-',
+          manager: item.manager.name || '-',
+          createdAt: item.createdAt || '-',
+        }));
         this.pagination.totalItems = this.clients.length;
       }).catch((error) => {
         this.$store.commit('setMessage', error.message);
