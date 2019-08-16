@@ -180,23 +180,23 @@ export default {
     // Gets total sale amount and sales array to show diagram
     getSales(sales, exchangeRate, officialRate) {
       let sale = sales.map(el => this.$getTotalPrice(el, exchangeRate, officialRate))
-        .reduce((a, b) => a + b);
+        .reduce((a, b) => a + b, 0);
       sale = this.$options.filters.roundUp(sale);
       return [
         `$ ${this.$options.filters.readable(sale)}`,
         sales.map(el => this.$getTotalPrice(el, exchangeRate, officialRate)),
         sales.map(el => this.$getTotalPrice(el, exchangeRate, officialRate))
-          .reduce((a, b) => a + b),
+          .reduce((a, b) => a + b, 0),
       ];
     },
     // Gets total payment amount and payments array to show diagram
     getPayments(payments) {
-      let payment = payments.map(el => el.sum).reduce((a, b) => a + b);
+      let payment = payments.map(el => el.sum).reduce((a, b) => a + b, 0);
       payment = this.$options.filters.roundUp(payment);
       return [
         `$ ${this.$options.filters.readable(payment)}`,
         payments.map(el => el.sum),
-        payments.map(el => el.sum).reduce((a, b) => a + b),
+        payments.map(el => el.sum).reduce((a, b) => a + b, 0),
       ];
     },
     // Gets total Late debt amount and its array to show diagram
@@ -233,7 +233,8 @@ export default {
       ]).then((data) => {
         const clients = this.$getClients(data[0]);
         const warehouseSum = this.$options.filters.roundUp(data[5]
-          .reduce((a, b) => a.totalPrice + b.totalPrice));
+          .map(el => el.totalPrice)
+          .reduce((a, b) => a + b, 0));
         const totalDebt = this.getSales(data[1],
           data[2].value, data[3].value)[2] - this.getPayments(data[4])[2];
         // Общее количество клиентов

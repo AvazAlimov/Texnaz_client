@@ -147,7 +147,8 @@ export default {
         Configuration.getExchangeRate(),
         Configuration.getOfficialRate(),
       ]).then((result) => {
-        this.startDate = (new Date(result[0][0].createdAt)).toISOString().substring(0, 10);
+        this.startDate = (new Date(result[0][0] ? result[0][0].createdAt : 0))
+          .toISOString().substring(0, 10);
         result[0].forEach((el) => {
           this.items.push({
             number: el.number ? el.number : '-',

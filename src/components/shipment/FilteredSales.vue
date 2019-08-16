@@ -18,8 +18,8 @@
             | {{ $getTotalPrice(props.item, exchangeRate, officialRate) | roundUp }}$
           div(v-if="accounting")
             | {{ getAccountingPrice(props.item) }}сум
-        td {{ types.find(type => type.id == props.item.type).name }}
-        td {{ balance(props.item.client) }}
+        td {{ accounting ? '' : types.find(type => type.id == props.item.type).name }}
+        td {{ accounting ? '' : balance(props.item.client) }}
         td
           v-layout(row)
             v-btn.ma-0(
@@ -67,50 +67,55 @@ export default {
     loading: false,
     payments: shipmentPayments,
     types: shipmentTypes,
-    headers: [
-      {
-        text: 'Дата',
-        value: 'createdAt',
-      },
-      {
-        text: 'Номер',
-        value: 'id',
-      },
-      {
-        text: 'Склад',
-        value: 'warehouse.name',
-      },
-      {
-        text: 'ИКК',
-        value: 'client.icc',
-      },
-      {
-        text: 'Клиент',
-        value: 'client.name',
-      },
-      {
-        text: 'Менеджер',
-        value: 'manager.name',
-      },
-      {
-        text: 'Сумма',
-        value: 'price',
-        sortable: false,
-      },
-      {
-        text: 'Тип оплаты',
-        value: 'type',
-      },
-      {
-        text: 'Баланс',
-        value: 'balance',
-        sortable: false,
-      },
-      {
-        sortable: false,
-      },
-    ],
   }),
+  computed: {
+    headers() {
+      return [
+        {
+          text: 'Дата',
+          value: 'createdAt',
+        },
+        {
+          text: 'Номер',
+          value: 'id',
+        },
+        {
+          text: 'Склад',
+          value: 'warehouse.name',
+        },
+        {
+          text: 'ИКК',
+          value: 'client.icc',
+        },
+        {
+          text: 'Клиент',
+          value: 'client.name',
+        },
+        {
+          text: 'Менеджер',
+          value: 'manager.name',
+        },
+        {
+          text: 'Сумма',
+          value: 'price',
+          sortable: false,
+        },
+        {
+          text: this.accounting ? '' : 'Тип оплаты',
+          value: 'type',
+          sortable: !this.accounting,
+        },
+        {
+          text: this.accounting ? '' : 'Баланс',
+          value: 'balance',
+          sortable: false,
+        },
+        {
+          sortable: false,
+        },
+      ];
+    },
+  },
   methods: {
     balance(client) {
       return this.$options.filters.readable(this.$options.filters.roundUp(

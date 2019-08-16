@@ -71,7 +71,9 @@ export default {
           name: 7,
           manager: 7,
           date: 7,
+          ratioPrice: 7,
           sum: 7,
+          usd: 7,
           brand: 7,
           country: 7,
         },
@@ -98,12 +100,24 @@ export default {
           value: 'manager',
         },
         {
-          text: 'Дата',
+          text: 'Добавлено',
           value: 'date',
         },
         {
-          text: `Суммa ($${this.readable(this.filteredData.map(el => el.sum).reduce((a, b) => a + b, 0))})`,
+          text: `Оплата в сум (${this.readable(this.filteredData.map(el => (el.sum === '-' ? 0 : el.sum)).reduce((a, b) => a + b, 0))} сум)`,
           value: 'sum',
+        },
+        {
+          text: `Оплата в доллора (${this.readable(this.filteredData.map(el => (el.ratioPrice === '-' ? 0 : el.ratioPrice)).reduce((a, b) => a + b, 0))} $)`,
+          value: 'ratioPrice',
+        },
+        {
+          text: `Эквивалент в доллора (${this.readable(this.filteredData.map(el => el.usd).reduce((a, b) => a + b, 0))} $)`,
+          value: 'usd',
+        },
+        {
+          text: 'Курс (продажа)',
+          value: 'date',
         },
         {
           text: 'Бренд',
@@ -127,7 +141,10 @@ export default {
         || (el.name.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.manager.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.date.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.ratioPrice.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.usd.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.sum.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.exchangeRate.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.brand.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.country.toString().toLowerCase()).includes(this.search.toLowerCase())));
     },
@@ -139,7 +156,7 @@ export default {
     getAll() {
       this.items = [];
       Payment.getAll().then((data) => {
-        this.startDate = (new Date(data[0].createdAt)).toISOString().substring(0, 10);
+        this.startDate = (new Date(data[0] ? data[0].createdAt : 0)).toISOString().substring(0, 10);
         data.forEach((el) => {
           this.items.push({
             number: el.number ? el.number : '-',
@@ -147,7 +164,10 @@ export default {
             name: el.client.name,
             manager: el.manager.name,
             date: el.createdAt,
-            sum: el.ratio === 1 ? el.sum : el.sum / el.ratio,
+            ratioPrice: el.ratio === 1 ? el.sum : '-',
+            sum: el.ratio === 1 ? '-' : el.sum,
+            usd: el.ratio === 1 ? el.sum : el.sum / el.ratio,
+            exchangeRate: el.exchangeRate,
             brand: el.brand ? el.brand.name : '-',
             country: el.brand ? el.brand.country : '-',
           });

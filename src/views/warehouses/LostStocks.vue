@@ -16,6 +16,7 @@
             td {{ props.item.stock.product.color || '-' }}
             td {{ props.item.quantity }}
             td {{ props.item.quantity * props.item.stock.product.packing }}
+
 </template>
 
 <script>
@@ -24,6 +25,7 @@ import Lost from '@/services/Lost';
 export default {
   name: 'LostStocks',
   data: () => ({
+    weight: '',
     loading: false,
     headers: [
       {

@@ -78,7 +78,7 @@
                 td {{ props.item.stock.expiry_date | moment('YYYY-MM-DD') }}
                 td {{ props.item.discount }}%
                 td {{ props.item.quantity }}
-                td(v-if="!$route.query.accounting") {{ getPrice(props.item) | roundUp }}$
+                td {{ $route.query.accounting ? accountantPrice(props.item) : getPrice(props.item)| roundUp | readable}}
           v-divider
           v-layout(row v-if="sale.approved < 1 && ($hasRole(1) || $hasRole(3))")
             v-spacer
@@ -164,7 +164,7 @@ export default {
           width: 1,
         },
         {
-          text: this.$route.query.accounting ? '' : 'Цена',
+          text: 'Цена',
           value: 'price',
           sortable: false,
           width: 1,
@@ -208,6 +208,31 @@ export default {
           return item.commissionPrice / this.exchangeRate
                   * item.quantity
                   * (100 - item.discount) / 100;
+        default:
+          return 0;
+      }
+    },
+    accountantPrice(item) {
+      switch (this.sale.type) {
+        case 1:
+          return 
+            (item.price.firstPrice * item.quantity
+                  * (100 - item.discount) / 100)
+        case 2:
+          // mixPriceNonCash
+          return
+            (item.price.mixPriceNonCash * item.quantity
+                  * (100 - item.discount) / 100)
+        case 3:
+          // mixPriceNonCash
+          return 
+            (item.price.mixPriceNonCash * item.quantity
+                        * (100 - item.discount) / 100)
+        case 4:
+          // commissionPrice
+          return
+            item.commissionPrice * item.quantity
+                              * (100 - item.discount) / 100
         default:
           return 0;
       }
