@@ -188,21 +188,21 @@ export default {
         .finally(() => { this.loading = false; });
     },
     getPrice(item) {
+      const itemPrice = this.$price(item.price, this.officialRate, this.exchangeRate);
       switch (this.sale.type) {
         case 1:
-          return (this.$b2c(item.price, this.officialRate, this.exchangeRate)
-                      * item.quantity
-                      * (100 - item.discount) / 100)
-                      / this.officialRate;
+          return (itemPrice.firstPrice * item.quantity
+          * (100 - item.discount) / 100)
+          / this.officialRate;
         case 2:
-          return (item.price.mixPriceNonCash / this.exchangeRate
-                      + item.price.mixPriceCash)
-                      * item.quantity
-                      * (100 - item.discount) / 100;
+          return (itemPrice.mixPriceNonCash / this.exchangeRate
+          + itemPrice.mixPriceCash)
+          * item.quantity
+          * (100 - item.discount) / 100;
         case 3:
-          return item.price.secondPrice
-                      * item.quantity
-                      * (100 - item.discount) / 100;
+          return itemPrice.secondPrice
+                  * item.quantity
+                  * (100 - item.discount) / 100;
         case 4:
           return item.commissionPrice / this.exchangeRate
                   * item.quantity
