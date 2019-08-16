@@ -1,8 +1,8 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-      v-btn(icon :to="{ name: 'shipments' }")
+      v-btn(icon :to="{ name: 'shipments' }").tertiary--text
           v-icon arrow_back
-      .title Отгрузка
+      .title.tertiary--text Отгрузка
       v-flex(xs12)
         .white.border.mt-3
           v-layout(row wrap).pa-4
@@ -183,7 +183,6 @@ export default {
           [this.sale, this.configurations] = results;
           this.exchangeRate = (this.configurations.find(conf => conf.id === 4)).value;
           this.officialRate = (this.configurations.find(conf => conf.id === 5)).value;
-          console.log(this.sale);
         })
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });
@@ -215,24 +214,20 @@ export default {
     accountantPrice(item) {
       switch (this.sale.type) {
         case 1:
-          return 
-            (item.price.firstPrice * item.quantity
-                  * (100 - item.discount) / 100)
+          return (item.price.firstPrice * item.quantity
+                  * (100 - item.discount) / 100) || 0;
         case 2:
           // mixPriceNonCash
-          return
-            (item.price.mixPriceNonCash * item.quantity
-                  * (100 - item.discount) / 100)
+          return (item.price.mixPriceNonCash * item.quantity
+                  * (100 - item.discount) / 100) || 0;
         case 3:
           // mixPriceNonCash
-          return 
-            (item.price.mixPriceNonCash * item.quantity
-                        * (100 - item.discount) / 100)
+          return (item.price.mixPriceNonCash * item.quantity
+                        * (100 - item.discount) / 100) || 0;
         case 4:
           // commissionPrice
-          return
-            item.commissionPrice * item.quantity
-                              * (100 - item.discount) / 100
+          return (item.commissionPrice * item.quantity
+                              * (100 - item.discount) / 100) || 0;
         default:
           return 0;
       }
