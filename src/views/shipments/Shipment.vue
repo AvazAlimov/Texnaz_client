@@ -78,7 +78,7 @@
                 td {{ props.item.stock.expiry_date | moment('YYYY-MM-DD') }}
                 td {{ props.item.discount }}%
                 td {{ props.item.quantity }}
-                td {{ $route.query.accounting ? accountantPrice(props.item) : getPrice(props.item)| roundUp | readable}}
+                td {{ price(props.item) | roundUp | readable}}
           v-divider
           v-layout(row v-if="sale.approved < 1 && ($hasRole(1) || $hasRole(3))")
             v-spacer
@@ -173,6 +173,10 @@ export default {
     },
   },
   methods: {
+    // To get rid off eslint error in tables
+    price(item) {
+      return this.$route.query.accounting ? this.accountantPrice(item) : this.getPrice(item);
+    },
     getAll() {
       this.loading = true;
       Promise.all([
