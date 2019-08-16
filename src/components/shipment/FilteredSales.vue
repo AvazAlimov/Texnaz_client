@@ -120,7 +120,7 @@ export default {
     balance(client) {
       return this.$options.filters.readable(this.$options.filters.roundUp(
         this.$getClientBalance(client, this.allSales
-          .filter(el => el.id === client.id && el.approved)),
+          .filter(el => el.clientId === client.id && el.approved)),
       ));
     },
     getAccountingPrice(sale) {
