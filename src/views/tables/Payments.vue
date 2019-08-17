@@ -108,6 +108,10 @@ export default {
           value: 'sum',
         },
         {
+          text: `Оплата в сум бн (${this.readable(this.filteredData.map(el => (el.sumbn === '-' ? 0 : el.sumbn)).reduce((a, b) => a + b, 0))} сум)`,
+          value: 'ratioPrice',
+        },
+        {
           text: `Оплата в доллора (${this.readable(this.filteredData.map(el => (el.ratioPrice === '-' ? 0 : el.ratioPrice)).reduce((a, b) => a + b, 0))} $)`,
           value: 'ratioPrice',
         },
@@ -144,6 +148,7 @@ export default {
         || (el.ratioPrice.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.usd.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.sum.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.sumbn.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.exchangeRate.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.brand.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.country.toString().toLowerCase()).includes(this.search.toLowerCase())));
@@ -164,8 +169,9 @@ export default {
             name: el.client.name,
             manager: el.manager.name,
             date: el.createdAt,
-            ratioPrice: el.ratio === 1 ? el.sum : '-',
-            sum: el.ratio === 1 ? '-' : el.sum,
+            ratioPrice: el.currency === 0 ? el.sum : '-',
+            sum: el.currency === 1 ? el.sum : '-',
+            sumbn: el.currency === 2 ? el.sum : '-',
             usd: el.ratio === 1 ? el.sum : el.sum / el.ratio,
             exchangeRate: el.exchangeRate,
             brand: el.brand ? el.brand.name : '-',

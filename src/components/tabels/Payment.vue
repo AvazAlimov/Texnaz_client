@@ -6,6 +6,7 @@
     td {{ items.manager }}
     td {{ items.date | moment('YYYY-MM-DD')}}
     td {{ readable(items.sum) }}
+    td {{ readable(items.sumbn) }}
     td {{ readable(items.ratioPrice) }}
     td {{ readable(items.usd) }}
     td {{ readable(items.exchangeRate) }}

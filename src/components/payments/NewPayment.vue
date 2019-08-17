@@ -165,6 +165,7 @@ export default {
           clientId: this.client.id,
           brandId: this.brandId,
           sum: this.sum,
+          currency: this.currency.id,
         })
           .then(() => {
             this.number = '';
@@ -172,6 +173,7 @@ export default {
             this.managerId = null;
             this.client = null;
             this.brandId = null;
+            this.currency = null;
             this.$validator.validate();
             this.postAction();
           })
