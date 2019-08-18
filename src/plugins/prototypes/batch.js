@@ -104,7 +104,7 @@ function totalVat(batch) {
     .reduce((a, b) => a + b, 0);
   return batch.items
     .map((item) => {
-      const totalPr = item.customs_price * item.quantity;
+      const totalPr = item.customs_price * item.quantity * item.product.packing;
       const excise = totalPr * (item.excise / 100);
       const tax = totalPr * (item.tax / 100);
       console.log(`Transport cash: ${batch.transport_non_cash / total}`);
