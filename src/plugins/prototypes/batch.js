@@ -96,7 +96,8 @@ function totalTax(batch) {
 
 // Oбщий НДС в долларах
 function totalVat(batch) {
-  const total = batch.items.map(item => item.quantity).reduce((a, b) => a + b);
+  const total = batch.items.map(item => item.quantity * item.product.packing)
+    .reduce((a, b) => a + b);
   return batch.items
     .map((item) => {
       const totalPr = item.customs_price * item.quantity;

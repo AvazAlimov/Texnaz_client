@@ -41,7 +41,6 @@
             v-flex(xs12)
                 v-data-table(
                     :headers="headers"
-                    hide-actions
                     :items="filteredData"
                 )
                   template(v-slot:items="{ item }")

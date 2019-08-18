@@ -101,7 +101,6 @@
           )
           v-data-table(
             v-if="showTable"
-            hide-actions
             :headers="headers"
             :items="expanses"
           )
