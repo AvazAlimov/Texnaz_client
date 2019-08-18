@@ -47,7 +47,6 @@
               :headers="headers"
               :items="filteredData"
               :search="search"
-              hide-actions
           )
               template(v-slot:items="props")
                   Rate(:items="props.item")

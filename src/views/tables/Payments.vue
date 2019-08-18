@@ -46,7 +46,6 @@
         v-data-table(
           :headers="headers"
           :items="filteredData"
-          hide-actions
         )
           template(v-slot:items="props")
             Payment(:items="props.item")

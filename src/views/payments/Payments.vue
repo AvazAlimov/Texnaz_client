@@ -41,7 +41,6 @@
           v-data-table(
             :headers="headers"
             :items="approved"
-            hide-actions
           )
             template(v-slot:items="props")
               td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}

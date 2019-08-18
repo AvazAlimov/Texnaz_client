@@ -47,7 +47,6 @@
           v-data-table(
                 :headers="headers"
                 :items="filteredData"
-                hide-actions
                 disable-initial-sort
             )
             template(v-slot:items="props")

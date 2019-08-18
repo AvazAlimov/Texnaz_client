@@ -47,7 +47,6 @@
         v-data-table(
           :headers="headers"
           :items="filteredData"
-          hide-actions
         )
           template(v-slot:items="prop")
             Sale(:items="prop.item")

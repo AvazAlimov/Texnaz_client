@@ -46,7 +46,6 @@
                 v-data-table(
                     :headers="headers"
                     :items="filteredData"
-                    hide-actions
                 )
                     template(v-slot:items ="{ item }")
                         td {{ item.date | moment('YYYY-MM-DD HH-mm') }}
