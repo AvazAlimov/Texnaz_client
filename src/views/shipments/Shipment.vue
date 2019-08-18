@@ -78,7 +78,8 @@
                 td {{ props.item.stock.expiry_date | moment('YYYY-MM-DD') }}
                 td {{ props.item.discount }}%
                 td {{ props.item.quantity }}
-                td {{ price(props.item) | roundUp | readable}}
+                td {{ $route.query.accounting ? anAccount(props.item) : getAPrice(props.item) | roundUp | readable }}
+                td {{ price(props.item) | roundUp | readable }}
           v-divider
           v-layout(row v-if="sale.approved < 1 && ($hasRole(1) || $hasRole(3))")
             v-spacer
@@ -123,6 +124,23 @@ export default {
     types: shipmentTypes,
   }),
   computed: {
+    aPriceHeader() {
+      if (this.$route.query.accounting) {
+        switch (this.sale.type) {
+          case 1:
+            return this.types[0].name;
+          case 2:
+            return this.types[1].name;
+          case 3:
+            return this.types[1].name;
+          case 4:
+            return this.types[3].name;
+          default:
+            return '-';
+        }
+      }
+      return this.types.find(el => el.id === this.sale.type).name;
+    },
     headers() {
       return [
         {
@@ -164,6 +182,11 @@ export default {
           width: 1,
         },
         {
+          text: this.aPriceHeader,
+          value: 'aprice',
+          width: 1,
+        },
+        {
           text: 'Цена',
           value: 'price',
           sortable: false,
@@ -190,6 +213,39 @@ export default {
         })
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });
+    },
+    getAPrice(item) {
+      const itemPrice = this.$price(item.price, this.officialRate, this.exchangeRate);
+      switch (this.sale.type) {
+        case 1:
+          return itemPrice.firstPrice;
+        case 2:
+          return (itemPrice.mixPriceNonCash / this.exchangeRate
+          + itemPrice.mixPriceCash);
+        case 3:
+          return itemPrice.secondPrice;
+        case 4:
+          return item.commissionPrice / this.exchangeRate;
+        default:
+          return 0;
+      }
+    },
+    anAccount(item) {
+      switch (this.sale.type) {
+        case 1:
+          return item.price.firstPrice || 0;
+        case 2:
+          // mixPriceNonCash
+          return item.price.mixPriceNonCash || 0;
+        case 3:
+          // mixPriceNonCash
+          return item.price.mixPriceNonCash || 0;
+        case 4:
+          // commissionPrice
+          return item.commissionPrice || 0;
+        default:
+          return 0;
+      }
     },
     getPrice(item) {
       const itemPrice = this.$price(item.price, this.officialRate, this.exchangeRate);

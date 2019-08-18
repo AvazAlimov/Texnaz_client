@@ -211,10 +211,12 @@ export default {
       ];
     },
     getPaymentStatistics(payments) {
-      return payments.map(el => ({
-        value: this.$options.filters.roundUp(el.sum),
+      const result = payments.map(el => ({
+        value: this.$options.filters.roundUp(el.ratio === 1 ? el.sum : (el.sum / el.ratio)),
         date: this.$moment(el.createdAt).format('DD-MM'),
       }));
+      console.log(result);
+      return result;
     },
     getSalesStatistics(sales, exRate, offRate) {
       return sales.map(el => ({
@@ -260,7 +262,7 @@ export default {
         this.managerStatistics[0].data = this.getSalesStatistics(data[1]
           .sort((a, b) => (a.id > b.id ? 1 : -1)), data[2].value, data[3].value);
         this.managerStatistics[1].data = this.getPaymentStatistics(data[4]
-          .sort((a, b) => (a.id > b.id ? 1 : -1)));
+          .filter(el => el.approved).sort((a, b) => (a.id > b.id ? 1 : -1)));
       });
     },
   },

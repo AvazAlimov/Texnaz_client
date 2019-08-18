@@ -78,6 +78,7 @@
                 td {{ props.item.stock.expiry_date | moment('YYYY-MM-DD') }}
                 td {{ props.item.discount }}%
                 td {{ props.item.quantity }}
+                td {{ getAPrice(props.item) | roundUp | readable }}
                 td {{ getPrice(props.item) | roundUp }}$
 </template>
 
@@ -94,52 +95,6 @@ export default {
     exchangeRate: 1,
     officialRate: 1,
     configurations: [],
-    headers: [
-      {
-        text: 'Код товара',
-        value: 'product.code',
-      },
-      {
-        text: 'Наименование',
-        value: 'product.name',
-      },
-      {
-        text: 'Фасовка',
-        value: 'product.packing',
-      },
-      {
-        text: 'Цвет',
-        value: 'product.color',
-      },
-      {
-        text: 'Состояние',
-        value: 'defected',
-      },
-      {
-        text: 'Дата прибытия',
-        value: 'arrival_date',
-      },
-      {
-        text: 'Срок действия',
-        value: 'expiry_date',
-      },
-      {
-        text: 'Скидка %',
-        value: 'discount',
-        width: 1,
-      },
-      {
-        text: 'Количество',
-        value: 'quantity',
-        width: 1,
-      },
-      {
-        text: 'Цена',
-        value: 'price',
-        sortable: false,
-        width: 1,
-      },
-    ],
     sale: {
       items: [],
       client: {
@@ -154,6 +109,61 @@ export default {
     payments: shipmentPayments,
     types: shipmentTypes,
   }),
+  computed: {
+    headers() {
+      return [
+        {
+          text: 'Код товара',
+          value: 'product.code',
+        },
+        {
+          text: 'Наименование',
+          value: 'product.name',
+        },
+        {
+          text: 'Фасовка',
+          value: 'product.packing',
+        },
+        {
+          text: 'Цвет',
+          value: 'product.color',
+        },
+        {
+          text: 'Состояние',
+          value: 'defected',
+        },
+        {
+          text: 'Дата прибытия',
+          value: 'arrival_date',
+        },
+        {
+          text: 'Срок действия',
+          value: 'expiry_date',
+        },
+        {
+          text: 'Скидка %',
+          value: 'discount',
+          width: 1,
+        },
+        {
+          text: 'Количество',
+          value: 'quantity',
+          width: 1,
+        },
+        {
+          text: this.types.find(el => el.id === this.sale.type).name,
+          value: 'aquantity',
+          width: 1,
+        },
+        {
+          text: 'Цена',
+          value: 'price',
+          sortable: false,
+          width: 1,
+        },
+      ];
+    },
+  },
   methods: {
     getAll() {
       this.loading = true;
@@ -168,6 +178,22 @@ export default {
         })
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });
+    },
+    getAPrice(item) {
+      const itemPrice = this.$price(item.price, this.officialRate, this.exchangeRate);
+      switch (this.sale.type) {
+        case 1:
+          return itemPrice.firstPrice;
+        case 2:
+          return (itemPrice.mixPriceNonCash / this.exchangeRate
+          + itemPrice.mixPriceCash);
+        case 3:
+          return itemPrice.secondPrice;
+        case 4:
+          return item.commissionPrice / this.exchangeRate;
+        default:
+          return 0;
+      }
     },
     getPrice(item) {
       switch (this.sale.type) {

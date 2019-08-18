@@ -10,7 +10,7 @@
           v-layout(wrap)
             .title.ma-3 На согласование
             v-spacer
-            .subheading.ma-3 Oбщая сумма: {{ totalPending }}
+            .subheading.ma-3 Oбщая сумма: {{ readable(totalPending) }}
           v-divider
           v-data-table(
             :headers="headers"
@@ -25,8 +25,8 @@
               td {{ props.item.brand ? `${props.item.brand.name} ` : '-' }}
                 | {{ props.item.manufacturer ? `${props.item.brand.manufacturer}` : '' }}
               td {{ props.item.manager.name }}
-              td {{ balance(props.item.client).toFixed(2) }} $
-              td {{ (props.item.sum / props.item.ratio).toFixed(2) }} $
+              td {{ readable(balance(props.item.client)) }} $
+              td {{ readable((props.item.sum / props.item.ratio)) }} $
               td {{ props.item.user.name }}
               td
                 v-btn(icon :to="{name: 'payment', params: {id: props.item.id}}").ma-0
@@ -36,7 +36,7 @@
           v-layout(wrap)
             .title.ma-3 Согласованные
             v-spacer
-            .subheading.ma-3 Oбщая сумма: {{ totalApproved }}
+            .subheading.ma-3 Oбщая сумма: {{ readable(totalApproved) }}
           v-divider
           v-data-table(
             :headers="headers"
@@ -51,8 +51,8 @@
               td {{ props.item.brand ? `${props.item.brand.name} ` : '-' }}
                 | {{ props.item.manufacturer ? `${props.item.brand.manufacturer}` : '' }}
               td {{ props.item.manager.name }}
-              td {{ balance(props.item.client).toFixed(2) }} $
-              td {{ (props.item.sum / props.item.ratio).toFixed(2) }} $
+              td {{ readable(balance(props.item.client)) }} $
+              td {{ readable((props.item.sum / props.item.ratio)) }} $
               td {{ props.item.user.name }}
     router-view
 </template>
@@ -118,6 +118,11 @@ export default {
     },
   },
   methods: {
+    readable(value) {
+      return this.$options.filters.readable(
+        this.$options.filters.roundUp(value || 0),
+      );
+    },
     getAll() {
       this.loading = true;
       Payment.getAll()

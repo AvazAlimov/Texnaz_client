@@ -16,7 +16,25 @@
             td {{ props.item.stock.product.color || '-' }}
             td {{ props.item.quantity }}
             td {{ props.item.quantity * props.item.stock.product.packing }}
-
+            td
+              v-text-field(
+                v-model="props.item.Oquantity"
+                :name="props.item.stock.product.code"
+                v-validate="{\
+                  required: true,\
+                  numeric: true,\
+                  max_value: props.item.quantity,\
+                  excluded: '0',\
+                  }"
+              )
+            td
+              v-btn(icon
+              flat
+              color="green"
+              :disabled="!!errors.items.find(el => el.field === props.item.stock.product.code) ||\
+                props.item.Oquantity === 0"
+              @click="submit(props.item)")
+                v-icon(small) check
 </template>
 
 <script>
@@ -58,7 +76,14 @@ export default {
       },
       {
         text: 'Вес',
-        value: 'quantity',
+        value: 'weight',
+      },
+      {
+        text: 'Количество возврата',
+        value: 'quantityReturn',
+      },
+      {
+        sortable: false,
       },
     ],
     lostStocks: [],
@@ -69,9 +94,24 @@ export default {
       Lost.getAll(this.$route.params.id)
         .then((lostStocks) => {
           this.lostStocks = lostStocks;
+          // eslint-disable-next-line no-param-reassign
+          lostStocks.forEach((el) => { el.Oquantity = 0; });
         })
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });
+    },
+    submit(item) {
+      new Promise((resolve, reject) => {
+        Lost.found({
+          id: item.id,
+          quantity: item.Oquantity,
+        })
+          .then(() => resolve())
+          .catch(() => reject());
+      }).then(() => { this.getAll(); })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
   created() {
