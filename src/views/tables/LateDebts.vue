@@ -100,7 +100,7 @@ export default {
           value: 'manager',
         },
         {
-          text: 'количество дней',
+          text: 'Количество дней',
           value: 'debt',
         },
       ];

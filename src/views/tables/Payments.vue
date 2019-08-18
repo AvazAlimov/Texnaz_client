@@ -111,11 +111,11 @@ export default {
           value: 'ratioPrice',
         },
         {
-          text: `Оплата в доллора (${this.readable(this.filteredData.map(el => (el.ratioPrice === '-' ? 0 : el.ratioPrice)).reduce((a, b) => a + b, 0))} $)`,
+          text: `Оплата в долларах (${this.readable(this.filteredData.map(el => (el.ratioPrice === '-' ? 0 : el.ratioPrice)).reduce((a, b) => a + b, 0))} $)`,
           value: 'ratioPrice',
         },
         {
-          text: `Эквивалент в доллора (${this.readable(this.filteredData.map(el => el.usd).reduce((a, b) => a + b, 0))} $)`,
+          text: `Эквивалент в долларах (${this.readable(this.filteredData.map(el => el.usd).reduce((a, b) => a + b, 0))} $)`,
           value: 'usd',
         },
         {

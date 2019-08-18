@@ -70,7 +70,7 @@ export default {
           value: 'date',
         },
         {
-          text: 'Наименование',
+          text: 'Кто изменил',
           value: 'name',
         },
         {

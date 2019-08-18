@@ -105,7 +105,7 @@ export default {
           value: 'returnDate',
         },
         {
-          text: 'Суммма Возвратa',
+          text: ' Сумма возврата',
           value: 'return price',
         },
         {

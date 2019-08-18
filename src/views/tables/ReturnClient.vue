@@ -103,7 +103,7 @@ export default {
           value: 'clientname',
         },
         {
-          text: 'Имя менеджера',
+          text: 'Менеджер',
           value: 'managername',
         },
         {
@@ -115,7 +115,7 @@ export default {
           value: 'form',
         },
         {
-          text: `Возврат цены ($${this.readable(this.filteredData.map(el => el.returnPrice).reduce((a, b) => a + b, 0))})`,
+          text: `Сумма возврата ($${this.readable(this.filteredData.map(el => el.returnPrice).reduce((a, b) => a + b, 0))})`,
           value: 'returnPrice',
         },
         {

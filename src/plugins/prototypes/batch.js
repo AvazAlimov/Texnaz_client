@@ -96,13 +96,18 @@ function totalTax(batch) {
 
 // Oбщий НДС в долларах
 function totalVat(batch) {
+  console.log(`Total quantity: ${batch.items.map(item => item.quantity)
+    .reduce((a, b) => a + b, 0)}`);
+  console.log(`Total weight: ${batch.items.map(item => item.quantity * item.product.packing)
+    .reduce((a, b) => a + b, 0)}`);
   const total = batch.items.map(item => item.quantity * item.product.packing)
-    .reduce((a, b) => a + b);
+    .reduce((a, b) => a + b, 0);
   return batch.items
     .map((item) => {
       const totalPr = item.customs_price * item.quantity;
       const excise = totalPr * (item.excise / 100);
       const tax = totalPr * (item.tax / 100);
+      console.log(`Transport cash: ${batch.transport_non_cash / total}`);
       return (totalPr + excise + tax + batch.transport_non_cash / total) * (item.vat / 100);
     })
     .reduce((a, b) => a + b, 0);
