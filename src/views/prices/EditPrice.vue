@@ -37,7 +37,7 @@
           .subheading Наценка ($)
           v-spacer
             v-divider.mx-4
-          .subheading {{ price.secondPrice - price.mixPriceNonCash / exchangeRate | roundUp }} $
+          .subheading {{ price.secondPrice - price.mixPriceNonCash / officialRate | roundUp }} $
         v-layout(row wrap)
           v-flex(xs6)
             v-text-field.ml-4.mr-2.my-0(

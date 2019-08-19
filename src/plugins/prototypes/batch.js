@@ -98,7 +98,6 @@ function totalTax(batch) {
 function totalVat(batch) {
   const totalW = batch.items.map(item => item.quantity * item.product.packing)
     .reduce((a, b) => a + b, 0);
-
   return batch.items
     .map((item) => {
       const cp = item.customs_price / item.product.packing;
