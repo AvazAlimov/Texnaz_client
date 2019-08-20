@@ -39,8 +39,7 @@
           :headers="headers"
           :items="filteredStocks"
           :loading="loading"
-          fixed-height
-          hide-actions)
+          fixed-height)
           template(v-slot:items="props")
             StockItem(
               :expand="() => {props.expanded = !props.expanded}"
