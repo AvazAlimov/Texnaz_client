@@ -57,7 +57,7 @@
                 hide-actions)
                 template(v-slot:items="stocks")
                   StockItemExpanded(
-                    :item="props.item"
+                    :item="stocks.item"
                     :readOnly="readOnly"
                     :select="() => select(stocks.item)"
                     :selected="indexOf(stocks.item.id) != null"
@@ -209,9 +209,12 @@ export default {
             const row = this.stocks.find(item => item.product.id === stock.product.id);
             if (row) {
               row.stocks.push(stock);
+              row.totalquantity += stock.quantity;
             } else {
               // eslint-disable-next-line no-param-reassign
               stock.stocks = [stock];
+              // eslint-disable-next-line no-param-reassign
+              stock.totalquantity = stock.quantity;
               this.stocks.push(stock);
             }
           });

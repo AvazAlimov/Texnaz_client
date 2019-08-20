@@ -8,7 +8,7 @@
     td {{ item.product.name }}
     td {{ item.product.packing }}
     td {{ item.product.color || '-' }}
-    td {{ item.quantity }}
+    td {{ item.totalquantity }}
     td {{ booked + sales }}
     td {{( item.quantity - booked - sales) * item.product.packing}}
 </template>
