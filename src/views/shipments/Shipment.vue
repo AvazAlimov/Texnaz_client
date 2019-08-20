@@ -78,8 +78,8 @@
                 td {{ props.item.stock.expiry_date | moment('YYYY-MM-DD') }}
                 td {{ props.item.discount }}%
                 td {{ props.item.quantity }}
-                td {{ $route.query.accounting ? anAccount(props.item) : getAPrice(props.item) | roundUp | readable }}
-                td {{ price(props.item) | roundUp | readable }}
+                td {{ price(props.item[0]) | roundUp | readable }}
+                td {{ price(props.item)[1] | roundUp | readable }}
           v-divider
           v-layout(row v-if="sale.approved < 1 && ($hasRole(1) || $hasRole(3))")
             v-spacer
@@ -124,23 +124,6 @@ export default {
     types: shipmentTypes,
   }),
   computed: {
-    aPriceHeader() {
-      if (this.$route.query.accounting) {
-        switch (this.sale.type) {
-          case 1:
-            return this.types[0].name;
-          case 2:
-            return this.types[1].name;
-          case 3:
-            return this.types[1].name;
-          case 4:
-            return this.types[3].name;
-          default:
-            return '-';
-        }
-      }
-      return this.types.find(el => el.id === this.sale.type).name;
-    },
     headers() {
       return [
         {
@@ -182,12 +165,12 @@ export default {
           width: 1,
         },
         {
-          text: this.aPriceHeader,
+          text: 'Цена',
           value: 'aprice',
           width: 1,
         },
         {
-          text: 'Цена',
+          text: 'Сумма',
           value: 'price',
           sortable: false,
           width: 1,
@@ -198,7 +181,10 @@ export default {
   methods: {
     // To get rid off eslint error in tables
     price(item) {
-      return this.$route.query.accounting ? this.accountantPrice(item) : this.getPrice(item);
+      return [
+        this.$route.query.accounting ? this.anAccount(item) : this.getAPrice(item),
+        this.$route.query.accounting ? this.accountantPrice(item) : this.getPrice(item),
+      ];
     },
     getAll() {
       this.loading = true;
