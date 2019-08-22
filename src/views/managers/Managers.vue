@@ -42,7 +42,7 @@ export default {
         .then((users) => {
           this.managers = users.filter((user) => {
             const managerRole = user.roles.filter(role => role.id === 2);
-            return managerRole.length;
+            return managerRole.length && user.province.id === this.$provinceId();
           });
         })
         .catch((error) => {

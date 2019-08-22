@@ -24,6 +24,16 @@
                     v-validate="'required'"
                     color="secondary")
                 v-select(
+                  v-model="user.provinceId"
+                  :items="provinces"
+                  label="Область"
+                  item-text="name"
+                  item-value="id"
+                  name="province"
+                  v-validate="'required'"
+                  color="secondary"
+                )
+                v-select(
                     v-model="user.roles"
                     :items="fixedRoles"
                     label="Роли"
@@ -45,6 +55,7 @@
 <script>
 import User from '@/services/User';
 import Roles from '@/services/Roles';
+import Province from '@/services/Province';
 
 export default {
   name: 'User',
@@ -58,8 +69,10 @@ export default {
         name: '',
         username: '',
         password: '',
+        provinceId: null,
         roles: [],
       },
+      provinces: [],
       fixedRoles: [],
       loading: false,
     };
@@ -86,14 +99,19 @@ export default {
     },
   },
   created() {
-    Roles.getAll().then((roles) => { this.fixedRoles = roles; });
+    Promise.all([
+      Roles.getAll(),
+      Province.getAll(),
+    ])
+      .then((result) => { [this.fixedRoles, this.provinces] = result; });
     if (this.$route.params.id) {
       this.id = this.$route.params.id;
       User.get(this.$route.params.id)
-        .then(({ name, username, roles }) => {
-          this.user.name = name;
-          this.user.username = username;
-          this.user.roles = roles.map(role => role.id);
+        .then((user) => {
+          this.user.name = user.name;
+          this.user.username = user.username;
+          this.user.roles = user.roles.map(role => role.id);
+          this.user.provinceId = user.province.id;
         });
     }
   },

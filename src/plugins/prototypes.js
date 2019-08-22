@@ -47,6 +47,15 @@ Vue.prototype.$getUserId = () => {
   return user.id;
 };
 
+Vue.prototype.$provinceId = () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user) {
+    router.push({ name: 'login' });
+    return false;
+  }
+  return user.province.id;
+};
+
 Vue.prototype.$getClients = (clients) => {
   const user = JSON.parse(localStorage.getItem('user'));
   if (Vue.prototype.$hasRole(1) || Vue.prototype.$hasRole(6)

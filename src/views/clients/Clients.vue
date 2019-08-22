@@ -28,7 +28,6 @@
                 td {{ item.contactPerson || '-' }}
                 td {{ item.phone || '-' }}
                 td {{ item.province }}
-                td {{ item.region }}
                 td {{ item.sphere || '-' }}
                 td {{ item.manager }}
                 td {{ item.createdAt | moment('YYYY-MM-DD') }}
@@ -94,10 +93,6 @@ export default {
           value: 'region.province.name',
         },
         {
-          text: 'Pегион',
-          value: 'region.name',
-        },
-        {
           text: 'Направление деятельности',
           value: 'sphere',
         },
@@ -151,7 +146,8 @@ export default {
   methods: {
     balance(client) {
       return this
-        .$getClientBalance(client, this.sales.filter(el => el.clientId === client.id && el.approved)) || 0;
+        .$getClientBalance(client, this.sales
+          .filter(el => el.clientId === client.id && el.approved)) || 0;
     },
     getAll() {
       this.loading = true;

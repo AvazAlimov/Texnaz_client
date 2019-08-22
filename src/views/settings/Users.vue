@@ -5,10 +5,15 @@
         .title.tertiary--text ПОЛЬЗОВАТЕЛИ
         v-flex(xs12).mt-3
             .border.white
-                v-data-table(:headers="headers" :items="users" hide-actions :loading="loading")
+                v-data-table(
+                :headers="headers"
+                :items="users"
+                hide-actions
+                :loading="loading")
                     template(v-slot:items="props")
                         td {{ props.item.name }}
                         td {{ props.item.username }}
+                        td {{ props.item.province ? props.item.province.name : '-' }}
                         td
                           v-chip(
                             v-for="role in props.item.roles"
@@ -49,6 +54,10 @@ export default {
         {
           text: 'Имя пользователя',
           value: 'username',
+        },
+        {
+          text: 'Область',
+          value: 'province',
         },
         {
           text: 'Роли',
