@@ -7,6 +7,7 @@
           Card(
             :title="`${warehouse.name} ${warehouse.company}`"
             :subtitle="`Владелец: ${warehouse.owner.name}`"
+            :heading="`Областьa: ${warehouse.province.name}`"
             :caption="`Сумма товаров: \
               ${$options.filters.readable(warehouse.totalPrice.toFixed(0))} $`"
             icon="store_mall_directory"
@@ -50,8 +51,13 @@ export default {
       ])
         .then((reslut) => {
           [this.warehouses, this.types] = reslut;
+          /*
           this.warehouses = this.$hasRole(4) ? this.warehouses
             .filter(item => item.ownerId === this.$getUserId()) : this.warehouses;
+            */
+          this.warehouses = (this.$hasRole(7) || this.$hasRole(8)) ? this.warehouses
+            .filter(({ province }) => (province ? province.id === this.$provinceId()
+              : false)) : this.warehouses;
         })
         .finally(() => { this.loading = false; });
     },

@@ -27,6 +27,15 @@
                     v-validate="'required'"
                     color="secondary")
                 v-select(
+                  v-model="warehouse.provinceId"
+                  :items="provinces"
+                  item-text="name"
+                  item-value="id"
+                  label="Область"
+                  name="province"
+                  v-validate="'required'"
+                )
+                v-select(
                     v-model="warehouse.ownerId"
                     :items="users"
                     label="Ответственное лицо"
@@ -48,6 +57,7 @@
 import Warehouse from '@/services/Warehouse';
 import User from '@/services/User';
 import Info from '@/services/Info';
+import Province from '@/services/Province';
 
 export default {
   name: 'WarehouseTemplate',
@@ -60,11 +70,13 @@ export default {
       warehouse: {
         name: '',
         company: '',
+        provinceId: null,
         ownerId: null,
         type: null,
       },
       users: [],
       types: [],
+      provinces: [],
       loading: false,
     };
   },
@@ -74,9 +86,10 @@ export default {
       Promise.all([
         User.getAll(),
         Info.getWarehouseTypes(),
+        Province.getAll(),
       ])
         .then((result) => {
-          [this.users, this.types] = result;
+          [this.users, this.types, this.provinces] = result;
         })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
