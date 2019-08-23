@@ -130,7 +130,7 @@
               v-spacer
               v-btn(
                 flat
-                v-if="$hasRole(1)"
+                v-if="$hasRole(1) || $hasRole(7) || $hasRole(8)"
                 color="secondary"
                 :loading="loading"
                 :disabled="errors.items.length > 0 || !!!ranges.length"
@@ -242,6 +242,7 @@ export default {
         method: this.method,
         start: this.startDate,
         end: this.endDate,
+        provinceId: this.$provinceId(),
         total: this.total,
         min: this.min,
         allBrands: this.brand.includes(0),

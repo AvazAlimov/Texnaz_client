@@ -9,7 +9,7 @@
         v-divider
         v-layout(row)
           v-spacer
-          v-menu(offset-y v-if="$hasRole(1)")
+          v-menu(offset-y v-if="$hasRole(1) || $hasRole(7) || $hasRole(8)")
             template(v-slot:activator="{ on }")
               v-btn.ma-0.mr-1(
                 flat color="secondary"

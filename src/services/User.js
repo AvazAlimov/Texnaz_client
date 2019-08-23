@@ -1,7 +1,13 @@
+import Vue from 'vue';
 import Api, { execute } from './Api';
 
+function byProvince() {
+  return Vue.prototype.$hasRole(1) ? ''
+    : `provinceId=${Vue.prototype.$provinceId()}`;
+}
+
 export default {
-  getAll: () => execute(Api().get('users/')),
+  getAll: () => execute(Api().get(`users?${byProvince()}`)),
 
   get: id => execute(Api().get(`users/${id}`)),
 

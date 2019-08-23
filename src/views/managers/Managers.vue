@@ -40,10 +40,7 @@ export default {
       this.managers = [];
       User.getAll()
         .then((users) => {
-          this.managers = users.filter((user) => {
-            const managerRole = user.roles.filter(role => role.id === 2);
-            return managerRole.length && user.province.id === this.$provinceId();
-          });
+          this.managers = users.filter(user => user.roles.filter(role => role.id === 2));
         })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
