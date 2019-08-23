@@ -66,6 +66,7 @@ export default {
       manager: {},
       user: {},
       client: {},
+      provinceId: null,
       createdAt: new Date(),
     },
   }),

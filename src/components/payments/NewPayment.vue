@@ -159,6 +159,7 @@ export default {
         this.loading = true;
         Payment.create({
           number: this.number,
+          provinceId: this.$provinceId(),
           userId: user.id,
           ratio: this.currency.ratio,
           managerId: this.managerId,
