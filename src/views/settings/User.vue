@@ -37,11 +37,22 @@
                     v-model="user.roles"
                     :items="fixedRoles"
                     label="Роли"
+                    :disabled="!!errors.items.find(item => item.field === 'province')"
                     item-text="name"
                     item-value="id"
                     multiple
                     name="roles"
                     v-validate="'required'"
+                    color="secondary")
+                v-select(
+                    v-model="user.controllerId"
+                    :items="controllers"
+                    :label="extraLabel"
+                    v-show="isEnabled"
+                    item-text="name"
+                    item-value="id"
+                    name="controller"
+                    v-validate="isEnabled ? 'required' : ''"
                     color="secondary")
                 v-layout
                     v-spacer
@@ -69,16 +80,39 @@ export default {
         name: '',
         username: '',
         password: '',
+        controllerId: null,
         provinceId: null,
         roles: [],
       },
+      users: [],
       provinces: [],
       fixedRoles: [],
+      controllerId: [],
       loading: false,
     };
   },
+  computed: {
+    extraLabel() {
+      return this.user.roles.find(role => role === 2) ? 'Supervisor' : 'CEO';
+    },
+    controllers() {
+      if (this.user.roles.find(role => role === 2)) {
+        return this.users.filter(user => user.province.id === this.user.provinceId && user.roles
+          .map(role => role.id).includes(7));
+      }
+
+      return this.users.filter(user => user.province.id === this.user.provinceId && user.roles
+        .map(role => role.id).includes(8));
+    },
+    isEnabled() {
+      return this.user.roles.length
+        ? !!this.user.roles.find(role => role === 2 || role === 7) : false;
+    },
+  },
   methods: {
     submit() {
+      if (!this.user.roles
+        .find(role => role === 2 || role === 7)) { this.user.controllerId = null; }
       if (!this.id) this.create();
       else this.update();
     },
@@ -102,8 +136,9 @@ export default {
     Promise.all([
       Roles.getAll(),
       Province.getAll(),
+      User.getAll(),
     ])
-      .then((result) => { [this.fixedRoles, this.provinces] = result; });
+      .then((result) => { [this.fixedRoles, this.provinces, this.users] = result; });
     if (this.$route.params.id) {
       this.id = this.$route.params.id;
       User.get(this.$route.params.id)
