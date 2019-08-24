@@ -8,7 +8,6 @@
                 v-data-table(
                 :headers="headers"
                 :items="users"
-                hide-actions
                 :loading="loading")
                     template(v-slot:items="props")
                         td {{ props.item.name }}
