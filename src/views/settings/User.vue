@@ -93,10 +93,10 @@ export default {
   },
   computed: {
     extraLabel() {
-      return this.user.roles.find(role => role === 2) ? 'Supervisor' : 'CEO';
+      return this.user.roles.find(role => role === 2 || role === 9) ? 'Supervisor' : 'CEO';
     },
     controllers() {
-      if (this.user.roles.find(role => role === 2)) {
+      if (this.user.roles.find(role => role === 2 || role === 9)) {
         return this.users.filter(user => user.province.id === this.user.provinceId && user.roles
           .map(role => role.id).includes(7));
       }
@@ -106,7 +106,7 @@ export default {
     },
     isEnabled() {
       return this.user.roles.length
-        ? !!this.user.roles.find(role => role === 2 || role === 7) : false;
+        ? !!this.user.roles.find(role => role === 2 || role === 7 || role === 9) : false;
     },
   },
   methods: {
