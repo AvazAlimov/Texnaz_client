@@ -35,6 +35,10 @@ export default {
         name: 'Возврат',
       },
       {
+        to: { name: 'statistics' },
+        name: 'Статистика',
+      },
+      {
         to: { name: 'rates' },
         name: 'Курсы',
       },

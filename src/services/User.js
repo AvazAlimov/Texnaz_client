@@ -9,6 +9,8 @@ function byProvince() {
 export default {
   getAll: () => execute(Api().get(`users?${byProvince()}`)),
 
+  getByProvince: id => execute(Api().get(`users?provinceId=${id}`)),
+
   get: id => execute(Api().get(`users/${id}`)),
 
   create: ({

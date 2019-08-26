@@ -500,6 +500,16 @@ const router = new Router({
           component: () => import('./views/tables/Main.vue'),
           children: [
             {
+              path: 'sales',
+              name: 'sales',
+              component: () => import('./views/tables/Sales.vue'),
+            },
+            {
+              path: 'paymentInfo',
+              name: 'paymentInfo',
+              component: () => import('./views/tables/Payments.vue'),
+            },
+            {
               path: 'debtclients',
               name: 'debtclients',
               component: () => import('./views/tables/DebtClients.vue'),
@@ -510,24 +520,19 @@ const router = new Router({
               component: () => import('./views/tables/LateDebts.vue'),
             },
             {
-              path: 'paymentInfo',
-              name: 'paymentInfo',
-              component: () => import('./views/tables/Payments.vue'),
+              path: 'returnclient',
+              name: 'returnclient',
+              component: () => import('./views/tables/ReturnClient.vue'),
             },
             {
-              path: 'sales',
-              name: 'sales',
-              component: () => import('./views/tables/Sales.vue'),
+              path: 'statistics',
+              name: 'statistics',
+              component: () => import('./views/tables/Statistics.vue'),
             },
             {
               path: 'rates',
               name: 'rates',
               component: () => import('./views/tables/Rates.vue'),
-            },
-            {
-              path: 'returnclient',
-              name: 'returnclient',
-              component: () => import('./views/tables/ReturnClient.vue'),
             },
           ],
         },
