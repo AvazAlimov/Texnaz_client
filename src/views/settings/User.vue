@@ -35,7 +35,7 @@
                 )
                 v-select(
                     v-model="user.roles"
-                    :items="fixedRoles"
+                    :items="filteredRoles"
                     label="Роли"
                     :disabled="!!errors.items.find(item => item.field === 'province')"
                     item-text="name"
@@ -94,6 +94,10 @@ export default {
   computed: {
     extraLabel() {
       return this.user.roles.find(role => role === 2 || role === 9) ? 'Supervisor' : 'CEO';
+    },
+    filteredRoles() {
+      return this.user.provinceId === 12 ? this.fixedRoles
+        : this.fixedRoles.filter(role => role.id !== 1 && role.id !== 6 && role.id !== 3);
     },
     controllers() {
       if (this.user.roles.find(role => role === 2 || role === 9)) {

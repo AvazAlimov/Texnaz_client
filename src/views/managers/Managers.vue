@@ -10,13 +10,14 @@
             icon="account_circle"
             :to="{ name: 'manager', params: { id: manager.id }}"
           )
-        v-flex(xs4)
-          Card(
-            title="Добавить"
-            subtitle="Новый менеджер"
-            icon="add"
-            :to="{ name: 'template_manager' }"
-          )
+        //
+          v-flex(xs4)
+            Card(
+              title="Добавить"
+              subtitle="Новый менеджер"
+              icon="add"
+              :to="{ name: 'template_manager' }"
+            )
     router-view
 </template>
 
