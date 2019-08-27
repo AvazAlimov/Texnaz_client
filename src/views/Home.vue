@@ -146,15 +146,18 @@ export default {
       });
     },
     update(id, value) {
-      Rate.create({
-        exchangeRate: this.configurations[0].value,
-        officialRate: this.configurations[1].value,
-      });
-      Configuration.update(id, value).then(() => {
-        this.$store.commit('setMessage', 'Обновлено');
-      }).catch((error) => {
-        this.$store.commit('setMessage', error.message);
-      });
+      // eslint-disable-next-line no-restricted-globals, no-alert
+      if (confirm('Are you sure you want to save the rates')) {
+        Rate.create({
+          exchangeRate: this.configurations[0].value,
+          officialRate: this.configurations[1].value,
+        });
+        Configuration.update(id, value).then(() => {
+          this.$store.commit('setMessage', 'Обновлено');
+        }).catch((error) => {
+          this.$store.commit('setMessage', error.message);
+        });
+      }
     },
   },
   created() {

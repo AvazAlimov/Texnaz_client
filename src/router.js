@@ -34,13 +34,37 @@ const router = new Router({
           path: '',
           component: () => import('./views/analytics/Analytics.vue'),
           beforeEnter(_, __, next) {
-            if (Vue.prototype.$hasRole(4)) {
+            if (Vue.prototype.$hasRole(2) && !Vue.prototype.$hasRole(1)) {
+              next({
+                name: 'tables',
+              });
+            } else if (Vue.prototype.$hasRole(3)) {
+              next({
+                name: 'tables',
+              });
+            } else if (Vue.prototype.$hasRole(4)) {
               next({
                 name: 'warehouses',
               });
             } else if (Vue.prototype.$hasRole(5)) {
               next({
                 name: 'accounting',
+              });
+            } else if (Vue.prototype.$hasRole(6)) {
+              next({
+                name: 'tables',
+              });
+            } else if (Vue.prototype.$hasRole(7)) {
+              next({
+                name: 'tables',
+              });
+            } else if (Vue.prototype.$hasRole(8)) {
+              next({
+                name: 'tables',
+              });
+            } else if (Vue.prototype.$hasRole(9)) {
+              next({
+                name: 'tables',
               });
             } else {
               next();
