@@ -11,13 +11,24 @@
             .title.mb-3 План
 
             v-select(
+              v-model="role"
+              :items="roles"
+              item-value="id"
+              item-text="name"
+              color="secondary"
+              label="Roles"
+              name="roles"
+              v-validate="'required'"
+              clearable)
+
+            v-select(
               v-model="managerId"
               :items="managers"
               item-value="id"
               item-text="name"
               color="secondary"
-              label="Менеджер"
-              name="Менеджер"
+              label="Users"
+              name="users"
               v-validate="'required'"
               clearable)
 
@@ -147,7 +158,6 @@ export default {
   data: () => ({
     loading: true,
     managerId: null,
-    managers: [],
     brand: [0],
     brands: [
       {
@@ -177,6 +187,22 @@ export default {
         name: 'Отдельно',
       },
     ],
+    role: 0,
+    roles: [
+      {
+        id: 2,
+        name: 'Менеджер',
+      },
+      {
+        id: 7,
+        name: 'Учредитель',
+      },
+      {
+        id: 8,
+        name: 'Территориальный менеджер',
+      },
+    ],
+    users: [],
     start: false,
     end: false,
     startDate: (new Date()).toISOString().substring(0, 10),
@@ -186,6 +212,11 @@ export default {
     max: 0,
     ranges: [],
   }),
+  computed: {
+    managers() {
+      return this.users.filter(user => user.roles.map(role => role.id).includes(this.role));
+    },
+  },
   methods: {
     getAll() {
       this.loading = true;
@@ -195,10 +226,7 @@ export default {
       ])
         .then((results) => {
           const [users, brands] = results;
-          this.managers = users
-            .filter(user => user.roles
-              .map(role => role.id)
-              .includes(2));
+          this.users = users;
           brands
             .map(brand => ({
               id: brand.id,
@@ -209,6 +237,7 @@ export default {
           if (this.$route.params.id) {
             Plan.get(this.$route.params.id)
               .then((plan) => {
+                this.role = plan.roleId;
                 this.managerId = plan.managerId;
                 this.type = plan.type;
                 this.method = plan.method;
@@ -238,6 +267,7 @@ export default {
       this.loading = true;
       const plan = {
         managerId: this.managerId,
+        roleId: this.role,
         type: this.type,
         method: this.method,
         start: this.startDate,
