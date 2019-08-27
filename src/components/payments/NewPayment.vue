@@ -43,10 +43,19 @@
                 clearable
             )
             v-select(
+              color="secondary"
+              v-model="province"
+              label="Область"
+              :items="provinces"
+              item-text="name"
+              item-value="id"
+              clearable
+            )
+            v-select(
                 color="secondary"
                 v-model="managerId"
                 label="Менеджер"
-                :items="managers"
+                :items="filteredMangers"
                 item-text="name"
                 item-value="id"
                 name="Менеджер"
@@ -83,6 +92,7 @@ import Client from '@/services/Client';
 import Brand from '@/services/Brand';
 import User from '@/services/User';
 import Configuration from '@/services/Configuration';
+import Province from '@/services/Province';
 
 export default {
   name: 'NewPayment',
@@ -113,6 +123,8 @@ export default {
         ratio: 1,
       },
     ],
+    province: null,
+    provinces: [],
     number: '',
     isUnique: true,
     client: null,
@@ -131,6 +143,9 @@ export default {
         .filter(item => item.managerId === this.managerId)
         .map(item => ({ name: `${item.icc} - ${item.name}`, id: item.id })) : [];
     },
+    filteredMangers() {
+      return this.managers.filter(manager => manager.province.id === this.province);
+    },
   },
   methods: {
     getAll() {
@@ -140,9 +155,10 @@ export default {
         User.getAll(),
         Brand.getAll(),
         Configuration.getExchangeRate(),
+        Province.getAll(),
       ])
         .then((result) => {
-          [this.clients, this.managers, this.brands, this.exchangeRate] = result;
+          [this.clients, this.managers, this.brands, this.exchangeRate, this.provinces] = result;
           this.managers = this.managers.filter(user => !!user.roles.find(role => role.id === 2));
           this.currencies[1].ratio = parseFloat(this.exchangeRate.value);
           this.currencies[2].ratio = parseFloat(this.exchangeRate.value);
@@ -159,7 +175,7 @@ export default {
         this.loading = true;
         Payment.create({
           number: this.number,
-          provinceId: this.$provinceId(),
+          provinceId: this.province,
           userId: user.id,
           ratio: this.currency.ratio,
           managerId: this.managerId,
