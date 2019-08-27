@@ -81,7 +81,8 @@
                 td {{ price(props.item)[0] | roundUp | readable }}
                 td {{ price(props.item)[1] | roundUp | readable }}
           v-divider
-          v-layout(row v-if="sale.approved < 1 && ($hasRole(1) || $hasRole(3))")
+          v-layout(row v-if="sale.approved < 1 && ($hasRole(1) || $hasRole(3)\
+            || $hasRole(7) || $hasRole(8))")
             v-spacer
             v-btn.ma-0.mb-1.mr-1(
               :loading="loading"
