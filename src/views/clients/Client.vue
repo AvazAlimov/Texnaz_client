@@ -47,24 +47,17 @@
                   name="Направление деятельности"
               )
               v-select(
-                      v-model="province"
+                      name="province"
+                      v-model="client.provinceId"
                       :items="provinces"
                       item-value="id"
                       item-text="name"
                       label="Область"
+                      v-validate="'required'"
                       color="secondary")
               v-select(
-                      v-model="client.regionId"
-                      :items="filteredRegions"
-                      item-text="name"
-                      item-value="id"
-                      label="Регион"
-                      color="secondary"
-                      name="Регион"
-                      v-validate="'required'")
-              v-select(
                       v-model="client.managerId"
-                      :items="managers"
+                      :items="filteredManagers"
                       item-text="name"
                       item-value="id"
                       label="Менеджер"
@@ -110,7 +103,6 @@ export default {
   data() {
     return {
       id: null,
-      province: null,
       menu: false,
       client: {
         icc: '',
@@ -118,7 +110,8 @@ export default {
         itn: '',
         contactPerson: '',
         phone: '',
-        regionId: null,
+        provinceId: null,
+        regionId: 1,
         sphere: '',
         managerId: null,
         createdAt: (new Date()).toISOString().substring(0, 10),
@@ -135,6 +128,9 @@ export default {
         return this.regions.filter(region => region.provinceId === this.province);
       }
       return [];
+    },
+    filteredManagers() {
+      return this.managers.filter(manager => manager.province.id === this.client.provinceId);
     },
   },
   methods: {
@@ -164,7 +160,7 @@ export default {
             clients.sort((a, b) => ((a.icc > b.icc) ? -1 : ((b.icc > a.icc) ? 1 : 0)));
             if (clients.length) {
               if (parseInt(clients[0].icc, 10)) {
-                this.client.icc = parseInt(clients[0].icc, 10) + 1;
+                this.client.icc = (parseInt(clients[0].icc, 10) + 1).toString();
               } else {
                 this.client.icc = '';
               }
@@ -206,7 +202,7 @@ export default {
         .then((client) => {
           this.client = client;
           this.client.createdAt = this.client.createdAt.substring(0, 10);
-          this.province = client.region.provinceId;
+          this.client.provinceId = client.province.id;
         });
     }
   },
