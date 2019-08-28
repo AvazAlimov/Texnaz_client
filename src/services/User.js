@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Api, { execute } from './Api';
 
 function byProvince() {
-  return Vue.prototype.$hasRole(1) ? ''
+  return Vue.prototype.$hasRole(1) || Vue.prototype.$hasRole(3) || Vue.prototype.$hasRole(6) ? ''
     : `provinceId=${Vue.prototype.$provinceId()}`;
 }
 
