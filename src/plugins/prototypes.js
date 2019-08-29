@@ -65,6 +65,12 @@ Vue.prototype.$getClients = (clients) => {
   if (Vue.prototype.$hasRole(2)) {
     return clients.filter(client => client.managerId === user.id);
   }
+  if (Vue.prototype.$hasRole(7)) {
+    return clients.filter(client => client.manager.controllerId === user.id);
+  }
+  if (Vue.prototype.$hasRole(8)) {
+    return clients.filter(client => client.provinceId === user.province.id);
+  }
   return [];
 };
 

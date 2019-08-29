@@ -13,12 +13,18 @@
               append-icon="search"
               label="Поиск"
             ).ma-4
+            //
+              v-data-table(
+                :loading="loading"
+                hide-actions
+                :headers="headers"
+                :items="myClients"
+                :pagination.sync="pagination"
+              )
             v-data-table(
               :loading="loading"
-              hide-actions
               :headers="headers"
               :items="myClients"
-              :pagination.sync="pagination"
             )
               template(v-slot:items="{ item }")
                 td {{ item.icc }}
@@ -39,9 +45,10 @@
                           v-icon(color="secondary" small) edit
                       v-btn(icon @click="remove(item.id)").mx-0
                           v-icon(color="red" small) delete
-            v-divider
-            .text-xs-center.py-2
-              v-pagination(v-model="pagination.page" color="secondary" :length="pages")
+            // Cause first v-data-table commited
+             v-divider
+              .text-xs-center.py-2
+                v-pagination(v-model="pagination.page" color="secondary" :length="pages")
             v-divider
             v-layout(row v-if="$hasRole(1) || $hasRole(3) || $hasRole(6)")
               v-spacer
@@ -190,6 +197,7 @@ export default {
     },
   },
   created() {
+    console.log('created');
     this.getAll();
   },
 };

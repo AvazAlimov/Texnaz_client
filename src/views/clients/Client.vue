@@ -35,10 +35,14 @@
               )
               v-text-field(
                   v-model="client.phone"
-                  label="Номер телефон"
+                  label="+998123456789"
                   color="secondary"
                   name="Номер телефон"
-                  v-validate:length="'min_value:7'"
+                  v-validate="{\
+                      required: true,\
+                      phone: true,\
+                      excluded: '',\
+                    }"
               )
             v-flex(xs6)
               v-text-field(
