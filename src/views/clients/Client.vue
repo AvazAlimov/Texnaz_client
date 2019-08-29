@@ -38,6 +38,7 @@
                   label="Номер телефон"
                   color="secondary"
                   name="Номер телефон"
+                  v-validate:length="'min_value:7'"
               )
             v-flex(xs6)
               v-text-field(

@@ -39,7 +39,7 @@ export default {
   methods: {
     getAll() {
       this.managers = [];
-      User.getAll()
+      (this.$hasRole(7) ? User.getBySupervisor() : User.getAll())
         .then((users) => {
           this.managers = users.filter(user => user.roles.filter(role => role.id === 2));
         })

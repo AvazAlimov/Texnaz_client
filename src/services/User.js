@@ -11,6 +11,8 @@ export default {
 
   getByProvince: id => execute(Api().get(`users?provinceId=${id}`)),
 
+  getBySupervisor: () => execute(Api().get(`users?controllerId=${Vue.prototype.$getUserId()}`)),
+
   get: id => execute(Api().get(`users/${id}`)),
 
   create: ({

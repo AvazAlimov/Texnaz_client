@@ -42,26 +42,27 @@
                 v-spacer
                   v-divider.mx-4
                 .subheading {{ sale.manager.name }}
-              v-layout.mb-2(align-center)
-                .title Тип оплаты
-                v-spacer
-                  v-divider.mx-4
-                .subheading {{ types.find(type => type.id == sale.type).name }}
-              v-layout.mb-2(align-center)
-                .title Тип расчета
-                v-spacer
-                  v-divider.mx-4
-                .subheading {{ payments.find(payment => payment.id == sale.form).name }}
-              v-layout.mb-2(align-center)
-                .title Баланс клиента
-                v-spacer
-                  v-divider.mx-4
-                .subheading {{ $getClientBalance(sale.client) | roundUp }} $
-              v-layout.mb-2(align-center)
-                .title Сумма отгрузки
-                v-spacer
-                  v-divider.mx-4
-                .subheading {{ $getTotalPrice(sale, exchangeRate, officialRate) | roundUp }} $
+              //
+                v-layout.mb-2(align-center)
+                  .title Тип оплаты
+                  v-spacer
+                    v-divider.mx-4
+                  .subheading {{ types.find(type => type.id == sale.type).name }}
+                v-layout.mb-2(align-center)
+                  .title Тип расчета
+                  v-spacer
+                    v-divider.mx-4
+                  .subheading {{ payments.find(payment => payment.id == sale.form).name }}
+                v-layout.mb-2(align-center)
+                  .title Баланс клиента
+                  v-spacer
+                    v-divider.mx-4
+                  .subheading {{ $getClientBalance(sale.client) | roundUp }} $
+                v-layout.mb-2(align-center)
+                  .title Сумма отгрузки
+                  v-spacer
+                    v-divider.mx-4
+                  .subheading {{ $getTotalPrice(sale, exchangeRate, officialRate) | roundUp }} $
           v-divider
           v-data-table(
               :loading="loading"
@@ -78,8 +79,23 @@
                 td {{ props.item.stock.expiry_date | moment('YYYY-MM-DD') }}
                 td {{ props.item.discount }}%
                 td {{ props.item.quantity }}
-                td {{ getAPrice(props.item) | roundUp | readable }}
-                td {{ getPrice(props.item) | roundUp }}$
+                //
+                  td {{ getAPrice(props.item) | roundUp | readable }}
+                  td {{ getPrice(props.item) | roundUp }}$
+          v-divider
+          v-layout(align-center)
+            v-spacer
+            v-btn.ma-0.mb-1.mr-1(
+              :loading="loading"
+              flat color="secondary"
+              @click="submit($route.params.itemId, true)"
+            ) Подтвердить
+            v-btn.ma-0.mb-1.mr-1(
+              v-if="sale.approved != -1"
+              :loading="loading"
+              flat color="secondary"
+              @click="submit($route.params.itemId, false)"
+            ) Отменить
 </template>
 
 <script>
@@ -150,7 +166,7 @@ export default {
           value: 'quantity',
           width: 1,
         },
-        {
+        /* {
           text: this.types.find(el => el.id === this.sale.type).name,
           value: 'aquantity',
           width: 1,
@@ -160,7 +176,7 @@ export default {
           value: 'price',
           sortable: false,
           width: 1,
-        },
+        }, */
       ];
     },
   },
@@ -226,6 +242,13 @@ export default {
         });
       }
       return balance;
+    },
+    submit(saleId, state) {
+      this.loading = true;
+      (state ? Sale.approveShipment(saleId) : Sale.rejectShipment(saleId))
+        .then(() => { this.$router.push({ name: 'shipping_info' }); })
+        .catch(error => this.$emit('setMessage', error.message))
+        .finally(() => { this.loading = false; });
     },
   },
   created() {

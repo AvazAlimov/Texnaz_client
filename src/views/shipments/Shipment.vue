@@ -69,7 +69,7 @@
               :headers="headers"
               :items="sale.items")
               template(v-slot:items="props")
-                td {{ props.item.stock.product.id }}
+                td {{ props.item.stock.product.code }}
                 td {{ props.item.stock.product.name }}
                 td {{ props.item.stock.product.packing }}
                 td {{ props.item.stock.product.color || '-' }}
@@ -239,8 +239,7 @@ export default {
       switch (this.sale.type) {
         case 1:
           return (itemPrice.firstPrice * item.quantity
-          * (100 - item.discount) / 100)
-          / this.officialRate;
+          * (100 - item.discount) / 100);
         case 2:
           return (itemPrice.mixPriceNonCash / this.exchangeRate
           + itemPrice.mixPriceCash)
@@ -251,7 +250,7 @@ export default {
                   * item.quantity
                   * (100 - item.discount) / 100;
         case 4:
-          return item.commissionPrice / this.exchangeRate
+          return item.commissionPrice
                   * item.quantity
                   * (100 - item.discount) / 100;
         default:
