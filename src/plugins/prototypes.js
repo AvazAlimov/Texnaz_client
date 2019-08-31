@@ -47,13 +47,13 @@ Vue.prototype.$getUserId = () => {
   return user.id;
 };
 
-Vue.prototype.$provinceId = () => {
+Vue.prototype.$getUserTerritory = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   if (!user) {
     router.push({ name: 'login' });
     return false;
   }
-  return user.province.id;
+  return user.territory.id;
 };
 
 Vue.prototype.$getClients = (clients) => {
@@ -69,7 +69,8 @@ Vue.prototype.$getClients = (clients) => {
     return clients.filter(client => client.manager.controllerId === user.id);
   }
   if (Vue.prototype.$hasRole(8)) {
-    return clients.filter(client => client.provinceId === user.province.id);
+    return clients.filter(client => user.territory.provinces
+      .map(province => province.id).includes(client.provinceId));
   }
   return [];
 };
