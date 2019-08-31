@@ -26,6 +26,7 @@
                   label="ИНН"
                   color="secondary"
                   name="ИНН"
+                  v-validate="'required'"
               )
               v-text-field(
                   v-model="client.contactPerson"
@@ -60,9 +61,19 @@
                       label="Область"
                       v-validate="'required'"
                       color="secondary")
+              // Supervisors list to filter managers dynamically
+                v-select(
+                        name="supervisor"
+                        v-model="supervisor"
+                        :items="supervisors"
+                        item-value="id"
+                        item-text="name"
+                        label="Supervisors"
+                        v-validate="'required'"
+                        color="secondary")
               v-select(
                       v-model="client.managerId"
-                      :items="filteredManagers"
+                      :items="mangers"
                       item-text="name"
                       item-value="id"
                       label="Менеджер"
@@ -101,7 +112,9 @@
 <script>
 import User from '@/services/User';
 import Client from '@/services/Client';
-import Region from '@/services/Region';
+import Provinces from '@/services/Province';
+import Territories from '@/services/Territory';
+
 
 export default {
   name: 'Client',
@@ -121,9 +134,12 @@ export default {
         managerId: null,
         createdAt: (new Date()).toISOString().substring(0, 10),
       },
+      supervisor: null,
+      clients: [],
+      users: [],
       provinces: [],
       regions: [],
-      managers: [],
+      territories: [],
       loading: false,
     };
   },
@@ -134,8 +150,17 @@ export default {
       }
       return [];
     },
-    filteredManagers() {
-      return this.managers.filter(manager => manager.province.id === this.client.provinceId);
+    supervisors() {
+      const territory = this.territories.find(item => item.provinces
+        .map(el => el.id).includes(this.client.provinceId));
+      const supervisors = this.users.filter(user => (territory ? (user.territoryId === territory.id)
+        && user.roles.map(role => role.id).includes(7) : false));
+      return supervisors.filter(user => (user ? user.provinces
+        .map(el => el.id).includes(this.client.provinceId) : false));
+    },
+    mangers() {
+      return this.users.filter(user => this.supervisors
+        .map(el => (el ? el.id : null)).includes(user.controller ? user.controller.id : -1));
     },
   },
   methods: {
@@ -143,29 +168,19 @@ export default {
       this.loading = true;
       Promise.all([
         User.getAll(),
-        Region.getAll(),
+        Provinces.getAll(),
         Client.getAll(),
+        Territories.getAll(),
       ])
         .then((result) => {
-          const [users, regions, clients] = result;
-          this.managers = users.filter((user) => {
-            const managerRole = user.roles.filter(role => role.id === 2);
-            return managerRole.length;
-          });
-
-          regions.forEach((region) => {
-            if (!this.provinces.find(province => province.id === region.provinceId)) {
-              this.provinces.push(region.province);
-            }
-          });
-          this.regions = regions;
+          [this.users, this.provinces, this.clients, this.territories] = result;
 
           if (!this.$route.params.id) {
             // eslint-disable-next-line no-nested-ternary
-            clients.sort((a, b) => ((a.icc > b.icc) ? -1 : ((b.icc > a.icc) ? 1 : 0)));
-            if (clients.length) {
-              if (parseInt(clients[0].icc, 10)) {
-                this.client.icc = (parseInt(clients[0].icc, 10) + 1).toString();
+            this.clients.sort((a, b) => ((a.icc > b.icc) ? -1 : ((b.icc > a.icc) ? 1 : 0)));
+            if (this.clients.length) {
+              if (parseInt(this.clients[0].icc, 10)) {
+                this.client.icc = (parseInt(this.clients[0].icc, 10) + 1).toString();
               } else {
                 this.client.icc = '';
               }

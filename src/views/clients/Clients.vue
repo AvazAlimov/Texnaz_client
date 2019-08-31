@@ -173,7 +173,7 @@ export default {
           inn: item.itn || '-',
           contactPerson: item.contactPerson || '-',
           phone: item.phone || '-',
-          province: item.region.province.name || '-',
+          province: item.province.name || '-',
           region: item.region.name || '-',
           sphere: item.sphere || '-',
           manager: item.manager.name || '-',

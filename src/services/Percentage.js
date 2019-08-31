@@ -1,16 +1,10 @@
-import Vue from 'vue';
 import Api, { execute } from './Api';
 
-function byProvince() {
-  return Vue.prototype.$hasRole(1) ? ''
-    : `provinceId=${Vue.prototype.$provinceId()}`;
-}
-
 export default {
-  getAll: () => execute(Api().get(`percentages?${byProvince()}`)),
+  getAll: () => execute(Api().get('percentages')),
   get: id => execute(Api().get(`percentages/${id}`)),
   getByProperty: properties => execute(
-    Api().get(`percentages/?${Object.keys(properties).map(key => `${key}=${properties[key]}`).join('&')}&${byProvince()}`),
+    Api().get(`percentages/?${Object.keys(properties).map(key => `${key}=${properties[key]}`).join('&')}}`),
   ),
   create: percentage => execute(Api().post('percentages', percentage)),
   update: (id, percentage) => execute(Api().post(`percentages/${id}`, percentage)),
