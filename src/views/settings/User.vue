@@ -18,26 +18,24 @@
                     v-validate="'required'"
                     color="secondary")
                 v-text-field(
+                    name="password"
                     v-model="user.password"
                     label="Пароль"
-                    name="password"
                     v-validate="'required'"
                     color="secondary")
                 v-select(
-                  v-model="user.provinceId"
-                  :items="provinces"
-                  label="Область"
+                  name="territory"
+                  v-model="user.territoryId"
+                  label="Tерритория"
+                  :items="territories"
                   item-text="name"
                   item-value="id"
-                  name="province"
                   v-validate="'required'"
-                  color="secondary"
                 )
                 v-select(
                     v-model="user.roles"
-                    :items="filteredRoles"
+                    :items="fixedRoles"
                     label="Роли"
-                    :disabled="!!errors.items.find(item => item.field === 'province')"
                     item-text="name"
                     item-value="id"
                     multiple
@@ -45,15 +43,40 @@
                     v-validate="'required'"
                     color="secondary")
                 v-select(
-                    v-model="user.controllerId"
-                    :items="controllers"
-                    :label="extraLabel"
-                    v-show="isEnabled"
-                    item-text="name"
-                    item-value="id"
-                    name="controller"
-                    v-validate="isEnabled ? 'required' : ''"
-                    color="secondary")
+                  name="province"
+                  label="Область"
+                  v-model="user.provinces"
+                  v-show="user.roles.includes(7)"
+                  :items="provinces"
+                  item-text="name"
+                  item-value="id"
+                  v-validate="user.roles.includes(7) ? 'required' : ''"
+                  multiple
+                  clearable
+                )
+
+                // If it is Manager
+                v-select(
+                  name="supervisors"
+                  label="Supervisors"
+                  v-model="user.controllerId"
+                  :items="supervisors"
+                  v-show="user.roles.includes(2)"
+                  item-text="name"
+                  v-validate="user.roles.includes(2) ? 'required' : ''"
+                  item-value="id"
+                )
+                // If it is Supervisor
+                v-select(
+                  name="ceoes"
+                  label="Территориальный менеджер"
+                  v-model="user.controllerId"
+                  :items="ceoes"
+                  v-show="user.roles.includes(7)"
+                  item-text="name"
+                  v-validate="user.roles.includes(7) ? 'required' : ''"
+                  item-value="id"
+                )
                 v-layout
                     v-spacer
                     v-btn(
@@ -66,7 +89,7 @@
 <script>
 import User from '@/services/User';
 import Roles from '@/services/Roles';
-import Province from '@/services/Province';
+import Territory from '@/services/Territory';
 
 export default {
   name: 'User',
@@ -81,42 +104,42 @@ export default {
         username: '',
         password: '',
         controllerId: null,
-        provinceId: null,
+        territoryId: null,
+        provinces: [],
         roles: [],
       },
       users: [],
+      territories: [],
       provinces: [],
       fixedRoles: [],
-      controllerId: [],
       loading: false,
     };
   },
   computed: {
-    extraLabel() {
-      return this.user.roles.find(role => role === 2 || role === 9) ? 'Supervisor' : 'CEO';
+    supervisors() {
+      return this.users.filter(user => (user.territoryId === this.user.territoryId)
+        && user.roles.map(role => role.id).includes(7));
     },
-    filteredRoles() {
-      return this.user.provinceId === 12 ? this.fixedRoles
-        : this.fixedRoles.filter(role => role.id !== 1 && role.id !== 6 && role.id !== 3);
+    ceoes() {
+      return this.users.filter(user => (user.territoryId === this.user.territoryId)
+       && user.roles.map(role => role.id).includes(8));
     },
-    controllers() {
-      if (this.user.roles.find(role => role === 2 || role === 9)) {
-        return this.users.filter(user => user.province.id === this.user.provinceId && user.roles
-          .map(role => role.id).includes(7));
-      }
-
-      return this.users.filter(user => user.province.id === this.user.provinceId && user.roles
-        .map(role => role.id).includes(8));
-    },
-    isEnabled() {
-      return this.user.roles.length
-        ? !!this.user.roles.find(role => role === 2 || role === 7 || role === 9) : false;
+  },
+  watch: {
+    user: {
+      handler(user) {
+        this.provinces = user.territoryId
+          ? this.territories.find(el => el.id === user.territoryId).provinces : [];
+      },
+      deep: true,
     },
   },
   methods: {
     submit() {
       if (!this.user.roles
         .find(role => role === 2 || role === 7)) { this.user.controllerId = null; }
+      if (!this.user.roles
+        .find(role => role === 7)) { this.user.provinces = null; }
       if (!this.id) this.create();
       else this.update();
     },
@@ -139,10 +162,10 @@ export default {
   created() {
     Promise.all([
       Roles.getAll(),
-      Province.getAll(),
+      Territory.getAll(),
       User.getAll(),
     ])
-      .then((result) => { [this.fixedRoles, this.provinces, this.users] = result; });
+      .then((result) => { [this.fixedRoles, this.territories, this.users] = result; });
     if (this.$route.params.id) {
       this.id = this.$route.params.id;
       User.get(this.$route.params.id)

@@ -39,7 +39,9 @@ export default {
   methods: {
     getAll() {
       this.managers = [];
-      (this.$hasRole(7) ? User.getBySupervisor() : User.getAll())
+      // eslint-disable-next-line no-nested-ternary
+      (this.$hasRole(8) ? User.getByTerritory() : (
+        this.$hasRole(7) ? User.getByController() : User.getAll()))
         .then((users) => {
           this.managers = users.filter(user => user.roles.filter(role => role.id === 2));
         })
