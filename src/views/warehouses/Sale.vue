@@ -242,7 +242,7 @@ export default {
         number: this.number,
         type: this.type.id,
         form: this.payment,
-        provinceId: this.$provinceId(),
+        provinceId: this.client.provinceId,
         clientId: this.client.id,
         managerId: this.$getUserId(),
         warehouseId: parseInt(this.$route.params.id, 10),
