@@ -43,30 +43,19 @@
                 clearable
             )
             v-select(
-              color="secondary"
-              v-model="province"
-              label="Область"
-              :items="provinces"
-              item-text="name"
-              item-value="id"
-              clearable
-            )
-            v-select(
                 color="secondary"
                 v-model="managerId"
-                label="Менеджер"
-                :items="filteredMangers"
+                label="Mенеджеры"
+                :items="managers"
                 item-text="name"
                 item-value="id"
-                name="Менеджер"
-                v-validate="'required'"
                 clearable
             )
             v-combobox(
                 v-model="client"
                 :items="filteredClients"
                 auto-select-first
-                item-value="id"
+                item-value="client"
                 item-text="name"
                 color="secondary"
                 label="Клиент"
@@ -92,7 +81,7 @@ import Client from '@/services/Client';
 import Brand from '@/services/Brand';
 import User from '@/services/User';
 import Configuration from '@/services/Configuration';
-import Province from '@/services/Province';
+
 
 export default {
   name: 'NewPayment',
@@ -123,8 +112,6 @@ export default {
         ratio: 1,
       },
     ],
-    province: null,
-    provinces: [],
     number: '',
     isUnique: true,
     client: null,
@@ -133,6 +120,7 @@ export default {
     brands: [],
     managerId: null,
     managers: [],
+    users: [],
     exchangeRate: null,
   }),
   computed: {
@@ -141,10 +129,11 @@ export default {
       this.client = null;
       return this.managerId ? this.clients
         .filter(item => item.managerId === this.managerId)
-        .map(item => ({ name: `${item.icc} - ${item.name}`, id: item.id })) : [];
+        .map(item => ({ name: `${item.icc} - ${item.name}`, client: item })) : [];
     },
-    filteredMangers() {
-      return this.managers.filter(manager => manager.province.id === this.province);
+    mangerClients() {
+      return this.managerId
+        ? this.clients.filter(item => item.managerId === this.managerId) : [];
     },
   },
   methods: {
@@ -155,11 +144,10 @@ export default {
         User.getAll(),
         Brand.getAll(),
         Configuration.getExchangeRate(),
-        Province.getAll(),
       ])
         .then((result) => {
-          [this.clients, this.managers, this.brands, this.exchangeRate, this.provinces] = result;
-          this.managers = this.managers.filter(user => !!user.roles.find(role => role.id === 2));
+          [this.clients, this.users, this.brands, this.exchangeRate] = result;
+          this.managers = this.users.filter(user => !!user.roles.find(role => role.id === 2));
           this.currencies[1].ratio = parseFloat(this.exchangeRate.value);
           this.currencies[2].ratio = parseFloat(this.exchangeRate.value);
           this.$validator.validate();
@@ -175,11 +163,11 @@ export default {
         this.loading = true;
         Payment.create({
           number: this.number,
-          provinceId: this.province,
+          provinceId: this.client.client.provinceId,
           userId: user.id,
           ratio: this.currency.ratio,
           managerId: this.managerId,
-          clientId: this.client.id,
+          clientId: this.client.client.id,
           brandId: this.brandId,
           sum: this.sum,
           currency: this.currency.id,

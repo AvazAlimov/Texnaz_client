@@ -5,7 +5,6 @@
                 v-list-tile-title.secondary--text {{ title }}
                 v-list-tile-sub-title.secondary--text.text--lighten-1 {{ subtitle }}
                 v-list-tile-sub-title.secondary--text.text--lighten-1 {{ caption }}
-                v-list-tile-sub-title.secondary--text.text--lighten-1 {{ heading ? heading : '' }}
             v-list-tile-action
                 v-icon(large color="secondary") {{ icon }}
 </template>
@@ -29,10 +28,6 @@ export default {
     },
     caption: {
       type: String,
-    },
-    heading: {
-      type: String,
-      required: false,
     },
     icon: {
       type: String,
