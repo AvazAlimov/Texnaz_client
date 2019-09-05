@@ -119,6 +119,8 @@ export default {
           sortable: false,
         },
       ],
+      totalQuantity: 0,
+      totalWeight: 0,
       loading: false,
       stocks: [],
       brands: [],
@@ -157,7 +159,7 @@ export default {
           value: 'product.color',
         },
         {
-          text: 'Количество',
+          text: `Количество (${this.$options.filters.readable(this.filteredStocks.reduce((a, b) => a + b.quantity, 0))})`,
           value: 'quantity',
         },
         {
@@ -165,7 +167,7 @@ export default {
           value: 'booked',
         },
         {
-          text: 'Вес',
+          text: `Вес (${this.$options.filters.readable(this.filteredStocks.reduce((a, b) => a + (b.product.packing * b.quantity), 0))}кг)`,
           value: 'quantity',
         },
       ];
