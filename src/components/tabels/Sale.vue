@@ -1,6 +1,8 @@
 <template lang="pug">
     tr
         td {{ items.number }}
+        td {{ items.territory }}
+        td {{ items.province }}
         td {{ items.icc }}
         td {{ items.name }}
         td {{ items.date | moment('YYYY-MM-DD HH:mm')}}

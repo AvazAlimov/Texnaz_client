@@ -55,6 +55,7 @@
 <script>
 import Sales from '@/services/Sale';
 import Configuration from '@/services/Configuration';
+import Territory from '@/services/Territory';
 
 export default {
   data() {
@@ -84,6 +85,14 @@ export default {
         {
           text: 'Номер',
           value: 'number',
+        },
+        {
+          text: 'Tерритория',
+          value: 'territory',
+        },
+        {
+          text: 'Область',
+          value: 'province',
         },
         {
           text: 'Икк',
@@ -126,6 +135,8 @@ export default {
       return this.items.filter(el => new Date(el.date).getTime() >= start.getTime()
           && new Date(el.date).getTime() <= end.getTime()
           && ((el.number.toString().toLowerCase()).includes(this.search.toLowerCase())
+            || (el.territory.toString().toLowerCase()).includes(this.search.toLowerCase())
+            || (el.province.toString().toLowerCase()).includes(this.search.toLowerCase())
             || (el.icc.toString().toLowerCase()).includes(this.search.toLowerCase())
             || (el.name.toString().toLowerCase()).includes(this.search.toLowerCase())
             || (el.date.toString().toLowerCase()).includes(this.search.toLowerCase())
@@ -145,12 +156,16 @@ export default {
         Sales.getAll(),
         Configuration.getExchangeRate(),
         Configuration.getOfficialRate(),
+        Territory.getAll(),
       ]).then((result) => {
         this.startDate = (new Date(result[0][0] ? result[0][0].createdAt : 0))
           .toISOString().substring(0, 10);
         result[0].forEach((el) => {
           this.items.push({
             number: el.number ? el.number : '-',
+            territory: result[3].find(element => element.provinces
+              .map(item => item.id).includes(el.provinceId)).name,
+            province: el.province.name,
             icc: el.client.icc,
             name: el.client.name,
             date: el.createdAt,
