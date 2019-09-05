@@ -3,8 +3,12 @@ export const PriceCash = ({ secondPrice, mixPriceNonCash }, exRate) => (secondPr
 
 export const B2C = (item, offRate, exRate) => (item.secondPrice * 1.2 * exRate);
 
+function ceil(value) {
+  return Math.ceil(value / 100) * 100;
+}
+
 export default (price, offRate, exRate) => ({
-  firstPrice: B2C(price, offRate, exRate), // price.secondPrice * rate,
+  firstPrice: ceil(B2C(price, offRate, exRate)), // price.secondPrice * rate,
   secondPrice: price.secondPrice,
   mixPriceNonCash: price.mixPriceNonCash,
   mixPriceCash: PriceCash(price, exRate),
