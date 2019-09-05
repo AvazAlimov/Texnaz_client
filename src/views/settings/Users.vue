@@ -21,7 +21,7 @@
                     template(v-slot:items="props")
                         td {{ props.item.name }}
                         td {{ props.item.username }}
-                        td {{ props.item.province ? props.item.province.name : '-' }}
+                        td {{ props.item.territory ? props.item.territory.name : '-' }}
                         td
                           v-chip(
                             v-for="role in props.item.roles"
@@ -64,8 +64,8 @@ export default {
           value: 'username',
         },
         {
-          text: 'Область',
-          value: 'province',
+          text: 'Территориа',
+          value: 'territory',
         },
         {
           text: 'Роли',

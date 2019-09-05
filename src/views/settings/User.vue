@@ -128,8 +128,8 @@ export default {
   watch: {
     user: {
       handler(user) {
-        this.provinces = user.territoryId
-          ? this.territories.find(el => el.id === user.territoryId).provinces : [];
+        const territory = this.territories.find(el => el.id === user.territoryId);
+        this.provinces = territory ? territory.provinces : [];
       },
       deep: true,
     },
@@ -173,7 +173,9 @@ export default {
           this.user.name = user.name;
           this.user.username = user.username;
           this.user.roles = user.roles.map(role => role.id);
-          this.user.provinceId = user.province.id;
+          this.user.territoryId = user.territoryId;
+          this.user.controllerId = user.controller ? user.controller.id : null;
+          this.user.provinces = user.provinces ? user.provinces.map(el => el.id) : [];
         });
     }
   },
