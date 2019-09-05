@@ -5,9 +5,18 @@
         .title.tertiary--text ПОЛЬЗОВАТЕЛИ
         v-flex(xs12).mt-3
             .border.white
+                v-layout(row).ma-2.pr-3
+                  v-spacer
+                  v-spacer
+                  v-text-field(
+                    append-icon="search"
+                    label="Поиск"
+                    v-model="search"
+                  )
                 v-data-table(
                 :headers="headers"
                 :items="users"
+                :search="search"
                 :loading="loading")
                     template(v-slot:items="props")
                         td {{ props.item.name }}
@@ -67,6 +76,7 @@ export default {
           width: 100,
         },
       ],
+      search: '',
       users: [],
       loading: false,
     };
