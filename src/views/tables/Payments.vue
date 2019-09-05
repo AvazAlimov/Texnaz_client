@@ -53,6 +53,7 @@
 
 <script>
 import Payment from '@/services/Payment';
+import Territory from '@/services/Territory';
 
 export default {
   data() {
@@ -85,6 +86,14 @@ export default {
         {
           text: 'Номер',
           value: 'number',
+        },
+        {
+          text: 'Tерритория',
+          value: 'territory',
+        },
+        {
+          text: 'Область',
+          value: 'province',
         },
         {
           text: 'Икк',
@@ -140,6 +149,8 @@ export default {
       return this.items.filter(el => new Date(el.date).getTime() >= start.getTime()
         && new Date(el.date).getTime() <= end.getTime()
         && ((el.number.toString()).includes(this.search.toLowerCase())
+        || (el.territory.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.province.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.icc.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.name.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.manager.toString().toLowerCase()).includes(this.search.toLowerCase())
@@ -159,11 +170,19 @@ export default {
     },
     getAll() {
       this.items = [];
-      Payment.getAll().then((data) => {
-        this.startDate = (new Date(data[0] ? data[0].createdAt : 0)).toISOString().substring(0, 10);
-        data.forEach((el) => {
+      Promise.all([
+        Territory.getAll(),
+        Payment.getAll(),
+      ]).then((result) => {
+        const [territories, payments] = result;
+        this.startDate = (new Date(payments[0] ? payments[0].createdAt : 0))
+          .toISOString().substring(0, 10);
+        payments.forEach((el) => {
           this.items.push({
             number: el.number ? el.number : '-',
+            territory: territories.find(element => element.provinces
+              .map(item => item.id).includes(el.provinceId)).name,
+            province: el.province.name,
             icc: el.client.icc,
             name: el.client.name,
             manager: el.manager.name,
@@ -177,7 +196,7 @@ export default {
             country: el.brand ? el.brand.country : '-',
           });
         });
-      });
+      }).catch(err => this.$commit('setMessage', err.message));
     },
   },
   created() {

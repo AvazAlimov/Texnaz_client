@@ -1,6 +1,8 @@
 <template lang="pug">
     tr
       td {{ user.clienticc }}
+      td {{ user.territory || '-'}}
+      td {{ user.province || '-'}}
       td {{ user.clientname }}
       td {{ user.managername }}
       td {{ user.saleDate | moment('YYYY-MM-DD HH:mm')}}

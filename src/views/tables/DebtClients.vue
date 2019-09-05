@@ -57,6 +57,7 @@
 import Sale from '@/services/Sale';
 import Payment from '@/services/Payment';
 import ReturnClient from '@/services/ReturnClient';
+import Territory from '@/services/Territory';
 
 export default {
   data() {
@@ -75,6 +76,14 @@ export default {
         {
           text: 'Икк',
           value: 'clienticc',
+        },
+        {
+          text: 'Tерритория',
+          value: 'territory',
+        },
+        {
+          text: 'Область',
+          value: 'province',
         },
         {
           text: 'Kлиент',
@@ -121,6 +130,8 @@ export default {
       return this.items.filter(el => (
         (el.saleDate.toString()).includes(this.search)
         || (el.salePrice.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.territory.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.province.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.paymentDate.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.paymentPrice.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.returnDate.toString().toLowerCase()).includes(this.search.toLowerCase())
@@ -145,6 +156,7 @@ export default {
         Sale.getAll(),
         Payment.getAll(),
         ReturnClient.getAll(),
+        Territory.getAll(),
       ]).then((result) => {
         this.items = [];
         const [sales, payments, returns] = result;
@@ -161,6 +173,9 @@ export default {
           clientbalance: this.$getClientBalance(sale.client, sales
             .filter(el => el.clientId === sale.clientId && el.approved)),
           managername: sale.manager.name,
+          territory: result[3].find(element => element.provinces
+            .map(item => item.id).includes(sale.provinceId)).name,
+          province: sale.province.name,
         }));
         payments.forEach(payment => this.items.push({
           saleDate: '-',
@@ -174,6 +189,9 @@ export default {
           clientname: payment.client.name,
           clientbalance: this.$getClientBalance(payment.client, sales),
           managername: payment.manager.name,
+          territory: result[3].find(element => element.provinces
+            .map(item => item.id).includes(payment.provinceId)).name,
+          province: payment.province.name,
         }));
         returns.forEach(returnItem => this.items.push({
           saleDate: '-',
@@ -188,6 +206,9 @@ export default {
           clientname: returnItem.client.name,
           clientbalance: this.$getClientBalance(returnItem.client, sales),
           managername: returnItem.manager.name,
+          territory: result[3].find(element => element.provinces
+            .map(item => item.id).includes(returnItem.provinceId)).name,
+          province: returnItem.province.name,
         }));
         this.items.sort((a, b) => (a.date > b.date ? 1 : -1));
       });

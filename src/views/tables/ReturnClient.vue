@@ -48,6 +48,8 @@
                     :items="filteredData"
                 )
                     template(v-slot:items ="{ item }")
+                        td {{ item.territory }}
+                        td {{ item.province }}
                         td {{ item.date | moment('YYYY-MM-DD HH-mm') }}
                         td {{ item.number }}
                         td {{ item.warehouse }}
@@ -66,6 +68,7 @@ import Sale from '@/services/Sale';
 import ReturnClient from '@/services/ReturnClient';
 import ShipmentTypes from '@/assets/shipment_types.json';
 import ShipmentPayments from '@/assets/shipment_payments.json';
+import Territory from '@/services/Territory';
 
 export default {
   data: () => ({
@@ -82,6 +85,14 @@ export default {
   computed: {
     headers() {
       return [
+        {
+          text: 'Tерритория',
+          value: 'territory',
+        },
+        {
+          text: 'Область',
+          value: 'province',
+        },
         {
           text: 'Дата возвращения',
           value: 'date',
@@ -133,6 +144,8 @@ export default {
         && new Date(el.date).getTime() <= end.getTime()
         && ((el.number.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.warehouse.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.territory.toString().toLowerCase()).includes(this.search.toLowerCase())
+        || (el.province.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.icc.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.date.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.clientname.toString().toLowerCase()).includes(this.search.toLowerCase())
@@ -149,6 +162,7 @@ export default {
       Promise.all([
         ReturnClient.getAll(),
         Sale.getAll(),
+        Territory.getAll(),
       ])
         .then((result) => {
           this.items.push(...result[0].map(item => ({
@@ -163,6 +177,9 @@ export default {
             returnPrice: this.$getTotalPrice(item, item.exchangeRate, item.officialRate),
             balance: this.$getClientBalance(item.client, result[1]
               .filter(el => el.clientId === item.clientId)),
+            territory: result[2].find(element => element.provinces
+              .map(province => province.id).includes(item.client.provinceId)).name,
+            province: item.client.province.name,
           })));
         })
         .catch((err) => { this.$store.commit('setMessage', err.message); });
