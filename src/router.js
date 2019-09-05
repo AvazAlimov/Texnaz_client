@@ -38,10 +38,6 @@ const router = new Router({
               next({
                 name: 'tables',
               });
-            } else if (Vue.prototype.$hasRole(3)) {
-              next({
-                name: 'tables',
-              });
             } else if (Vue.prototype.$hasRole(4)) {
               next({
                 name: 'warehouses',
@@ -49,10 +45,6 @@ const router = new Router({
             } else if (Vue.prototype.$hasRole(5)) {
               next({
                 name: 'accounting',
-              });
-            } else if (Vue.prototype.$hasRole(6)) {
-              next({
-                name: 'tables',
               });
             } else if (Vue.prototype.$hasRole(7)) {
               next({

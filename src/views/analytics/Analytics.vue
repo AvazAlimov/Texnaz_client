@@ -3,7 +3,7 @@
     v-flex.mb-3(xs12)
       v-btn.ma-0(small color="tertiary" @click="tab = 0"
         :flat="tab != 0" :outline="tab == 0"
-        v-if="$hasRole(1)"
+        v-if="$hasRole(1) || $hasRole(3) || $hasRole(6)"
       ) Статистика
       v-btn.ma-0(small color="tertiary" @click="tab = 1"
         :flat="tab != 1" :outline="tab == 1"
@@ -19,7 +19,7 @@
           UserSales(:userId="$getUserId()")
 
       //Dashboard
-      template(v-if="tab==0 && $hasRole(1)")
+      template(v-if="tab==0 && ($hasRole(1) || $hasRole(3) || $hasRole(6))")
         v-flex(xs6 md3 d-flex v-for="item in cards" :key="item.id")
           GraphCard(:icon="item.icon"
             :title="item.title"
@@ -45,7 +45,7 @@ export default {
   name: 'Analytics',
   data() {
     return {
-      tab: this.$hasRole(1) ? 0 : 1,
+      tab: (this.$hasRole(1) || this.$hasRole(3) || this.$hasRole(6)) ? 0 : 1,
       colorSecondary: this.$vuetify.theme.dashboardSecondary,
       colorCard: this.$vuetify.theme.dashboardCard,
       colorBorder: this.$vuetify.theme.dashboardBorder,
