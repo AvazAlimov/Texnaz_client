@@ -160,7 +160,7 @@ export default {
       ]).then((result) => {
         this.startDate = (new Date(result[0][0] ? result[0][0].createdAt : 0))
           .toISOString().substring(0, 10);
-        result[0].forEach((el) => {
+        result[0].filter(el => el.approved).forEach((el) => {
           this.items.push({
             number: el.number ? el.number : '-',
             territory: result[3].find(element => element.provinces
@@ -175,7 +175,7 @@ export default {
             warehouse: el.warehouse.name,
           });
         });
-      });
+      }).catch(err => this.$commit('setMessage', err.message));
     },
   },
   created() {
