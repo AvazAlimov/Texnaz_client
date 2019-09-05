@@ -26,7 +26,7 @@
           td {{ $getTotalPrice(props.item, exchangeRate, officialRate) | roundUp }}$
           td {{ types.find(type => type.id == props.item.type).name }}
           td {{ payments.find(payment => payment.id == props.item.form).name }}
-          td {{ getClientBalance(props.item.client) }} $
+          td {{ $getClientBalance(props.item.client, allSales) | roundUp | readable}} $
           td
             v-layout(row)
               v-btn.ma-0(
@@ -65,6 +65,7 @@ export default {
     officialRate: 1,
     totalPrice: 0,
     sales: [],
+    allSales: [],
     headers: [
       {
         text: 'Дата',
@@ -125,10 +126,10 @@ export default {
       Promise.all([
         Sale.getByManagerId(this.userId),
         Configuration.getAll(),
+        Sale.getAll(),
       ])
         .then((results) => {
-          console.log('Hey I got data');
-          [this.sales, this.configurations] = results;
+          [this.sales, this.configurations, this.allSales] = results;
           this.sales = this.sales.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
           this.exchangeRate = (this.configurations.find(conf => conf.id === 4)).value;
           this.officialRate = (this.configurations.find(conf => conf.id === 5)).value;

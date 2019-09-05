@@ -127,7 +127,7 @@ Vue.prototype.$getClientBalance = (client, sales) => {
     });
   }
   if (sales ? sales.length : false) {
-    sales.forEach((sale) => {
+    sales.filter(el => el.clientId === client.id).forEach((sale) => {
       if (sale.approved) {
         balance -= Vue.prototype
           .$getTotalPrice(sale, sale.exchangeRate, sale.officialRate);
