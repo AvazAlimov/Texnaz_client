@@ -201,7 +201,10 @@ export default {
     execute(promise) {
       this.loading = true;
       promise
-        .then(() => this.$router.push({ name: 'clients' }))
+        .then(() => {
+          this.$router.push({ name: 'clients' });
+          window.location.reload();
+        })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
         })
