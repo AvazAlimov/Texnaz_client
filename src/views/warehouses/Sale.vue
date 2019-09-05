@@ -27,26 +27,32 @@
                     label="Тип оплаты"
                     color="secondary"
                     return-object)
-                  v-select(v-model="payment"
-                    :items="payments"
-                    item-text="name"
-                    item-value="id"
-                    label="Тип расчета"
-                    color="secondary")
                   v-select(v-model="client"
                     :items="filteredClients"
                     item-text="name"
                     return-object
+                    v-validate="'required'"
                     label="Клиент"
                     color="secondary")
-                  v-text-field(
-                    color="secondary"
-                    type="number"
-                    v-model="days"
-                    label="Количество дней платежа"
-                    name="Количество дней платежа"
-                    v-validate="'required|numeric|min_value:1'"
-                    :suffix="dueDate")
+
+                  // Commented, cause it is not necessary now,
+                    but if it removed backend responses 403 status
+                    v-select(v-model="payment"
+                      :items="payments"
+                      item-text="name"
+                      item-value="id"
+                      label="Тип расчета"
+                      color="secondary")
+
+                    v-text-field(
+                      color="secondary"
+                      v-show="false"
+                      type="number"
+                      v-model="days"
+                      label="Количество дней платежа"
+                      name="Количество дней платежа"
+                      v-validate="'required|numeric|min_value:1'"
+                      :suffix="dueDate")
 
               v-stepper-content.pa-0(step="2")
                 v-layout.grey.lighten-2(row wrap align-center)
