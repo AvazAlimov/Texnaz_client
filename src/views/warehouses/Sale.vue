@@ -201,6 +201,16 @@ export default {
     },
   },
   methods: {
+    getDebt(type, item) {
+      switch (type) {
+        case 1:
+          return (item.commissionPrice * item.sale) * ((100 - item.discount) / 100);
+        case 3:
+          return item.product.prices[0].secondPrice * item.sale * ((100 - item.discount) / 100);
+        default:
+          return 0;
+      }
+    },
     getAll() {
       this.loading = true;
       Promise.all([
@@ -259,6 +269,8 @@ export default {
         sale.items.push({
           stockId: item.id,
           priceId: item.product.prices[0].id,
+          debtPrice: this.getDebt(this.type.id, item),
+          paidPrice: 0,
           quantity: item.sale,
           discount: item.discount,
           commissionPrice: item.commissionPrice,
@@ -284,6 +296,9 @@ export default {
     },
   },
   watch: {
+    type(value) {
+      console.log(value);
+    },
     number(value) {
       this.isUnique = true;
       if (value) {

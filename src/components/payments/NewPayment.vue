@@ -35,9 +35,9 @@
         v-flex(xs6)
             v-select(
                 color="secondary"
-                v-model="brandId"
-                label="Бренд"
-                :items="brands"
+                v-model="provinceId"
+                label="Область"
+                :items="provinces"
                 item-text="name"
                 item-value="id"
                 clearable
@@ -46,7 +46,7 @@
                 color="secondary"
                 v-model="managerId"
                 label="Mенеджеры"
-                :items="managers"
+                :items="provinceManagers"
                 item-text="name"
                 item-value="id"
                 clearable
@@ -77,8 +77,9 @@
 
 <script>
 import Payment from '@/services/Payment';
+import Province from '@/services/Province';
+import Territory from '@/services/Territory';
 import Client from '@/services/Client';
-import Brand from '@/services/Brand';
 import User from '@/services/User';
 import Configuration from '@/services/Configuration';
 
@@ -116,8 +117,9 @@ export default {
     isUnique: true,
     client: null,
     clients: [],
-    brandId: null,
-    brands: [],
+    provinceId: null,
+    provinces: [],
+    territories: [],
     managerId: null,
     managers: [],
     users: [],
@@ -131,6 +133,17 @@ export default {
         .filter(item => item.managerId === this.managerId)
         .map(item => ({ name: `${item.icc} - ${item.name}`, client: item })) : [];
     },
+    provinceManagers() {
+      const territory = this.territories.find(item => item.provinces
+        .map(el => el.id).includes(this.provinceId));
+      const territorySupervisors = this.users
+        .filter(user => (territory ? (user.territoryId === territory.id)
+        && user.roles.map(role => role.id).includes(7) : false));
+      const provinceSupervisors = territorySupervisors.filter(user => (user ? user.provinces
+        .map(el => el.id).includes(this.provinceId) : false));
+      return this.users.filter(user => provinceSupervisors
+        .map(el => el.id).includes(user.controller ? user.controller.id : -1));
+    },
     mangerClients() {
       return this.managerId
         ? this.clients.filter(item => item.managerId === this.managerId) : [];
@@ -142,11 +155,12 @@ export default {
       Promise.all([
         Client.getAll(),
         User.getAll(),
-        Brand.getAll(),
+        Province.getAll(),
+        Territory.getAll(),
         Configuration.getExchangeRate(),
       ])
         .then((result) => {
-          [this.clients, this.users, this.brands, this.exchangeRate] = result;
+          [this.clients, this.users, this.provinces, this.territories, this.exchangeRate] = result;
           this.managers = this.users.filter(user => !!user.roles.find(role => role.id === 2));
           this.currencies[1].ratio = parseFloat(this.exchangeRate.value);
           this.currencies[2].ratio = parseFloat(this.exchangeRate.value);
@@ -168,7 +182,7 @@ export default {
           ratio: this.currency.ratio,
           managerId: this.managerId,
           clientId: this.client.client.id,
-          brandId: this.brandId,
+          brandId: 0,
           sum: this.sum,
           currency: this.currency.id,
         })
@@ -177,7 +191,7 @@ export default {
             this.sum = 0;
             this.managerId = null;
             this.client = null;
-            this.brandId = null;
+            this.provinceId = null;
             this.currency = null;
             this.$validator.validate();
             this.postAction();
