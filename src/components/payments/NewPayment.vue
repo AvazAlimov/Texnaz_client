@@ -76,6 +76,7 @@
 </template>
 
 <script>
+import { calculate } from '@/utils/Payment';
 import Payment from '@/services/Payment';
 import Province from '@/services/Province';
 import Territory from '@/services/Territory';
@@ -123,6 +124,8 @@ export default {
     managerId: null,
     managers: [],
     users: [],
+    rate: 0,
+    rates: [],
     exchangeRate: null,
   }),
   computed: {
@@ -175,6 +178,7 @@ export default {
       const user = JSON.parse(localStorage.getItem('user'));
       if (user) {
         this.loading = true;
+        calculate(this.client.client.id, this.currency.id, this.sum, this.exchangeRate.value);
         Payment.create({
           number: this.number,
           provinceId: this.client.client.provinceId,
