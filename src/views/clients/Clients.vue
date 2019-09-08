@@ -151,11 +151,6 @@ export default {
     },
   },
   methods: {
-    balance(client) {
-      return this
-        .$getClientBalance(client, this.sales
-          .filter(el => el.clientId === client.id && el.approved)) || 0;
-    },
     getAll() {
       this.loading = true;
       this.clients = [];
@@ -169,7 +164,7 @@ export default {
           id: item.id,
           icc: item.icc || 0,
           name: item.name || '-',
-          balance: this.balance(item) || 0,
+          balance: item.balance || 0,
           inn: item.itn || '-',
           contactPerson: item.contactPerson || '-',
           phone: item.phone || '-',
