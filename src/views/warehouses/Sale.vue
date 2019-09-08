@@ -89,7 +89,7 @@
                     label="Номер"
                     name="Номер"
                     v-validate="'required'")
-                  .subheading Баланс клиента: {{ balance | roundUp | readable }} $
+                  .subheading Баланс клиента: {{ client.balance || 0 | roundUp | readable }} $
                   .subheading Итоговая цена: {{ getTotalPrice() | roundUp | readable }} $
                 v-divider
                 v-data-table(
@@ -111,6 +111,7 @@ import Client from '@/services/Client';
 import Configuration from '@/services/Configuration';
 import shipmentTypes from '@/assets/shipment_types.json';
 import shipmentPayments from '@/assets/shipment_payments.json';
+import calculate from '@/utils/Sale';
 
 export default {
   name: 'Sale',
@@ -195,10 +196,6 @@ export default {
       }
       return this.clients.filter(client => client.managerId === this.$getUserId());
     },
-    balance() {
-      return this.$getClientBalance(this.client, this.sales
-        .filter(sale => sale.clientId === this.client.id));
-    },
   },
   methods: {
     getDebt(type, item) {
@@ -280,9 +277,10 @@ export default {
         ? Sale.update(this.$route.params.saleId, sale)
         : Sale.create(sale)
       )
-        .then(() => {
-          this.$router.push({ name: 'information' });
-          window.location.reload();
+        .then(async () => {
+          await calculate(this.client.id, this.exchangeRate);
+          // this.$router.push({ name: 'information' });
+          // window.location.reload();
         })
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });
