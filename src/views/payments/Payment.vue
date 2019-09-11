@@ -41,7 +41,7 @@
                           .title Баланс клиента
                           v-spacer
                             v-divider.mx-4
-                          .subheading {{ balance.toFixed(2) || 0 }} $
+                          .subheading {{ payment.client.balance || 0 | roundUp | readable}} $
                         v-layout.my-2(align-center)
                           .title Сумма оплаты
                           v-spacer
@@ -55,6 +55,7 @@
 
 <script>
 import Payment from '@/services/Payment';
+import { calculate } from '@/utils/Payment';
 import Sale from '@/services/Sale';
 
 export default {
@@ -63,6 +64,9 @@ export default {
     loading: false,
     sales: [],
     payment: {
+      currency: 0,
+      sum: 0,
+      exchangeRate: 0,
       manager: {},
       user: {},
       client: {},
@@ -70,12 +74,6 @@ export default {
       createdAt: new Date(),
     },
   }),
-  computed: {
-    balance() {
-      return this.$getClientBalance(this.payment.client, this.sales
-        .filter(el => el.id === this.payment.client.id));
-    },
-  },
   methods: {
     getAll() {
       this.loading = true;
@@ -90,17 +88,25 @@ export default {
         })
         .finally(() => { this.loading = false; });
     },
-    approve() {
+    async approve() {
       this.loading = true;
-      Payment.approve(this.$route.params.id)
+
+      calculate(this.payment.client.id,
+        this.payment.currency,
+        this.payment.sum,
+        Number.parseFloat(this.payment.exchangeRate))
         .then(() => {
-          this.$router.push({ name: 'payments' });
-          window.location.reload();
+          Payment.approve(this.$route.params.id)
+            .then(() => {
+              this.$router.push({ name: 'payments' });
+              window.location.reload();
+            })
+            .catch((error) => {
+              this.$store.commit('setMessage', error.message);
+            })
+            .finally(() => { this.loading = false; });
         })
-        .catch((error) => {
-          this.$store.commit('setMessage', error.message);
-        })
-        .finally(() => { this.loading = false; });
+        .catch(err => this.$store.commit('setMessage', err.message));
     },
     remove() {
       // eslint-disable-next-line no-alert, no-restricted-globals
