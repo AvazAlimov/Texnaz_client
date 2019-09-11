@@ -64,7 +64,7 @@ export default {
           value: 'username',
         },
         {
-          text: 'Территориа',
+          text: 'Территория',
           value: 'territory',
         },
         {
