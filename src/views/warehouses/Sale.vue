@@ -277,10 +277,13 @@ export default {
         ? Sale.update(this.$route.params.saleId, sale)
         : Sale.create(sale)
       )
-        .then(async () => {
-          await calculate(this.client.id, this.exchangeRate);
-          // this.$router.push({ name: 'information' });
-          // window.location.reload();
+        .then(() => {
+          calculate(this.client.id,
+            sale.items.reduce((a, b) => a + b.debtPrice, 0),
+            this.officialRate).then(() => {
+            this.$router.push({ name: 'information' });
+            window.location.reload();
+          }).catch(err => this.$commit('setMessage', err.message));
         })
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });

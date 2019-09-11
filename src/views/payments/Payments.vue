@@ -22,10 +22,9 @@
               td {{ props.item.number }}
               td {{ props.item.client.name }}
               td {{ props.item.client.icc }}
-              td {{ props.item.brand ? `${props.item.brand.name} ` : '-' }}
                 | {{ props.item.manufacturer ? `${props.item.brand.manufacturer}` : '' }}
               td {{ props.item.manager.name }}
-              td {{ readable(balance(props.item.client)) }} $
+              td {{ props.item.client.balance | roundUp | readable }} $
               td {{ readable((props.item.sum / props.item.ratio)) }} $
               td {{ props.item.user.name }}
               td
@@ -47,10 +46,9 @@
               td {{ props.item.number }}
               td {{ props.item.client.name }}
               td {{ props.item.client.icc }}
-              td {{ props.item.brand ? `${props.item.brand.name} ` : '-' }}
                 | {{ props.item.manufacturer ? `${props.item.brand.manufacturer}` : '' }}
               td {{ props.item.manager.name }}
-              td {{ readable(balance(props.item.client)) }} $
+              td {{ props.item.client.balance | roundUp | readable }} $
               td {{ readable((props.item.sum / props.item.ratio)) }} $
               td {{ props.item.user.name }}
     router-view
@@ -78,10 +76,6 @@ export default {
       {
         text: 'ИКК',
         value: 'client.icc',
-      },
-      {
-        text: 'Бренд',
-        value: 'brandId',
       },
       {
         text: 'Менеджер',
@@ -138,18 +132,6 @@ export default {
           this.$store.commit('setMessage', error.message);
         })
         .finally(() => { this.loading = false; });
-    },
-    balance(client) {
-      if (client.payments) {
-        let balance = 0;
-        client.payments.forEach((payment) => {
-          if (payment.approved) {
-            balance += payment.sum / payment.ratio;
-          }
-        });
-        return balance;
-      }
-      return 0;
     },
   },
   created() {
