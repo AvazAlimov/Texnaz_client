@@ -170,8 +170,7 @@ export default {
           date: sale.createdAt,
           clienticc: sale.client.icc,
           clientname: sale.client.name,
-          clientbalance: this.$getClientBalance(sale.client, sales
-            .filter(el => el.clientId === sale.clientId && el.approved)),
+          clientbalance: sale.client.balance || 0,
           managername: sale.manager.name,
           territory: result[3].find(element => element.provinces
             .map(item => item.id).includes(sale.provinceId)).name,
@@ -187,7 +186,7 @@ export default {
           date: payment.createdAt,
           clienticc: payment.client.icc,
           clientname: payment.client.name,
-          clientbalance: this.$getClientBalance(payment.client, sales),
+          clientbalance: payment.client.balance || 0,
           managername: payment.manager.name,
           territory: result[3].find(element => element.provinces
             .map(item => item.id).includes(payment.provinceId)).name,
@@ -204,7 +203,7 @@ export default {
           date: returnItem.createdAt,
           clienticc: returnItem.client.icc,
           clientname: returnItem.client.name,
-          clientbalance: this.$getClientBalance(returnItem.client, sales),
+          clientbalance: returnItem.client.balance || 0,
           managername: returnItem.manager.name,
           territory: result[3].find(element => element.provinces
             .map(item => item.id).includes(returnItem.provinceId)).name,

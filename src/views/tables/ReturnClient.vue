@@ -175,8 +175,7 @@ export default {
             type: item.type,
             form: item.form,
             returnPrice: this.$getTotalPrice(item, item.exchangeRate, item.officialRate),
-            balance: this.$getClientBalance(item.client, result[1]
-              .filter(el => el.clientId === item.clientId)),
+            balance: item.client.balance || 0,
             territory: result[2].find(element => element.provinces
               .map(province => province.id).includes(item.client.provinceId)).name,
             province: item.client.province.name,

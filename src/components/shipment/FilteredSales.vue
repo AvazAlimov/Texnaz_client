@@ -19,7 +19,7 @@
           div(v-if="accounting")
             | {{ getAccountingPrice(props.item) }}сум
         td {{ accounting ? '' : types.find(type => type.id == props.item.type).name }}
-        td {{ accounting ? '' : balance(props.item.client) }}
+        td {{ (accounting ? '' : props.item.client.balance) | roundUp | readable }}
         td
           v-layout(row)
             v-btn.ma-0(

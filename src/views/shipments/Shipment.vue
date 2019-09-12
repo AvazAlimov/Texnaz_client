@@ -56,7 +56,7 @@
                 .title Баланс клиента
                 v-spacer
                   v-divider.mx-4
-                .subheading {{ $getClientBalance(sale.client) | roundUp }} $
+                .subheading {{ sale.client.balance | roundUp | readable}} $
               v-layout.mb-2(align-center v-if="!$route.query.accounting")
                 .title Сумма отгрузки
                 v-spacer

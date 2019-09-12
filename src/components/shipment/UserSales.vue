@@ -26,7 +26,7 @@
           td {{ $getTotalPrice(props.item, exchangeRate, officialRate) | roundUp }}$
           td {{ types.find(type => type.id == props.item.type).name }}
           td {{ payments.find(payment => payment.id == props.item.form).name }}
-          td {{ $getClientBalance(props.item.client, allSales) | roundUp | readable}} $
+          td {{ (props.item.client.balance || 0) | roundUp | readable}} $
           td
             v-layout(row)
               v-btn.ma-0(
