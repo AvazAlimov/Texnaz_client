@@ -34,15 +34,19 @@ export function currencyRespectPayment(payment, paymentType, saleType, rate) {
  * @param {Payment value} value
  * @param {Rate for converting} rate
  */
-export const calculate = (clientId, type, value, rate) => new Promise((resolve, reject) => {
+// eslint-disable-next-line max-len
+export const calculate = (clientId, type, value, rate, isSale = false) => new Promise((resolve, reject) => {
   // UPDATE client balance
-  Client.addBalance(clientId, type === 0 ? value : value / rate);
+  Promise.all([
+    Sale.getByClient(clientId),
+    isSale ? Client.addBalance(clientId, 0)
+      : Client.addBalance(clientId, type === 0 ? value : value / rate),
+  ])
+    .then((result) => {
+      const [sales] = result;
+      let paymentValue = Number.parseFloat(value) || 0;
 
-  Sale.getByClient(clientId)
-    .then(async (sales) => {
-      const paymentValue = Number.parseFloat(value) || 0;
-
-      await sales.sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1)).forEach(async (sale) => {
+      sales.sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1)).forEach(async (sale) => {
         if (paymentValue > 0) {
           //  payment respect currency
           let payment = paymentRespectCurrency(paymentValue, type, sale.type, rate);
@@ -50,7 +54,6 @@ export const calculate = (clientId, type, value, rate) => new Promise((resolve, 
           // payment for each sale product
           sale.items.forEach((saleItem) => {
             if (payment > 0) {
-              console.log(Number.parseFloat(saleItem.paidPrice) + Number.parseFloat(payment));
               // debtPrice > 0 means product is not paid fully
               if (saleItem.debtPrice > 0) {
                 if (saleItem.debtPrice > (Number.parseFloat(saleItem.paidPrice)
@@ -61,7 +64,7 @@ export const calculate = (clientId, type, value, rate) => new Promise((resolve, 
                   }));
                   payment = 0;
                 } else if (payment !== 0) {
-                // UPDATE debtPrice and paidPrice are equal now
+                  // UPDATE debtPrice and paidPrice are equal now
                   payment = (Number.parseFloat(saleItem.paidPrice)
                     + Number.parseFloat(payment)) - Number.parseFloat(saleItem.debtPrice);
                   tasks.push(Sale.updateSaleItem(saleItem.id, {
@@ -73,17 +76,12 @@ export const calculate = (clientId, type, value, rate) => new Promise((resolve, 
             }
           });
 
-          Promise.all(tasks)
-            .then(async () => {
+          paymentValue = payment > 0 ? currencyRespectPayment(payment, type, sale.type, rate) : 0;
+
+          await Promise.all(tasks)
+            .then(() => {
               // check whether all products payed, if yeah then update sale status to Closed
-              await Sale.getByClient(clientId).then((newSales) => {
-                newSales.forEach(async (newSale) => {
-                  if (!newSale.items.filter(({ debtPrice }) => debtPrice !== 0).length) {
-                    // UPDATE sale status closed
-                    await Sale.close(newSale.id);
-                  }
-                });
-              });
+              Sale.check(clientId);
             })
             .catch(err => reject(err));
         }

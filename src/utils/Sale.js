@@ -1,19 +1,16 @@
 import { calculate } from './Payment';
+import Sale from '@/services/Sale';
 import Client from '@/services/Client';
 
-export default (clientId, salePrice, rate) => new Promise((res, rej) => {
+export default (clientId, salePrice, type, rate) => new Promise((res, rej) => {
   Client.get(clientId)
     .then((client) => {
-      if (client.balance > 0) {
-        calculate(clientId, 0, client.balance, rate);
-        res();
-      }
-      if (client.balance < salePrice) {
-        Client.addBalance(clientId,
-          0 - (Number.parseFloat(salePrice) / rate))
-          .then(() => { res(); })
-          .catch(err => rej(err));
-      }
+      Client.addBalance(clientId, 0 - (type === 1 ? (salePrice / rate) : salePrice))
+        .then(() => {
+          calculate(clientId, 0, client.balance, rate, true)
+            .then(() => Sale.check(clientId)
+              .then(() => res()));
+        });
     })
     .catch(error => rej(error));
 });
