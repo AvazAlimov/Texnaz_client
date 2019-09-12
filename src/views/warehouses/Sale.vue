@@ -129,7 +129,7 @@ export default {
     clients: [],
     payment: 1,
     type: shipmentTypes[0],
-    types: shipmentTypes,
+    types: shipmentTypes.filter(el => el.id !== 2),
     payments: shipmentPayments,
     configurations: [],
     exchangeRate: 1,
