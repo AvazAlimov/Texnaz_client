@@ -280,10 +280,12 @@ export default {
         .then(() => {
           calculate(this.client.id,
             sale.items.reduce((a, b) => a + b.debtPrice, 0),
-            this.officialRate).then(() => {
-            this.$router.push({ name: 'information' });
-            window.location.reload();
-          }).catch(err => this.$commit('setMessage', err.message));
+            sale.type,
+            this.officialRate)
+            .then(() => {
+              this.$router.push({ name: 'information' });
+              window.location.reload();
+            }).catch(err => this.$commit('setMessage', err.message));
         })
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });

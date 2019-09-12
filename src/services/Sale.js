@@ -25,7 +25,7 @@ export default {
   create: sale => execute(Api().post('sales', sale)),
   update: (id, sale) => execute(Api().post(`sales/${id}`, sale)),
   updateSaleItem: (id, saleItem) => execute(Api().post(`sales/saleItem/${id}`, { ...saleItem })),
-  close: id => execute(Api().post(`sales/close/${id}`)),
+  check: id => execute(Api().post(`sales/check/${id}`)),
   delete: id => execute(Api().delete(`sales/${id}`)),
   approve: id => execute(Api().post(`sales/approve/${id}`)),
   disapprove: id => execute(Api().post(`sales/disapprove/${id}`)),
