@@ -24,6 +24,7 @@
                     v-validate="'required'"
                     color="secondary")
                 v-select(
+                  v-show="!id"
                   name="territory"
                   v-model="user.territoryId"
                   label="Tерритория"
@@ -33,6 +34,7 @@
                   v-validate="'required'"
                 )
                 v-select(
+                    v-show="!id"
                     v-model="user.roles"
                     :items="fixedRoles"
                     label="Роли"
@@ -46,7 +48,7 @@
                   name="province"
                   label="Область"
                   v-model="user.provinces"
-                  v-show="user.roles.includes(7)"
+                  v-show="user.roles.includes(7) && !id"
                   :items="provinces"
                   item-text="name"
                   item-value="id"
@@ -61,7 +63,7 @@
                   label="Supervisors"
                   v-model="user.controllerId"
                   :items="supervisors"
-                  v-show="user.roles.includes(2)"
+                  v-show="user.roles.includes(2) && !id"
                   item-text="name"
                   v-validate="user.roles.includes(2) ? 'required' : ''"
                   item-value="id"
@@ -72,7 +74,7 @@
                   label="Территориальный менеджер"
                   v-model="user.controllerId"
                   :items="ceoes"
-                  v-show="user.roles.includes(7)"
+                  v-show="user.roles.includes(7) && !id"
                   item-text="name"
                   v-validate="user.roles.includes(7) ? 'required' : ''"
                   item-value="id"
