@@ -24,7 +24,7 @@
               td {{ props.item.client.icc }}
                 | {{ props.item.manufacturer ? `${props.item.brand.manufacturer}` : '' }}
               td {{ props.item.manager.name }}
-              td {{ props.item.client.balance | roundUp | readable }} $
+              td {{ props.item.client.balance || 0 | roundUp | readable }} $
               td {{ readable((props.item.sum / props.item.ratio)) }} $
               td {{ props.item.user.name }}
               td
@@ -48,7 +48,7 @@
               td {{ props.item.client.icc }}
                 | {{ props.item.manufacturer ? `${props.item.brand.manufacturer}` : '' }}
               td {{ props.item.manager.name }}
-              td {{ props.item.client.balance | roundUp | readable }} $
+              td {{ props.item.client.balance || 0 | roundUp | readable }} $
               td {{ readable((props.item.sum / props.item.ratio)) }} $
               td {{ props.item.user.name }}
     router-view

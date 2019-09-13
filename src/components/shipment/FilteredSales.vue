@@ -15,11 +15,11 @@
         td {{ props.item.manager.name }}
         td
           div(v-if="!accounting")
-            | {{ $getTotalPrice(props.item, exchangeRate, officialRate) | roundUp }}$
+            | {{ $getTotalPrice(props.item, exchangeRate, officialRate) || 0 | roundUp }}$
           div(v-if="accounting")
             | {{ getAccountingPrice(props.item) }}сум
         td {{ accounting ? '' : types.find(type => type.id == props.item.type).name }}
-        td {{ (accounting ? '' : props.item.client.balance) | roundUp | readable }}
+        td {{ (accounting ? '' : readable(props.item.client.balance)) }}
         td
           v-layout(row)
             v-btn.ma-0(
@@ -122,6 +122,11 @@ export default {
         this.$getClientBalance(client, this.allSales
           .filter(el => el.clientId === client.id && el.approved)),
       ));
+    },
+    readable(value) {
+      return this.$options.filters.readable(
+        this.$options.filters.roundUp(value),
+      );
     },
     getAccountingPrice(sale) {
       let total = 0;
