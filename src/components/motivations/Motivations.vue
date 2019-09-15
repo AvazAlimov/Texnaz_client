@@ -2,35 +2,45 @@
   div
     v-data-table(
       :headers="headers"
-      :items="motivations"
+      :items="items"
       :loading="loading"
       hide-actions)
-      template(v-slot:items="props")
-        td {{ props.item.manager.name }}
-        td {{ props.item.start | moment('YYYY-MM-DD') }}
-        td {{ props.item.end | moment('YYYY-MM-DD') }}
-        td
-          v-progress-linear(:value="props.item.progress \
-          ? props.item.progress: 0" color="secondary")
-        td {{ props.item.earned ? props.item.earned: 0 | roundUp | readable}} $
-        td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
+      template(v-slot:items="{ item }")
+        td {{ item.territory }}
+        td {{ item.role }}
+        td {{ item.name }}
+        td {{ item.start || 0 | moment('DD-MM-YYYY')}}
+        td {{ item.end || 0 | moment('DD-MM-YYYY')}}
+        td {{ item.plan }}
+        td {{ item.total || 0 | roundUp | readable}}
+        td {{ item.progress || 0 | roundUp | readable}} %
+        td {{ item.type ? 'Отгрузка' : 'Оплата'}}
+        td {{ item.earned || 0 | roundUp | readable}}
         td
           v-layout(row)
-            v-spacer
-            v-btn.ma-0(flat color="secondary" icon
-              :to="{\
-                name: props.item.motivationType == 0\
-                  ? 'plan_edit'\
-                  : (props.item.motivationType == 1\
-                  ? 'percentage_edit'\
-                  : 'mix_edit'),\
-                  params: {id: props.item.id}\
-                }")
-              v-icon(small v-if="$hasRole(1)") edit
-              v-icon(small v-else) visibility
-            v-btn.ma-0(flat color="red" icon
-              @click="remove(props.item.id, props.item.motivationType)")
-              v-icon(small) delete
+              v-spacer
+              v-btn.ma-0(flat color="secondary" icon
+                :to="{ name: 'plan_edit', params: {id: item.id} }")
+                v-icon(small v-if="$hasRole(1)") edit
+                v-icon(small v-else) visibility
+        //
+          td
+            v-layout(row)
+              v-spacer
+              v-btn.ma-0(flat color="secondary" icon
+                :to="{\
+                  name: props.item.motivationType == 0\
+                    ? 'plan_edit'\
+                    : (props.item.motivationType == 1\
+                    ? 'percentage_edit'\
+                    : 'mix_edit'),\
+                    params: {id: props.item.id}\
+                  }")
+                v-icon(small v-if="$hasRole(1)") edit
+                v-icon(small v-else) visibility
+              v-btn.ma-0(flat color="red" icon
+                @click="remove(props.item.id, props.item.motivationType)")
+                v-icon(small) delete
 </template>
 
 <script>
@@ -39,6 +49,7 @@ import Percentage from '@/services/Percentage';
 import Mix from '@/services/Mix';
 import Sale from '@/services/Sale';
 import Payment from '@/services/Payment';
+import User from '@/services/User';
 
 export default {
   name: 'Motivations',
@@ -52,35 +63,236 @@ export default {
     motivations: [],
     headers: [
       {
-        text: 'Менеджер',
-        value: 'manager.name',
+        text: 'Территория',
+        value: 'territory',
       },
       {
-        text: 'Срок от',
+        text: 'Роль',
+        value: 'role',
+      },
+      {
+        text: 'Имя',
+        value: 'name',
+      },
+      {
+        text: 'Дата начала',
         value: 'start',
       },
       {
-        text: 'Срок до',
+        text: 'Дата окончала',
         value: 'end',
       },
       {
-        text: 'Прогресс',
-        sortable: false,
+        text: 'План',
+        value: 'plan',
       },
       {
-        text: 'Вознаграждения',
-        sortable: false,
+        text: 'Результат',
+        value: 'total',
       },
       {
-        text: 'Добавлено',
-        value: 'createdAt',
+        text: '%',
+        value: 'progress',
+      },
+      {
+        text: 'Тип',
+        value: 'type',
+      },
+      {
+        text: '$',
+        value: 'earned',
       },
       {
         sortable: false,
       },
     ],
+    items: [],
   }),
   methods: {
+    getAll() {
+      this.loading = true;
+      Promise.all([
+        Plan.getAll(),
+        Sale.getAll(),
+        Payment.getAll(),
+        User.getAll(),
+      ]).then((results) => {
+        const [plans, sales, payments, users] = results;
+
+        plans.forEach((plan) => {
+          switch (plan.roleId) {
+            case 2: // Manager
+              this.items.push({
+                id: plan.id,
+                territory: plan.user.territory.name,
+                role: plan.role.name,
+                name: plan.user.name,
+                start: plan.start,
+                end: plan.end,
+                plan: plan.total,
+                type: plan.type,
+                ...this.plan(plan, sales, payments, [plan.userId]),
+              });
+              break;
+            case 7: // Supervisor
+              this.items.push({
+                id: plan.id,
+                territory: plan.user.territory.name,
+                role: plan.role.name,
+                name: plan.user.name,
+                start: plan.start,
+                end: plan.end,
+                plan: plan.total,
+                type: plan.type,
+                ...this.plan(plan, sales, payments, users
+                  .filter(({ controller }) => (controller
+                    ? controller.id === plan.userId : false))
+                  .map(user => user.id)),
+              });
+              break;
+            case 8: // Territory manager
+              this.items.push({
+                id: plan.id,
+                territory: plan.user.territory.name,
+                role: plan.role.name,
+                name: plan.user.name,
+                start: plan.start,
+                end: plan.end,
+                plan: plan.total,
+                type: plan.type,
+                ...this.plan(plan, sales, payments, users
+                  .filter(({ territoryId }) => (territoryId
+                    ? territoryId === plan.user.territory.id : false))
+                  .map(user => user.id)),
+              });
+              break;
+            default:
+              break;
+          }
+        });
+      }).catch(error => this.$store.commit('setMessage', error.message))
+        .finally(() => { this.loading = false; });
+    },
+
+    // returns { total, progress, earned }
+    /**
+     * motivation {
+     *  userId: 0,
+     *  brands: [],
+     *  ranges: [],
+     * }
+     */
+    plan(motivation, sales, payments, managerIds) {
+      const result = {};
+      const brands = motivation.brands.length ? motivation.brands.map(el => el.brandId) : [];
+      // Оплата или Отгрузка
+      switch (motivation.type) {
+        // Оплата
+        case 0: {
+          result.total = managerIds.map(managerId => (brands.length ? sales
+            .filter(el => el.managerId === managerId
+              && el.shipped && new Date(el.createdAt) < new Date(motivation.end))
+            .map(sale => sale.items
+              .filter((item) => {
+                if (brands.length) {
+                // When no brand selected at the time payment, Take as done for required brand
+                  return item.stock.product.Brand
+                    ? brands.includes(item.stock.product.Brand.id) : false;
+                }
+                return true;
+              })
+              .map(item => (sale.type === 3
+                ? item.paidPrice : (item.paidPrice / sale.officialRate)))
+              .reduce((a, b) => a + b, 0))
+            .reduce((a, b) => a + b, 0)
+            : payments
+              .filter(payment => payment.managerId === managerId && payment.approved)
+              .map(payment => (payment.ratio === 1
+                ? payment.sum : (payment.sum / payment.exchangeRate)))
+              .reduce((a, b) => a + b, 0)))
+            .reduce((a, b) => a + b, 0);
+          result.progress = (result.total * 100) / motivation.total;
+          break;
+        }
+        // Отгрузка
+        case 1: {
+          result.total = managerIds.map(managerId => sales.filter(el => el.managerId === managerId
+            && el.shipped && new Date(el.createdAt) > new Date(motivation.start))
+            .map((el) => {
+              if (brands.length) {
+                return el.items.filter(item => brands.includes(item.stock.product.brand));
+              }
+              return el;
+            })
+            .map(el => this.$getTotalPrice(el, el.exchangeRate, el.officialRate))
+            .reduce((a, b) => a + b, 0))
+            .reduce((a, b) => a + b, 0);
+
+          result.progress = (result.total * 100) / motivation.total;
+          break;
+        }
+        default:
+          break;
+      }
+      // Отдельно или Накопительно
+      let earned = 0;
+      switch (motivation.method) {
+        // Накопительно
+        case 0: {
+          const range = motivation.ranges.length ? motivation.ranges
+            .filter(el => el.from < result.progress).pop() : null;
+          // eslint-disable-next-line no-param-reassign
+          earned = result.total * ((range ? range.percentage : 0) / 100);
+          break;
+        }
+        // Отдельно
+        case 1: {
+          const ranges = motivation.ranges.length ? motivation.ranges
+            .filter(el => el.from < result.progress) : null;
+          ranges.forEach((range) => {
+            earned += (result.total - (motivation.total
+                        * ((range ? range.from : 0) / 100)))
+                        * ((range ? range.percentage : 0) / 100);
+          });
+          break;
+        }
+        default:
+          break;
+      }
+
+      result.earned = earned || result.total * (motivation.min / 100);
+
+      return result;
+    },
+    remove(id, type) {
+      // eslint-disable-next-line no-alert, no-restricted-globals
+      if (confirm('Это действие удалит элемент навсегда, вы уверены?')) {
+        let model = null;
+        switch (type) {
+          case 0:
+            model = Plan;
+            break;
+          case 1:
+            model = Percentage;
+            break;
+          case 2:
+            model = Mix;
+            break;
+          default:
+            return;
+        }
+        model.delete(id)
+          .then(() => { this.getAll(); })
+          .catch(error => this.$store.commit('setMessage', error.message));
+      }
+    },
+  },
+  created() {
+    this.getAll();
+  },
+};
+</script>
+    <!-- Changed product logic
     getAll() {
       this.motivations = [];
       Promise.all([
@@ -124,72 +336,6 @@ export default {
         default:
           break;
       }
-    },
-    plan(motivation, [sales, payments]) {
-      let total = 0;
-      const brands = motivation.brands.length ? motivation.brands.map(el => el.id) : [];
-      // Оплата или Отгрузка
-      switch (motivation.type) {
-        // Оплата
-        case 0: {
-          total = payments.filter(el => el.managerId === motivation.managerId)
-            .filter((el) => {
-              if (brands.length) {
-                // When no brand selected at the time payment, Take as done for required brand
-                return el.brandId ? true : brands.includes(el.brandId);
-              }
-              return true;
-            })
-            .map(el => (el.ratio === 1 ? el.sum : (el.sum / el.ratio)))
-            .reduce((a, b) => a + b, 0);
-          // eslint-disable-next-line no-param-reassign
-          motivation.progress = (total * 100) / motivation.total;
-          break;
-        }
-        // Отгрузка
-        case 1: {
-          total = sales.filter(el => el.managerId === motivation.managerId)
-            .map((el) => {
-              if (brands.length) {
-                return el.items.filter(item => brands.includes(item.stock.product.brand));
-              }
-              return el;
-            })
-            .map(el => this.$getTotalPrice(el, el.exchangeRate, el.officialRate))
-            .reduce((a, b) => a + b, 0);
-          // eslint-disable-next-line no-param-reassign
-          motivation.progress = (total * 100) / motivation.total;
-          break;
-        }
-        default:
-          break;
-      }
-      // Отдельно или Накопительно
-      let earned = 0;
-      switch (motivation.method) {
-        // Накопительно
-        case 0: {
-          const range = motivation.ranges.length ? motivation.ranges
-            .filter(el => el.from < motivation.progress).pop() : null;
-          // eslint-disable-next-line no-param-reassign
-          earned = total * ((range ? range.percentage : 0) / 100);
-          break;
-        }
-        // Отдельно
-        case 1: {
-          const ranges = motivation.ranges.length ? motivation.ranges
-            .filter(el => el.from < motivation.progress) : null;
-          ranges.forEach((range) => {
-            earned += (total - (motivation.total
-            * ((range ? range.from : 0) / 100))) * ((range ? range.percentage : 0) / 100);
-          });
-          break;
-        }
-        default:
-          break;
-      }
-      // eslint-disable-next-line no-param-reassign
-      motivation.earned = earned || total * (motivation.min / 100);
     },
     percent(motivation, [sales, payments]) {
       let total = 0;
@@ -298,31 +444,3 @@ export default {
       // eslint-disable-next-line no-param-reassign
       motivation.progress = (percent * 100) / motivation.total;
     },
-    remove(id, type) {
-      // eslint-disable-next-line no-alert, no-restricted-globals
-      if (confirm('Это действие удалит элемент навсегда, вы уверены?')) {
-        let model = null;
-        switch (type) {
-          case 0:
-            model = Plan;
-            break;
-          case 1:
-            model = Percentage;
-            break;
-          case 2:
-            model = Mix;
-            break;
-          default:
-            return;
-        }
-        model.delete(id)
-          .then(() => { this.getAll(); })
-          .catch(error => this.$store.commit('setMessage', error.message));
-      }
-    },
-  },
-  created() {
-    this.getAll();
-  },
-};
-</script>
