@@ -238,7 +238,7 @@ export default {
             Plan.get(this.$route.params.id)
               .then((plan) => {
                 this.role = plan.roleId;
-                this.managerId = plan.managerId;
+                this.managerId = plan.userId;
                 this.type = plan.type;
                 this.method = plan.method;
                 this.startDate = this.$moment(plan.start).format('YYYY-MM-DD');
