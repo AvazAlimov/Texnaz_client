@@ -244,7 +244,7 @@ export default {
                 this.startDate = this.$moment(plan.start).format('YYYY-MM-DD');
                 this.endDate = this.$moment(plan.end).format('YYYY-MM-DD');
                 this.total = plan.total;
-                this.brand = plan.allBrands ? [0] : plan.brands.map(el => el.id);
+                this.brand = plan.allBrands ? [0] : plan.brands.map(el => el.brandId);
                 this.min = plan.min;
                 this.ranges = plan.ranges.map(range => ({
                   from: range.from,
@@ -266,13 +266,12 @@ export default {
     submit() {
       this.loading = true;
       const plan = {
-        managerId: this.managerId,
+        userId: this.managerId,
         roleId: this.role,
         type: this.type,
         method: this.method,
         start: this.startDate,
         end: this.endDate,
-        provinceId: this.$provinceId(),
         total: this.total,
         min: this.min,
         allBrands: this.brand.includes(0),
