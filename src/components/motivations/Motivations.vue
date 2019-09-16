@@ -1,9 +1,18 @@
 <template lang="pug">
-  div
+  .white.border
+    v-layout.mx-4.my-3
+      .title Мотивации
+      v-spacer
+      v-text-field(
+              v-model="search"
+              label="Поиск"
+              append-icon="search"
+      ).ma-0.pa-0
     v-data-table(
       :headers="headers"
       :items="items"
       :loading="loading"
+      :search="search"
       hide-actions)
       template(v-slot:items="{ item }")
         td {{ item.territory }}
@@ -61,6 +70,7 @@ export default {
   data: () => ({
     loading: false,
     motivations: [],
+    search: '',
     headers: [
       {
         text: 'Территория',
