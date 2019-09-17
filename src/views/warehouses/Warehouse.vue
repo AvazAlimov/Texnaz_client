@@ -139,7 +139,7 @@ export default {
         Return.getAll(this.$route.params.id),
         Lost.getAll(this.$route.params.id),
         Sale.getByShipped(this.$route.params.id, 0),
-        Sale.getAll(),
+        Sale.getByWarehouse(this.$route.params.id),
       ])
         .then((results) => {
           [this.warehouse] = results;

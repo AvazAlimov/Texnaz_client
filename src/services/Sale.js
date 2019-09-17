@@ -17,6 +17,7 @@ export default {
   rejectShipment: id => execute(Api().post(`sales/shipment/reject/${id}`)),
   return: items => execute(Api().put('sales', { items })),
 
+  getByWarehouse: id => execute(Api().get(`sales?warehouseId=${id}`)),
   getByNumber: number => execute(Api().get(`sales/?number=${number}`)),
   getByManagerId: managerId => execute(Api().get(`sales/?managerId=${managerId}`)),
   getByStatus: status => execute(Api().get(`sales/?approved=${status}`)),
