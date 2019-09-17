@@ -141,7 +141,7 @@
               v-spacer
               v-btn(
                 flat
-                v-if="$hasRole(1) || $hasRole(7) || $hasRole(8)"
+                v-if="$hasRole(1) || $hasRole(3) || $hasRole(6)"
                 color="secondary"
                 :loading="loading"
                 :disabled="errors.items.length > 0 || !!!ranges.length"
@@ -195,7 +195,7 @@ export default {
       },
       {
         id: 7,
-        name: 'Учредитель',
+        name: 'Супервайзер',
       },
       {
         id: 8,

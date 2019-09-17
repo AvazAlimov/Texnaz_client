@@ -1,6 +1,6 @@
 <template lang="pug">
   v-layout(row wrap)
-    v-flex(xs12)
+    v-flex(xs12).white
         Motivations(
           :userId="($hasRole(1) || $hasRole(3) || $hasRole(6)) ? null : $getUserId()"
         )

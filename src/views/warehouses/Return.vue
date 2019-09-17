@@ -107,7 +107,7 @@ export default {
   methods: {
     getAll() {
       this.loading = true;
-      Sale.getAll()
+      Sale.getByWarehouse(this.$route.params.id)
         .then((sales) => {
           this.returns = sales.filter(sale => !!sale.shipped
             && ((this.$hasRole(1)
