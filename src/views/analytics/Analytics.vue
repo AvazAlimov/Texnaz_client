@@ -1,37 +1,38 @@
 <template lang="pug">
   v-layout(row wrap)
-    v-flex.mb-3(xs12)
-      v-btn.ma-0(small color="tertiary" @click="tab = 0"
-        :flat="tab != 0" :outline="tab == 0"
-        v-if="$hasRole(1) || $hasRole(3) || $hasRole(6)"
-      ) Статистика
-      v-btn.ma-0(small color="tertiary" @click="tab = 1"
-        :flat="tab != 1" :outline="tab == 1"
-      ) Менеджер
+    // No need for dashboar, project modification
+      v-flex.mb-3(xs12)
+        v-btn.ma-0(small color="tertiary" @click="tab = 0"
+          :flat="tab != 0" :outline="tab == 0"
+          v-if="$hasRole(1) || $hasRole(3) || $hasRole(6)"
+        ) Статистика
+        v-btn.ma-0(small color="tertiary" @click="tab = 1"
+          :flat="tab != 1" :outline="tab == 1"
+        ) Менеджер
 
     v-layout(justify-center row wrap)
       //PreDashboard
-      template(v-if="tab==1")
+      template
         // Manager view
-        v-flex(xs12 v-if="$hasRole(2)")
+        v-flex(xs12 v-if="$hasRole(2) || $hasRole(3) || $hasRole(6) || $hasRole(1)")
           UserBookings(:userId="$getUserId()")
-        v-flex(xs12 v-if="$hasRole(2)")
+        v-flex(xs12 v-if="$hasRole(2) || $hasRole(3) || $hasRole(6) || $hasRole(1)")
           UserSales(:userId="$getUserId()")
 
       //Dashboard
-      template(v-if="tab==0 && ($hasRole(1) || $hasRole(3) || $hasRole(6))")
-        v-flex(xs6 md3 d-flex v-for="item in cards" :key="item.id")
-          GraphCard(:icon="item.icon"
-            :title="item.title"
-            :subtitle="item.subtitle"
-            :caption="item.caption"
-            :value="item.value"
-            :colorSecondary="colorSecondary"
-            :colorCard="colorCard")
-        v-flex(xs12 d-flex)
-          ManagerStatistics(:models="managerStatistics"
-          :data="managerStatistics[0].data"
-          :colorSecondary="colorSecondary")
+        template(v-if="tab==0 && ($hasRole(1) || $hasRole(3) || $hasRole(6))")
+          v-flex(xs6 md3 d-flex v-for="item in cards" :key="item.id")
+            GraphCard(:icon="item.icon"
+              :title="item.title"
+              :subtitle="item.subtitle"
+              :caption="item.caption"
+              :value="item.value"
+              :colorSecondary="colorSecondary"
+              :colorCard="colorCard")
+          v-flex(xs12 d-flex)
+            ManagerStatistics(:models="managerStatistics"
+            :data="managerStatistics[0].data"
+            :colorSecondary="colorSecondary")
 </template>
 
 <script>
