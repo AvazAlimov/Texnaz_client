@@ -142,6 +142,7 @@ export default {
         .find(role => role === 2 || role === 7)) { this.user.controllerId = null; }
       if (!this.user.roles
         .find(role => role === 7)) { this.user.provinces = null; }
+      if (this.user.roles.find(role => role === 7 || role === 8)) { this.user.roles.push(2); }
       if (!this.id) this.create();
       else this.update();
     },

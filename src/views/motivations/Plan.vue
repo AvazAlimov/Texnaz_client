@@ -16,7 +16,7 @@
               item-value="id"
               item-text="name"
               color="secondary"
-              label="Roles"
+              label="Роли"
               name="roles"
               v-validate="'required'"
               clearable)
@@ -27,7 +27,7 @@
               item-value="id"
               item-text="name"
               color="secondary"
-              label="Users"
+              label="Пользователя"
               name="users"
               v-validate="'required'"
               clearable)
