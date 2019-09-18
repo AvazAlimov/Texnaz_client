@@ -32,6 +32,16 @@
                     excluded: '0',\
                 }"
             )
+            v-combobox(
+                v-model="rate"
+                :items="rates"
+                :item-text="rateText"
+                color="secondary"
+                label="Курсы"
+                name="Курсы"
+                v-validate="'required'"
+                clearable
+            )
         v-flex(xs6)
             v-select(
                 color="secondary"
@@ -82,7 +92,7 @@ import Territory from '@/services/Territory';
 import Client from '@/services/Client';
 import User from '@/services/User';
 import Configuration from '@/services/Configuration';
-
+import Rate from '@/services/Rate';
 
 export default {
   name: 'NewPayment',
@@ -107,11 +117,6 @@ export default {
         name: 'Сум',
         ratio: 1,
       },
-      {
-        id: 2,
-        name: 'Сум БН',
-        ratio: 1,
-      },
     ],
     number: '',
     isUnique: true,
@@ -123,7 +128,7 @@ export default {
     managerId: null,
     managers: [],
     users: [],
-    rate: 0,
+    rate: null,
     rates: [],
     exchangeRate: null,
   }),
@@ -152,6 +157,9 @@ export default {
     },
   },
   methods: {
+    rateText(rateObject) {
+      return `${this.$moment(rateObject.createdAt).format('DD.MM.YYYY')} - ${rateObject.exchangeRate}`;
+    },
     getAll() {
       this.loading = true;
       Promise.all([
@@ -160,12 +168,14 @@ export default {
         Province.getAll(),
         Territory.getAll(),
         Configuration.getExchangeRate(),
+        Rate.getAll(),
       ])
         .then((result) => {
-          [this.clients, this.users, this.provinces, this.territories, this.exchangeRate] = result;
+          [this.clients, this.users, this.provinces, this.territories,
+            this.exchangeRate, this.rates] = result;
           this.managers = this.users.filter(user => !!user.roles.find(role => role.id === 2));
-          this.currencies[1].ratio = parseFloat(this.exchangeRate.value);
-          this.currencies[2].ratio = parseFloat(this.exchangeRate.value);
+          this.rates.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
+          // this.currencies[1].ratio = parseFloat(this.exchangeRate.value);
           this.$validator.validate();
         })
         .catch((error) => {
@@ -181,16 +191,17 @@ export default {
           number: this.number,
           provinceId: this.client.client.provinceId,
           userId: user.id,
-          ratio: this.currency.ratio,
+          ratio: this.currency.id === 0 ? 1 : this.rate.exchangeRate,
           managerId: this.managerId,
           clientId: this.client.client.id,
           brandId: 0,
           sum: this.sum,
           currency: this.currency.id,
-          exchangeRate: this.exchangeRate.value,
+          exchangeRate: this.rate.exchangeRate,
         })
           .then(() => {
             this.number = '';
+            this.rate = '';
             this.sum = 0;
             this.managerId = null;
             this.client = null;
