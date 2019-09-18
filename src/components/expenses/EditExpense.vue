@@ -116,19 +116,22 @@ export default {
           this.getPropertyId(this.person, MyExpanses.createPerson),
         ])
           .then((results) => {
-            const [typeId, formId, purposeId, personId] = results;
-            MyExpanses.update(this.expense.id, {
-              value: this.val,
-              typeId,
-              purposeId,
-              formId,
-              personId,
-            }).then(() => {
-              this.postUpdate();
-              this.cancel();
-            })
-              .catch(error => this.$store.commit('setMessage', error.message))
-              .finally(() => { this.loading = false; });
+            if (this.expense) {
+              const [typeId, formId, purposeId, personId] = results;
+              MyExpanses.update(this.expense.id, {
+                ...this.expense,
+                value: this.val,
+                typeId,
+                purposeId,
+                formId,
+                personId,
+              }).then(() => {
+                this.postUpdate();
+                this.cancel();
+              })
+                .catch(error => this.$store.commit('setMessage', error.message))
+                .finally(() => { this.loading = false; });
+            }
           })
           .catch(error => this.$store.commit('setMessage', error.message));
       });
