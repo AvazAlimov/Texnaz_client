@@ -159,8 +159,16 @@ export default {
         .map(el => el.id).includes(this.client.provinceId) : false));
     },
     mangers() {
-      return this.users.filter(user => this.supervisors
-        .map(el => (el ? el.id : null)).includes(user.controller ? user.controller.id : -1));
+      const territory = this.territories.find(item => item.provinces
+        .map(el => el.id).includes(this.client.provinceId));
+
+      return (this.users.filter(user => this.supervisors
+        .map(el => (el ? el.id : null)).includes(user.controller ? user.controller.id : -1)
+          || (user.roles.map(role => role.id).includes(7)
+            && user.provinces ? user.provinces
+              .map(province => province.id).includes(this.client.provinceId) : false)
+          || ((user.roles.map(role => role.id).includes(8))
+            && (user.territoryId === (territory ? territory.id : -1)))));
     },
   },
   methods: {
