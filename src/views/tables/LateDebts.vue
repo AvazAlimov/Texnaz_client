@@ -63,6 +63,7 @@ export default {
       startDate: (new Date()).toISOString().substring(0, 10),
       start: false,
       endDate: (new Date()).toISOString().substring(0, 10),
+      maximum: (new Date()).toISOString().substring(0, 10),
       end: false,
       users: [
         {
@@ -107,9 +108,6 @@ export default {
     },
     readable(value) {
       return this.$options.filters.readable(this.$options.filters.roundUp(value));
-    },
-    maximum() {
-      return (new Date()).toISOString().substring(0, 10);
     },
     filteredData() {
       const start = new Date(this.startDate);

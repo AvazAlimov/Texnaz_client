@@ -27,7 +27,7 @@
               item-value="id"
               item-text="name"
               color="secondary"
-              label="Пользователя"
+              label="Пользователь"
               name="users"
               v-validate="'required'"
               clearable)

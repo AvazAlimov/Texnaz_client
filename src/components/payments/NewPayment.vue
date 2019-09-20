@@ -32,16 +32,23 @@
                     excluded: '0',\
                 }"
             )
-            v-combobox(
-                v-model="rate"
-                :items="rates"
-                :item-text="rateText"
-                color="secondary"
-                label="Курсы"
-                name="Курсы"
-                v-validate="'required'"
-                clearable
+            v-menu(
+              v-model="datemenu"
+              :close-on-content-click="false"
+              min-width="290px"
             )
+              template(v-slot:activator="{ on }")
+                v-text-field(
+                  readonly
+                  v-on="on"
+                  v-model="date"
+                  label="Data"
+                )
+              v-date-picker(
+                v-model="date"
+                @input="datemenu = false"
+                :max="maximum"
+              )
         v-flex(xs6)
             v-select(
                 color="secondary"
@@ -72,6 +79,10 @@
                 name="Клиент"
                 v-validate="'required'"
                 clearable
+            )
+            v-text-field(
+              disabled
+              :label="rate ? rate.exchangeRate : '-'"
             )
         v-flex(xs12)
             v-layout(row)
@@ -130,6 +141,9 @@ export default {
     users: [],
     rate: null,
     rates: [],
+    datemenu: false,
+    date: null,
+    maximum: (new Date()).toISOString().substring(0, 10),
     exchangeRate: null,
   }),
   computed: {
@@ -218,6 +232,12 @@ export default {
     },
   },
   watch: {
+    date(value) {
+      const sorted = this.rates.filter(el => new Date(el.createdAt) < new Date(this.date))
+        .sort((a, b) => (new Date(a) > new Date(b) ? 1 : -1));
+      this.rate = sorted[sorted.length - 1];
+      console.log(this.rate);
+    },
     number(value) {
       this.isUnique = true;
       if (value) {
