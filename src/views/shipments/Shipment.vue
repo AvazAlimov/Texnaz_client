@@ -86,6 +86,7 @@
             v-spacer
             v-btn.ma-0.mb-1.mr-1(
               :loading="loading"
+              v-if="sale.approved != -1"
               flat color="secondary"
               @click="approve()"
             ) Подтвердить
