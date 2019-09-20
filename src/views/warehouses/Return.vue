@@ -2,11 +2,53 @@
     v-layout(row wrap)
         v-flex(xs12)
             .border.white
+                v-layout.pa-3
+                  v-menu(
+                    v-model="start"
+                    :close-on-content-click="false"
+                    min-width="290px"
+                  ).ma-3
+                    template(v-slot:activator="{ on }")
+                      v-text-field(
+                        readonly
+                        v-on="on"
+                        v-model="startDate"
+                        label="От"
+                      )
+                    v-date-picker(
+                      v-model="startDate"
+                      @input="start = false"
+                      :max="maximum"
+                    )
+                  v-menu(
+                    v-model="end"
+                    :close-on-content-click="false"
+                    full-width
+                    min-width="290px"
+                  ).ma-3
+                    template(v-slot:activator="{ on }")
+                      v-text-field(
+                        readonly
+                        v-on="on"
+                        v-model="endDate"
+                        label="До"
+                      )
+                    v-date-picker(
+                      v-model="endDate"
+                      @input="end = false"
+                      :max="maximum"
+                    )
+                  v-spacer
+                  v-text-field(
+                    v-model="search"
+                    append-icon="search"
+                    label="Поиск"
+                  )
                 v-data-table(
                     :headers="headers"
                     :loading="loading"
                     :items="returns"
-                    hide-actions
+                    :search="search"
                 )
                     template(v-slot:items="{ item }")
                       td {{ item.date | moment('YYYY-MM-DD') }}
@@ -100,6 +142,12 @@ export default {
       },
     ],
     returns: [],
+    search: '',
+    startDate: (new Date()).toISOString().substring(0, 10),
+    start: false,
+    endDate: (new Date()).toISOString().substring(0, 10),
+    maximum: (new Date()).toISOString().substring(0, 10),
+    end: false,
   }),
   created() {
     this.getAll();
