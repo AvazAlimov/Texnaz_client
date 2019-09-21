@@ -37,7 +37,9 @@
                     @click="clickHandler(4)"
                 ).ma-2 Incomes
         v-flex(xs12)
-            TotalStatistics(v-if="index === 1").mt-3
+          TotalStatistics(v-if="index === 1").mt-3
+        v-flex(xs12)
+          ManyStatistics(v-if="index === 3").mt-3
 </template>
 <script>
 export default {
