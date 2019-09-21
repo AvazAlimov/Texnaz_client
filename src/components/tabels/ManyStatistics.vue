@@ -69,7 +69,8 @@
                       hide-actions
                   )
                     template(v-slot:items="{ item }")
-                      tr(v-if="item.provinces.length ? item.provinces.includes(props.item.id) : false")
+                      tr(v-if="item.provinces.length ? \
+                        item.provinces.includes(props.item.id) : false")
                         td {{ item.name }}
                         td
                           v-chip(
@@ -86,7 +87,6 @@
 <script>
 import Territory from '@/services/Territory';
 import Province from '@/services/Province';
-import Client from '@/services/Client';
 import User from '@/services/User';
 import Payment from '@/services/Payment';
 
@@ -149,7 +149,8 @@ export default {
       start.setHours(0, 0, 0, 0);
       const end = new Date(this.end);
       end.setHours(23, 59, 59, 59);
-      return (this.start && this.end) ? this.payments.filter(payment => (((new Date(payment.createdAt)) > start)
+      return (this.start && this.end) ? this.payments
+        .filter(payment => (((new Date(payment.createdAt)) > start)
         && ((new Date(payment.createdAt)) < end))) : this.payments;
     },
   },
@@ -170,8 +171,10 @@ export default {
         .finally(() => { this.loading = false; });
     },
     getProvinces(user) {
-      const territory = this.territories.find(({ id }) => user.territoryId === id) || { provinces: [] };
-      return user.controller ? this.users.find(({ id }) => id === user.controller.id).provinces.map(({ id }) => id) || []
+      const territory = this.territories
+        .find(({ id }) => user.territoryId === id) || { provinces: [] };
+      return user.controller ? this.users
+        .find(({ id }) => id === user.controller.id).provinces.map(({ id }) => id) || []
         : territory.provinces.map(({ id }) => id);
     },
     generate() {
