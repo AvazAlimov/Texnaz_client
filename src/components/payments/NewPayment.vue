@@ -233,10 +233,10 @@ export default {
   },
   watch: {
     date(value) {
-      const sorted = this.rates.filter(el => new Date(el.createdAt) < new Date(this.date))
-        .sort((a, b) => (new Date(a) > new Date(b) ? 1 : -1));
-      this.rate = sorted[sorted.length - 1];
-      console.log(this.rate);
+      const compared = new Date(value);
+      compared.setHours(23, 59, 59, 59);
+      const sorted = this.rates.filter(el => new Date(el.createdAt) < compared);
+      [this.rate] = sorted;
     },
     number(value) {
       this.isUnique = true;
