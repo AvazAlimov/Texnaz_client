@@ -17,6 +17,8 @@ export default {
   rejectShipment: id => execute(Api().post(`sales/shipment/reject/${id}`)),
   return: items => execute(Api().put('sales', { items })),
 
+  getByProvince: id => execute(Api().get(`sales?provinceId=${id}&shipped=1`)),
+  getAllByShipped: () => execute(Api().get('sales?shipped=1')),
   getByWarehouse: id => execute(Api().get(`sales?warehouseId=${id}`)),
   getByNumber: number => execute(Api().get(`sales/?number=${number}`)),
   getByManagerId: managerId => execute(Api().get(`sales/?managerId=${managerId}`)),
