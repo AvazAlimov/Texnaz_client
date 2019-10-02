@@ -42,6 +42,8 @@
           GaussStatistics(v-if="index===2").mt-3
         v-flex(xs12)
           ManyStatistics(v-if="index === 3").mt-3
+        v-flex(xs12)
+          IncomeStatistics(v-if="index === 4").mt-3
 </template>
 <script>
 export default {

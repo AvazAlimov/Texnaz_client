@@ -73,14 +73,28 @@
             v-data-table(
               :items="sales.item.expandedItems"
               :headers="expandedHeader"
-              hode-actions
+              hide-actions
             )
-              template(v-slot:items="{ item }")
-                tr
-                  td {{ item.clientname }}
-                  td {{ item.totalWeight || 0 | roundUp | readable}}
-                  td {{ item.totalQuantity }}
-                  td {{ item.sum || 0 | roundUp | readable}}
+              template(v-slot:items="clients")
+                tr(@click="clients.expanded = !clients.expanded")
+                  td {{ clients.item.clientname }}
+                  td {{ clients.item.totalWeight || 0 | roundUp | readable}}
+                  td {{ clients.item.totalQuantity }}
+                  td {{ clients.item.sum || 0 | roundUp | readable}}
+              template(v-slot:expand="products")
+                v-data-table(
+                  :headers="productsHeader"
+                  :items="products.item.productItems"
+                  hide-actions
+                )
+                  template(v-slot:items="{ item }")
+                    tr
+                      td {{ item.code }}
+                      td {{ item.name }}
+                      td {{ item.packing }}
+                      td {{ item.color || 'None'}}
+                      td {{ item.quantity }}
+
 
 </template>
 <script>
@@ -143,6 +157,28 @@ export default {
         value: 'sum',
       },
     ],
+    productsHeader: [
+      {
+        text: 'Code',
+        value: 'code',
+      },
+      {
+        text: 'Name',
+        value: 'name',
+      },
+      {
+        text: 'Packing',
+        value: 'packing',
+      },
+      {
+        text: 'Color',
+        value: 'color',
+      },
+      {
+        text: 'Quantity',
+        value: 'quantity',
+      },
+    ],
   }),
   methods: {
     filterDate(sales) {
@@ -173,6 +209,7 @@ export default {
               number: Number.parseFloat(sale.number),
               isClosed: sale.isClosed,
               client: sale.client,
+              items: sale.items,
               sum: this.filterItems(sale.items)
                 .map(({ debtPrice, paidPrice }) => (debtPrice === 0 ? paidPrice : debtPrice))
                 .map(price => (sale.type === 3 ? price : (price / sale.officialRate)))
@@ -206,6 +243,7 @@ export default {
     createItem(province, clients, data) {
       const byProvince = array => array.filter(({ provinceId }) => provinceId === province.id);
       const byClient = (array, clientId) => array.filter(({ client }) => client.id === clientId);
+      const byAClient = (array, clientId) => array.find(({ client }) => client.id === clientId);
 
       if (province.territory) {
         this.items.push({
@@ -216,10 +254,18 @@ export default {
           weight: byProvince(data).reduce((a, b) => a + b.weight, 0),
           sum: byProvince(data).reduce((a, b) => a + b.sum, 0),
           expandedItems: byProvince(clients).map(provinceClient => ({
+            id: provinceClient.id,
             clientname: provinceClient.name,
             totalWeight: byClient(data, provinceClient.id).reduce((a, b) => a + b.weight, 0),
             totalQuantity: byClient(data, provinceClient.id).reduce((a, b) => a + b.quantity, 0),
             sum: byClient(data, provinceClient.id).reduce((a, b) => a + b.sum, 0),
+            productItems: byAClient(data, provinceClient.id).items.map(item => ({
+              code: item.stock.product.code,
+              name: item.stock.product.name,
+              packing: item.stock.product.packing,
+              color: item.stock.product.color,
+              quantity: item.quantity,
+            })),
           })),
         });
       }

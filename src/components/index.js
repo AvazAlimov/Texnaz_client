@@ -20,6 +20,7 @@ import Rate from './tabels/Rate.vue';
 import TotalStatistics from './tabels/TotalStatistics.vue';
 import ManyStatistics from './tabels/ManyStatistics.vue';
 import GaussStatistics from './tabels/GaussStatistics.vue';
+import IncomeStatistics from './tabels/IncomeStatistics.vue';
 
 // WAREHOUSE
 import SearchStock from './warehouse/SearchStock.vue';
@@ -73,6 +74,7 @@ const Components = {
   TotalStatistics,
   ManyStatistics,
   GaussStatistics,
+  IncomeStatistics,
 
   SaleItem,
   PreStockItem,
