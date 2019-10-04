@@ -37,6 +37,8 @@
                     @click="clickHandler(4)"
                 ).ma-2 Incomes
         v-flex(xs12)
+          LateDebtStatistics(v-if="index === 0").mt-3
+        v-flex(xs12)
           TotalStatistics(v-if="index === 1").mt-3
         v-flex(xs12)
           GaussStatistics(v-if="index===2").mt-3
