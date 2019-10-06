@@ -29,6 +29,9 @@ Vue.prototype.$hasPermission = (key) => {
   return !!permissions.find(permission => permission.name === key);
 };
 
+Vue.prototype.$unique = array => array.filter((element, index) => index === array
+  .findIndex(obj => obj === element));
+
 Vue.prototype.$hasRole = (id) => {
   const user = JSON.parse(localStorage.getItem('user'));
   if (!user) {
