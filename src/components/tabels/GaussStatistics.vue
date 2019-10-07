@@ -95,6 +95,7 @@
                       td {{ item.packing }}
                       td {{ item.color || 'None'}}
                       td {{ item.quantity }}
+                      td {{ item.price || 0 |roundUp | readable }}
 
 
 </template>
@@ -179,6 +180,10 @@ export default {
         text: 'Quantity',
         value: 'quantity',
       },
+      {
+        text: 'Price',
+        value: 'price',
+      },
     ],
   }),
   methods: {
@@ -189,6 +194,7 @@ export default {
         start.setHours(0, 0, 0, 0);
         const end = new Date(this.endDate === '' ? '12-12-9999' : this.endDate);
         end.setHours(23, 59, 59, 59);
+        console.log(dateSale > start && dateSale < end);
         return dateSale > start && dateSale < end;
       });
     },
@@ -211,6 +217,7 @@ export default {
               isClosed: sale.isClosed,
               client: sale.client,
               items: sale.items,
+              officialRate: sale.officialRate,
               sum: this.filterItems(sale.items)
                 .map(({ debtPrice, paidPrice }) => (debtPrice === 0 ? paidPrice : debtPrice))
                 .map(price => (sale.type === 3 ? price : (price / sale.officialRate)))
@@ -266,6 +273,9 @@ export default {
               packing: item.stock.product.packing,
               color: item.stock.product.color,
               quantity: item.quantity,
+              price: byAClient(data, provinceClient.id) === 3 ? item.commissionPrice
+                : (Number.parseFloat(item.commissionPrice)
+                / Number.parseFloat(byAClient(data, provinceClient.id).officialRate)),
             })),
           })),
         });

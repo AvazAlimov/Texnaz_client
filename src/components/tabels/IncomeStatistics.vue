@@ -96,8 +96,8 @@ export default {
   data() {
     return {
       maximum: (new Date()).toISOString().substring(0, 10),
-      startDate: (new Date()).toISOString().substring(0, 10),
-      endDate: (new Date()).toISOString().substring(0, 10),
+      startDate: '',
+      endDate: '',
       startMenu: false,
       endMenu: false,
       province: 0,
@@ -197,7 +197,7 @@ export default {
           const supervisors = territory ? this.getUsers(users, territory.id, 7) : [];
           const managers = territory ? this.getUsers(users, territory.id, 2) : [];
           const clients = allclients.filter(({ provinceId }) => provinceId === province.id);
-          const sales = collection
+          const sales = this.filterDate(collection)
             .filter(({ shipped, provinceId }) => shipped && provinceId === province.id);
 
           const salesPrice = sales.map(({ items, type, officialRate }) => (type === 3

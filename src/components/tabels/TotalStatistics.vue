@@ -109,8 +109,8 @@ export default {
   data() {
     return {
       maximum: (new Date()).toISOString().substring(0, 10),
-      startDate: (new Date()).toISOString().substring(0, 10),
-      endDate: (new Date()).toISOString().substring(0, 10),
+      startDate: '',
+      endDate: '',
       startMenu: false,
       endMenu: false,
       province: 0,
@@ -167,6 +167,17 @@ export default {
     };
   },
   methods: {
+    filterDate(sales) {
+      return sales.filter((sale) => {
+        const dateSale = new Date(sale.createdAt);
+        const start = new Date(this.startDate === '' ? null : this.startDate);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(this.endDate === '' ? '12-12-9999' : this.endDate);
+        end.setHours(23, 59, 59, 59);
+        console.log(dateSale > start && dateSale < end);
+        return dateSale > start && dateSale < end;
+      });
+    },
     isActive(client, collection) {
       const lastMonth = new Date();
       lastMonth.setMonth(lastMonth.getMonth() - 1);
@@ -196,10 +207,11 @@ export default {
         : users.filter(({ territoryId, roles }) => (territoryId === idTerritory
             && roles.map(({ id }) => id).includes(roleId)));
     },
-    managerBrands(idManager, collection) {
+    managerBrands(idManager, collection, province) {
       const managerBrands = [];
       const holder = collection
-        .filter(({ shipped, managerId }) => shipped && managerId === idManager)
+        .filter(({ shipped, managerId, provinceId }) => shipped
+          && managerId === idManager && provinceId === province)
         .map(({ type, items, officialRate }) => (type === 3
           ? items.map(({ paidPrice, debtPrice, stock }) => ({
             total: this.type === 0 ? paidPrice : debtPrice,
@@ -230,13 +242,13 @@ export default {
           const supervisors = territory ? this.getUsers(users, territory.id, 7) : [];
           const managers = territory ? this.getUsers(users, territory.id, 2) : [];
           const clients = allclients.filter(({ provinceId }) => provinceId === province.id);
-          const payments = collection
+          const payments = this.filterDate(collection)
             .filter(({ shipped, provinceId }) => shipped && provinceId === province.id)
             .map(({ items, type, officialRate }) => (type === 3
               ? items.map(({ paidPrice }) => paidPrice).reduce((a, b) => a + b, 0)
               : items.map(({ paidPrice }) => paidPrice / officialRate).reduce((a, b) => a + b, 0)));
 
-          const sales = collection
+          const sales = this.filterDate(collection)
             .filter(({ shipped, provinceId }) => shipped && provinceId === province.id)
             .map(({ items, type, officialRate }) => (type === 3
               ? items.map(({ debtPrice }) => debtPrice)
@@ -285,7 +297,7 @@ export default {
                   collection.filter(({ approved, clientId }) => approved && clientId === client.id),
                 )).length,
               brands: eheaders.map((header) => {
-                const found = this.managerBrands(manager.id, collection)
+                const found = this.managerBrands(manager.id, collection, province.id)
                   .filter(({ id }) => header.id === id);
                 return found.length ? {
                   id: header.id,
