@@ -61,6 +61,7 @@
           :headers="headers"
           :items="items"
           :loading="loading"
+          hide-actions
         )
           template(v-slot:items="props")
             tr(@click="props.expanded = !props.expanded")
@@ -106,7 +107,7 @@ import Sale from '@/services/Sale';
 export default {
   data: () => ({
     loading: false,
-    province: {},
+    province: 0,
     provinces: [],
     brand: [0],
     brands: [],

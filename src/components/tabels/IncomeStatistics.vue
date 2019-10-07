@@ -61,6 +61,7 @@
                 :headers="headers"
                 :loading="loading"
                 :items="items"
+                hide-actions
             )
                 template(v-slot:items="props")
                     tr(@click="() => { props.expanded = !props.expanded }")

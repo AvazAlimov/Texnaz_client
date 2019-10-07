@@ -55,6 +55,7 @@
                 :items="items"
                 :loading="loading"
                 fixed-height
+                hide-actions
             )
               template(v-slot:items="props")
                   tr(@click="() =>{props.expanded = !props.expanded}")
@@ -165,6 +166,7 @@ export default {
       ]).then((result) => {
         [this.territories, this.allprovinces, this.users, this.payments] = result;
         this.territories.push({ id: 0, name: 'All' });
+        this.territory = 0;
         this.territories.sort((a, b) => (a > b ? 1 : -1));
         this.provinces = this.allprovinces;
       }).catch((err) => { this.$store.commit('setMessage', err.message); })

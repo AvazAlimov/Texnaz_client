@@ -69,9 +69,10 @@
                 :loading="loading"
                 :headers="headers"
                 :items="items"
+                hide-actions
             )
                 template(v-slot:items="props")
-                  tr(@click="() => { props.expanded = !props.expanded }")
+                  tr(v-if="props.item.id" @click="() => { props.expanded = !props.expanded }")
                     td {{ props.item.province }}
                     td {{ props.item.ceo }}
                     td {{ props.item.numSupervisors }}
