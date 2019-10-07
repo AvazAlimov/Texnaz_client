@@ -16,7 +16,7 @@
                     :items="provinces"
                     item-text="name"
                     item-value="id"
-                    label="Regions"
+                    label="Области"
                 ).ma-2
                 v-spacer
                 v-menu(
@@ -108,32 +108,32 @@ export default {
       province: null,
       headers: [
         {
-          text: 'Territory',
+          text: 'Территория',
           value: 'territory',
         },
         {
-          text: 'Region',
+          text: 'Область',
           value: 'province',
         },
         {
-          text: 'Total sum',
+          text: 'Всего сумма',
           value: 'sum',
         },
       ],
       items: [],
       expandedHeaders: [
         {
-          text: 'Name',
+          text: 'Имя',
           value: 'name',
           width: 1,
         },
         {
-          text: 'Role',
+          text: 'Роль',
           value: 'roles',
           width: 1,
         },
         {
-          text: 'Sum',
+          text: 'Сумма',
           value: 'sum',
           width: 1,
         },
@@ -165,7 +165,7 @@ export default {
         Payment.getAll(),
       ]).then((result) => {
         [this.territories, this.allprovinces, this.users, this.payments] = result;
-        this.territories.push({ id: 0, name: 'All' });
+        this.territories.push({ id: 0, name: 'Все' });
         this.territory = 0;
         this.territories.sort((a, b) => (a > b ? 1 : -1));
         this.provinces = this.allprovinces;

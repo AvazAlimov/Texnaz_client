@@ -26,10 +26,10 @@ export default {
         to: { name: 'debtclients' },
         name: 'Баланс клиентов',
       },
-      {
+      /* {
         to: { name: 'latedebts' },
         name: 'ПДЗ',
-      },
+      }, */
       {
         to: { name: 'returnclient' },
         name: 'Возврат',

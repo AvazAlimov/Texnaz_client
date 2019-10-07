@@ -7,12 +7,12 @@
               :items="provinces"
               item-text="name"
               item-value="id"
-              label="Region"
+              label="Области"
           ).ma-2
           v-select(
               v-model="brand"
               :items="brands"
-              label="Brands"
+              label="Бренды"
               item-text="name"
               item-value="id"
               clearable
@@ -29,7 +29,7 @@
                       readonly
                       v-model="startDate"
                       v-on="on"
-                      label="From"
+                      label="От"
                   )
               v-date-picker(
                   v-model="startDate"
@@ -47,7 +47,7 @@
                       readonly
                       v-model="endDate"
                       v-on="on"
-                      label="To"
+                      label="До"
                   )
               v-date-picker(
                   v-model="endDate"
@@ -121,67 +121,67 @@ export default {
     items: [],
     headers: [
       {
-        text: 'Territory',
+        text: 'Территория',
         value: 'territory',
       },
       {
-        text: 'Province',
+        text: 'Область',
         value: 'province',
       },
       {
-        text: 'Total quantity',
+        text: 'Общий объем',
         value: 'quantity',
       },
       {
-        text: 'Total weight',
+        text: 'Общий вес',
         value: 'weight',
       },
       {
-        text: 'Sale sum',
+        text: 'Общая выручка',
         value: 'sum',
       },
     ],
     expandedHeader: [
       {
-        text: 'Client name',
+        text: 'Имя клиента',
         value: 'clientname',
       },
       {
-        text: 'Total weight',
+        text: 'Общий вес',
         value: 'totalWeight',
       },
       {
-        text: 'Total quantity',
+        text: 'Общий объем',
         value: 'totalQuantity',
       },
       {
-        text: 'Sum',
+        text: 'Сумма',
         value: 'sum',
       },
     ],
     productsHeader: [
       {
-        text: 'Code',
+        text: 'Код',
         value: 'code',
       },
       {
-        text: 'Name',
+        text: 'Имя',
         value: 'name',
       },
       {
-        text: 'Packing',
+        text: 'Фасофка',
         value: 'packing',
       },
       {
-        text: 'Color',
+        text: 'Цвет',
         value: 'color',
       },
       {
-        text: 'Quantity',
+        text: 'Количество',
         value: 'quantity',
       },
       {
-        text: 'Price',
+        text: 'Цена',
         value: 'price',
       },
     ],
@@ -236,11 +236,11 @@ export default {
         [this.provinces, this.brands, this.territories] = result;
         this.provinces.push({
           id: 0,
-          name: 'All',
+          name: 'Все',
         });
         this.brands.push({
           id: 0,
-          name: 'All',
+          name: 'Все',
         });
         this.provinces.sort((a, b) => (a > b ? 1 : -1));
         this.brands.sort((a, b) => (a > b ? 1 : -1));

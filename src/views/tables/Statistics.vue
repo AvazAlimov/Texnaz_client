@@ -7,35 +7,35 @@
                     outline
                     :color="index === 0 ? '' : 'grey'"
                     @click="clickHandler(0)"
-                ).ma-2 Late debt
+                ).ma-2 ПДЗ
                 v-divider
                 v-btn(
                     block
                     outline
                     :color="index === 1 ? '' : 'grey'"
                     @click="clickHandler(1)"
-                ).ma-2 Total
+                ).ma-2 ТОТАЛ
                 v-divider
                 v-btn(
                     block
                     outline
                     :color="index === 2 ? '' : 'grey'"
                     @click="clickHandler(2)"
-                ).ma-2 Gauss
+                ).ma-2 ГАУСС
                 v-divider
                 v-btn(
                     block
                     outline
                     :color="index === 3 ? '' : 'grey'"
                     @click="clickHandler(3)"
-                ).ma-2 Many
+                ).ma-2 Поступления
                 v-divider
                 v-btn(
                     block
                     outline
                     :color="index === 4 ? '' : 'grey'"
                     @click="clickHandler(4)"
-                ).ma-2 Incomes
+                ).ma-2 Выручка
         v-flex(xs12)
           LateDebtStatistics(v-if="index === 0").mt-3
         v-flex(xs12)

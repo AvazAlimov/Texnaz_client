@@ -107,31 +107,31 @@ export default {
       loading: false,
       headers: [
         {
-          text: 'Province',
+          text: 'Область',
           value: 'province',
         },
         {
-          text: 'CEO',
+          text: 'Руководитель',
           value: 'ceo',
         },
         {
-          text: 'numSupervisors',
+          text: 'Кол-во супервайзеров',
           value: 'numSupervisors',
         },
         {
-          text: 'numManagers',
+          text: 'Кол-во менеджеров',
           value: 'numManagers',
         },
         {
-          text: 'numClients',
+          text: 'Кол-во клиентов',
           value: 'numClients',
         },
         {
-          text: 'numActivesClients',
+          text: 'АКБ',
           value: 'numActiveClients',
         },
         {
-          text: 'totalAmount',
+          text: 'Всего сумма',
           value: 'totalAmount',
         },
       ],
@@ -158,7 +158,7 @@ export default {
     sort(array) {
       array.push({
         id: 0,
-        name: 'All',
+        name: 'Все',
       });
       array.sort((a, b) => (a > b ? 1 : -1));
     },
@@ -210,7 +210,7 @@ export default {
 
           this.expandedHeaders = [
             {
-              text: 'name',
+              text: 'Имя',
               value: 'name',
             },
           ].concat(eheaders.map(el => ({ text: el.name, value: el.name })));
