@@ -1,10 +1,58 @@
 <template lang="pug">
   .white.border
+    v-layout(v-if="status" align-center).px-4.py-2
+      v-flex(xs6)
+        v-layout
+          v-menu(
+                  v-model="startMenu"
+                  full-width
+                  min-width="290px"
+                  :close-on-content-click="false"
+          ).ma-2
+            template(v-slot:activator="{ on }")
+              v-text-field(
+                  readonly
+                  v-model="startDate"
+                  v-on="on"
+                  label="От"
+              )
+            v-date-picker(
+                v-model="startDate"
+                @input="() => { startMenu = false }"
+            )
+          v-menu(
+                  v-model="endMenu"
+                  full-width
+                  min-width="290px"
+                  :close-on-content-click="false"
+          ).ma-2
+            template(v-slot:activator="{ on }")
+                v-text-field(
+                    readonly
+                    v-model="endDate"
+                    v-on="on"
+                    label="До"
+                )
+            v-date-picker(
+                v-model="endDate"
+                @input="() => { endMenu = false }"
+            )
+          v-switch(
+            color="green"
+            v-model="finished"
+          )
+      v-spacer
+      v-text-field(
+        v-model="search"
+        append-icon="search"
+        label="Поиск"
+      )
     v-data-table(
       hide-actions
       :headers="headers"
-      :items="sales"
+      :items="filteredSales"
       :loading="loading"
+      :search="search"
       disable-initial-sort)
       template(v-slot:items="props")
         td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
@@ -35,6 +83,14 @@
               v-if="props.item.approved < 1"
               flat icon color="red")
               v-icon(small) delete
+            v-chip(
+              v-if="status"
+              :color="props.item.isClosed ? 'green' : 'red'"
+              outline
+              disabled
+              small
+            )
+              v-icon(small) {{ props.item.isClosed ? 'done_all' : 'check' }}
 </template>
 
 <script>
@@ -62,13 +118,25 @@ export default {
     accounting: {
       type: Boolean,
     },
+    status: {
+      type: Boolean,
+    },
   },
   data: () => ({
     loading: false,
+    search: '',
     payments: shipmentPayments,
     types: shipmentTypes,
+    finished: false,
+    startMenu: false,
+    startDate: '',
+    endMenu: false,
+    endDate: '',
   }),
   computed: {
+    filteredSales() {
+      return this.finished ? this.filterDate(true) : this.filterDate(false);
+    },
     headers() {
       return [
         {
@@ -116,7 +184,22 @@ export default {
       ];
     },
   },
+  watch: {
+    finished(value) {
+      console.log(value);
+    },
+  },
   methods: {
+    filterDate(isClosed) {
+      return this.sales.filter((sale) => {
+        const dateSale = new Date(sale.createdAt);
+        const start = new Date(this.startDate === '' ? null : this.startDate);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(this.endDate === '' ? '12-12-9999' : this.endDate);
+        end.setHours(23, 59, 59, 59);
+        return dateSale > start && dateSale < end && (sale.isClosed === isClosed);
+      });
+    },
     balance(client) {
       return this.$options.filters.readable(this.$options.filters.roundUp(
         this.$getClientBalance(client, this.allSales

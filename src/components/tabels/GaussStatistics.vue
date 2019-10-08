@@ -194,7 +194,6 @@ export default {
         start.setHours(0, 0, 0, 0);
         const end = new Date(this.endDate === '' ? '12-12-9999' : this.endDate);
         end.setHours(23, 59, 59, 59);
-        console.log(dateSale > start && dateSale < end);
         return dateSale > start && dateSale < end;
       });
     },

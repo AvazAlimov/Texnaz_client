@@ -3,6 +3,7 @@
     v-flex(xs12)
       FilteredSales(:sales="sales"
       :allSales="allSales"
+      status
       :exchangeRate="exchangeRate"
       :officialRate="officialRate")
 </template>
