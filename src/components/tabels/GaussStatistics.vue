@@ -64,7 +64,7 @@
           hide-actions
         )
           template(v-slot:items="props")
-            tr(@click="props.expanded = !props.expanded")
+            tr(@click="props.expanded = !props.expanded").grey.lighten-3
               td {{ props.item.territory }}
               td {{ props.item.province }}
               td {{ props.item.quantity }}
@@ -77,7 +77,7 @@
               hide-actions
             )
               template(v-slot:items="clients")
-                tr(@click="clients.expanded = !clients.expanded")
+                tr(@click="clients.expanded = !clients.expanded").teal.lighten-5
                   td {{ clients.item.clientname }}
                   td {{ clients.item.totalWeight || 0 | roundUp | readable}}
                   td {{ clients.item.totalQuantity }}
@@ -89,7 +89,7 @@
                   hide-actions
                 )
                   template(v-slot:items="{ item }")
-                    tr
+                    tr.green.lighten-5
                       td {{ item.code }}
                       td {{ item.name }}
                       td {{ item.packing }}

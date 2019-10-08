@@ -58,12 +58,11 @@
                 hide-actions
             )
               template(v-slot:items="props")
-                  tr(@click="() =>{props.expanded = !props.expanded}")
+                  tr(@click="() =>{props.expanded = !props.expanded}").grey.lighten-3
                     td {{ props.item.territory }}
                     td {{ props.item.province }}
                     td {{ props.item.sum | roundUp | readable}}
               template(v-slot:expand="props")
-                .grey.lighten-4
                   v-data-table(
                       :headers="expandedHeaders"
                       :items="props.item.expandedItems"
@@ -71,7 +70,7 @@
                   )
                     template(v-slot:items="{ item }")
                       tr(v-if="item.provinces.length ? \
-                        item.provinces.includes(props.item.id) : false")
+                        item.provinces.includes(props.item.id) : false").teal.lighten-5
                         td {{ item.name }}
                         td
                           v-chip(

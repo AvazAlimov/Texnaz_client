@@ -72,7 +72,8 @@
                 hide-actions
             )
                 template(v-slot:items="props")
-                  tr(v-if="props.item.id" @click="() => { props.expanded = !props.expanded }")
+                  tr(v-if="props.item.id"
+                    @click="() => { props.expanded = !props.expanded }").grey.lighten-3
                     td {{ props.item.province }}
                     td {{ props.item.ceo }}
                     td {{ props.item.numSupervisors }}
@@ -81,7 +82,6 @@
                     td {{ props.item.numActiveClients }}
                     td {{ props.item.totalAmount || 0 | roundUp | readable }}
                 template(v-slot:expand="props")
-                  .grey.lighten-4
                     v-data-table(
                       :headers="expandedHeaders"
                       :items="props.item.expandedItems"
@@ -89,7 +89,7 @@
                       hide-actions
                     )
                       template(v-slot:items="{ item }")
-                        tr
+                        tr.teal.lighten-5
                           td {{ item.name }}
                           td {{ item.controller }}
                           td {{ item.clients }}

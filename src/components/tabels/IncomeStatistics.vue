@@ -64,7 +64,7 @@
                 hide-actions
             )
                 template(v-slot:items="props")
-                    tr(@click="() => { props.expanded = !props.expanded }")
+                    tr(@click="() => { props.expanded = !props.expanded }").grey.lighten-3
                         td {{ props.item.province }}
                         td {{ props.item.ceo }}
                         td {{ props.item.numSupervisors }}
@@ -79,7 +79,7 @@
                         hide-actions
                     )
                       template(v-slot:items="{ item }")
-                        tr
+                        tr.teal.lighten-5
                           td {{ item.name }}
                           td(v-for="b in item.brands") {{ b.price | roundUp | readable }}
 </template>
