@@ -18,7 +18,7 @@
           color="secondary"
           v-validate="{\
             required: true,\
-            numeric: true,\
+            decimal: true,\
             min_value: 0,\
             max_value: item.initial,\
           }"

@@ -44,7 +44,7 @@
                 :name="item.id"
                 v-validate="{\
                     required: true,\
-                    numeric: true,\
+                    decimal: true,\
                     min_value: 0,\
                     excluded: '0',\
                     max_value: item.quantity - item.booked - item.sold\
