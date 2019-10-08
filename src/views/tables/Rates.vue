@@ -35,7 +35,6 @@
               v-date-picker(
                 v-model="endDate"
                 @input="end = !end"
-                :max="maximum"
               )
             v-spacer
             v-text-field(
@@ -49,7 +48,12 @@
               :search="search"
           )
               template(v-slot:items="props")
-                  Rate(:items="props.item")
+                tr
+                  td {{ props.item.date | moment('YYYY-MM-DD HH:mm') }}
+                  td {{ props.item.name }}
+                  td {{ props.item.exchangeRate }}
+                  td {{ props.item.officialRate }}
+                  td {{ props.item.marketRate }}
 </template>
 
 <script>
@@ -98,8 +102,10 @@ export default {
       start.setHours(0, 0, 0, 0);
       const end = new Date(this.endDate);
       end.setHours(23, 59, 59, 59);
-      return this.items.filter(el => new Date(el.date).getTime() >= start.getTime()
-        && new Date(el.date).getTime() <= end.getTime());
+      return this.items.filter(({ date }) => {
+        console.log(new Date(date) <= end);
+        return (new Date(date) >= start) && (new Date(date) <= end);
+      });
     },
   },
   methods: {

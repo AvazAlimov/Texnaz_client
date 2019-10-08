@@ -30,14 +30,17 @@
         template(v-slot:activator="{ on }")
           v-btn(flat icon v-on="on").dashboardTertiary--text
             v-icon settings
-        v-list
-          v-list-tile(v-for="(item, index) in configurations" :key="index")
-            v-list-tile-title {{ item.name }}
-            v-list-tile-content
-              v-text-field.my-2(v-model="item.value" color="secondary")
-            v-list-tile-action
-              v-btn(flat icon @click="update(item.id, item.value)")
-                v-icon save
+        v-layout(justify-center).white
+          v-flex(xs10)
+            v-list
+              v-list-tile(v-for="(item, index) in configurations" :key="index")
+                v-list-tile-title {{ item.name }}
+                v-list-tile-content
+                  v-text-field.my-2(v-model="item.value" color="secondary")
+          v-flex(xs2)
+            v-btn(flat icon @click="update()")
+              v-icon save
+
     v-content.dashboardPrimary
       v-container(grid-list-md fluid)
         router-view
@@ -145,14 +148,17 @@ export default {
         this.configurations = configurations.filter(item => item.id > 3 && item.id < 6);
       });
     },
-    update(id, value) {
+    update() {
       // eslint-disable-next-line no-restricted-globals, no-alert
       if (confirm('Are you sure you want to save the rates')) {
-        Rate.create({
-          exchangeRate: this.configurations[0].value,
-          officialRate: this.configurations[1].value,
-        });
-        Configuration.update(id, value).then(() => {
+        Promise.all([
+          Rate.create({
+            exchangeRate: this.configurations[0].value,
+            officialRate: this.configurations[1].value,
+          }),
+          Configuration.update(4, this.configurations[0].value),
+          Configuration.update(5, this.configurations[1].value),
+        ]).then(() => {
           this.$store.commit('setMessage', 'Обновлено');
         }).catch((error) => {
           this.$store.commit('setMessage', error.message);

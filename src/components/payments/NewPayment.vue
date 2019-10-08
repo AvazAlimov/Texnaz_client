@@ -47,7 +47,6 @@
               v-date-picker(
                 v-model="date"
                 @input="datemenu = false"
-                :max="maximum"
               )
         v-flex(xs6)
             v-select(

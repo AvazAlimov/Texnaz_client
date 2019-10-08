@@ -219,7 +219,7 @@ export default {
               items: sale.items,
               officialRate: sale.officialRate,
               sum: this.filterItems(sale.items)
-                .map(({ debtPrice, paidPrice }) => (debtPrice === 0 ? paidPrice : debtPrice))
+                .map(({ commissionPrice, quantity }) => commissionPrice * quantity)
                 .map(price => (sale.type === 3 ? price : (price / sale.officialRate)))
                 .reduce((a, b) => a + b, 0),
             })) : []))
@@ -251,7 +251,8 @@ export default {
     createItem(province, clients, data) {
       const byProvince = array => array.filter(({ provinceId }) => provinceId === province.id);
       const byClient = (array, clientId) => array.filter(({ client }) => client.id === clientId);
-      const byAClient = (array, clientId) => array.find(({ client }) => client.id === clientId);
+      const parseUSD = (sale, price) => (sale.type === 3 ? price
+        : price / Number.parseFloat(sale.officialRate));
 
       if (province.territory) {
         this.items.push({
@@ -267,16 +268,14 @@ export default {
             totalWeight: byClient(data, provinceClient.id).reduce((a, b) => a + b.weight, 0),
             totalQuantity: byClient(data, provinceClient.id).reduce((a, b) => a + b.quantity, 0),
             sum: byClient(data, provinceClient.id).reduce((a, b) => a + b.sum, 0),
-            productItems: byAClient(data, provinceClient.id).items.map(item => ({
+            productItems: byClient(data, provinceClient.id).map(sale => sale.items.map(item => ({
               code: item.stock.product.code,
               name: item.stock.product.name,
               packing: item.stock.product.packing,
               color: item.stock.product.color,
               quantity: item.quantity,
-              price: byAClient(data, provinceClient.id) === 3 ? item.commissionPrice
-                : (Number.parseFloat(item.commissionPrice)
-                / Number.parseFloat(byAClient(data, provinceClient.id).officialRate)),
-            })),
+              price: parseUSD(sale, item.commissionPrice * item.quantity),
+            }))).reduce((a, b) => a.concat(b), []),
           })),
         });
       }
