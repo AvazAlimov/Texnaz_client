@@ -48,7 +48,7 @@
         label="Поиск"
       )
     v-data-table(
-      hide-actions
+      :hide-actions="!status"
       :headers="headers"
       :items="filteredSales"
       :loading="loading"
