@@ -37,10 +37,13 @@
                 v-model="endDate"
                 @input="() => { endMenu = false }"
             )
-          v-switch(
-            color="green"
-            v-model="finished"
-          )
+          v-select(
+              v-model="selectedstatus"
+              :items="allstatus"
+              item-text="name"
+              item-value="id"
+              label="Статус"
+          ).ma-2
       v-spacer
       v-text-field(
         v-model="search"
@@ -132,10 +135,25 @@ export default {
     startDate: '',
     endMenu: false,
     endDate: '',
+    allstatus: [
+      {
+        id: 0,
+        name: 'Все',
+      },
+      {
+        id: 1,
+        name: 'Законченный',
+      },
+      {
+        id: 2,
+        name: 'Не закончен',
+      },
+    ],
+    selectedstatus: 0,
   }),
   computed: {
     filteredSales() {
-      return this.finished ? this.filterDate(true) : this.filterDate(false);
+      return this.filterDate(this.selectedstatus);
     },
     headers() {
       return [
@@ -190,14 +208,19 @@ export default {
     },
   },
   methods: {
-    filterDate(isClosed) {
+    filterDate(status) {
       return this.sales.filter((sale) => {
         const dateSale = new Date(sale.createdAt);
         const start = new Date(this.startDate === '' ? null : this.startDate);
         start.setHours(0, 0, 0, 0);
         const end = new Date(this.endDate === '' ? '12-12-9999' : this.endDate);
         end.setHours(23, 59, 59, 59);
-        return dateSale > start && dateSale < end && (sale.isClosed === isClosed);
+        switch (status) {
+          case 1: return dateSale > start && dateSale < end && (sale.isClosed === true);
+          case 2: return dateSale > start && dateSale < end && (sale.isClosed === false);
+          default:
+            return dateSale > start && dateSale < end;
+        }
       });
     },
     balance(client) {
