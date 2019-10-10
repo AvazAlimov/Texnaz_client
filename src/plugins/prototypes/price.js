@@ -1,7 +1,7 @@
 export const PriceCash = ({ secondPrice, mixPriceNonCash }, exRate) => (secondPrice
   - mixPriceNonCash / exRate);
 
-export const B2C = (item, offRate, exRate) => (item.secondPrice * 1.2 * exRate);
+export const B2C = (item, offRate, exRate) => (item.secondPrice * 1.15 * exRate);
 
 function ceil(value) {
   return Math.ceil(value / 100) * 100;

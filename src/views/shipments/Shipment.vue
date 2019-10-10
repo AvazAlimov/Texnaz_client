@@ -208,12 +208,12 @@ export default {
         case 1:
           return itemPrice.firstPrice;
         case 2:
-          return (itemPrice.mixPriceNonCash / this.exchangeRate
+          return (itemPrice.mixPriceNonCash / this.officialRate
           + itemPrice.mixPriceCash);
         case 3:
           return itemPrice.secondPrice;
         case 4:
-          return item.commissionPrice / this.exchangeRate;
+          return item.commissionPrice / this.officialRate;
         default:
           return 0;
       }
@@ -242,7 +242,7 @@ export default {
           return (itemPrice.firstPrice * item.quantity
           * (100 - item.discount) / 100);
         case 2:
-          return (itemPrice.mixPriceNonCash / this.exchangeRate
+          return (itemPrice.mixPriceNonCash / this.officialRate
           + itemPrice.mixPriceCash)
           * item.quantity
           * (100 - item.discount) / 100;

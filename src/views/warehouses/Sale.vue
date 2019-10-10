@@ -123,7 +123,7 @@ export default {
     number: '',
     isUnique: false,
     stock: null,
-    sales: [],
+    sales: [0],
     client: {},
     selected: [],
     clients: [],
@@ -169,6 +169,11 @@ export default {
         {
           text: 'Срок действия',
           value: 'expiry_date',
+        },
+        {
+          text: 'Единица',
+          value: 'unit',
+          width: 1,
         },
         {
           text: this.type.name,
