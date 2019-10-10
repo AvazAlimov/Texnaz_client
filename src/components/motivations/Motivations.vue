@@ -10,7 +10,7 @@
       ).ma-0.pa-0
     v-data-table(
       :headers="headers"
-      :items="items"
+      :items="filteredData"
       :loading="loading"
       :search="search"
       hide-actions)
@@ -71,6 +71,7 @@ export default {
     loading: false,
     motivations: [],
     search: '',
+    roles: [],
     headers: [
       {
         text: 'Территория',
@@ -118,6 +119,21 @@ export default {
     ],
     items: [],
   }),
+  computed: {
+    filteredData() {
+      if (this.roles.includes(7)) {
+        return this.items.filter(({ user: { controller } }) => (controller
+          ? controller.id === this.userId : false));
+      } if (this.roles.includes(8)) {
+        return this.items.filter(({ user: { territory } }) => (territory
+          ? territory.id === this.user.territoryId : false));
+      } if (this.roles.includes(2)) {
+        return this.items.filter(({ user: { id } }) => id === this.userId);
+      }
+
+      return this.items;
+    },
+  },
   methods: {
     getAll() {
       this.loading = true;
@@ -128,12 +144,13 @@ export default {
         User.getAll(),
       ]).then((results) => {
         const [plans, sales, payments, users] = results;
-
+        const user = users.find(({ id }) => id === this.userId);
+        this.roles = user ? user.roles.map(({ id }) => id) : [];
         plans.forEach((plan) => {
           switch (plan.roleId) {
             case 2: // Manager
               this.items.push({
-                id: plan.id,
+                ...plan,
                 territory: plan.user.territory.name,
                 role: plan.role.name,
                 name: plan.user.name,
@@ -146,7 +163,7 @@ export default {
               break;
             case 7: // Supervisor
               this.items.push({
-                id: plan.id,
+                ...plan,
                 territory: plan.user.territory.name,
                 role: plan.role.name,
                 name: plan.user.name,
@@ -162,7 +179,7 @@ export default {
               break;
             case 8: // Territory manager
               this.items.push({
-                id: plan.id,
+                ...plan,
                 territory: plan.user.territory.name,
                 role: plan.role.name,
                 name: plan.user.name,
