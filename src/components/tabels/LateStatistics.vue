@@ -52,6 +52,7 @@
             LateStatisticsTable(
                 :items="items"
                 :headers="headers"
+                :loading="loading"
                 :expandedHeaders="expandedHeaders"
                 :getPrice="getPrice"
             )

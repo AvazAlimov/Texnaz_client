@@ -169,7 +169,7 @@ export default {
         value: 'name',
       },
       {
-        text: 'Фасофка',
+        text: 'Фасовка',
         value: 'packing',
       },
       {

@@ -137,7 +137,6 @@ export default {
           width: 1,
         },
       ],
-      expandedItems: [],
       users: [],
       filteredUsers: [],
       payments: [],
@@ -178,22 +177,24 @@ export default {
         .find(({ id }) => id === user.controller.id).provinces.map(({ id }) => id) || []
         : territory.provinces.map(({ id }) => id);
     },
-    generate() {
-      this.expandedItems = this.filteredUsers.map(user => ({
+    getExpandItem({ id }) {
+      return this.filteredUsers.map(user => ({
         name: user.name,
         provinces: user.provinces,
         roles: user.roles.length > 1 ? user.roles.filter(role => role.id !== 2) : user.roles,
-        sum: this.filteredPayments.filter(payment => payment.manager.id === user.id)
+        sum: this.filteredPayments.filter(payment => payment.manager.id === user.id
+            && payment.provinceId === id)
           .map(({ ratio, sum }) => (ratio === 1 ? sum : (sum / ratio)))
           .reduce((a, b) => a + b, 0),
       }));
+    },
+    generate() {
       this.items = this.tableProvinces.map(province => ({
         id: province.id,
         territory: province.territory.name,
         province: province.name,
-        sum: this.expandedItems.filter(item => item.provinces.includes(province.id))
-          .reduce((a, b) => a + b.sum, 0),
-        expandedItems: this.expandedItems,
+        sum: this.getExpandItem(province).reduce((a, b) => a + b.sum, 0),
+        expandedItems: this.getExpandItem(province),
       }));
     },
   },
