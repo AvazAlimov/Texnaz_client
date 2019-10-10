@@ -142,11 +142,11 @@ export default {
       },
       {
         id: 1,
-        name: 'Законченный',
+        name: 'Закрытые',
       },
       {
         id: 2,
-        name: 'Не закончен',
+        name: 'Незакрытые',
       },
     ],
     selectedstatus: 0,

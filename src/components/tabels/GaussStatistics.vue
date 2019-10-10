@@ -206,20 +206,17 @@ export default {
         (id === 0 ? Sale.getAllByShipped() : Sale.getByProvince(id))
           .then(sales => resolve(this.filterDate(sales).length
             ? this.filterDate(sales).map(sale => ({
-              provinceId: sale.provinceId,
+              ...sale,
               clientName: sale.client.name,
               quantity: sale.items.reduce((a, b) => a + b.quantity, 0),
               weight: this.filterItems(sale.items)
                 .map(item => ({ q: item.quantity, w: item.stock.product.packing }))
                 .reduce((a, b) => a + (b.q * b.w), 0),
               number: Number.parseFloat(sale.number),
-              isClosed: sale.isClosed,
-              client: sale.client,
-              items: sale.items,
-              officialRate: sale.officialRate,
               sum: this.filterItems(sale.items)
-                .map(({ commissionPrice, quantity }) => commissionPrice * quantity)
-                .map(price => (sale.type === 3 ? price : (price / sale.officialRate)))
+                .map(({ price: { secondPrice }, commissionPrice, quantity }) => (sale.type === 3
+                  ? secondPrice : (commissionPrice
+                  / Number.parseFloat(sale.officialRate))) * quantity)
                 .reduce((a, b) => a + b, 0),
             })) : []))
           .then(error => reject(error));
@@ -250,8 +247,10 @@ export default {
     createItem(province, clients, data) {
       const byProvince = array => array.filter(({ provinceId }) => provinceId === province.id);
       const byClient = (array, clientId) => array.filter(({ client }) => client.id === clientId);
-      const parseUSD = (sale, price) => (sale.type === 3 ? price
-        : price / Number.parseFloat(sale.officialRate));
+      const parseUSD = ({ type, officialRate }, {
+        commissionPrice,
+        price: { secondPrice },
+      }) => (type === 3 ? secondPrice : (commissionPrice / officialRate));
 
       if (province.territory) {
         this.items.push({
@@ -273,7 +272,7 @@ export default {
               packing: item.stock.product.packing,
               color: item.stock.product.color,
               quantity: item.quantity,
-              price: parseUSD(sale, item.commissionPrice * item.quantity),
+              price: parseUSD(sale, item) * item.quantity,
             }))).reduce((a, b) => a.concat(b), []),
           })),
         });
