@@ -111,12 +111,15 @@ function totalVat(batch) {
 
 // Oбщий Очистка в долларах
 function totalCleaning(batch) {
+  const totalW = batch.items.map(item => item.quantity * item.product.packing)
+    .reduce((a, b) => a + b, 0);
   return batch.items
     .map((item) => {
-      const totalPr = item.customs_price * item.quantity;
-      const excise = totalPr * (item.excise / 100);
-      const tax = totalPr * (item.tax / 100);
-      return (totalPr + excise + tax) * (item.cleaning / 100);
+      const cp = item.customs_price / item.product.packing;
+      return ((cp + cp * (item.excise / 100)
+      + cp * (item.tax / 100)
+      + (batch.transport_non_cash / totalW)) * (item.cleaning / 100))
+      * item.quantity * item.product.packing;
     })
     .reduce((a, b) => a + b, 0);
 }
