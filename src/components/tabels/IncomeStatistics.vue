@@ -201,9 +201,10 @@ export default {
             .filter(({ shipped, provinceId }) => shipped && provinceId === province.id);
 
           const salesPrice = sales.map(({ items, type, officialRate }) => (type === 3
-            ? items.map(({ debtPrice }) => debtPrice)
+            ? items.map(({ price: { secondPrice }, quantity }) => secondPrice * quantity)
               .reduce((a, b) => a + b, 0)
-            : items.map(({ debtPrice }) => debtPrice / officialRate).reduce((a, b) => a + b, 0)));
+            : items.map(({ commissionPrice }) => commissionPrice
+              / officialRate).reduce((a, b) => a + b, 0)));
 
           const eheaders = this.brand.includes(0) ? this.brands
             : this.brand.map(brandId => this.brands.find(({ id }) => id === brandId));
