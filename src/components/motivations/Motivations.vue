@@ -1,16 +1,50 @@
 <template lang="pug">
   .white.border
-    v-layout.mx-4.my-3
-      .title Мотивации
+    v-layout(align-center).mx-4.my-3
+      .title.mr-4 Мотивации
+      v-menu(
+              v-model="startMenu"
+              full-width
+              min-width="290px"
+              :close-on-content-click="false"
+      ).ma-2
+        template(v-slot:activator="{ on }")
+            v-text-field(
+                readonly
+                v-model="startDate"
+                v-on="on"
+                label="От"
+            )
+        v-date-picker(
+            v-model="startDate"
+            @input="() => { startMenu = false }"
+        )
+      v-menu(
+              v-model="endMenu"
+              full-width
+              min-width="290px"
+              :close-on-content-click="false"
+      ).ma-2
+        template(v-slot:activator="{ on }")
+            v-text-field(
+                readonly
+                v-model="endDate"
+                v-on="on"
+                label="До"
+            )
+        v-date-picker(
+            v-model="endDate"
+            @input="() => { endMenu = false }"
+        )
       v-spacer
       v-text-field(
               v-model="search"
               label="Поиск"
               append-icon="search"
-      ).ma-0.pa-0
+      )
     v-data-table(
       :headers="headers"
-      :items="filteredData"
+      :items="filteredData(false)"
       :loading="loading"
       :search="search"
       hide-actions)
@@ -50,6 +84,32 @@
               v-btn.ma-0(flat color="red" icon
                 @click="remove(props.item.id, props.item.motivationType)")
                 v-icon(small) delete
+    v-divider.my-4
+    .title.mx-4.my-3 История
+    v-data-table(
+      :headers="headers"
+      :items="filteredData(true)"
+      :loading="loading"
+      :search="search").mt-2
+      template(v-slot:items="{ item }")
+        tr.red.lighten-4
+          td {{ item.territory }}
+          td {{ item.role }}
+          td {{ item.name }}
+          td {{ item.start || 0 | moment('DD-MM-YYYY')}}
+          td {{ item.end || 0 | moment('DD-MM-YYYY')}}
+          td {{ item.plan }}
+          td {{ item.total || 0 | roundUp | readable}}
+          td {{ item.progress || 0 | roundUp | readable}} %
+          td {{ item.type ? 'Отгрузка' : 'Оплата'}}
+          td {{ item.earned || 0 | roundUp | readable}}
+          td
+            v-layout(row)
+                v-spacer
+                v-btn.ma-0(flat color="secondary" icon
+                  :to="{ name: 'plan_edit', params: {id: item.id} }")
+                  v-icon(small v-if="$hasRole(1)") edit
+                  v-icon(small v-else) visibility
 </template>
 
 <script>
@@ -118,23 +178,41 @@ export default {
       },
     ],
     items: [],
+    startMenu: false,
+    startDate: '',
+    endMenu: false,
+    endDate: '',
   }),
-  computed: {
-    filteredData() {
+  methods: {
+    filterDate(items) {
+      return items.filter(({ createdAt }) => {
+        const dateMotivation = new Date(createdAt);
+        const start = new Date(this.startDate === '' ? null : this.startDate);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(this.endDate === '' ? '12-12-9999' : this.endDate);
+        end.setHours(23, 59, 59, 59);
+        return dateMotivation > start && dateMotivation < end;
+      });
+    },
+    filterDay(items, isLate) {
+      const now = new Date();
+      return this.filterDate(items).filter(({ end }) => (isLate
+        ? (new Date(end)) < now : (new Date(end)) >= now));
+    },
+
+    filteredData(isLate) {
       if (this.roles.includes(7)) {
-        return this.items.filter(({ user: { controller } }) => (controller
+        return this.filterDay(this.items, isLate).filter(({ user: { controller } }) => (controller
           ? controller.id === this.userId : false));
       } if (this.roles.includes(8)) {
-        return this.items.filter(({ user: { territory } }) => (territory
+        return this.filterDay(this.items, isLate).filter(({ user: { territory } }) => (territory
           ? territory.id === this.user.territoryId : false));
       } if (this.roles.includes(2)) {
-        return this.items.filter(({ user: { id } }) => id === this.userId);
+        return this.filterDay(this.items, isLate).filter(({ user: { id } }) => id === this.userId);
       }
 
-      return this.items;
+      return this.filterDay(this.items, isLate);
     },
-  },
-  methods: {
     getAll() {
       this.loading = true;
       Promise.all([
@@ -174,7 +252,7 @@ export default {
                 ...this.plan(plan, sales, payments, users
                   .filter(({ controller }) => (controller
                     ? controller.id === plan.userId : false))
-                  .map(user => user.id)),
+                  .map(({ id }) => id)),
               });
               break;
             case 8: // Territory manager
@@ -190,7 +268,7 @@ export default {
                 ...this.plan(plan, sales, payments, users
                   .filter(({ territoryId }) => (territoryId
                     ? territoryId === plan.user.territory.id : false))
-                  .map(user => user.id)),
+                  .map(({ id }) => id)),
               });
               break;
             default:
@@ -200,7 +278,6 @@ export default {
       }).catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });
     },
-
     // returns { total, progress, earned }
     /**
      * motivation {
