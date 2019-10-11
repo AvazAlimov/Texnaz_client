@@ -4,36 +4,36 @@
             v-layout(row align-center justify-space-between)
                 v-btn(
                     block
-                    outline
-                    :color="index === 0 ? '' : 'grey'"
+                    :outline="index !== 0"
+                    :class="index === 0 ? 'primary' : ''"
                     @click="clickHandler(0)"
                 ).ma-2 ПДЗ
                 v-divider
                 v-btn(
                     block
-                    outline
-                    :color="index === 1 ? '' : 'grey'"
+                    :outline="index !== 1"
+                    :class="index === 1 ? 'primary' : ''"
                     @click="clickHandler(1)"
                 ).ma-2 ТОТАЛ
                 v-divider
                 v-btn(
                     block
-                    outline
-                    :color="index === 2 ? '' : 'grey'"
+                    :outline="index !== 2"
+                    :class="index === 2 ? 'primary' : ''"
                     @click="clickHandler(2)"
                 ).ma-2 ГАУСС
                 v-divider
                 v-btn(
                     block
-                    outline
-                    :color="index === 3 ? '' : 'grey'"
+                    :outline="index !== 3"
+                    :class="index === 3 ? 'primary' : ''"
                     @click="clickHandler(3)"
                 ).ma-2 Поступления
                 v-divider
                 v-btn(
                     block
-                    outline
-                    :color="index === 4 ? '' : 'grey'"
+                    :outline="index !== 4"
+                    :class="index === 4 ? 'primary' : ''"
                     @click="clickHandler(4)"
                 ).ma-2 Выручка
         v-flex(xs12)
