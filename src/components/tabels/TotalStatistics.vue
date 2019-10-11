@@ -213,12 +213,16 @@ export default {
         .filter(({ shipped, managerId, provinceId }) => shipped
           && managerId === idManager && provinceId === province)
         .map(({ type, items, officialRate }) => (type === 3
-          ? items.map(({ paidPrice, debtPrice, stock }) => ({
-            total: this.type === 0 ? paidPrice : debtPrice,
+          ? items.map(({
+            paidPrice, quantity, price: { secondPrice }, stock,
+          }) => ({
+            total: this.type === 0 ? paidPrice : (secondPrice * quantity),
             id: stock.product.brand,
           }))
-          : items.map(({ paidPrice, debtPrice, stock }) => ({
-            total: (this.type === 0 ? paidPrice : debtPrice) / officialRate,
+          : items.map(({
+            paidPrice, quantity, commissionPrice, stock,
+          }) => ({
+            total: (this.type === 0 ? paidPrice : (commissionPrice * quantity)) / officialRate,
             id: stock.product.brand,
           }))));
       holder.forEach((brand) => { brand.forEach(item => managerBrands.push(item)); });
@@ -250,10 +254,10 @@ export default {
 
           const sales = this.filterDate(collection)
             .filter(({ shipped, provinceId }) => shipped && provinceId === province.id)
-            .map(({ items, type, officialRate }) => (type === 3
-              ? items.map(({ debtPrice }) => debtPrice)
-                .reduce((a, b) => a + b, 0)
-              : items.map(({ debtPrice }) => debtPrice / officialRate).reduce((a, b) => a + b, 0)));
+            .map(({ items, type, officialRate }) => items
+              .map(({ commissionPrice, quantity, price: { secondPrice } }) => (type === 3
+                ? (secondPrice * quantity) : ((commissionPrice / officialRate) * quantity)))
+              .reduce((a, b) => a + b, 0));
 
           const eheaders = this.brand.includes(0) ? this.brands
             : this.brand.map(brandId => this.brands.find(({ id }) => id === brandId));
