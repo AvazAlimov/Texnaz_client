@@ -203,7 +203,7 @@ export default {
           const salesPrice = sales.map(({ items, type, officialRate }) => (type === 3
             ? items.map(({ price: { secondPrice }, quantity }) => secondPrice * quantity)
               .reduce((a, b) => a + b, 0)
-            : items.map(({ commissionPrice }) => commissionPrice
+            : items.map(({ commissionPrice, quantity }) => (commissionPrice * quantity)
               / officialRate).reduce((a, b) => a + b, 0)));
 
           const eheaders = this.brand.includes(0) ? this.brands
@@ -238,9 +238,12 @@ export default {
                 brands: eheaders.map(brand => ({
                   price: clientItems.filter(({ item }) => (item
                     ? item.stock.product.brand === brand.id : false))
-                    .map(({ type, officialRate, item: { debtPrice, paidPrice } }) => (
-                      debtPrice === 0 ? paidPrice : debtPrice)
-                      / (type === 3 ? 1 : Number.parseFloat(officialRate)))
+                    .map(({
+                      type,
+                      officialRate,
+                      item: { quantity, commissionPrice, price: { secondPrice } },
+                    }) => ((type === 3 ? secondPrice : commissionPrice) * quantity)
+                    / (type === 3 ? 1 : officialRate))
                     .reduce((a, b) => a + b, 0),
                 })),
               };
