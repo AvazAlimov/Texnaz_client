@@ -209,3 +209,13 @@ module.exports.SHOW_SHIPMENTS_ACCOUNTING = {
   name: 'show accounting',
   id: 46,
 };
+
+module.exports.SHOW_TABEL_STATISTICS = {
+  name: 'show tabel statistics',
+  id: 47,
+};
+
+module.exports.SHOW_TABEL_RATES = {
+  name: 'Show tabel rates',
+  id: 48,
+};

@@ -512,9 +512,14 @@ const router = new Router({
         {
           path: 'tables',
           name: 'tables',
-          redirect: { name: 'sales' },
+          redirect: { name: 'statistics' },
           component: () => import('./views/tables/Main.vue'),
           children: [
+            {
+              path: 'statistics',
+              name: 'statistics',
+              component: () => import('./views/tables/Statistics.vue'),
+            },
             {
               path: 'sales',
               name: 'sales',
@@ -539,11 +544,6 @@ const router = new Router({
               path: 'returnclient',
               name: 'returnclient',
               component: () => import('./views/tables/ReturnClient.vue'),
-            },
-            {
-              path: 'statistics',
-              name: 'statistics',
-              component: () => import('./views/tables/Statistics.vue'),
             },
             {
               path: 'rates',
