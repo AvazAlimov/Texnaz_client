@@ -81,6 +81,12 @@ export default {
       expandedLoading: false,
       headers: [
         {
+          text: '',
+          value: '',
+          sortable: false,
+          width: 1,
+        },
+        {
           text: 'Территория',
           value: 'province',
         },

@@ -59,6 +59,8 @@
             )
               template(v-slot:items="props")
                   tr(@click="() =>{props.expanded = !props.expanded}").grey.lighten-3
+                    td
+                      v-icon {{ props.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
                     td {{ props.item.territory }}
                     td {{ props.item.province }}
                     td {{ props.item.sum | roundUp | readable}}
@@ -106,6 +108,12 @@ export default {
       provinces: [],
       province: null,
       headers: [
+        {
+          text: '',
+          value: '',
+          sortable: false,
+          width: 1,
+        },
         {
           text: 'Территория',
           value: 'territory',

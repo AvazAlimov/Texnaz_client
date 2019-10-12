@@ -10,6 +10,8 @@
                 template(v-slot:items="props")
                   tr(@click="() => { props.expanded = !props.expanded }"
                     v-if="props.item.id!==0").grey.lighten-4
+                    td
+                      v-icon {{ props.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
                     td {{ props.item.territory }}
                     td {{ props.item.province }}
                     td {{ getPrice(0, 30, props.item) | roundUp | readable}}

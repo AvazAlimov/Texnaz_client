@@ -65,6 +65,8 @@
             )
                 template(v-slot:items="props")
                     tr(@click="() => { props.expanded = !props.expanded }").grey.lighten-3
+                        td
+                          v-icon {{ props.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
                         td {{ props.item.province }}
                         td {{ props.item.ceo }}
                         td {{ props.item.numSupervisors }}
@@ -106,6 +108,12 @@ export default {
       brands: [],
       loading: false,
       headers: [
+        {
+          text: '',
+          value: '',
+          sortable: false,
+          width: 1,
+        },
         {
           text: 'Область',
           value: 'province',
