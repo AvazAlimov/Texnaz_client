@@ -12,8 +12,6 @@
     td {{ readable(items.ratioPrice) }}
     td {{ readable(items.usd) }}
     td {{ readable(items.exchangeRate) }}
-    td {{ items.brand }}
-    td {{ items.country }}
 </template>
 
 <script>

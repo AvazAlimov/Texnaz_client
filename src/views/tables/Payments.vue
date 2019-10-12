@@ -131,14 +131,6 @@ export default {
           text: 'Курс (продажа)',
           value: 'date',
         },
-        {
-          text: 'Бренд',
-          value: 'brand',
-        },
-        {
-          text: 'Страна',
-          value: 'country',
-        },
       ];
     },
     filteredData() {
@@ -146,7 +138,9 @@ export default {
       start.setHours(0, 0, 0, 0);
       const end = new Date(this.endDate);
       end.setHours(23, 59, 59, 59);
-      return this.items.filter(el => new Date(el.date).getTime() >= start.getTime()
+      return this.items
+        .filter(({ userId }) => userId === this.$getUserId())
+        .filter(el => new Date(el.date).getTime() >= start.getTime()
         && new Date(el.date).getTime() <= end.getTime()
         && ((el.number.toString()).includes(this.search.toLowerCase())
         || (el.territory.toString().toLowerCase()).includes(this.search.toLowerCase())

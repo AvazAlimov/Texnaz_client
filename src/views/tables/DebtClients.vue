@@ -127,20 +127,22 @@ export default {
       return (new Date()).toISOString().substring(0, 10);
     },
     filteredData() {
-      return this.items.filter(el => (
-        (el.saleDate.toString()).includes(this.search)
-        || (el.salePrice.toString().toLowerCase()).includes(this.search.toLowerCase())
-        || (el.territory.toString().toLowerCase()).includes(this.search.toLowerCase())
-        || (el.province.toString().toLowerCase()).includes(this.search.toLowerCase())
-        || (el.paymentDate.toString().toLowerCase()).includes(this.search.toLowerCase())
-        || (el.paymentPrice.toString().toLowerCase()).includes(this.search.toLowerCase())
-        || (el.returnDate.toString().toLowerCase()).includes(this.search.toLowerCase())
-        || (el.returnQuantity.toString().toLowerCase()).includes(this.search.toLowerCase())
-        || (el.date.toString().toLowerCase()).includes(this.search.toLowerCase())
-        || (el.clienticc.toString().toLowerCase()).includes(this.search.toLowerCase())
-        || (el.clientname.toString().toLowerCase()).includes(this.search.toLowerCase())
-        || (el.clientbalance.toString().toLowerCase()).includes(this.search.toLowerCase())
-        || (el.managername.toString().toLowerCase()).includes(this.search.toLowerCase())));
+      return this.items
+        .filter(({ userId }) => userId === this.$getUserId())
+        .filter(el => (
+          (el.saleDate.toString()).includes(this.search)
+          || (el.salePrice.toString().toLowerCase()).includes(this.search.toLowerCase())
+          || (el.territory.toString().toLowerCase()).includes(this.search.toLowerCase())
+          || (el.province.toString().toLowerCase()).includes(this.search.toLowerCase())
+          || (el.paymentDate.toString().toLowerCase()).includes(this.search.toLowerCase())
+          || (el.paymentPrice.toString().toLowerCase()).includes(this.search.toLowerCase())
+          || (el.returnDate.toString().toLowerCase()).includes(this.search.toLowerCase())
+          || (el.returnQuantity.toString().toLowerCase()).includes(this.search.toLowerCase())
+          || (el.date.toString().toLowerCase()).includes(this.search.toLowerCase())
+          || (el.clienticc.toString().toLowerCase()).includes(this.search.toLowerCase())
+          || (el.clientname.toString().toLowerCase()).includes(this.search.toLowerCase())
+          || (el.clientbalance.toString().toLowerCase()).includes(this.search.toLowerCase())
+          || (el.managername.toString().toLowerCase()).includes(this.search.toLowerCase())));
     },
   },
   methods: {
@@ -175,6 +177,7 @@ export default {
           territory: result[3].find(element => element.provinces
             .map(item => item.id).includes(sale.provinceId)).name,
           province: sale.province.name,
+          userId: sale.userId,
         }));
         payments.forEach(payment => this.items.push({
           saleDate: '-',
@@ -191,6 +194,7 @@ export default {
           territory: result[3].find(element => element.provinces
             .map(item => item.id).includes(payment.provinceId)).name,
           province: payment.province.name,
+          userId: payment.userId,
         }));
         returns.forEach(returnItem => this.items.push({
           saleDate: '-',
@@ -208,6 +212,7 @@ export default {
           territory: result[3].find(element => element.provinces
             .map(item => item.id).includes(returnItem.provinceId)).name,
           province: returnItem.province.name,
+          userId: returnItem.userId,
         }));
         this.items.sort((a, b) => (a.date > b.date ? 1 : -1));
       });

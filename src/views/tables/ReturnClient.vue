@@ -140,7 +140,9 @@ export default {
       start.setHours(0, 0, 0, 0);
       const end = new Date(this.endDate);
       end.setHours(23, 59, 59, 59);
-      return this.items.filter(el => new Date(el.date).getTime() >= start.getTime()
+      return this.items
+        .filter(({ userId }) => userId === this.$getUserId())
+        .filter(el => new Date(el.date).getTime() >= start.getTime()
         && new Date(el.date).getTime() <= end.getTime()
         && ((el.number.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.warehouse.toString().toLowerCase()).includes(this.search.toLowerCase())
@@ -179,6 +181,7 @@ export default {
             territory: result[2].find(element => element.provinces
               .map(province => province.id).includes(item.client.provinceId)).name,
             province: item.client.province.name,
+            userId: item.userId,
           })));
         })
         .catch((err) => { this.$store.commit('setMessage', err.message); });
