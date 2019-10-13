@@ -194,7 +194,8 @@ export default {
       ];
     },
     getPriceUzs(sale) {
-      return sale.items.reduce((a, { quantity, commissionPrice }) => a + (commissionPrice * quantity), 0);
+      return sale.items
+        .reduce((a, { quantity, commissionPrice }) => a + (commissionPrice * quantity), 0);
     },
     getAll() {
       this.loading = true;
