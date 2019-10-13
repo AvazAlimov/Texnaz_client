@@ -141,7 +141,7 @@
               v-spacer
               v-btn(
                 flat
-                v-if="$hasRole(1) || $hasRole(3) || $hasRole(6)"
+                v-if="($hasRole(1) || $hasRole(3) || $hasRole(6)) && !($route.params.readOnly)"
                 color="secondary"
                 :loading="loading"
                 :disabled="errors.items.length > 0 || !!!ranges.length"

@@ -62,6 +62,11 @@
                 v-spacer
                   v-divider.mx-4
                 .subheading {{ $getTotalPrice(sale, exchangeRate, officialRate) | roundUp }} $
+              v-layout.mb-2(align-center v-if="!$route.query.accounting")
+                .title Сумма отгрузки
+                v-spacer
+                  v-divider.mx-4
+                .subheading {{ getPriceUzs(sale) || 0 | roundUp | readable}}
           v-divider
           v-data-table(
               :loading="loading"
@@ -187,6 +192,9 @@ export default {
         this.$route.query.accounting ? this.anAccount(item) : this.getAPrice(item),
         this.$route.query.accounting ? this.accountantPrice(item) : this.getPrice(item),
       ];
+    },
+    getPriceUzs(sale) {
+      return sale.items.reduce((a, { quantity, commissionPrice }) => a + (commissionPrice * quantity), 0);
     },
     getAll() {
       this.loading = true;

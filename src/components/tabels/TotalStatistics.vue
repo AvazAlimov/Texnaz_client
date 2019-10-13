@@ -69,6 +69,7 @@
                 :loading="loading"
                 :headers="headers"
                 :items="items"
+                no-data-text="Нет информации"
                 hide-actions
             )
                 template(v-slot:items="props")
@@ -88,6 +89,7 @@
                       :headers="expandedHeaders"
                       :items="props.item.expandedItems"
                       :loading="expandedLoading"
+                      no-data-text="Нет информации"
                       hide-actions
                     )
                       template(v-slot:items="{ item }")

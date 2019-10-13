@@ -80,8 +80,7 @@
                 clearable
             )
             v-text-field(
-              disabled
-              :label="rate ? rate.exchangeRate : '-'"
+              v-model="rate"
             )
         v-flex(xs12)
             v-layout(row)
@@ -188,6 +187,7 @@ export default {
             this.exchangeRate, this.rates] = result;
           this.managers = this.users.filter(user => !!user.roles.find(role => role.id === 2));
           this.rates.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
+          this.date = (new Date()).toISOString().substring(0, 10);
           // this.currencies[1].ratio = parseFloat(this.exchangeRate.value);
           this.$validator.validate();
         })
@@ -204,13 +204,13 @@ export default {
           number: this.number,
           provinceId: this.client.client.provinceId,
           userId: user.id,
-          ratio: this.currency.id === 0 ? 1 : this.rate.exchangeRate,
+          ratio: this.currency.id === 0 ? 1 : this.rate,
           managerId: this.managerId,
           clientId: this.client.client.id,
           brandId: 0,
           sum: this.sum,
           currency: this.currency.id,
-          exchangeRate: this.rate.exchangeRate,
+          exchangeRate: this.rate,
         })
           .then(() => {
             this.number = '';
@@ -235,7 +235,7 @@ export default {
       const compared = new Date(value);
       compared.setHours(23, 59, 59, 59);
       const sorted = this.rates.filter(el => new Date(el.createdAt) < compared);
-      [this.rate] = sorted;
+      [this.rate] = sorted.map(({ exchangeRate }) => exchangeRate);
     },
     number(value) {
       this.isUnique = true;

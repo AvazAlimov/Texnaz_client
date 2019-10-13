@@ -90,7 +90,8 @@
                     name="Номер"
                     v-validate="'required'")
                   .subheading Баланс клиента: {{ client.balance || 0 | roundUp | readable }} $
-                  .subheading Итоговая цена: {{ getTotalPrice() | roundUp | readable }} $
+                  .subheading Сумма в долларах: {{ getTotalPrice() | roundUp | readable }} $
+                  .subheading Сумма в сумах: {{ getTotalUzs() || 0 }} сум
                 v-divider
                 v-data-table(
                     :headers="headers"
@@ -297,10 +298,14 @@ export default {
     },
     getTotalPrice() {
       let price = 0;
+      console.log(this.selected);
       if (this.type) {
         this.selected.forEach((item) => { price += this.type.key === 'firstPrice' ? item[this.type.key] / this.officialRate : item[this.type.key]; });
       }
       return price;
+    },
+    getTotalUzs() {
+      return this.selected.reduce((a, b) => a + (b.commissionPrice * b.sale), 0);
     },
   },
   watch: {

@@ -26,6 +26,7 @@
               td {{ props.item.manager.name }}
               td {{ props.item.client.balance || 0 | roundUp | readable }} $
               td {{ readable((props.item.sum / props.item.ratio)) }} $
+              td {{ props.item.exchangeRate }}
               td {{ props.item.user.name }}
               td
                 v-btn(icon :to="{name: 'payment', params: {id: props.item.id}}").ma-0
@@ -89,6 +90,10 @@ export default {
       {
         text: 'Сумма',
         value: 'sum',
+      },
+      {
+        text: 'Kурс',
+        value: 'rate',
       },
       {
         text: 'Принял',

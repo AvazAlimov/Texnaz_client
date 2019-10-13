@@ -54,6 +54,7 @@
                 :headers="headers"
                 :items="items"
                 :loading="loading"
+                no-data-text="Нет информации"
                 fixed-height
                 hide-actions
             )
@@ -68,6 +69,7 @@
                   v-data-table(
                       :headers="expandedHeaders"
                       :items="props.item.expandedItems"
+                      no-data-text="Нет информации"
                       hide-actions
                   )
                     template(v-slot:items="{ item }")

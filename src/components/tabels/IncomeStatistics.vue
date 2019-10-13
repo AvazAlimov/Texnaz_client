@@ -61,6 +61,7 @@
                 :headers="headers"
                 :loading="loading"
                 :items="items"
+                no-data-text="Нет информации"
                 hide-actions
             )
                 template(v-slot:items="props")
@@ -78,6 +79,7 @@
                     v-data-table(
                         :headers="expandedHeaders"
                         :items="sales.item.expandedItems"
+                        no-data-text="Нет информации"
                         hide-actions
                     )
                       template(v-slot:items="{ item }")

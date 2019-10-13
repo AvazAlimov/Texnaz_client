@@ -5,6 +5,7 @@
                 :loading="loading"
                 :headers="headers"
                 :items="items"
+                no-data-text="Нет информации"
                 hide-actions
             )
                 template(v-slot:items="props")
@@ -23,6 +24,7 @@
                     v-data-table(
                       :headers="expandedHeaders"
                       :items="props.item.expandedItems"
+                      no-data-text="Нет информации"
                       hide-actions
                     )
                       template(v-slot:items="lates")
@@ -37,6 +39,7 @@
                           v-data-table(
                             :headers="expandedHeaders"
                             :items="item.expandedUsers"
+                            no-data-text="Нет информации"
                             hide-actions
                           )
                             template(v-slot:items="client")

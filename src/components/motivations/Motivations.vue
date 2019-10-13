@@ -107,9 +107,8 @@
             v-layout(row)
                 v-spacer
                 v-btn.ma-0(flat color="secondary" icon
-                  :to="{ name: 'plan_edit', params: {id: item.id} }")
-                  v-icon(small v-if="$hasRole(1)") edit
-                  v-icon(small v-else) visibility
+                  :to="{ name: 'plan_edit', params: {id: item.id, readOnly: true} }")
+                  v-icon(small) visibility
 </template>
 
 <script>
@@ -150,7 +149,7 @@ export default {
         value: 'start',
       },
       {
-        text: 'Дата окончала',
+        text: 'Дата окончания',
         value: 'end',
       },
       {
