@@ -31,7 +31,7 @@
                   :items="territories"
                   item-text="name"
                   item-value="id"
-                  v-validate="'required'"
+                  v-validate="isRequired()"
                 )
                 v-select(
                     v-show="!id"
@@ -42,7 +42,7 @@
                     item-value="id"
                     multiple
                     name="roles"
-                    v-validate="'required'"
+                    v-validate="isRequired()"
                     color="secondary")
                 v-select(
                   name="province"
@@ -52,7 +52,7 @@
                   :items="provinces"
                   item-text="name"
                   item-value="id"
-                  v-validate="user.roles.includes(7) ? 'required' : ''"
+                  v-validate="isRequired(user.roles.includes(7) ? 'required' : {})"
                   multiple
                   clearable
                 )
@@ -65,7 +65,7 @@
                   :items="supervisors"
                   v-show="user.roles.includes(2) && !id"
                   item-text="name"
-                  v-validate="user.roles.includes(2) ? 'required' : ''"
+                  v-validate="isRequired(user.roles.includes(2) ? 'required' : {})"
                   item-value="id"
                 )
                 // If it is Supervisor
@@ -76,7 +76,7 @@
                   :items="ceoes"
                   v-show="user.roles.includes(7) && !id"
                   item-text="name"
-                  v-validate="user.roles.includes(7) ? 'required' : ''"
+                  v-validate="isRequired(user.roles.includes(7) ? 'required' : {})"
                   item-value="id"
                 )
                 v-layout
@@ -137,6 +137,12 @@ export default {
     },
   },
   methods: {
+    isRequired(params) {
+      if (this.$route.params.id) {
+        return '';
+      }
+      return params || 'required';
+    },
     submit() {
       if (!this.user.roles
         .find(role => role === 2 || role === 7)) { this.user.controllerId = null; }
