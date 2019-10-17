@@ -38,7 +38,7 @@
                 td {{ item.manager }}
                 td {{ item.createdAt | moment('YYYY-MM-DD') }}
                 td
-                  v-layout(v-if="$hasRole(1)")
+                  v-layout
                       v-btn(icon
                         :to="{ name: 'client', params: { id: item.id }}"
                       ).mx-0
