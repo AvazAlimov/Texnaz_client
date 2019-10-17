@@ -7,6 +7,8 @@ export default {
 
   addBalance: (id, balance) => execute(Api().post(`clients/balance/${id}`, { balance })),
 
+  getByIcc: icc => execute(Api().get(`clients?icc=${icc}`)),
+
   get: id => execute(Api().get(`clients/${id}`)),
 
   create: client => execute(Api().post('clients/', client)),

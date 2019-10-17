@@ -12,6 +12,7 @@
                   label="ИКК"
                   color="secondary"
                   name="ИКК"
+                  :error="client.icc === oldIcc ? !$route.params.id : !isUnique"
                   v-validate="'required'"
               )
               v-text-field(
@@ -104,7 +105,7 @@
                 v-layout
                   v-spacer
                   v-btn(:loading="loading"
-                    :disabled="errors.items.length > 0"
+                    :disabled="errors.items.length > 0 || !isUnique"
                     flat color="secondary"
                     @click="submit") {{ id == null ? 'Добавить' : 'Сохранить' }}
 </template>
@@ -141,6 +142,8 @@ export default {
       regions: [],
       territories: [],
       loading: false,
+      isUnique: false,
+      oldIcc: '',
     };
   },
   computed: {
@@ -232,10 +235,22 @@ export default {
       Client.get(this.$route.params.id)
         .then((client) => {
           this.client = client;
+          this.oldIcc = client.icc;
           this.client.createdAt = this.client.createdAt.substring(0, 10);
           this.client.provinceId = client.province.id;
         });
     }
+    this.isUnique = true;
+  },
+  watch: {
+    client: {
+      handler({ icc }) {
+        Client.getByIcc(icc).then((clients) => {
+          this.isUnique = !clients.length;
+        });
+      },
+      deep: true,
+    },
   },
   mounted() {
     this.$validator.validateAll();
