@@ -58,15 +58,6 @@
                 item-value="id"
                 clearable
             )
-            v-select(
-                color="secondary"
-                v-model="managerId"
-                label="Mенеджеры"
-                :items="provinceManagers"
-                item-text="name"
-                item-value="id"
-                clearable
-            )
             v-combobox(
                 v-model="client"
                 :items="filteredClients"
@@ -78,6 +69,12 @@
                 name="Клиент"
                 v-validate="'required'"
                 clearable
+            )
+            v-text-field(
+                color="secondary"
+                v-model="managerName"
+                label="Mенеджеры"
+                readonly
             )
             v-text-field(
               v-model="rate"
@@ -134,6 +131,7 @@ export default {
     provinceId: null,
     provinces: [],
     territories: [],
+    managerName: '',
     managerId: null,
     managers: [],
     users: [],
@@ -148,8 +146,8 @@ export default {
     filteredClients() {
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.client = null;
-      return this.managerId ? this.clients
-        .filter(item => item.managerId === this.managerId)
+      return this.provinceId ? this.clients
+        .filter(({ provinceId }) => provinceId === this.provinceId)
         .map(item => ({ name: `${item.icc} - ${item.name}`, client: item })) : [];
     },
     provinceManagers() {
@@ -231,6 +229,9 @@ export default {
     },
   },
   watch: {
+    client(value) {
+      this.managerName = value ? value.client.manager.name : '';
+    },
     date(value) {
       const compared = new Date(value);
       compared.setHours(23, 59, 59, 59);
