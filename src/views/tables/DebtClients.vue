@@ -128,7 +128,7 @@ export default {
     },
     filteredData() {
       return this.items
-        .filter(({ userId }) => userId === this.$getUserId())
+        // .filter(({ userId }) => userId === this.$getUserId())
         .filter(el => (
           (el.saleDate.toString()).includes(this.search)
           || (el.salePrice.toString().toLowerCase()).includes(this.search.toLowerCase())

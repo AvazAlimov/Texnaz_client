@@ -133,7 +133,7 @@ export default {
       const end = new Date(this.endDate);
       end.setHours(23, 59, 59, 59);
       return this.items
-        .filter(({ userId }) => userId === this.$getUserId())
+        // .filter(({ userId }) => userId === this.$getUserId())
         .filter(el => new Date(el.date).getTime() >= start.getTime()
           && new Date(el.date).getTime() <= end.getTime()
           && ((el.number.toString().toLowerCase()).includes(this.search.toLowerCase())
