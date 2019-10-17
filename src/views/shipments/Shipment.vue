@@ -56,17 +56,17 @@
                 .title Баланс клиента
                 v-spacer
                   v-divider.mx-4
-                .subheading {{ sale.client.balance | roundUp | readable}} $
+                .subheading {{ sale.client.balance}} $
               v-layout.mb-2(align-center v-if="!$route.query.accounting")
                 .title Сумма отгрузки
                 v-spacer
                   v-divider.mx-4
-                .subheading {{ $getTotalPrice(sale, exchangeRate, officialRate) | roundUp }} $
+                .subheading {{ $getTotalPrice(sale, exchangeRate, officialRate)}} $
               v-layout.mb-2(align-center v-if="!$route.query.accounting")
                 .title Сумма отгрузки
                 v-spacer
                   v-divider.mx-4
-                .subheading {{ getPriceUzs(sale) || 0 | roundUp | readable}}
+                .subheading {{ getPriceUzs(sale) || 0}}
           v-divider
           v-data-table(
               :loading="loading"
@@ -83,8 +83,8 @@
                 td {{ props.item.stock.expiry_date | moment('YYYY-MM-DD') }}
                 td {{ props.item.discount }}%
                 td {{ props.item.quantity }}
-                td {{ price(props.item)[0] | roundUp | readable }}
-                td {{ price(props.item)[1] | roundUp | readable }}
+                td {{ price(props.item)[0] }}
+                td {{ price(props.item)[1] }}
           v-divider
           v-layout(row v-if="sale.approved < 1 && ($hasRole(1) || $hasRole(3)\
             || $hasRole(7) || $hasRole(8))")
