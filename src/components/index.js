@@ -51,6 +51,8 @@ import ExpenseAnalytics from './expenses/ExpenseAnalytics.vue';
 import Revenue from './expenses/Revenue.vue';
 import NewPayment from './payments/NewPayment.vue';
 
+import ProductAccounting from './shipment/ProductAccounting.vue';
+
 import UserSales from './shipment/UserSales.vue';
 import FilteredSales from './shipment/FilteredSales.vue';
 
@@ -90,6 +92,7 @@ const Components = {
   StockItem,
   StockItemExpanded,
   ReturnWarehouseItem,
+  ProductAccounting,
 
   Map,
   GraphCard,

@@ -219,3 +219,8 @@ module.exports.SHOW_TABEL_RATES = {
   name: 'Show tabel rates',
   id: 48,
 };
+
+module.exports.SHOW_SHIPMENTS_PRODUCT_ACCOUNTING = {
+  name: 'Show shipment product accounting',
+  id: 49,
+};

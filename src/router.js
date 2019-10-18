@@ -592,6 +592,11 @@ const router = new Router({
               name: 'shipment',
               component: () => import('./views/shipments/Shipment.vue'),
             },
+            {
+              path: 'productaccounting',
+              name: 'productaccounting',
+              component: () => import('./views/shipments/ProductAccount.vue'),
+            },
           ],
         },
         {
