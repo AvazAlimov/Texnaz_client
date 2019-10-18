@@ -24,16 +24,6 @@
                     v-validate="'required'"
                     color="secondary")
                 v-select(
-                  v-show="!id"
-                  name="territory"
-                  v-model="user.territoryId"
-                  label="Tерритория"
-                  :items="territories"
-                  item-text="name"
-                  item-value="id"
-                  v-validate="isRequired()"
-                )
-                v-select(
                     v-show="!id"
                     v-model="user.roles"
                     :items="fixedRoles"
@@ -44,6 +34,18 @@
                     name="roles"
                     v-validate="isRequired()"
                     color="secondary")
+                v-select(
+                  v-show="!id && isManagers"
+                  name="territory"
+                  v-model="user.territoryId"
+                  label="Tерритория"
+                  :items="territories"
+                  item-text="name"
+                  item-value="id"
+                  v-validate="isRequired((user.roles.includes(7)\
+                    || user.roles.includes(8)\
+                    || user.roles.includes(2)) ? 'required' : {})"
+                )
                 v-select(
                   name="province"
                   label="Область"
@@ -106,7 +108,7 @@ export default {
         username: '',
         password: '',
         controllerId: null,
-        territoryId: null,
+        territoryId: -1,
         provinces: [],
         roles: [],
       },
@@ -125,6 +127,11 @@ export default {
     ceoes() {
       return this.users.filter(user => (user.territoryId === this.user.territoryId)
        && user.roles.map(role => role.id).includes(8));
+    },
+    isManagers() {
+      return this.user.roles.includes(7)
+          || this.user.roles.includes(8)
+          || this.user.roles.includes(2);
     },
   },
   watch: {
