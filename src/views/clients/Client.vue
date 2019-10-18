@@ -246,7 +246,7 @@ export default {
     client: {
       handler({ icc }) {
         Client.getByIcc(icc).then((clients) => {
-          this.isUnique = !clients.length;
+          if (!this.$route.params.id) { this.isUnique = !clients.length; }
         });
       },
       deep: true,
