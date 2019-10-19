@@ -5,90 +5,165 @@
           v-data-table(
             :loading="loading"
             :headers="headers"
-            :items="closedProducts"
+            :items="shippedProducts"
+            hide-actions
           )
+            template(v-slot:items="props")
+              td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
+              td {{ props.item.number }}
+              td {{ props.item.warehouse.name }} {{ props.item.warehouse.company }}
+              td {{ props.item.client.icc }}
+              td {{ props.item.client.name }}
+              td {{ props.item.manager.name }}
+              td {{ getAccountingPrice(props.item) || 0 | roundUp | readable}}сум
+              td
+                v-layout(row)
+                  v-btn.ma-0(
+                    flat icon color="secondary"
+                    :to="{ name: 'shipment', params: {id: props.item.id},\
+                      query:{ accounting: true }}")
+                    v-icon(small) visibility
+                  v-btn.ma-0(
+                    flat icon color="green" @click="accept(props.item)")
+                    v-icon(small) check
       .border.white.pa-2.mt-5
           .title.ma-2 История товара
           v-data-table(
             :loading="loading"
             :headers="headers"
-            :items="notClosedProducts"
+            :items="notShippedProducts"
           )
+            template(v-slot:items="props")
+              td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
+              td {{ props.item.number }}
+              td {{ props.item.warehouse.name }} {{ props.item.warehouse.company }}
+              td {{ props.item.client.icc }}
+              td {{ props.item.client.name }}
+              td {{ props.item.manager.name }}
+              td {{ getAccountingPrice(props.item) || 0 | roundUp | readable}}сум
+              td
+                v-layout(row)
+                  v-btn.ma-0(
+                    flat icon color="secondary"
+                    :to="{ name: 'shipment', params: {id: props.item.id},\
+                      query:{ accounting: true }}")
+                    v-icon(small) visibility
 </template>
 <script>
+import Sale from '@/services/Sale';
+
 export default {
-  props: {
-    loading: {
-      type: Boolean,
-      required: true,
-    },
-    sales: {
-      type: Object,
-      required: true,
-    },
-  },
   data() {
     return {
+      sales: [],
+      loading: false,
       headers: [
         {
-          text: 'Код товара',
-          value: 'product.code',
+          text: 'Дата',
+          value: 'createdAt',
         },
         {
-          text: 'Наименование',
-          value: 'product.name',
+          text: 'Номер',
+          value: 'id',
         },
         {
-          text: 'Фасовка',
-          value: 'product.packing',
+          text: 'Склад',
+          value: 'warehouse.name',
         },
         {
-          text: 'Цвет',
-          value: 'product.color',
+          text: 'ИКК',
+          value: 'client.icc',
         },
         {
-          text: 'Состояние',
-          value: 'defected',
+          text: 'Клиент',
+          value: 'client.name',
         },
         {
-          text: 'Дата прибытия',
-          value: 'arrival_date',
-        },
-        {
-          text: 'Срок действия',
-          value: 'expiry_date',
-        },
-        {
-          text: 'Скидка %',
-          value: 'discount',
-          width: 1,
-        },
-        {
-          text: 'Количество',
-          value: 'quantity',
-          width: 1,
-        },
-        {
-          text: 'Цена',
-          value: 'aprice',
-          width: 1,
+          text: 'Менеджер',
+          value: 'manager.name',
         },
         {
           text: 'Сумма',
           value: 'price',
           sortable: false,
-          width: 1,
+        },
+        {
+          sortable: false,
         },
       ],
     };
   },
   computed: {
-    closedProducts() {
-      return this.sales.filter(({ isClosed }) => isClosed === true);
+    shippedProducts() {
+      return this.sales.filter(({ shipped, accepted }) => shipped && !accepted);
     },
-    notClosedProducts() {
-      return this.sales.filter(({ isClosed }) => isClosed === false);
+    notShippedProducts() {
+      return this.sales.filter(({ shipped, accepted }) => shipped && accepted);
     },
+  },
+  methods: {
+    getAll() {
+      this.loading = true;
+      Promise.all([Sale.getAll()])
+        .then((results) => {
+          [this.sales] = results;
+        })
+        .catch(error => this.$store.commit('setMessage', error.message))
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    getAccountingPrice(sale) {
+      let total = 0;
+      switch (sale.type) {
+        case 1:
+          sale.items.forEach((item) => {
+            total
+              += (item.price.firstPrice * item.quantity * (100 - item.discount))
+              / 100;
+          });
+          break;
+        case 2:
+          // mixPriceNonCash
+          sale.items.forEach((item) => {
+            total
+              += (item.price.mixPriceNonCash
+                * item.quantity
+                * (100 - item.discount))
+              / 100;
+          });
+          break;
+        case 3:
+          // mixPriceNonCash
+          sale.items.forEach((item) => {
+            total
+              += (item.price.mixPriceNonCash
+                * item.quantity
+                * (100 - item.discount))
+              / 100;
+          });
+          break;
+        case 4:
+          // commissionPrice
+          sale.items.forEach((item) => {
+            total
+              += (item.commissionPrice * item.quantity * (100 - item.discount))
+              / 100;
+          });
+          break;
+        default:
+          break;
+      }
+      return total;
+    },
+    accept({ id }) {
+      Sale.accept(id)
+        .then(() => this.getAll())
+        .catch(err => this.$store.commit('setMessage', err.message));
+    },
+  },
+  created() {
+    this.getAll();
   },
 };
 </script>

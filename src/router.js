@@ -588,14 +588,14 @@ const router = new Router({
               component: () => import('./views/shipments/Accounting.vue'),
             },
             {
-              path: ':id',
-              name: 'shipment',
-              component: () => import('./views/shipments/Shipment.vue'),
-            },
-            {
               path: 'productaccounting',
               name: 'productaccounting',
               component: () => import('./views/shipments/ProductAccount.vue'),
+            },
+            {
+              path: ':id',
+              name: 'shipment',
+              component: () => import('./views/shipments/Shipment.vue'),
             },
           ],
         },
