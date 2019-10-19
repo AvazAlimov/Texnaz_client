@@ -85,8 +85,9 @@
                 @click="remove(props.item.id, props.item.motivationType)")
                 v-icon(small) delete
     v-divider.my-4
-    .title.mx-4.my-3 История
+    .title.mx-4.my-3(v-if="$hasRole(1) || $hasRole(3) || $hasRole(6)") История
     v-data-table(
+      v-if="$hasRole(1) || $hasRole(3) || $hasRole(6)"
       :headers="headers"
       :items="filteredData(true)"
       :loading="loading"
