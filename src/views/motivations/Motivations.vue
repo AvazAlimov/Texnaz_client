@@ -7,7 +7,8 @@
         v-divider
         v-layout(row)
           v-spacer
-          v-btn(flat :to="{ name: 'plan' }") Добавить
+          v-btn(flat v-if="$hasRole(1) ||\
+            $hasRole(3) || $hasRole(6)" :to="{ name: 'plan' }") Добавить
           // changed project plan
             v-menu(offset-y v-if="$hasRole(1) || $hasRole(7) || $hasRole(8)")
               template(v-slot:activator="{ on }")

@@ -139,3 +139,7 @@ Vue.prototype.$getClientBalance = (client, sales) => {
   }
   return balance;
 };
+
+Vue.prototype.$back = () => {
+  window.history.back();
+};

@@ -1,6 +1,6 @@
 <template lang="pug">
     v-layout(row wrap align-center)
-      v-btn(icon :to="{ name: 'shipments' }").tertiary--text
+      v-btn(icon @click="$back()").tertiary--text
           v-icon arrow_back
       .title.tertiary--text Отгрузка
       v-flex(xs12)

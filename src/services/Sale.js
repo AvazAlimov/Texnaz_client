@@ -30,6 +30,7 @@ export default {
   updateSaleItem: (id, saleItem) => execute(Api().post(`sales/saleItem/${id}`, { ...saleItem })),
   check: id => execute(Api().post(`sales/check/${id}`)),
   delete: id => execute(Api().delete(`sales/${id}`)),
+  accept: id => execute(Api().post(`sales/accept/${id}`)),
   approve: id => execute(Api().post(`sales/approve/${id}`)),
   disapprove: id => execute(Api().post(`sales/disapprove/${id}`)),
 };
