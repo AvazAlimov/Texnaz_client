@@ -299,17 +299,23 @@ export default {
             numManagers: managers ? managers.length : '-',
             numClients: clients ? clients.length : '-',
             numActiveClients: clients ? clients
-              .filter(client => this.isActive(client, collection.filter(({ approved, clientId }) => approved && clientId === client.id))).length : '-',
+              .filter(client => this.isActive(
+                client,
+                collection
+                  .filter(({ approved, clientId }) => approved && clientId === client.id),
+              )).length : '-',
             totalAmount: (this.type === 0 ? payments : sales).reduce((a, b) => a + b, 0),
+            // Expanded
             expandedItems: managers.map(manager => ({
               name: manager.name,
               controller: manager.controller ? manager.controller.name : '-',
               clients: clients.filter(({ managerId }) => managerId === manager.id).length,
-              activeClients: clients.filter(({ managerId }) => managerId === manager.id)
-                .map(client => this.isActive(
+              activeClients: clients ? clients.filter(({ managerId }) => managerId === manager.id)
+                .filter(client => this.isActive(
                   client,
                   collection.filter(({ approved, clientId }) => approved && clientId === client.id),
-                )).length,
+                )).length : 0,
+              // Expanded
               brands: eheaders.map((header) => {
                 const found = this.managerBrands(manager.id, collection, province.id)
                   .filter(({ id }) => header.id === id);
