@@ -231,6 +231,7 @@ export default {
   watch: {
     client(value) {
       this.managerName = value ? value.client.manager.name : '';
+      this.managerId = value ? value.client.manager.id : null;
     },
     date(value) {
       const compared = new Date(value);
