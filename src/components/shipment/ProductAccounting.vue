@@ -95,10 +95,10 @@ export default {
   },
   computed: {
     shippedProducts() {
-      return this.sales.filter(({ shipped, accepted }) => shipped && !accepted);
+      return this.sales.filter(({ isClosed, accepted }) => isClosed && !accepted);
     },
     notShippedProducts() {
-      return this.sales.filter(({ shipped, accepted }) => shipped && accepted);
+      return this.sales.filter(({ isClosed, accepted }) => isClosed && accepted);
     },
   },
   methods: {
