@@ -255,6 +255,22 @@ export default {
         .catch((error) => { this.$store.commit('setMessage', error.message); })
         .finally(() => { this.loading = false; });
     },
+    makeSingle(sales) {
+      const extra = [];
+      return sales.filter(({ code: productCode, quantity, price }, position) => {
+        if (sales.find(({ code }) => code === productCode) === sales[position]) {
+          return true;
+        }
+        extra.push({ productCode, quantity, price });
+        return false;
+      }).map(element => ({
+        ...element,
+        quantity: element.quantity + extra
+          .filter(({ code }) => code === element.productCode).reduce((a, b) => a + b.quantity, 0),
+        price: element.price + extra
+          .filter(({ code }) => code === element.productCode).reduce((a, b) => a + b.price, 0),
+      }));
+    },
     createItem(province, clients, data) {
       const byProvince = array => array.filter(({ provinceId }) => provinceId === province.id);
       const byClient = (array, clientId) => array.filter(({ client }) => client.id === clientId);
@@ -277,14 +293,16 @@ export default {
             totalWeight: byClient(data, provinceClient.id).reduce((a, b) => a + b.weight, 0),
             totalQuantity: byClient(data, provinceClient.id).reduce((a, b) => a + b.quantity, 0),
             sum: byClient(data, provinceClient.id).reduce((a, b) => a + b.sum, 0),
-            productItems: byClient(data, provinceClient.id).map(sale => sale.items.map(item => ({
-              code: item.stock.product.code,
-              name: item.stock.product.name,
-              packing: item.stock.product.packing,
-              color: item.stock.product.color,
-              quantity: item.quantity,
-              price: parseUSD(sale, item) * item.quantity,
-            }))).reduce((a, b) => a.concat(b), []),
+            productItems: this.makeSingle(
+              byClient(data, provinceClient.id).map(sale => sale.items.map(item => ({
+                code: item.stock.product.code,
+                name: item.stock.product.name,
+                packing: item.stock.product.packing,
+                color: item.stock.product.color,
+                quantity: item.quantity,
+                price: parseUSD(sale, item) * item.quantity,
+              }))).reduce((a, b) => a.concat(b), []),
+            ),
           })),
         });
       }
@@ -295,9 +313,7 @@ export default {
         .then((data) => {
           const makeUnique = allClients => allClients.filter(({ id }, i) => data
             .map(({ client }) => client.id).indexOf(id) === i);
-
           const clients = makeUnique(data.map(({ client }) => client));
-
           if (this.province === 0) {
             this.provinces.forEach((province) => {
               this.createItem(province, clients, data);
