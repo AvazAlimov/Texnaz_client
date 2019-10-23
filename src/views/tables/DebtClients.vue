@@ -63,9 +63,9 @@ export default {
   data() {
     return {
       search: '',
-      startDate: (new Date()).toISOString().substring(0, 10),
+      startDate: null,
       start: false,
-      endDate: (new Date()).toISOString().substring(0, 10),
+      endDate: null,
       end: false,
       items: [],
     };
@@ -127,8 +127,13 @@ export default {
       return (new Date()).toISOString().substring(0, 10);
     },
     filteredData() {
+      const start = new Date(this.startDate);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(this.endDate);
+      end.setHours(23, 59, 59, 59);
       return this.items
         // .filter(({ userId }) => userId === this.$getUserId())
+        .filter(el => new Date(el.date).getTime() >= start.getTime())
         .filter(el => (
           (el.saleDate.toString()).includes(this.search)
           || (el.salePrice.toString().toLowerCase()).includes(this.search.toLowerCase())
