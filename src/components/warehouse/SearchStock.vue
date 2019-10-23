@@ -171,7 +171,7 @@ export default {
           value: 'quantity',
         },
         {
-          text: 'Тег',
+          text: 'Инфо',
           value: 'tag',
         },
       ];

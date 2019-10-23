@@ -11,6 +11,7 @@
     td {{ item.totalquantity }}
     td {{ booked + sales }}
     td {{( item.quantity - booked - sales) * item.product.packing}}
+    td {{ item.product.tags.length ? item.product.tags[0].name : '-' }}
 </template>
 
 <script>

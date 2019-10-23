@@ -85,6 +85,7 @@
                 td {{ props.item.quantity }}
                 td {{ price(props.item)[0] }}
                 td {{ price(props.item)[1] }}
+                td {{ getTagName(props.item) }}
           v-divider
           v-layout(row v-if="sale.approved < 1 && ($hasRole(1) || $hasRole(3)\
             || $hasRole(7) || $hasRole(8))")
@@ -182,10 +183,18 @@ export default {
           sortable: false,
           width: 1,
         },
+        {
+          text: 'Инфо',
+          value: 'tag',
+        },
       ];
     },
   },
   methods: {
+    getTagName(item) {
+      return item.stock.product.tags.length
+        ? item.stock.product.tags[0].name : '-';
+    },
     // To get rid off eslint error in tables
     price(item) {
       return [
