@@ -170,6 +170,10 @@ export default {
           text: `Вес (${this.$options.filters.readable(this.filteredStocks.reduce((a, b) => a + (b.product.packing * b.quantity), 0))}кг)`,
           value: 'quantity',
         },
+        {
+          text: 'Тег',
+          value: 'tag',
+        },
       ];
       if (!this.readOnly) {
         headers.splice(0, 0, {
