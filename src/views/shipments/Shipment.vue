@@ -56,12 +56,12 @@
                 .title Баланс клиента
                 v-spacer
                   v-divider.mx-4
-                .subheading {{ sale.client.balance}} $
+                .subheading {{ sale.client.balance || 0 | roundUp | readable }} $
               v-layout.mb-2(align-center v-if="!$route.query.accounting")
                 .title Сумма отгрузки
                 v-spacer
                   v-divider.mx-4
-                .subheading {{ $getTotalPrice(sale, exchangeRate, officialRate)}} $
+                .subheading {{ $getTotalPrice(sale, exchangeRate, officialRate) || 0 | roundUp | radable}} $
               v-layout.mb-2(align-center v-if="!$route.query.accounting")
                 .title Сумма отгрузки
                 v-spacer
