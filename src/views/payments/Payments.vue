@@ -51,6 +51,7 @@
               td {{ props.item.manager.name }}
               td {{ props.item.client.balance || 0 | roundUp | readable }} $
               td {{ readable((props.item.sum / props.item.ratio)) }} $
+              td {{ props.item.exchangeRate }}
               td {{ props.item.user.name }}
     router-view
 </template>
