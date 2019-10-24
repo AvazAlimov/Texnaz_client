@@ -107,6 +107,8 @@
               flat color="secondary"
               @click="disapprove()"
             ) Отменить
+          v-layout
+            Print
 </template>
 
 <script>
@@ -198,7 +200,11 @@ export default {
   },
   methods: {
     print() {
-      PrintJS({ printable: 'printForm', type: 'html' });
+      PrintJS({
+        printable: 'Print',
+        type: 'html',
+        css: '../../assets/style/print.css',
+      });
     },
     getTagName(item) {
       return item.stock.product.tags.length
