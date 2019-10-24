@@ -1,5 +1,5 @@
 <template lang="pug">
-    v-layout(row wrap align-center)
+    v-layout(id="printForm" row wrap align-center)
       v-btn(icon @click="$back()").tertiary--text
           v-icon arrow_back
       .title.tertiary--text Отгрузка
@@ -92,6 +92,11 @@
             v-spacer
             v-btn.ma-0.mb-1.mr-1(
               :loading="loading"
+              flat color="secondary"
+              @click="print()"
+            ) Print
+            v-btn.ma-0.mb-1.mr-1(
+              :loading="loading"
               v-if="sale.approved != -1"
               flat color="secondary"
               @click="approve()"
@@ -105,6 +110,7 @@
 </template>
 
 <script>
+import PrintJS from 'print-js';
 import Sale from '@/services/Sale';
 import Configuration from '@/services/Configuration';
 import shipmentTypes from '@/assets/shipment_types.json';
@@ -191,6 +197,9 @@ export default {
     },
   },
   methods: {
+    print() {
+      PrintJS({ printable: 'printForm', type: 'html' });
+    },
     getTagName(item) {
       return item.stock.product.tags.length
         ? item.stock.product.tags[0].name : '-';
