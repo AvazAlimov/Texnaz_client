@@ -113,6 +113,13 @@ Vue.prototype.$getTotalPrice = (sale, exchangeRate, officialRate) => {
                   * (100 - item.discount) / 100;
       });
       break;
+    case 5:
+      sale.items.forEach((item) => {
+        total += item.commissionPriceUsd
+                  * item.quantity
+                  * (100 - item.discount) / 100;
+      });
+      break;
     default:
       break;
   }
