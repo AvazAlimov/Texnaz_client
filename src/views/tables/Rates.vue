@@ -47,13 +47,13 @@
               :items="filteredData"
               :search="search"
           )
-              template(v-slot:items="props")
+              template(v-slot:items="{ item }")
                 tr
-                  td {{ props.item.date | moment('YYYY-MM-DD HH:mm') }}
-                  td {{ props.item.name }}
-                  td {{ props.item.exchangeRate }}
-                  td {{ props.item.officialRate }}
-                  td {{ props.item.marketRate }}
+                  td {{ item.date | moment('YYYY-MM-DD HH:mm') }}
+                  td {{ item.name }}
+                  td {{ item.exchangeRate }}
+                  td {{ item.officialRate }}
+                  td {{ item.marketRate }}
 </template>
 
 <script>
@@ -116,7 +116,7 @@ export default {
           data.forEach((el) => {
             this.items.push({
               date: el.createdAt,
-              name: el.user.name,
+              name: el.user ? el.name : '-',
               exchangeRate: el.exchangeRate,
               officialRate: el.officialRate,
             });
