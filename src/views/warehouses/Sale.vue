@@ -27,7 +27,9 @@
                     label="Тип оплаты"
                     color="secondary"
                     return-object)
-                  v-select(v-model="client"
+
+                  v-combobox(
+                    v-model="client"
                     :items="filteredClients"
                     item-text="name"
                     return-object
@@ -89,7 +91,7 @@
                     label="Номер"
                     name="Номер"
                     v-validate="'required'")
-                  .subheading Баланс клиента: {{ client.balance || 0 | roundUp | readable }} $
+                  .subheading Баланс клиента: {{ client ? client.balance : 0 | roundUp | readable }} $
                   .subheading Сумма в долларах: {{ getTotalPrice() | roundUp | readable }} $
                   .subheading Сумма в сумах: {{ getTotalUzs() || 0 }} сум
                 v-divider
@@ -125,7 +127,7 @@ export default {
     isUnique: false,
     stock: null,
     sales: [0],
-    client: {},
+    client: null,
     selected: [],
     clients: [],
     payment: 1,
@@ -197,10 +199,12 @@ export default {
       return this.$moment(new Date()).add(this.days, 'd').format('YYYY-MM-DD');
     },
     filteredClients() {
-      if (this.$getUserId() === 1) {
-        return this.clients;
-      }
-      return this.clients.filter(client => client.managerId === this.$getUserId());
+      return (this.$getUserId() === 1 ? this.clients
+        : this.clients.filter(client => client.managerId === this.$getUserId()))
+        .map(({ icc, name, ...others }) => ({
+          ...others,
+          name: `${icc} - ${name}`,
+        }));
     },
   },
   methods: {
