@@ -281,6 +281,7 @@ export default {
           quantity: item.sale,
           discount: item.discount,
           commissionPrice: item.commissionPrice,
+          commissionPriceUsd: item.commissionPriceUsd,
         });
       });
       (this.$route.params.saleId

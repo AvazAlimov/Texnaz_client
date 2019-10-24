@@ -25,6 +25,17 @@
                     min_value: $b2c(item.product.prices[0], officialRate, exchangeRate),\
                 }"
           )
+          v-text-field(
+            v-if="type.id == 5"
+            v-model="priceUSD"
+            color="secondary"
+            name="priceUSD"
+            v-validate="{\
+                    required: true,\
+                    numeric: true,\
+                    min_value: 1 || item.product.prices[0].secondPrice,\
+                }"
+          )
 
         td
             v-text-field(
@@ -33,7 +44,7 @@
                 name="discount"
                 v-validate="{\
                     required: true,\
-                    numeric: true,\
+                    decimal: true,\
                     min_value: 0,\
                     max_value: 100,\
                 }"
@@ -74,6 +85,7 @@ export default {
     discount: 0,
     sale: 0,
     price: 0,
+    priceUSD: 0,
   }),
   computed: {
     productPrice() {
@@ -112,6 +124,12 @@ export default {
                       * parseFloat((100 - this.item.discount) / 100);
     },
 
+    calculateComissionPriceUsd() {
+      this.item.commissionPriceUsd = this.priceUSD
+                      * parseFloat(this.item.sale)
+                      * parseFloat((100 - this.item.discount) / 100);
+    },
+
     calculateComissionPrice() {
       this.item.commissionPrice = parseFloat(this.price) || 0;
       this.item.price = this.item.commissionPrice
@@ -127,6 +145,7 @@ export default {
       this.calculateSecondPrice();
       this.calculateMixPrice();
       this.calculateComissionPrice();
+      this.calculateComissionPriceUsd();
     },
     sale(value) {
       this.item.sale = parseFloat(value) || 0;
@@ -134,9 +153,11 @@ export default {
       this.calculateSecondPrice();
       this.calculateMixPrice();
       this.calculateComissionPrice();
+      this.calculateComissionPriceUsd();
     },
     price() {
       this.calculateComissionPrice();
+      this.calculateComissionPriceUsd();
     },
   },
   created() {
@@ -148,6 +169,7 @@ export default {
     this.calculateSecondPrice();
     this.calculateMixPrice();
     this.price = this.$options.filters.ceil(this.productPrice.firstPrice);
+    this.priceUSD = this.item.product.prices[0].secondPrice;
   },
   mounted() {
     this.$validator.validate();
