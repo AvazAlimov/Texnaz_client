@@ -91,7 +91,7 @@
                     label="Номер"
                     name="Номер"
                     v-validate="'required'")
-                  .subheading Баланс клиента: {{ client ? client.balance : 0 | roundUp | readable }} $
+                  .subheading Баланс клиента: {{ balance | roundUp | readable }} $
                   .subheading Сумма в долларах: {{ getTotalPrice() | roundUp | readable }} $
                   .subheading Сумма в сумах: {{ getTotalUzs() || 0 }} сум
                 v-divider
@@ -197,6 +197,9 @@ export default {
     },
     dueDate() {
       return this.$moment(new Date()).add(this.days, 'd').format('YYYY-MM-DD');
+    },
+    balance() {
+      return this.client ? this.client.balance : 0;
     },
     filteredClients() {
       return (this.$getUserId() === 1 ? this.clients

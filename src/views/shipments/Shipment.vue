@@ -61,7 +61,7 @@
                 .title Сумма отгрузки
                 v-spacer
                   v-divider.mx-4
-                .subheading {{ $getTotalPrice(sale, exchangeRate, officialRate) || 0 | roundUp | radable}} $
+                .subheading {{ getSalePrice || 0 | roundUp | radable}} $
               v-layout.mb-2(align-center v-if="!$route.query.accounting")
                 .title Сумма отгрузки
                 v-spacer
@@ -140,6 +140,9 @@ export default {
     types: shipmentTypes,
   }),
   computed: {
+    getSalePrice() {
+      return this.$getTotalPrice(this.sale, this.exchangeRate, this.officialRate);
+    },
     headers() {
       return [
         {
@@ -247,6 +250,8 @@ export default {
           return itemPrice.secondPrice;
         case 4:
           return item.commissionPrice / this.officialRate;
+        case 5:
+          return item.commissionPriceUsd;
         default:
           return 0;
       }
@@ -285,6 +290,10 @@ export default {
                   * (100 - item.discount) / 100;
         case 4:
           return item.commissionPrice
+                  * item.quantity
+                  * (100 - item.discount) / 100;
+        case 5:
+          return item.commissionPriceUsd
                   * item.quantity
                   * (100 - item.discount) / 100;
         default:

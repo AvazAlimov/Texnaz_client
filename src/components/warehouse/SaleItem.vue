@@ -125,7 +125,8 @@ export default {
     },
 
     calculateComissionPriceUsd() {
-      this.item.commissionPriceUsd = this.priceUSD
+      this.item.commissionPriceUsd = parseFloat(this.priceUSD) || 0;
+      this.item.price = this.item.commissionPriceUsd
                       * parseFloat(this.item.sale)
                       * parseFloat((100 - this.item.discount) / 100);
     },
@@ -157,6 +158,8 @@ export default {
     },
     price() {
       this.calculateComissionPrice();
+    },
+    priceUSD() {
       this.calculateComissionPriceUsd();
     },
   },
