@@ -225,8 +225,8 @@ export default {
                 .reduce((a, b) => a + (b.q * b.w), 0),
               number: Number.parseFloat(sale.number),
               sum: this.filterItems(sale.items)
-                .map(({ price: { secondPrice }, commissionPrice, quantity }) => (sale.type === 3
-                  ? secondPrice : (commissionPrice
+                .map(({ commissionPriceUsd, commissionPrice, quantity }) => ((sale.type === 3
+                  || sale.type === 5) ? commissionPriceUsd : (commissionPrice
                   / Number.parseFloat(sale.officialRate))) * quantity)
                 .reduce((a, b) => a + b, 0),
             })) : []))
@@ -276,8 +276,8 @@ export default {
       const byClient = (array, clientId) => array.filter(({ client }) => client.id === clientId);
       const parseUSD = ({ type, officialRate }, {
         commissionPrice,
-        price: { secondPrice },
-      }) => (type === 3 ? secondPrice : (commissionPrice / officialRate));
+        commissionPriceUsd,
+      }) => ((type === 3 || type === 5) ? commissionPriceUsd : (commissionPrice / officialRate));
 
       if (province.territory) {
         this.items.push({

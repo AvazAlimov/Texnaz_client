@@ -210,8 +210,8 @@ export default {
           const sales = this.filterDate(collection)
             .filter(({ shipped, provinceId }) => shipped && provinceId === province.id);
 
-          const salesPrice = sales.map(({ items, type, officialRate }) => (type === 3
-            ? items.map(({ price: { secondPrice }, quantity }) => secondPrice * quantity)
+          const salesPrice = sales.map(({ items, type, officialRate }) => ((type === 3 || type === 5)
+            ? items.map(({ commissionPriceUsd, quantity }) => commissionPriceUsd * quantity)
               .reduce((a, b) => a + b, 0)
             : items.map(({ commissionPrice, quantity }) => (commissionPrice * quantity)
               / officialRate).reduce((a, b) => a + b, 0)));
@@ -251,9 +251,9 @@ export default {
                     .map(({
                       type,
                       officialRate,
-                      item: { quantity, commissionPrice, price: { secondPrice } },
-                    }) => ((type === 3 ? secondPrice : commissionPrice) * quantity)
-                    / (type === 3 ? 1 : officialRate))
+                      item: { quantity, commissionPrice, commissionPriceUsd },
+                    }) => (((type === 3 || type === 5) ? commissionPriceUsd : commissionPrice) * quantity)
+                    / ((type === 3 || type === 5) ? 1 : officialRate))
                     .reduce((a, b) => a + b, 0),
                 })),
               };

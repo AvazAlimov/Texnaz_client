@@ -222,11 +222,11 @@ export default {
       const holder = collection
         .filter(({ shipped, managerId, provinceId }) => shipped
           && managerId === idManager && provinceId === province)
-        .map(({ type, items, officialRate }) => (type === 3
+        .map(({ type, items, officialRate }) => ((type === 3 || type === 5)
           ? items.map(({
-            paidPrice, quantity, price: { secondPrice }, stock,
+            paidPrice, quantity, commissionPriceUsd, stock,
           }) => ({
-            total: this.type === 0 ? paidPrice : (secondPrice * quantity),
+            total: this.type === 0 ? paidPrice : (commissionPriceUsd * quantity),
             id: stock.product.brand,
           }))
           : items.map(({
@@ -258,15 +258,15 @@ export default {
           const clients = allclients.filter(({ provinceId }) => provinceId === province.id);
           const payments = this.filterDate(collection)
             .filter(({ shipped, provinceId }) => shipped && provinceId === province.id)
-            .map(({ items, type, officialRate }) => (type === 3
+            .map(({ items, type, officialRate }) => ((type === 3 || type === 5)
               ? items.map(({ paidPrice }) => paidPrice).reduce((a, b) => a + b, 0)
               : items.map(({ paidPrice }) => paidPrice / officialRate).reduce((a, b) => a + b, 0)));
 
           const sales = this.filterDate(collection)
             .filter(({ shipped, provinceId }) => shipped && provinceId === province.id)
             .map(({ items, type, officialRate }) => items
-              .map(({ commissionPrice, quantity, price: { secondPrice } }) => (type === 3
-                ? (secondPrice * quantity) : ((commissionPrice / officialRate) * quantity)))
+              .map(({ commissionPrice, quantity, commissionPriceUsd }) => ((type === 3 || type === 5)
+                ? (commissionPriceUsd * quantity) : ((commissionPrice / officialRate) * quantity)))
               .reduce((a, b) => a + b, 0));
 
           const eheaders = this.brand.includes(0) ? this.brands

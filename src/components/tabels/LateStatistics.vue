@@ -47,7 +47,8 @@
                   )
                 v-btn(icon @click="getItems()").secondary--text
                     v-icon table_chart
-
+                v-btn(icon @click="print()").secondary--text
+                    v-icon print
         v-flex(xs12)
             LateStatisticsTable(
                 :items="items"
@@ -62,6 +63,7 @@ import Province from '@/services/Province';
 import User from '@/services/User';
 import Territory from '@/services/Territory';
 import Sale from '@/services/Sale';
+import Export from '@/utils/Export';
 
 export default {
   data() {
@@ -151,7 +153,7 @@ export default {
         // eslint-disable-next-line no-param-reassign
         sale.lateDates = (times / (1000 * 3600 * 24));
         // eslint-disable-next-line no-param-reassign
-        sale.totalPrice = sale.items.map(item => (sale.type === 3 ? item.debtPrice : (item.debtPrice
+        sale.totalPrice = sale.items.map(item => ((sale.type === 3 || sale.type === 5) ? item.debtPrice : (item.debtPrice
               / Number.parseFloat(sale.officialRate))));
       });
       return sales.filter(sale => !sale.isClosed && sale.shipped);
@@ -233,6 +235,32 @@ export default {
           this.$store.commit('setMessage', err.message);
         })
         .finally(() => { this.loading = false; });
+    },
+    print() {
+      this.getItems();
+      const items = [];
+      this.items.forEach((item) => {
+        if (item.expandItems.length) {
+          item.expandItems.forEach((expanded) => {
+            if (expanded.expandedUsers.length) {
+              expanded.expandedUsers.forEach((client) => {
+                items.push({
+                  territory: item.territory,
+                  province: item.province,
+                  managerName: expanded.name,
+                  clientName: client.name,
+                  lessThirty: this.getPrice(0, 30, expanded),
+                  lessSixth: this.getPrice(30, 60, expanded),
+                  lessNinety: this.getPrice(60, 90, expanded),
+                  lessHundreds: this.getPrice(90, 180, expanded),
+                  moreHundreds: this.getPrice(180, -1, expanded),
+                });
+              });
+            }
+          });
+        }
+      });
+      Export.statisticsPDZToExcel(items, 'PDZ');
     },
   },
   created() {
