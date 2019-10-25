@@ -217,6 +217,10 @@ export default {
           return (item.commissionPrice * item.sale) * ((100 - item.discount) / 100);
         case 3:
           return item.product.prices[0].secondPrice * item.sale * ((100 - item.discount) / 100);
+        case 4:
+          return item.commissionPrice * item.sale * ((100 - item.discount) / 100);
+        case 5:
+          return (item.commissionPriceUsd * item.sale) * ((100 - item.discount) / 100);
         default:
           return 0;
       }
