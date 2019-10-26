@@ -153,7 +153,8 @@ export default {
         // eslint-disable-next-line no-param-reassign
         sale.lateDates = (times / (1000 * 3600 * 24));
         // eslint-disable-next-line no-param-reassign
-        sale.totalPrice = sale.items.map(item => ((sale.type === 3 || sale.type === 5) ? item.debtPrice : (item.debtPrice
+        sale.totalPrice = sale.items.map(item => ((sale.type === 3 || sale.type === 5)
+          ? item.debtPrice : (item.debtPrice
               / Number.parseFloat(sale.officialRate))));
       });
       return sales.filter(sale => !sale.isClosed && sale.shipped);

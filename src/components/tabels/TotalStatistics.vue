@@ -265,8 +265,9 @@ export default {
           const sales = this.filterDate(collection)
             .filter(({ shipped, provinceId }) => shipped && provinceId === province.id)
             .map(({ items, type, officialRate }) => items
-              .map(({ commissionPrice, quantity, commissionPriceUsd }) => ((type === 3 || type === 5)
-                ? (commissionPriceUsd * quantity) : ((commissionPrice / officialRate) * quantity)))
+              .map(({ commissionPrice, quantity, commissionPriceUsd }) => ((type === 3
+                || type === 5) ? (commissionPriceUsd * quantity)
+                : ((commissionPrice / officialRate) * quantity)))
               .reduce((a, b) => a + b, 0));
 
           const eheaders = this.brand.includes(0) ? this.brands
