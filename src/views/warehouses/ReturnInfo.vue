@@ -209,6 +209,7 @@ export default {
           quantity: item.quantity,
           discount: item.discount,
           commissionPrice: item.commissionPrice,
+          commissionPriceUsd: item.commissionPriceUsd,
         });
       });
       ReturnClient.create(returnItem)
