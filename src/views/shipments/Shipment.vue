@@ -107,16 +107,14 @@
               flat color="secondary"
               @click="disapprove()"
             ) Отменить
-          v-layout
-            Print
 </template>
 
 <script>
-import PrintJS from 'print-js';
 import Sale from '@/services/Sale';
 import Configuration from '@/services/Configuration';
 import shipmentTypes from '@/assets/shipment_types.json';
 import shipmentPayments from '@/assets/shipment_payments.json';
+import Print from '@/utils/Print';
 
 export default {
   name: 'Shipment',
@@ -203,11 +201,7 @@ export default {
   },
   methods: {
     print() {
-      PrintJS({
-        printable: 'Print',
-        type: 'html',
-        css: '../../assets/style/print.css',
-      });
+      Print(this.sale, this.price);
     },
     getTagName(item) {
       return item.stock.product.tags.length

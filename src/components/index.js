@@ -55,7 +55,6 @@ import ProductAccounting from './shipment/ProductAccounting.vue';
 
 import UserSales from './shipment/UserSales.vue';
 import FilteredSales from './shipment/FilteredSales.vue';
-
 import Motivations from './motivations/Motivations.vue';
 
 const Components = {
@@ -108,7 +107,6 @@ const Components = {
   ExpenseAnalytics,
   Revenue,
   NewPayment,
-
   UserSales,
   FilteredSales,
 
