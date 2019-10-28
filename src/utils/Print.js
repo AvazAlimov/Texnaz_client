@@ -9,6 +9,9 @@ export default ({
       <html>
         <head>
           <style>
+            body{
+              padding: 10px;
+            }
             table {
               margin: 2%;
             }
@@ -36,6 +39,7 @@ export default ({
               display: flex;
               justify-content: space-between;
             }
+            @page { size: auto;  margin: 0mm; }
           </style>
         </head>
         <body>
