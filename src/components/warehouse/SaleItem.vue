@@ -21,7 +21,7 @@
             name="price"
             v-validate="{\
                     required: true,\
-                    decimal: true,\
+                    numeric: true,\
                     min_value: $b2c(item.product.prices[0], officialRate, exchangeRate),\
                 }"
           )
@@ -32,8 +32,8 @@
             name="priceUSD"
             v-validate="{\
                     required: true,\
-                    numeric: true,\
-                    min_value: 1 || item.product.prices[0].secondPrice,\
+                    decimal: true,\
+                    min_value: 1,\
                 }"
           )
 
