@@ -41,4 +41,29 @@ export default {
     const file = xlsx.write(workbook, { bookType: 'xlsx', bookSST: true, type: 'binary' });
     FileSaver.saveAs(new Blob([toOctet(file)], { type: 'application/octet-stream' }), `${filename}.xlsx`);
   },
+  statisticsPDZToExcel(jsonData, filename) {
+    const workbook = xlsx.utils.book_new();
+    const rows = [
+      ['Территория', 'Область', 'Имя менеджера',
+        'Имя клиентa', '<30', '<60', '<90', '<180', '180+'],
+    ];
+    jsonData.filter(({ clientName }) => clientName !== '-').forEach((element) => {
+      const columns = [
+        element.territory,
+        element.province,
+        element.managerName,
+        element.clientName,
+        element.lessThirty,
+        element.lessSixth,
+        element.lessNinety,
+        element.lessHundreds,
+        element.moreHundreds,
+      ];
+      rows.push(columns);
+    });
+    const sheet = xlsx.utils.aoa_to_sheet(rows);
+    xlsx.utils.book_append_sheet(workbook, sheet, filename);
+    const file = xlsx.write(workbook, { bookType: 'xlsx', bookSST: true, type: 'binary' });
+    FileSaver.saveAs(new Blob([toOctet(file)], { type: 'application/octet-stream' }), `${filename}.xlsx`);
+  },
 };
