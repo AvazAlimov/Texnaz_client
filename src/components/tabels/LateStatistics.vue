@@ -47,7 +47,7 @@
                   )
                 v-btn(icon @click="getItems()").secondary--text
                     v-icon table_chart
-                v-btn(icon @click="print()").secondary--text
+                v-btn(icon :disabled="!items.length" @click="print()").secondary--text
                     v-icon print
         v-flex(xs12)
             LateStatisticsTable(
@@ -238,28 +238,23 @@ export default {
         .finally(() => { this.loading = false; });
     },
     print() {
-      this.getItems();
       const items = [];
       this.items.forEach((item) => {
-        if (item.expandItems.length) {
-          item.expandItems.forEach((expanded) => {
-            if (expanded.expandedUsers.length) {
-              expanded.expandedUsers.forEach((client) => {
-                items.push({
-                  territory: item.territory,
-                  province: item.province,
-                  managerName: expanded.name,
-                  clientName: client.name,
-                  lessThirty: this.getPrice(0, 30, expanded),
-                  lessSixth: this.getPrice(30, 60, expanded),
-                  lessNinety: this.getPrice(60, 90, expanded),
-                  lessHundreds: this.getPrice(90, 180, expanded),
-                  moreHundreds: this.getPrice(180, -1, expanded),
-                });
-              });
-            }
+        item.expandedItems.forEach((expanded) => {
+          expanded.expandedUsers.forEach((client) => {
+            items.push({
+              territory: item.territory,
+              province: item.province,
+              managerName: expanded.name,
+              clientName: client.name,
+              lessThirty: this.getPrice(0, 30, expanded),
+              lessSixth: this.getPrice(30, 60, expanded),
+              lessNinety: this.getPrice(60, 90, expanded),
+              lessHundreds: this.getPrice(90, 180, expanded),
+              moreHundreds: this.getPrice(180, -1, expanded),
+            });
           });
-        }
+        });
       });
       Export.statisticsPDZToExcel(items, 'PDZ');
     },
