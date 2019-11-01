@@ -25,7 +25,6 @@
                   v-date-picker(
                     v-model="startDate"
                     @input="startMenu = false"
-                    :max="maximum"
                   )
                 v-menu(
                   v-model="endMenu"
@@ -43,7 +42,6 @@
                   v-date-picker(
                     v-model="endDate"
                     @input="endMenu = false"
-                    :max="maximum"
                   )
                 v-btn(icon @click="getItems()").secondary--text
                     v-icon table_chart
@@ -68,9 +66,8 @@ import Export from '@/utils/Export';
 export default {
   data() {
     return {
-      maximum: (new Date()).toISOString().substring(0, 10),
-      startDate: (new Date()).toISOString().substring(0, 10),
-      endDate: (new Date()).toISOString().substring(0, 10),
+      startDate: '',
+      endDate: '',
       startMenu: false,
       endMenu: false,
       province: 0,
@@ -147,6 +144,16 @@ export default {
     };
   },
   methods: {
+    filterDate(array) {
+      return array.filter((item) => {
+        const dateSale = new Date(item.createdAt);
+        const start = new Date(this.startDate === '' ? null : this.startDate);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(this.endDate === '' ? '12-12-9999' : this.endDate);
+        end.setHours(23, 59, 59, 59);
+        return dateSale > start && dateSale < end;
+      });
+    },
     lateSales(sales) {
       sales.forEach((sale) => {
         const times = (new Date().getTime()) - (new Date(sale.createdAt).getTime());
@@ -206,30 +213,32 @@ export default {
 
           const sales = this.lateSales(collection)
             .filter(({ provinceId }) => provinceId === province.id);
-
           const clientIds = this.$unique(sales.map(({ client }) => client.id));
 
-          this.items.push({
-            id: province.id,
-            territory: province.id !== 0 ? province.territory.name : '-',
-            province: province.id !== 0 ? province.name : '-',
-            sales,
-            expandedItems: managers.map(manager => ({
-              id: manager.id,
-              name: manager.name,
-              sales: sales.filter(({ managerId }) => managerId === manager.id),
-              expandedUsers: clientIds.map((client) => {
-                const sale = sales
-                  .find(({ clientId, provinceId, client: { managerId } }) => client === clientId
+          if (this.province === 0 ? true
+            : this.province === province.id) {
+            this.items.push({
+              id: province.id,
+              territory: province.id !== 0 ? province.territory.name : '-',
+              province: province.id !== 0 ? province.name : '-',
+              sales: this.filterDate(sales),
+              expandedItems: managers.map(manager => ({
+                id: manager.id,
+                name: manager.name,
+                sales: sales.filter(({ managerId }) => managerId === manager.id),
+                expandedUsers: clientIds.map((client) => {
+                  const sale = sales
+                    .find(({ clientId, provinceId, client: { managerId } }) => client === clientId
                   && managerId === manager.id && provinceId === province.id);
-                return {
-                  id: sale ? sale.client.id : -1,
-                  name: sale ? sale.client.name : '-',
-                  sales: sale ? sales.filter(({ clientId }) => clientId === client) : [],
-                };
-              }),
-            })),
-          });
+                  return {
+                    id: sale ? sale.client.id : -1,
+                    name: sale ? sale.client.name : '-',
+                    sales: sale ? sales.filter(({ clientId }) => clientId === client) : [],
+                  };
+                }),
+              })),
+            });
+          }
         });
       })
         .catch((err) => {

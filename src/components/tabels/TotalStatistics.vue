@@ -41,7 +41,6 @@
                   v-date-picker(
                     v-model="startDate"
                     @input="startMenu = false"
-                    :max="maximum"
                   )
                 v-menu(
                   v-model="endMenu"
@@ -59,7 +58,6 @@
                   v-date-picker(
                     v-model="endDate"
                     @input="endMenu = false"
-                    :max="maximum"
                   )
                 v-btn(icon @click="getItems()").secondary--text
                     v-icon table_chart
@@ -112,7 +110,6 @@ import Sale from '@/services/Sale';
 export default {
   data() {
     return {
-      maximum: (new Date()).toISOString().substring(0, 10),
       startDate: '',
       endDate: '',
       startMenu: false,
@@ -188,6 +185,10 @@ export default {
         return dateSale > start && dateSale < end;
       });
     },
+    filterItems(items) {
+      return items.filter(item => (this.brand.includes(0) ? true
+        : this.brand.includes(item.stock.product.brand)));
+    },
     isActive(client, collection) {
       const lastMonth = new Date();
       lastMonth.setMonth(lastMonth.getMonth() - 1);
@@ -259,12 +260,12 @@ export default {
           const payments = this.filterDate(collection)
             .filter(({ shipped, provinceId }) => shipped && provinceId === province.id)
             .map(({ items, type, officialRate }) => ((type === 3 || type === 5)
-              ? items.map(({ paidPrice }) => paidPrice).reduce((a, b) => a + b, 0)
-              : items.map(({ paidPrice }) => paidPrice / officialRate).reduce((a, b) => a + b, 0)));
+              ? this.filterItems(items).map(({ paidPrice }) => paidPrice).reduce((a, b) => a + b, 0)
+              : this.filterItems(items).map(({ paidPrice }) => paidPrice / officialRate).reduce((a, b) => a + b, 0)));
 
           const sales = this.filterDate(collection)
             .filter(({ shipped, provinceId }) => shipped && provinceId === province.id)
-            .map(({ items, type, officialRate }) => items
+            .map(({ items, type, officialRate }) => this.filterItems(items)
               .map(({ commissionPrice, quantity, commissionPriceUsd }) => ((type === 3
                 || type === 5) ? (commissionPriceUsd * quantity)
                 : ((commissionPrice / officialRate) * quantity)))
@@ -292,41 +293,45 @@ export default {
             },
           ].concat(eheaders.map(el => ({ text: el.name, value: el.name })));
 
-          this.items.push({
-            id: province.id,
-            province: province.name,
-            ceo: territoryManager ? territoryManager.name : '-',
-            numSupervisors: supervisors ? supervisors.length : '-',
-            numManagers: managers ? managers.length : '-',
-            numClients: clients ? clients.length : '-',
-            numActiveClients: clients ? clients
-              .filter(client => this.isActive(
-                client,
-                collection
-                  .filter(({ approved, clientId }) => approved && clientId === client.id),
-              )).length : '-',
-            totalAmount: (this.type === 0 ? payments : sales).reduce((a, b) => a + b, 0),
-            // Expanded
-            expandedItems: managers.map(manager => ({
-              name: manager.name,
-              controller: manager.controller ? manager.controller.name : '-',
-              clients: clients.filter(({ managerId }) => managerId === manager.id).length,
-              activeClients: clients ? clients.filter(({ managerId }) => managerId === manager.id)
+          if (this.province === 0 ? true
+            : this.province === province.id) {
+            this.items.push({
+              id: province.id,
+              province: province.name,
+              ceo: territoryManager ? territoryManager.name : '-',
+              numSupervisors: supervisors ? supervisors.length : '-',
+              numManagers: managers ? managers.length : '-',
+              numClients: clients ? clients.length : '-',
+              numActiveClients: clients ? clients
                 .filter(client => this.isActive(
                   client,
-                  collection.filter(({ approved, clientId }) => approved && clientId === client.id),
-                )).length : 0,
+                  collection
+                    .filter(({ approved, clientId }) => approved && clientId === client.id),
+                )).length : '-',
+              totalAmount: (this.type === 0 ? payments : sales).reduce((a, b) => a + b, 0),
               // Expanded
-              brands: eheaders.map((header) => {
-                const found = this.managerBrands(manager.id, collection, province.id)
-                  .filter(({ id }) => header.id === id);
-                return found.length ? {
-                  id: header.id,
-                  total: found.reduce((a, b) => a + b.total, 0),
-                } : header;
-              }),
-            })),
-          });
+              expandedItems: managers.map(manager => ({
+                name: manager.name,
+                controller: manager.controller ? manager.controller.name : '-',
+                clients: clients.filter(({ managerId }) => managerId === manager.id).length,
+                activeClients: clients ? clients.filter(({ managerId }) => managerId === manager.id)
+                  .filter(client => this.isActive(
+                    client,
+                    collection.filter(({ approved, clientId }) => approved
+                      && clientId === client.id),
+                  )).length : 0,
+                // Expanded
+                brands: eheaders.map((header) => {
+                  const found = this.managerBrands(manager.id, collection, province.id)
+                    .filter(({ id }) => header.id === id);
+                  return found.length ? {
+                    id: header.id,
+                    total: found.reduce((a, b) => a + b.total, 0),
+                  } : header;
+                }),
+              })),
+            });
+          }
         });
       })
         .catch((err) => {

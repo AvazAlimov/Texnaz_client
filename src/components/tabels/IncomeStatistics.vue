@@ -34,7 +34,6 @@
                   v-date-picker(
                     v-model="startDate"
                     @input="startMenu = false"
-                    :max="maximum"
                   )
                 v-menu(
                   v-model="endMenu"
@@ -52,7 +51,6 @@
                   v-date-picker(
                     v-model="endDate"
                     @input="endMenu = false"
-                    :max="maximum"
                   )
                 v-btn(icon @click="getItems()").secondary--text
                     v-icon table_chart
@@ -99,7 +97,6 @@ import Sale from '@/services/Sale';
 export default {
   data() {
     return {
-      maximum: (new Date()).toISOString().substring(0, 10),
       startDate: '',
       endDate: '',
       startMenu: false,
@@ -160,6 +157,10 @@ export default {
         return dateSale > start && dateSale < end;
       });
     },
+    filterItems(items) {
+      return items.filter(item => (this.brand.includes(0) ? true
+        : this.brand.includes(item.stock.product.brand)));
+    },
     isActive(client, collection) {
       const lastMonth = new Date();
       lastMonth.setMonth(lastMonth.getMonth() - 1);
@@ -211,10 +212,10 @@ export default {
             .filter(({ shipped, provinceId }) => shipped && provinceId === province.id);
 
           const salesPrice = sales.map(({ items, type, officialRate }) => (
-            (type === 3 || type === 5) ? items.map(
+            (type === 3 || type === 5) ? this.filterItems(items).map(
               ({ commissionPriceUsd, quantity }) => commissionPriceUsd * quantity,
             ).reduce((a, b) => a + b, 0)
-              : items.map(({ commissionPrice, quantity }) => (commissionPrice * quantity)
+              : this.filterItems(items).map(({ commissionPrice, quantity }) => (commissionPrice * quantity)
               / officialRate).reduce((a, b) => a + b, 0)));
 
           const eheaders = this.brand.includes(0) ? this.brands
@@ -241,7 +242,7 @@ export default {
               const clientItems = [];
               sales.filter(({ clientId }) => clientId === client.id)
                 .forEach(({ type, officialRate, items }) => {
-                  items.forEach(item => clientItems.push({ type, officialRate, item }));
+                  this.filterItems(items).forEach(item => clientItems.push({ type, officialRate, item }));
                 });
               return {
                 id: client.id,
