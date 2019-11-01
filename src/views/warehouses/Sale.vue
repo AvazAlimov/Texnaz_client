@@ -37,6 +37,13 @@
                     label="Клиент"
                     color="secondary")
 
+                  v-text-field(
+                    v-if="hasRole"
+                    v-model="manager.name"
+                    label="Менеджер"
+                    disabled
+                  )
+
                   // Commented, cause it is not necessary now,
                     but if it removed backend responses 403 status
                     v-select(v-model="payment"
@@ -131,6 +138,7 @@ export default {
     selected: [],
     clients: [],
     payment: 1,
+    manager: { name: '' },
     type: shipmentTypes[0],
     types: shipmentTypes.filter(el => el.id !== 2),
     payments: shipmentPayments,
@@ -139,6 +147,9 @@ export default {
     officialRate: 1,
   }),
   computed: {
+    hasRole() {
+      return (this.$hasRole(1) || this.$hasRole(6) || this.$hasRole(3));
+    },
     headers() {
       return [
         {
@@ -274,7 +285,7 @@ export default {
         form: this.payment,
         provinceId: this.client.provinceId,
         clientId: this.client.id,
-        managerId: this.$getUserId(),
+        managerId: this.hasRole ? this.manager.id : this.$getUserId(),
         warehouseId: parseInt(this.$route.params.id, 10),
         days: this.days,
         items: [],
@@ -310,7 +321,6 @@ export default {
     },
     getTotalPrice() {
       let price = 0;
-      console.log(this.selected);
       if (this.type) {
         this.selected.forEach((item) => { price += this.type.key === 'firstPrice' ? item[this.type.key] / this.officialRate : item[this.type.key]; });
       }
@@ -321,9 +331,6 @@ export default {
     },
   },
   watch: {
-    type(value) {
-      console.log(value);
-    },
     number(value) {
       this.isUnique = true;
       if (value) {
@@ -331,6 +338,9 @@ export default {
           this.isUnique = !(sales.length);
         });
       }
+    },
+    client({ manager }) {
+      this.manager = manager;
     },
   },
   created() {
