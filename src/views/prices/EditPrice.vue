@@ -27,6 +27,16 @@
           v-spacer
             v-divider.mx-4
           .subheading {{ price.product.packing }}
+        v-layout.ma-4(align-center)
+          .subheading Единица
+          v-spacer
+            v-divider.mx-4
+          .subheading {{ stock.product.typeUnit.name }}
+        v-layout.ma-4(align-center)
+          .subheading Количество
+          v-spacer
+            v-divider.mx-4
+          .subheading {{ stock.quantity }}
       v-flex(xs6)
         v-layout.ma-4(align-center)
           .subheading B2C
@@ -39,7 +49,7 @@
             v-divider.mx-4
           .subheading {{ price.secondPrice - price.mixPriceNonCash / officialRate | roundUp }} $
         v-layout(row wrap)
-          v-flex(xs6)
+          v-flex(xs5)
             v-text-field.ml-4.mr-2.my-0(
               color="secondary"
               label="Наценка (сум)"
@@ -52,7 +62,7 @@
                 min_value: 0,\
                 excluded: '0'\
               }")
-          v-flex(xs6)
+          v-flex(xs5)
             v-text-field.mr-4.ml-2.my-0(
               color="secondary"
               label="B2B"
@@ -64,6 +74,16 @@
                 decimal: true,\
                 min_value: 0,\
                 excluded: '0'\
+              }")
+          v-flex(xs2)
+            v-text-field.mr-4.ml-2.my-0(
+              color="secondary"
+              label="Количество"
+              v-model="quantity"
+              name="Quantity"
+              v-validate="{\
+                required: true,\
+                decimal: true,\
               }")
         v-layout(row align-center)
           v-spacer
@@ -81,13 +101,16 @@
 
 <script>
 import Price from '@/services/Price';
+import Stock from '@/services/Stock';
 import Configuration from '@/services/Configuration';
 
 export default {
   name: 'EditPrice',
   data: () => ({
     loading: true,
+    stock: { product: { typeUnit: '' } },
     price: null,
+    quantity: 0,
     exchangeRate: 1,
     officialRate: 1,
   }),
@@ -100,8 +123,11 @@ export default {
       ])
         .then((results) => {
           [this.price] = results;
-          this.exchangeRate = results[1].value;
-          this.officialRate = results[2].value;
+          Stock.getByProductId(this.price.productId).then((stock) => {
+            [this.stock] = stock;
+            this.exchangeRate = results[1].value;
+            this.officialRate = results[2].value;
+          });
         })
         .catch((error) => {
           this.$store.commit('setMessage', error.message);
@@ -116,6 +142,7 @@ export default {
         mixPriceNonCash: this.price.mixPriceNonCash,
         mixPriceCash: this.price.mixPriceCash,
         secondPrice: this.price.secondPrice,
+        quantity: this.quantity,
       }])
         .then(() => {
           this.$router.push({ name: 'priced' });
