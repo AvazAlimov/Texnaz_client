@@ -8,7 +8,7 @@
                     :items="territories"
                     item-text="name"
                     item-value="id"
-                    label="Territories"
+                    label="Территоры"
                     v-validate="'required'"
                 ).ma-2
                 v-select(
