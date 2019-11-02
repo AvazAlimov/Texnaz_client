@@ -200,7 +200,8 @@ export default {
         Sale.getAll(),
       ]).then((result) => {
         const [territories, users, allclients, collection] = result;
-        this.provinces.filter(({ id }) => (this.province === 0 ? true : id === this.province) && id !== 0)
+        this.provinces.filter(({ id }) => (this.province === 0
+          ? true : id === this.province) && id !== 0)
           .forEach((province) => {
             const territory = territories.find(({ provinces }) => provinces
               .map(item => item.id).includes(province.id));

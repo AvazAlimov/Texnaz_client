@@ -49,7 +49,8 @@
                 flat color="secondary" icon
                 :to="{name: 'editprice', params: {id: props.item.id}}")
                 v-icon(small) edit
-              v-btn.ma-0(flat v-show="false" color="secondary" icon @click="props.expanded = !props.expanded")
+              v-btn.ma-0(flat v-show="false" color="secondary"
+                icon @click="props.expanded = !props.expanded")
                 v-icon {{ props.expanded ? 'expand_less' : 'expand_more' }}
       template(v-slot:expand="props")
         v-data-table#expanded(
