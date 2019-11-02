@@ -28,9 +28,7 @@
       :headers="headers"
       :items="filteredItems"
       :search="search"
-      :loading="loading"
-      :pagination.sync="pagination"
-      hide-actions)
+      :loading="loading")
       template(v-slot:items="props")
         tr
           td {{ props.index + 1 }}
@@ -51,14 +49,13 @@
                 flat color="secondary" icon
                 :to="{name: 'editprice', params: {id: props.item.id}}")
                 v-icon(small) edit
-              v-btn.ma-0(flat color="secondary" icon @click="props.expanded = !props.expanded")
+              v-btn.ma-0(flat v-show="false" color="secondary" icon @click="props.expanded = !props.expanded")
                 v-icon {{ props.expanded ? 'expand_less' : 'expand_more' }}
       template(v-slot:expand="props")
         v-data-table#expanded(
           :headers="expandedHeaders"
           :items="props.item.prices"
-          :loading="loading"
-          hide-actions)
+          :loading="loading")
           template(v-slot:items="prices")
             tr(@click="prices.expanded = !prices.expanded")
               td
@@ -75,11 +72,6 @@
               td
                 div(style="width: 72px;")
         v-divider
-    v-divider
-    .text-xs-center.py-2
-      v-pagination(v-model="pagination.page"
-    color="secondary"
-    :length="Math.ceil(pagination.totalItems / pagination.rowsPerPage)")
 </template>
 
 <script>
@@ -95,12 +87,6 @@ export default {
       loading: true,
       brands: [],
       types: [],
-      pagination: {
-        descending: false,
-        page: 1,
-        rowsPerPage: 30,
-        totalItems: 0,
-      },
       brand: null,
       type: null,
       search: '',
@@ -230,7 +216,6 @@ export default {
               date: price.createdAt,
               prices: price.prices,
             }));
-          this.pagination.totalItems = this.prices.length;
           this.exchangeRate = exchangeRate.value;
           this.officialRate = officialRate.value;
           this.brands = brands;
