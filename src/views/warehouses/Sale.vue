@@ -213,7 +213,8 @@ export default {
       return this.client ? this.client.balance : 0;
     },
     filteredClients() {
-      return (this.$getUserId() === 1 ? this.clients
+      return (this.$hasRole(1) || this.$hasRole(3)
+        || this.$hasRole(6) ? this.clients
         : this.clients.filter(client => client.managerId === this.$getUserId()))
         .map(({ icc, name, ...others }) => ({
           ...others,
