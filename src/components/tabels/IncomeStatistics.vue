@@ -200,71 +200,72 @@ export default {
         Sale.getAll(),
       ]).then((result) => {
         const [territories, users, allclients, collection] = result;
-        this.provinces.forEach((province) => {
-          const territory = territories.find(({ provinces }) => provinces
-            .map(item => item.id).includes(province.id));
+        this.provinces.filter(({ id }) => (this.province === 0 ? true : id === this.province) && id !== 0)
+          .forEach((province) => {
+            const territory = territories.find(({ provinces }) => provinces
+              .map(item => item.id).includes(province.id));
 
-          const territoryManager = territory ? this.getUsers(users, territory.id, 8) : null;
-          const supervisors = territory ? this.getUsers(users, territory.id, 7) : [];
-          const managers = territory ? this.getUsers(users, territory.id, 2) : [];
-          const clients = allclients.filter(({ provinceId }) => provinceId === province.id);
-          const sales = this.filterDate(collection)
-            .filter(({ shipped, provinceId }) => shipped && provinceId === province.id);
+            const territoryManager = territory ? this.getUsers(users, territory.id, 8) : null;
+            const supervisors = territory ? this.getUsers(users, territory.id, 7) : [];
+            const managers = territory ? this.getUsers(users, territory.id, 2) : [];
+            const clients = allclients.filter(({ provinceId }) => provinceId === province.id);
+            const sales = this.filterDate(collection)
+              .filter(({ shipped, provinceId }) => shipped && provinceId === province.id);
 
-          const salesPrice = sales.map(({ items, type, officialRate }) => (
-            (type === 3 || type === 5) ? this.filterItems(items).map(
-              ({ commissionPriceUsd, quantity }) => commissionPriceUsd * quantity,
-            ).reduce((a, b) => a + b, 0)
-              : this.filterItems(items)
-                .map(({ commissionPrice, quantity }) => (commissionPrice * quantity)
+            const salesPrice = sales.map(({ items, type, officialRate }) => (
+              (type === 3 || type === 5) ? this.filterItems(items).map(
+                ({ commissionPriceUsd, quantity }) => commissionPriceUsd * quantity,
+              ).reduce((a, b) => a + b, 0)
+                : this.filterItems(items)
+                  .map(({ commissionPrice, quantity }) => (commissionPrice * quantity)
               / officialRate).reduce((a, b) => a + b, 0)));
 
-          const eheaders = this.brand.includes(0) ? this.brands
-            : this.brand.map(brandId => this.brands.find(({ id }) => id === brandId));
+            const eheaders = this.brand.includes(0) ? this.brands
+              : this.brand.map(brandId => this.brands.find(({ id }) => id === brandId));
 
-          this.expandedHeaders = [
-            {
-              text: 'Имя',
-              value: 'name',
-            },
-          ].concat(eheaders.map(el => ({ text: el.name, value: el.name })));
+            this.expandedHeaders = [
+              {
+                text: 'Имя',
+                value: 'name',
+              },
+            ].concat(eheaders.map(el => ({ text: el.name, value: el.name })));
 
-          this.items.push({
-            id: province.id,
-            province: province.name,
-            ceo: territoryManager ? territoryManager.name : '-',
-            numSupervisors: supervisors ? supervisors.length : '-',
-            numManagers: managers ? managers.length : '-',
-            numClients: clients ? clients.length : '-',
-            numActiveClients: clients ? clients
-              .filter(client => this.isActive(client, collection.filter(({ approved, clientId }) => approved && clientId === client.id))).length : '-',
-            totalAmount: salesPrice.reduce((a, b) => a + b, 0),
-            expandedItems: clients.map((client) => {
-              const clientItems = [];
-              sales.filter(({ clientId }) => clientId === client.id)
-                .forEach(({ type, officialRate, items }) => {
-                  this.filterItems(items)
-                    .forEach(item => clientItems.push({ type, officialRate, item }));
-                });
-              return {
-                id: client.id,
-                name: client.name,
-                brands: eheaders.map(brand => ({
-                  price: clientItems.filter(({ item }) => (item
-                    ? item.stock.product.brand === brand.id : false))
-                    .map(({
-                      type,
-                      officialRate,
-                      item: { quantity, commissionPrice, commissionPriceUsd },
-                    }) => (((type === 3 || type === 5) ? commissionPriceUsd
-                      : commissionPrice) * quantity)
+            this.items.push({
+              id: province.id,
+              province: province.name,
+              ceo: territoryManager ? territoryManager.name : '-',
+              numSupervisors: supervisors ? supervisors.length : '-',
+              numManagers: managers ? managers.length : '-',
+              numClients: clients ? clients.length : '-',
+              numActiveClients: clients ? clients
+                .filter(client => this.isActive(client, collection.filter(({ approved, clientId }) => approved && clientId === client.id))).length : '-',
+              totalAmount: salesPrice.reduce((a, b) => a + b, 0),
+              expandedItems: clients.map((client) => {
+                const clientItems = [];
+                sales.filter(({ clientId }) => clientId === client.id)
+                  .forEach(({ type, officialRate, items }) => {
+                    this.filterItems(items)
+                      .forEach(item => clientItems.push({ type, officialRate, item }));
+                  });
+                return {
+                  id: client.id,
+                  name: client.name,
+                  brands: eheaders.map(brand => ({
+                    price: clientItems.filter(({ item }) => (item
+                      ? item.stock.product.brand === brand.id : false))
+                      .map(({
+                        type,
+                        officialRate,
+                        item: { quantity, commissionPrice, commissionPriceUsd },
+                      }) => (((type === 3 || type === 5) ? commissionPriceUsd
+                        : commissionPrice) * quantity)
                     / ((type === 3 || type === 5) ? 1 : officialRate))
-                    .reduce((a, b) => a + b, 0),
-                })),
-              };
-            }),
+                      .reduce((a, b) => a + b, 0),
+                  })),
+                };
+              }),
+            });
           });
-        });
       })
         .catch((err) => {
           this.$store.commit('setMessage', err.message);
