@@ -21,6 +21,7 @@
                 v-btn.mx-0(
                     small
                     color="tertiary" flat
+                    :to="{ name: 'history' }"
                 ) История
                     v-icon.ml-2(small) history
         v-flex(xs12)

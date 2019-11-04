@@ -174,6 +174,11 @@ const router = new Router({
               name: 'editprice',
               component: () => import('./views/prices/EditPrice.vue'),
             },
+            {
+              path: 'history',
+              name: 'history',
+              component: () => import('./views/prices/History.vue'),
+            },
           ],
         },
         {
