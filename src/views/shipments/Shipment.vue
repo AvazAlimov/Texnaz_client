@@ -61,7 +61,7 @@
                 .title Сумма отгрузки
                 v-spacer
                   v-divider.mx-4
-                .subheading {{ getSalePrice || 0 | roundUp | radable}} $
+                .subheading {{ getSalePrice || 0 | roundUp | readable}} $
               v-layout.mb-2(align-center v-if="!$route.query.accounting")
                 .title Сумма отгрузки
                 v-spacer
@@ -87,7 +87,7 @@
                 td {{ price(props.item)[1] }}
                 td {{ getTagName(props.item) }}
           v-divider
-          v-layout(row v-if="sale.approved < 1 && ($hasRole(1) || $hasRole(3)\
+          v-layout(row v-if="($hasRole(1) || $hasRole(3)\
             || $hasRole(7) || $hasRole(8))")
             v-spacer
             v-btn.ma-0.mb-1.mr-1(
@@ -97,12 +97,12 @@
             ) Print
             v-btn.ma-0.mb-1.mr-1(
               :loading="loading"
-              v-if="sale.approved != -1"
+              v-if="sale.approved != -1 && sale.approved < 1"
               flat color="secondary"
               @click="approve()"
             ) Подтвердить
             v-btn.ma-0.mb-1.mr-1(
-              v-if="sale.approved != -1"
+              v-if="sale.approved != -1 && sale.approved < 1"
               :loading="loading"
               flat color="secondary"
               @click="disapprove()"

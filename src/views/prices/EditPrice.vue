@@ -143,6 +143,7 @@ export default {
         mixPriceCash: this.price.mixPriceCash,
         secondPrice: this.price.secondPrice,
         quantity: this.quantity,
+        userId: this.$getUserId(),
       }])
         .then(() => {
           this.$router.push({ name: 'priced' });

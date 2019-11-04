@@ -18,6 +18,11 @@
                     v-if="$hasPermission($permissions.SHOW_PRICES_UNPRICED.name)"
                 ) Продукты без цен
                     v-icon.ml-2(small) close
+                v-btn.mx-0(
+                    small
+                    color="tertiary" flat
+                ) История
+                    v-icon.ml-2(small) history
         v-flex(xs12)
             router-view
 </template>
