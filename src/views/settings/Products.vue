@@ -7,13 +7,19 @@
         v-btn(flat color="secondary"
             :to="{ name: 'product' }"
           ).tertiary--text Добавить
-        v-flex(xs12).mt-3
-            .border.white
+        v-layout(row wrap).border.white
+          v-spacer
+          v-flex(xs3).ml-3.mr-3
+            v-text-field(
+              v-model="search"
+              append-icon="search"
+              label="Поиск"
+            )
+          v-flex(xs12).mt-3
                 v-data-table(
-                  hide-actions
                   :headers="headers"
                   :items="products"
-                  :pagination.sync="pagination"
+                  :search="search"
                   :loading="loading")
                     template(v-slot:items="props")
                         td {{ props.item.Brand.name }}
@@ -40,9 +46,6 @@
                                 v-btn(icon @click="remove(props.item.id)").mx-0
                                     v-icon(color="red" small) delete
                 v-divider
-                .text-xs-center.py-2
-                  v-pagination(v-model="pagination.page" color="secondary" :length="pages")
-                v-divider
                 v-layout
                     v-spacer
                     v-btn.ma-0.mb-1.mr-1(flat color="secondary"
@@ -61,6 +64,7 @@ export default {
   name: 'Products',
   data() {
     return {
+      search: '',
       headers: [
         {
           text: 'Бренд',
@@ -139,19 +143,7 @@ export default {
       purposes: [],
       tags: [],
       loading: false,
-      pagination: {
-        descending: false,
-        page: 1,
-        rowsPerPage: 50,
-        totalItems: 0,
-      },
     };
-  },
-  computed: {
-    pages() {
-      if (this.pagination.rowsPerPage == null || this.pagination.totalItems == null) { return 0; }
-      return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage);
-    },
   },
   methods: {
     getAll() {
@@ -166,7 +158,6 @@ export default {
       ])
         .then((result) => {
           [this.units, this.types, this.purposes, this.tags, this.products] = result;
-          this.pagination.totalItems = this.products.length;
         })
         .finally(() => { this.loading = false; });
     },
