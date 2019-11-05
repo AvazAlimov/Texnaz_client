@@ -68,7 +68,7 @@
           div(v-if="!accounting")
             | {{ $getTotalPrice(props.item, exchangeRate, officialRate) || 0 | roundUp }}$
           div(v-if="accounting")
-            | {{ getAccountingPrice(props.item) }}сум
+            | {{ getAccountingPrice(props.item) || 0 | roundUp }}сум
         td {{ accounting ? '' : types.find(type => type.id == props.item.type).name }}
         td {{ (accounting ? '' : readable(props.item.client.balance)) }}
         td
@@ -239,28 +239,32 @@ export default {
       switch (sale.type) {
         case 1:
           sale.items.forEach((item) => {
-            total += (item.price.firstPrice * item.quantity
+            const itemPrice = this.$price(item.price, this.officialRate, this.exchangeRate);
+            total += (itemPrice.firstPrice * item.quantity
                   * (100 - item.discount) / 100);
           });
           break;
         case 2:
           // mixPriceNonCash
           sale.items.forEach((item) => {
-            total += (item.price.mixPriceNonCash * item.quantity
+            const itemPrice = this.$price(item.price, this.officialRate, this.exchangeRate);
+            total += (itemPrice.mixPriceNonCash * item.quantity
                   * (100 - item.discount) / 100);
           });
           break;
         case 3:
           // mixPriceNonCash
           sale.items.forEach((item) => {
-            total += (item.price.mixPriceNonCash * item.quantity
+            const itemPrice = this.$price(item.price, this.officialRate, this.exchangeRate);
+            total += (itemPrice.mixPriceNonCash * item.quantity
                         * (100 - item.discount) / 100);
           });
           break;
         case 4:
           // commissionPrice
           sale.items.forEach((item) => {
-            total += (item.commissionPrice * item.quantity
+            const itemPrice = this.$price(item.price, this.officialRate, this.exchangeRate);
+            total += (itemPrice * item.quantity
                               * (100 - item.discount) / 100);
           });
           break;

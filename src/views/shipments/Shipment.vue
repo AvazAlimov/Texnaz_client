@@ -83,8 +83,8 @@
                 td {{ props.item.stock.expiry_date | moment('YYYY-MM-DD') }}
                 td {{ props.item.discount }}%
                 td {{ props.item.quantity }}
-                td {{ price(props.item)[0] }}
-                td {{ price(props.item)[1] }}
+                td {{ price(props.item)[0] || 0 | roundUp}}
+                td {{ price(props.item)[1] || 0 | roundUp}}
                 td {{ getTagName(props.item) }}
           v-divider
           v-layout(row v-if="($hasRole(1) || $hasRole(3)\
@@ -251,18 +251,19 @@ export default {
       }
     },
     anAccount(item) {
+      const itemPrice = this.$price(item.price, this.officialRate, this.exchangeRate);
       switch (this.sale.type) {
         case 1:
-          return item.price.firstPrice || 0;
+          return itemPrice.firstPrice || 0;
         case 2:
           // mixPriceNonCash
-          return item.price.mixPriceNonCash || 0;
+          return itemPrice.mixPriceNonCash || 0;
         case 3:
           // mixPriceNonCash
-          return item.price.mixPriceNonCash || 0;
+          return itemPrice.mixPriceNonCash || 0;
         case 4:
           // commissionPrice
-          return item.commissionPrice || 0;
+          return itemPrice.commissionPrice || 0;
         default:
           return 0;
       }
@@ -295,21 +296,22 @@ export default {
       }
     },
     accountantPrice(item) {
+      const itemPrice = this.$price(item.price, this.officialRate, this.exchangeRate);
       switch (this.sale.type) {
         case 1:
-          return (item.price.firstPrice * item.quantity
+          return (itemPrice.firstPrice * item.quantity
                   * (100 - item.discount) / 100) || 0;
         case 2:
           // mixPriceNonCash
-          return (item.price.mixPriceNonCash * item.quantity
+          return (itemPrice.mixPriceNonCash * item.quantity
                   * (100 - item.discount) / 100) || 0;
         case 3:
           // mixPriceNonCash
-          return (item.price.mixPriceNonCash * item.quantity
+          return (itemPrice.mixPriceNonCash * item.quantity
                         * (100 - item.discount) / 100) || 0;
         case 4:
           // commissionPrice
-          return (item.commissionPrice * item.quantity
+          return (itemPrice.commissionPrice * item.quantity
                               * (100 - item.discount) / 100) || 0;
         default:
           return 0;
