@@ -7,12 +7,14 @@
                     v-model="province"
                     :items="provinces"
                     item-text="name"
+                    label="Область"
                     item-value="id"
                 ).ma-2
                 v-select(
                     name="brands"
                     v-model="brand"
                     :items="brands"
+                    label="Бренды"
                     item-text="name"
                     item-value="id"
                     clearable

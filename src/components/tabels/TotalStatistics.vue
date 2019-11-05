@@ -5,6 +5,7 @@
                 v-select(
                     name="regions"
                     v-model="province"
+                    label="Область"
                     :items="provinces"
                     item-text="name"
                     item-value="id"
@@ -13,6 +14,7 @@
                     name="types"
                     v-model="type"
                     :items="types"
+                    label="Тип"
                     item-text="name"
                     item-value="id"
                 ).ma-2
@@ -22,6 +24,7 @@
                     :items="brands"
                     item-text="name"
                     item-value="id"
+                    label="Бренды"
                     clearable
                     multiple
                 ).ma-2

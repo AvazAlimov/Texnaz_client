@@ -8,7 +8,7 @@
                     :items="territories"
                     item-text="name"
                     item-value="id"
-                    label="Территоры"
+                    label="Территории"
                     v-validate="'required'"
                 ).ma-2
                 v-select(
@@ -117,7 +117,7 @@ export default {
           width: 1,
         },
         {
-          text: 'Территория',
+          text: 'Территории',
           value: 'territory',
         },
         {

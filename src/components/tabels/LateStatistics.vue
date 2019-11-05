@@ -6,6 +6,7 @@
                     name="regions"
                     v-model="province"
                     :items="provinces"
+                    label="Области"
                     item-text="name"
                     item-value="id"
                 ).ma-2
