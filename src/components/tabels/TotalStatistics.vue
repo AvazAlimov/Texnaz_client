@@ -264,7 +264,8 @@ export default {
             .filter(({ shipped, provinceId }) => shipped && provinceId === province.id)
             .map(({ items, type, officialRate }) => ((type === 3 || type === 5)
               ? this.filterItems(items).map(({ paidPrice }) => paidPrice).reduce((a, b) => a + b, 0)
-              : this.filterItems(items).map(({ paidPrice }) => paidPrice / officialRate).reduce((a, b) => a + b, 0)));
+              : this.filterItems(items).map(({ paidPrice }) => paidPrice / officialRate)
+                .reduce((a, b) => a + b, 0)));
 
           const sales = this.filterDate(collection)
             .filter(({ shipped, provinceId }) => shipped && provinceId === province.id)

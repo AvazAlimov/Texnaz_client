@@ -30,8 +30,8 @@
               :name="props.item.id"
               v-validate="'required|decimal|min_value:0|excluded:0'"
               style="min-width: 80px")
-          td {{ props.item.secondPrice * exchangeRate | ceil }}
-          td {{ props.item.secondPrice - props.item.mixPriceNonCash / exchangeRate | roundUp }}
+          td {{ $b2c(props.item, officialRate, exchangeRate) | ceil }}
+          td {{ $priceCash(props.item, exchangeRate) | roundUp }}
           td
             v-layout
               v-btn(
@@ -64,6 +64,7 @@ export default {
       },
       loading: false,
       exchangeRate: 1,
+      officialRate: 1,
       headers: [
         {
           text: '#',
@@ -125,10 +126,12 @@ export default {
       Promise.all([
         Price.getUnpricedProducts(),
         Configuration.getExchangeRate(),
+        Configuration.getOfficialRate(),
       ])
         .then((results) => {
           const [products] = results;
           this.exchangeRate = results[1].value;
+          this.officialRate = results[2].value;
           products.forEach((product) => {
             product.firstPrice = '0';
             product.mixPriceNonCash = '0';
