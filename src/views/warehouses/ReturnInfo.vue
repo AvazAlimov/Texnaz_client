@@ -190,6 +190,7 @@ export default {
         number: this.sale.number,
         days: this.sale.days,
         clientId: this.sale.clientId,
+        currentClientBalance: this.sale.client.balance,
         userId: this.sale.userId,
         managerId: this.sale.managerId,
         warehouseId: this.sale.warehouseId,

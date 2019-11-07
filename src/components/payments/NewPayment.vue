@@ -202,6 +202,7 @@ export default {
           number: this.number,
           provinceId: this.client.client.provinceId,
           userId: user.id,
+          currentClientBalance: this.client.client.balance,
           ratio: this.currency.id === 0 ? 1 : this.rate,
           managerId: this.managerId,
           clientId: this.client.client.id,
@@ -226,6 +227,7 @@ export default {
           })
           .finally(() => { this.loading = false; });
       }
+      console.log(this.client);
     },
   },
   watch: {

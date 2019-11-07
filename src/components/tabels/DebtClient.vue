@@ -11,7 +11,7 @@
       td {{ user.paymentPrice !== '-' ? readable(user.paymentPrice) : '-' }}
       td {{ user.returnDate | moment('YYYY-MM-DD HH:mm')}}
       td {{ user.returnQuantity }}
-      td {{ user.clientbalance | roundUp | readable}}
+      td {{ user.currentClientBalance | roundUp | readable}}
 </template>
 
 <script>

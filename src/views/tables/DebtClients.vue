@@ -18,7 +18,6 @@
               v-date-picker(
                 v-model="startDate"
                 @input="start = false"
-                :max="maximum"
               )
             v-menu(
               v-model="end"
@@ -36,7 +35,6 @@
               v-date-picker(
                 v-model="endDate"
                 @input="end = false"
-                :max="maximum"
               )
             v-spacer
             v-text-field(
@@ -176,6 +174,7 @@ export default {
           returnDate: '-',
           returnQuantity: '-',
           date: sale.createdAt,
+          currentClientBalance: sale.currentClientBalance,
           clienticc: sale.client.icc,
           clientname: sale.client.name,
           clientbalance: sale.client.balance || 0,
@@ -193,6 +192,7 @@ export default {
           returnDate: '-',
           returnQuantity: '-',
           date: payment.createdAt,
+          currentClientBalance: payment.currentClientBalance,
           clienticc: payment.client.icc,
           clientname: payment.client.name,
           clientbalance: payment.client.balance || 0,

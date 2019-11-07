@@ -283,6 +283,7 @@ export default {
       const sale = {
         number: this.number,
         type: this.type.id,
+        currentClientBalance: this.client.balance,
         form: this.payment,
         provinceId: this.client.provinceId,
         clientId: this.client.id,
