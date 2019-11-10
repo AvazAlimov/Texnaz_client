@@ -3,9 +3,7 @@
     v-data-table(
       :headers="headers"
       :items="products"
-      :loading="loading"
-      :pagination.sync="pagination"
-      hide-actions)
+      :loading="loading")
       template(v-slot:items="props")
         tr(@click="props.expanded = !props.expanded")
           td {{ props.index + 1 }}
@@ -33,6 +31,51 @@
           td {{ $b2c(props.item, officialRate, exchangeRate) | ceil }}
           td {{ $priceCash(props.item, exchangeRate) | roundUp }}
           td
+            v-menu(
+              v-model="startMenu"
+              full-width
+              min-width="290px"
+              :close-on-content-click="false"
+            ).ma-2
+              template(v-slot:activator="{ on }")
+                  v-text-field(
+                      readonly
+                      v-model="startDate"
+                      v-on="on"
+                      label="От"
+                  )
+              v-date-picker(
+                  v-model="startDate"
+                  @input="() => { startMenu = false }"
+
+              )
+          td
+            v-menu(
+              v-model="endMenu"
+              full-width
+              min-width="290px"
+              :close-on-content-click="false"
+            ).ma-2
+              template(v-slot:activator="{ on }")
+                  v-text-field(
+                      readonly
+                      v-model="endDate"
+                      v-on="on"
+                      label="До"
+                  )
+              v-date-picker(
+                  v-model="endDate"
+                  @input="() => { endMenu = false }"
+
+              )
+          td
+            v-select(
+              v-model="warehouse"
+              :items="warehouses"
+              item-text="name"
+              item-value="id"
+            )
+          td
             v-layout
               v-btn(
                 icon flat
@@ -41,30 +84,27 @@
                 @click="save(props.item)"
               )
                 v-icon(small) save
-
-    v-divider
-    .text-xs-center.py-2
-      v-pagination(v-model="pagination.page" color="secondary" :length="pageLength")
 </template>
 
 <script>
 /* eslint-disable no-param-reassign */
 import Price from '@/services/Price';
 import Configuration from '@/services/Configuration';
+import Warehouse from '@/services/Warehouse';
 
 export default {
   name: 'UnpricedProducts',
   data() {
     return {
-      pagination: {
-        descending: false,
-        page: 1,
-        rowsPerPage: 30,
-        totalItems: 0,
-      },
+      startMenu: false,
+      endMenu: false,
+      startDate: (new Date()).toISOString().substring(0, 10),
+      endDate: (new Date()).toISOString().substring(0, 10),
       loading: false,
       exchangeRate: 1,
       officialRate: 1,
+      warehouse: 1,
+      warehouses: [],
       headers: [
         {
           text: '#',
@@ -74,37 +114,57 @@ export default {
         {
           text: 'Наименование',
           value: 'Brand.name',
+          width: 1,
         },
         {
           text: 'Наименование',
           value: 'Brand.manufacturer',
+          width: 1,
         },
         {
           text: 'Наименование',
           value: 'name',
+          width: 1,
         },
         {
           text: 'Фасовка',
           value: 'packing',
+          width: 1,
         },
         {
           text: 'Цвет',
           value: 'color',
+          width: 1,
         },
         {
           text: 'Наценка (сум)',
           sortable: false,
+          width: 1,
         },
         {
           text: 'B2B ($)',
           sortable: false,
+          width: 1,
         },
         {
           text: 'B2C (сум)',
           sortable: false,
+          width: 1,
         },
         {
           text: 'Наценка ($)',
+          sortable: false,
+        },
+        {
+          text: 'arrival_date',
+          sortable: false,
+        },
+        {
+          text: 'expiry_date',
+          sortable: false,
+        },
+        {
+          text: 'warehouse',
           sortable: false,
         },
         {
@@ -114,24 +174,21 @@ export default {
       products: [],
     };
   },
-  computed: {
-    pageLength() {
-      return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage);
-    },
-  },
   methods: {
     getAll() {
       this.loading = true;
       this.products = [];
       Promise.all([
         Price.getUnpricedProducts(),
+        Warehouse.getAll(),
         Configuration.getExchangeRate(),
         Configuration.getOfficialRate(),
       ])
         .then((results) => {
-          const [products] = results;
-          this.exchangeRate = results[1].value;
-          this.officialRate = results[2].value;
+          const [products, warehouses] = results;
+          this.exchangeRate = results[2].value;
+          this.officialRate = results[3].value;
+          this.warehouses = warehouses;
           products.forEach((product) => {
             product.firstPrice = '0';
             product.mixPriceNonCash = '0';
@@ -139,7 +196,6 @@ export default {
             product.secondPrice = '0';
           });
           this.products = products;
-          this.pagination.totalItems = products.length;
           new Promise(resolve => setTimeout(resolve, 100)).then(() => {
             this.$validator.validate();
           });
@@ -152,12 +208,22 @@ export default {
     save(product) {
       this.loading = true;
       const index = this.products.indexOf(product);
+      const stock = {
+        warehouseId: this.warehouse,
+        arrival_date: this.startDate,
+        expiry_date: this.endDate,
+        quantity: 0,
+        productId: product.id,
+        defected: false,
+      };
       Price.createMultiple([{
         productId: product.id,
         firstPrice: product.firstPrice,
         mixPriceNonCash: product.mixPriceNonCash,
         mixPriceCash: product.mixPriceCash,
         secondPrice: product.secondPrice,
+        userId: this.$getUserId(),
+        stock,
       }])
         .then(() => {
           this.products.splice(index, 1);

@@ -6,7 +6,7 @@
           .subheading Бренд
           v-spacer
             v-divider.mx-4
-          .subheading {{ price.product.Brand.name }}
+          .subheading {{ price.product.Brand.name || '-' }}
         v-layout.ma-4(align-center)
           .subheading Производитель
           v-spacer
