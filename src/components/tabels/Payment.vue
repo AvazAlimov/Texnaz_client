@@ -12,6 +12,13 @@
     td {{ readable(items.ratioPrice) }}
     td {{ readable(items.usd) }}
     td {{ readable(items.exchangeRate) }}
+    td
+      v-layout
+        v-tooltip(top v-if="items.comment.length")
+          template(v-slot:activator="{ on }")
+            v-btn(icon v-on="on").ma-0
+              v-icon(color="secondary" small) message
+          span {{ items.comment }}
 </template>
 
 <script>

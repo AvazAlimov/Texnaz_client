@@ -48,6 +48,16 @@
                 v-model="date"
                 @input="datemenu = false"
               )
+            v-textarea(
+              label="Написать комментарий"
+              hint="комментарий"
+              auto-grow
+              clearable
+              outlined
+              shaped
+              small
+              v-model="comment"
+            )
         v-flex(xs6)
             v-select(
                 color="secondary"
@@ -125,6 +135,7 @@ export default {
       },
     ],
     number: '',
+    comment: '',
     isUnique: true,
     client: null,
     clients: [],
@@ -202,6 +213,7 @@ export default {
           number: this.number,
           provinceId: this.client.client.provinceId,
           userId: user.id,
+          comment: this.comment,
           currentClientBalance: this.client.client.balance,
           ratio: this.currency.id === 0 ? 1 : this.rate,
           managerId: this.managerId,
@@ -213,7 +225,7 @@ export default {
         })
           .then(() => {
             this.number = '';
-            this.rate = '';
+            this.comment = '';
             this.sum = 0;
             this.managerId = null;
             this.client = null;

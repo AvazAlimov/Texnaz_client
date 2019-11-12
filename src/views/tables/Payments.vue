@@ -131,6 +131,9 @@ export default {
           text: 'Курс (продажа)',
           value: 'date',
         },
+        {
+          sortable: false,
+        },
       ];
     },
     filteredData() {
@@ -143,6 +146,7 @@ export default {
         .filter(el => new Date(el.date).getTime() >= start.getTime()
         && new Date(el.date).getTime() <= end.getTime()
         && ((el.number.toString()).includes(this.search.toLowerCase())
+        || (el.comment.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.territory.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.province.toString().toLowerCase()).includes(this.search.toLowerCase())
         || (el.icc.toString().toLowerCase()).includes(this.search.toLowerCase())
@@ -179,6 +183,7 @@ export default {
             province: el.province.name,
             icc: el.client.icc,
             name: el.client.name,
+            comment: el.comment,
             manager: el.manager.name,
             date: el.createdAt,
             ratioPrice: el.currency === 0 ? el.sum : '-',

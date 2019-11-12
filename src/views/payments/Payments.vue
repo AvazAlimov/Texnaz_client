@@ -29,8 +29,14 @@
               td {{ props.item.exchangeRate }}
               td {{ props.item.user.name }}
               td
-                v-btn(icon :to="{name: 'payment', params: {id: props.item.id}}").ma-0
-                  v-icon(color="secondary" small) visibility
+                v-layout
+                  v-tooltip(top v-if="props.item.comment.length")
+                    template(v-slot:activator="{ on }")
+                      v-btn(icon v-on="on").ma-0
+                        v-icon(color="secondary" small) message
+                    span {{ props.item.comment }}
+                  v-btn(icon :to="{name: 'payment', params: {id: props.item.id}}").ma-0
+                    v-icon(color="secondary" small) visibility
       v-flex(xs12)
         .white.border
           v-layout(wrap)
@@ -53,6 +59,12 @@
               td {{ readable((props.item.sum / props.item.ratio)) }} $
               td {{ props.item.exchangeRate }}
               td {{ props.item.user.name }}
+              td
+                v-tooltip(top v-if="props.item.comment.length")
+                  template(v-slot:activator="{ on }")
+                    v-btn(icon v-on="on").ma-0
+                      v-icon(color="secondary" small) message
+                  span {{ props.item.comment }}
     router-view
 </template>
 
