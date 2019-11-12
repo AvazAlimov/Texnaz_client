@@ -106,7 +106,7 @@ export default {
           value: 'mixPriceCash',
         },
         {
-          text: 'Менеджер',
+          text: 'Сотрудник',
           width: 1,
           sortable: false,
           value: 'manager',

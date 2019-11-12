@@ -112,13 +112,8 @@ export default {
           sortable: false,
         },
         {
-          text: 'Наименование',
+          text: 'Бранд',
           value: 'Brand.name',
-          width: 1,
-        },
-        {
-          text: 'Наименование',
-          value: 'Brand.manufacturer',
           width: 1,
         },
         {
@@ -156,11 +151,11 @@ export default {
           sortable: false,
         },
         {
-          text: 'arrival_date',
+          text: 'Дата приема',
           sortable: false,
         },
         {
-          text: 'expiry_date',
+          text: 'Срок годности до',
           sortable: false,
         },
         {
