@@ -155,15 +155,30 @@ export default {
         return dateSale > start && dateSale < end;
       });
     },
+    getUsdPrice(type, item, officialRate) {
+      switch (type) {
+        case 1:
+          return item.debtPrice
+              / Number.parseFloat(officialRate);
+        case 2:
+          return item.debtPrice
+              / Number.parseFloat(officialRate);
+        case 3:
+          return item.price.secondPrice * item.quantity;
+        case 5:
+          return item.commissionPriceUsd * item.quantity;
+        default:
+          return 0;
+      }
+    },
     lateSales(sales) {
       sales.forEach((sale) => {
         const times = (new Date().getTime()) - (new Date(sale.createdAt).getTime());
         // eslint-disable-next-line no-param-reassign
         sale.lateDates = (times / (1000 * 3600 * 24));
         // eslint-disable-next-line no-param-reassign
-        sale.totalPrice = sale.items.map(item => ((sale.type === 3 || sale.type === 5)
-          ? item.debtPrice : (item.debtPrice
-              / Number.parseFloat(sale.officialRate))));
+        sale.totalPrice = sale.items.map(item => this
+          .getUsdPrice(sale.type, item, sale.officialRate));
       });
       return sales.filter(sale => !sale.isClosed && sale.shipped);
     },
@@ -179,10 +194,11 @@ export default {
         || ((day > from || day === from) && day < to)) ? price : 0;
     },
     getPrice(from, to, { sales }) {
-      return sales.filter(sale => (((to === -1) && (sale.lateDates < to))
+      const final = sales.filter(sale => (((to === -1) && (sale.lateDates < to))
         || ((from < sale.lateDates || from === sale.lateDates) && sale.lateDates < to)))
         .map(sale => sale.totalPrice.reduce((a, b) => a + b, 0))
         .reduce((a, b) => a + b, 0);
+      return final;
     },
     getAll() {
       Province.getAll().then((result) => {
