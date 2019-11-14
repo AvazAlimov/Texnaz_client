@@ -8,7 +8,6 @@
         tr(@click="props.expanded = !props.expanded")
           td {{ props.index + 1 }}
           td {{ props.item.Brand.name }}
-          td {{ props.item.Brand.manufacturer }}
           td {{ props.item.name }}
           td {{ props.item.packing }}
           td {{ props.item.color || '-' }}
@@ -32,7 +31,7 @@
           td {{ $priceCash(props.item, exchangeRate) | roundUp }}
           td
             v-menu(
-              v-model="startMenu"
+              v-model="props.item.startMenu"
               full-width
               min-width="290px"
               :close-on-content-click="false"
@@ -40,18 +39,18 @@
               template(v-slot:activator="{ on }")
                   v-text-field(
                       readonly
-                      v-model="startDate"
+                      v-model="props.item.startDate"
                       v-on="on"
                       label="От"
                   )
               v-date-picker(
-                  v-model="startDate"
-                  @input="() => { startMenu = false }"
+                  v-model="props.item.startDate"
+                  @input="() => { props.item.startMenu = false }"
 
               )
           td
             v-menu(
-              v-model="endMenu"
+              v-model="props.item.endMenu"
               full-width
               min-width="290px"
               :close-on-content-click="false"
@@ -59,18 +58,18 @@
               template(v-slot:activator="{ on }")
                   v-text-field(
                       readonly
-                      v-model="endDate"
+                      v-model="props.item.endDate"
                       v-on="on"
                       label="До"
                   )
               v-date-picker(
-                  v-model="endDate"
-                  @input="() => { endMenu = false }"
+                  v-model="props.item.endDate"
+                  @input="() => { props.item.endMenu = false }"
 
               )
           td
             v-select(
-              v-model="warehouse"
+              v-model="props.item.warehouse"
               :items="warehouses"
               item-text="name"
               item-value="id"
@@ -96,10 +95,6 @@ export default {
   name: 'UnpricedProducts',
   data() {
     return {
-      startMenu: false,
-      endMenu: false,
-      startDate: (new Date()).toISOString().substring(0, 10),
-      endDate: (new Date()).toISOString().substring(0, 10),
       loading: false,
       exchangeRate: 1,
       officialRate: 1,
@@ -159,7 +154,7 @@ export default {
           sortable: false,
         },
         {
-          text: 'warehouse',
+          text: 'Склад',
           sortable: false,
         },
         {
@@ -189,6 +184,11 @@ export default {
             product.mixPriceNonCash = '0';
             product.mixPriceCash = '0';
             product.secondPrice = '0';
+            product.warehouse = 1;
+            product.startMenu = false;
+            product.endMenu = false;
+            product.startDate = (new Date()).toISOString().substring(0, 10);
+            product.endDate = (new Date()).toISOString().substring(0, 10);
           });
           this.products = products;
           new Promise(resolve => setTimeout(resolve, 100)).then(() => {
@@ -204,9 +204,9 @@ export default {
       this.loading = true;
       const index = this.products.indexOf(product);
       const stock = {
-        warehouseId: this.warehouse,
-        arrival_date: this.startDate,
-        expiry_date: this.endDate,
+        warehouseId: product.warehouse,
+        arrival_date: product.startDate,
+        expiry_date: product.endDate,
         quantity: 0,
         productId: product.id,
         defected: false,
