@@ -247,7 +247,7 @@ export default {
         [this.clients, this.configurations, this.sales] = results;
         this.exchangeRate = (this.configurations.find(conf => conf.id === 4)).value;
         this.officialRate = (this.configurations.find(conf => conf.id === 5)).value;
-
+        this.number = `${this.sales.length ? this.sales[this.sales.length - 1].id + 1 : 1}`;
         if (this.$route.params.saleId) {
           Sale.get(this.$route.params.saleId).then((sale) => {
             this.oldNumber = sale.number;
