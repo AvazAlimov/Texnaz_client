@@ -197,6 +197,7 @@ export default {
         && ((this.type)
           ? (stock.product.type && stock.product.type === this.type.id)
           : true)
+        && stock.product.prices.length
       ));
     },
   },
