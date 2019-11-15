@@ -160,7 +160,7 @@ export default {
       this.users = [];
       Promise.all([
         Sale.getAll(),
-        Payment.getAll(),
+        Payment.getApproved(),
         ReturnClient.getAll(),
         Territory.getAll(),
       ]).then((result) => {

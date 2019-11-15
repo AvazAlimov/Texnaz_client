@@ -1,4 +1,5 @@
 import Sale from '@/services/Sale';
+import Payment from '@/services/Payment';
 import Client from '@/services/Client';
 
 export function paymentRespectCurrency(payment, paymentType, saleType, rate) {
@@ -28,6 +29,13 @@ export function currencyRespectPayment(payment, paymentType, saleType, rate) {
   }
 }
 
+function paymentUpdateBalance(paymentId, clientId, value) {
+  return [
+    Client.addBalance(clientId, value),
+    Payment.updateCurrentBalance(paymentId, value),
+  ];
+}
+
 /**
  * @param {Client id} clientId
  * @param {Payment type} type
@@ -35,12 +43,12 @@ export function currencyRespectPayment(payment, paymentType, saleType, rate) {
  * @param {Rate for converting} rate
  */
 // eslint-disable-next-line max-len
-export const calculate = (clientId, type, value, rate, isSale = false) => new Promise((resolve, reject) => {
+export const calculate = (clientId, type, value, rate, paymentId = 0) => new Promise((resolve, reject) => {
   // UPDATE client balance
   Promise.all([
     Sale.getByClient(clientId),
-    isSale ? Client.addBalance(clientId, 0)
-      : Client.addBalance(clientId, type === 0 ? value : value / rate),
+    paymentId ? paymentUpdateBalance(paymentId, clientId, type === 0 ? value : value / rate)
+      : Client.addBalance(clientId, 0),
   ])
     .then((result) => {
       const [sales] = result;

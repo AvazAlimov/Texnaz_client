@@ -214,7 +214,6 @@ export default {
           provinceId: this.client.client.provinceId,
           userId: user.id,
           comment: this.comment,
-          currentClientBalance: this.client.client.balance,
           ratio: this.currency.id === 0 ? 1 : this.rate,
           managerId: this.managerId,
           clientId: this.client.client.id,

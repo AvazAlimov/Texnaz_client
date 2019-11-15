@@ -309,10 +309,12 @@ export default {
         : Sale.create(sale)
       )
         .then(() => {
-          calculate(this.client.id,
+          calculate(
+            this.client.id,
             sale.items.reduce((a, b) => a + b.debtPrice, 0),
             sale.type,
-            this.officialRate)
+            this.officialRate,
+          )
             .then(() => {
               this.$router.push({ name: 'information' });
               window.location.reload();

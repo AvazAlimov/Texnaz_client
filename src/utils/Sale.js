@@ -7,7 +7,7 @@ export default (clientId, salePrice, type, rate) => new Promise((res, rej) => {
     .then((client) => {
       Client.addBalance(clientId, 0 - (type === 1 ? (salePrice / rate) : salePrice))
         .then(() => {
-          calculate(clientId, 0, client.balance, rate, true)
+          calculate(clientId, 0, client.balance, rate)
             .then(() => Sale.check(clientId)
               .then(() => res()));
         });

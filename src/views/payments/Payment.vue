@@ -94,7 +94,8 @@ export default {
       calculate(this.payment.client.id,
         this.payment.currency,
         this.payment.sum,
-        Number.parseFloat(this.payment.exchangeRate))
+        Number.parseFloat(this.payment.exchangeRate),
+        this.$route.params.id)
         .then(() => {
           Payment.approve(this.$route.params.id)
             .then(() => {
