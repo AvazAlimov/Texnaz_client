@@ -145,7 +145,7 @@ export default {
           date: priceLog.createdAt,
           quantityBefore: priceLog.quantityBefore,
           quantityAfter: priceLog.quantityAfter,
-        }));
+        })).sort((a, b) => a.date > b.date ? -1 : 1);
       });
     },
   },

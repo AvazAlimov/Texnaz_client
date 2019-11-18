@@ -8,7 +8,7 @@
         label="Бренд"
         clearable
         color="secondary"
-      ).ma-4
+      ).mt-4.mb-4.ml-4.mr-2
       v-combobox(
         v-model="type"
         :items="types"
@@ -16,7 +16,7 @@
         label="Тип продукта"
         clearable
         color="secondary"
-      ).ma-4
+      ).mt-4.mb-4
       v-text-field(
         v-model="search"
         prepend-inner-icon="search"
@@ -24,14 +24,23 @@
         color="secondary"
         clearable
       ).ma-4
+      v-btn(
+        icon
+        flat
+        color="secondary"
+        @click="getAll"
+      ).ma-4
+        v-icon table_chart
     v-data-table(
       :headers="headers"
       :items="filteredItems"
       :search="search"
+      no-data-text="Нет информации"
       :loading="loading")
       template(v-slot:items="props")
         tr
           td {{ props.index + 1 }}
+          td {{ props.item.code }}
           td {{ props.item.brand }}
           td {{ props.item.manufacturer }}
           td {{ props.item.name }}
@@ -85,7 +94,7 @@ export default {
   name: 'PricedProducts',
   data() {
     return {
-      loading: true,
+      loading: false,
       brands: [],
       types: [],
       brand: null,
@@ -97,6 +106,11 @@ export default {
           width: 1,
           invisible: true,
           sortable: false,
+        },
+        {
+          text: 'Код',
+          value: 'code',
+          invisible: true,
         },
         {
           text: 'Бренд',
@@ -203,6 +217,7 @@ export default {
           this.prices = this.group(prices.sort((a, b) => (a.id < b.id ? 0 : -1)))
             .map(price => ({
               id: price.id,
+              code: price.product.code,
               brandId: price.product.brand,
               type: price.product.type,
               brand: price.product.Brand.name,
@@ -247,7 +262,7 @@ export default {
     },
   },
   created() {
-    this.getAll();
+    // this.getAll();
   },
 };
 </script>
