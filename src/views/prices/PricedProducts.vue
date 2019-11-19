@@ -28,7 +28,7 @@
         icon
         flat
         color="secondary"
-        @click="getAll"
+        @click="getAllCustom"
       ).ma-4
         v-icon table_chart
     v-data-table(
@@ -202,6 +202,46 @@ export default {
     },
   },
   methods: {
+    getBrandsAndTypes() {
+      Promise.all([
+        Brand.getAll(),
+        ProductType.getAll(),
+      ]).then(result => {
+        const [brands, types] = result;
+        this.brands = brands;
+        this.types = types;
+      })
+    },
+    getAllCustom() {
+      Promise.all([
+        Price.getAllCustom(this.brand ? this.brand.id : null, this.type ? this.type.id : null),
+        Configuration.getExchangeRate(),
+        Configuration.getOfficialRate(),
+      ])
+      .then(results => {
+        const [prices, exchangeRate, officialRate] = results;
+          this.prices = this.group(prices.sort((a, b) => (a.id < b.id ? 0 : -1)))
+            .map(price => ({
+              id: price.id,
+              code: price.product.code,
+              brandId: price.product.brand,
+              type: price.product.type,
+              brand: price.product.Brand.name,
+              manufacturer: price.product.Brand.manufacturer,
+              name: price.product.name,
+              color: price.product.color,
+              packing: price.product.packing,
+              mixPriceNonCash: price.mixPriceNonCash,
+              secondPrice: price.secondPrice,
+              b2c: this.$b2c(price, officialRate.value, exchangeRate.value),
+              mixPriceCash: this.$priceCash(price, exchangeRate.value),
+              date: price.createdAt,
+              prices: price.prices,
+            }));
+          this.exchangeRate = exchangeRate.value;
+          this.officialRate = officialRate.value;
+      })
+    },
     getAll() {
       this.loading = true;
       this.prices = [];
@@ -256,13 +296,9 @@ export default {
       return groupedPrices;
     },
   },
-  watch: {
-    brand(value) {
-      console.log(value);
-    },
-  },
   created() {
     // this.getAll();
+    this.getBrandsAndTypes();
   },
 };
 </script>
