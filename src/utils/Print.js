@@ -63,15 +63,15 @@ export default ({
               </tr>
               ${items.map(item => `
               <tr>
-                <td>${item.stock.product.code}</td>
-                <td>${item.stock.product.tags[0].name}</td>
-                <td>${item.stock.product.name}</td>
-                <td>${item.stock.product.packing}</td>
-                <td>${item.stock.product.typeUnit.name}</td>
-                <td>${item.quantity}</td>
-                <td>${price(item)[0]}</td>
-                <td>${item.discount}%</td>
-                <td>${price(item)[1]}</td>
+                <td>${item.stock.product.code || '-'}</td>
+                <td>${item.stock.product.tags[0].name || '-'}</td>
+                <td>${item.stock.product.name || '-'}</td>
+                <td>${item.stock.product.packing || '-'}</td>
+                <td>${item.stock.product.typeUnit.name || '-'}</td>
+                <td>${item.quantity || '-'}</td>
+                <td>${price(item)[0] || '-'}</td>
+                <td>${item.discount || '-'}%</td>
+                <td>${price(item)[1] || '-'}</td>
               </tr>
               `).join('\n')}
               <tr>

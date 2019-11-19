@@ -94,7 +94,7 @@
               :loading="loading"
               flat color="secondary"
               @click="print()"
-            ) Print
+            ) Распечатать
             v-btn.ma-0.mb-1.mr-1(
               :loading="loading"
               v-if="sale.approved != -1 && sale.approved < 1"
@@ -210,8 +210,8 @@ export default {
     // To get rid off eslint error in tables
     price(item) {
       return [
-        this.$route.query.accounting ? this.anAccount(item) : this.getAPrice(item),
-        this.$route.query.accounting ? this.accountantPrice(item) : this.getPrice(item),
+        this.getAPrice(item),
+        this.getPrice(item),
       ];
     },
     getPriceUzs(sale) {

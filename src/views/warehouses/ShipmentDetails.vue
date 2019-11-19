@@ -88,6 +88,11 @@
             v-btn.ma-0.mb-1.mr-1(
               :loading="loading"
               flat color="secondary"
+              @click="print()"
+            ) Распечатать
+            v-btn.ma-0.mb-1.mr-1(
+              :loading="loading"
+              flat color="secondary"
               @click="submit($route.params.itemId, true)"
             ) Подтвердить
             v-btn.ma-0.mb-1.mr-1(
@@ -103,6 +108,7 @@ import Sale from '@/services/Sale';
 import Configuration from '@/services/Configuration';
 import shipmentTypes from '@/assets/shipment_types.json';
 import shipmentPayments from '@/assets/shipment_payments.json';
+import Print from '@/utils/Print';
 
 export default {
   name: 'Shipment',
@@ -195,6 +201,13 @@ export default {
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });
     },
+        // To get rid off eslint error in tables
+    price(item) {
+      return [
+        this.$route.query.accounting ? this.anAccount(item) : this.getAPrice(item),
+        this.$route.query.accounting ? this.accountantPrice(item) : this.getPrice(item),
+      ];
+    },
     getAPrice(item) {
       const itemPrice = this.$price(item.price, this.officialRate, this.exchangeRate);
       switch (this.sale.type) {
@@ -242,6 +255,9 @@ export default {
         });
       }
       return balance;
+    },
+    print() {
+      Print(this.sale, this.price);
     },
     submit(saleId, state) {
       this.loading = true;
