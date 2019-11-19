@@ -11,6 +11,7 @@
             v-flex(xs12)
                 v-data-table(
                     :headers="headers"
+                    disable-initial-sort
                     :items="items"
                     :search="search"
                     no-data-text="Нет информации"
@@ -145,7 +146,8 @@ export default {
           date: priceLog.createdAt,
           quantityBefore: priceLog.quantityBefore,
           quantityAfter: priceLog.quantityAfter,
-        })).sort((a, b) => a.date > b.date ? -1 : 1);
+        })).sort((a, b) => (new Date(a.date)
+          .getTime() > (new Date(b.date)).getTime() ? -1 : 1));
       });
     },
   },
