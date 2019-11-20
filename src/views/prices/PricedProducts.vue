@@ -206,11 +206,11 @@ export default {
       Promise.all([
         Brand.getAll(),
         ProductType.getAll(),
-      ]).then(result => {
+      ]).then((result) => {
         const [brands, types] = result;
         this.brands = brands;
         this.types = types;
-      })
+      });
     },
     getAllCustom() {
       Promise.all([
@@ -218,8 +218,8 @@ export default {
         Configuration.getExchangeRate(),
         Configuration.getOfficialRate(),
       ])
-      .then(results => {
-        const [prices, exchangeRate, officialRate] = results;
+        .then((results) => {
+          const [prices, exchangeRate, officialRate] = results;
           this.prices = this.group(prices.sort((a, b) => (a.id < b.id ? 0 : -1)))
             .map(price => ({
               id: price.id,
@@ -240,7 +240,7 @@ export default {
             }));
           this.exchangeRate = exchangeRate.value;
           this.officialRate = officialRate.value;
-      })
+        });
     },
     getAll() {
       this.loading = true;

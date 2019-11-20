@@ -198,6 +198,22 @@ export default {
     ],
   }),
   methods: {
+    getUsdPrice(type, item, officialRate) {
+      switch (type) {
+        case 1:
+          return item.debtPrice
+              / Number.parseFloat(officialRate);
+        case 2:
+          return item.debtPrice
+              / Number.parseFloat(officialRate);
+        case 3:
+          return item.price.secondPrice * item.quantity;
+        case 5:
+          return item.commissionPriceUsd * item.quantity;
+        default:
+          return 0;
+      }
+    },
     filterDate(sales) {
       return sales.filter((sale) => {
         const dateSale = new Date(sale.createdAt);
@@ -225,9 +241,7 @@ export default {
                 .reduce((a, b) => a + (b.q * b.w), 0),
               number: Number.parseFloat(sale.number),
               sum: this.filterItems(sale.items)
-                .map(({ commissionPriceUsd, commissionPrice, quantity }) => ((sale.type === 3
-                  || sale.type === 5) ? commissionPriceUsd : (commissionPrice
-                  / Number.parseFloat(sale.officialRate))) * quantity)
+                .map(item => this.getUsdPrice(sale.type, item, sale.officialRate))
                 .reduce((a, b) => a + b, 0),
             })) : []))
           .then(error => reject(error));

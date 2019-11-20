@@ -242,6 +242,22 @@ export default {
       holder.forEach((brand) => { brand.forEach(item => managerBrands.push(item)); });
       return managerBrands;
     },
+    getUsdPrice(type, item, officialRate) {
+      switch (type) {
+        case 1:
+          return item.debtPrice
+              / Number.parseFloat(officialRate);
+        case 2:
+          return item.debtPrice
+              / Number.parseFloat(officialRate);
+        case 3:
+          return item.price.secondPrice * item.quantity;
+        case 5:
+          return item.commissionPriceUsd * item.quantity;
+        default:
+          return 0;
+      }
+    },
     getItems() {
       this.items = [];
       this.loading = true;
@@ -270,9 +286,7 @@ export default {
           const sales = this.filterDate(collection)
             .filter(({ shipped, provinceId }) => shipped && provinceId === province.id)
             .map(({ items, type, officialRate }) => this.filterItems(items)
-              .map(({ commissionPrice, quantity, commissionPriceUsd }) => ((type === 3
-                || type === 5) ? (commissionPriceUsd * quantity)
-                : ((commissionPrice / officialRate) * quantity)))
+              .map(item => this.getUsdPrice(type, item, officialRate))
               .reduce((a, b) => a + b, 0));
 
           const eheaders = this.brand.includes(0) ? this.brands

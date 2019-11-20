@@ -149,6 +149,22 @@ export default {
     };
   },
   methods: {
+    getUsdPrice(type, item, officialRate) {
+      switch (type) {
+        case 1:
+          return item.debtPrice
+              / Number.parseFloat(officialRate);
+        case 2:
+          return item.debtPrice
+              / Number.parseFloat(officialRate);
+        case 3:
+          return item.price.secondPrice * item.quantity;
+        case 5:
+          return item.commissionPriceUsd * item.quantity;
+        default:
+          return 0;
+      }
+    },
     filterDate(sales) {
       return sales.filter((sale) => {
         const dateSale = new Date(sale.createdAt);
@@ -215,13 +231,8 @@ export default {
             const sales = this.filterDate(collection)
               .filter(({ shipped, provinceId }) => shipped && provinceId === province.id);
 
-            const salesPrice = sales.map(({ items, type, officialRate }) => (
-              (type === 3 || type === 5) ? this.filterItems(items).map(
-                ({ commissionPriceUsd, quantity }) => commissionPriceUsd * quantity,
-              ).reduce((a, b) => a + b, 0)
-                : this.filterItems(items)
-                  .map(({ commissionPrice, quantity }) => (commissionPrice * quantity)
-              / officialRate).reduce((a, b) => a + b, 0)));
+            const salesPrice = sales.map(({ items, type, officialRate }) => this.filterItems(items)
+              .map(item => this.getUsdPrice(type, item, officialRate)).reduce((a, b) => a + b, 0));
 
             const eheaders = this.brand.includes(0) ? this.brands
               : this.brand.map(brandId => this.brands.find(({ id }) => id === brandId));

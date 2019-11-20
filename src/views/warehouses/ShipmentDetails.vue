@@ -201,7 +201,7 @@ export default {
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });
     },
-        // To get rid off eslint error in tables
+    // To get rid off eslint error in tables
     price(item) {
       return [
         this.$route.query.accounting ? this.anAccount(item) : this.getAPrice(item),
