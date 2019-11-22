@@ -173,18 +173,6 @@ export default {
           value: 'quantity',
         },
         {
-          text: 'Состояние',
-          value: 'defected',
-        },
-        {
-          text: 'Дата прибытия',
-          value: 'arrival_date',
-        },
-        {
-          text: 'Срок действия',
-          value: 'expiry_date',
-        },
-        {
           text: 'Единица',
           value: 'unit',
           width: 1,
@@ -326,7 +314,11 @@ export default {
     getTotalPrice() {
       let price = 0;
       if (this.type) {
-        this.selected.forEach((item) => { price += this.type.key === 'firstPrice' ? item[this.type.key] / this.officialRate : item[this.type.key]; });
+        this.selected.forEach((item) => {
+          price += this.type.key === 'firstPrice'
+            ? (item[this.type.key] / this.officialRate)
+            : item[this.type.key];
+        });
       }
       return price;
     },

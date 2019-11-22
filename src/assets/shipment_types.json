@@ -17,11 +17,11 @@
     {
         "id": 4,
         "name": "Комиссия в сум",
-        "key": "price"
+        "key": "commissionPrice"
     },
     {
         "id": 5,
         "name": "Комиссия в долл",
-        "key": "price"
+        "key": "commissionPriceUsd"
     }
 ]

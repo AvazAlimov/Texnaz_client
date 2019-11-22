@@ -5,9 +5,6 @@
         td {{ item.product.packing }}
         td {{ item.product.color || '-' }}
         td {{ item.quantity - item.booked - item.sold }}
-        td {{ item.defected ? 'Поврежден' : 'Хорошо' }}
-        td {{ item.arrival_date | moment('YYYY-MM-DD') }}
-        td {{ item.expiry_date | moment('YYYY-MM-DD') }}
         td {{ item.product.typeUnit ? item.product.typeUnit.name : '-' }}
         td
           span(v-if="type.id == 1") {{ productPrice.firstPrice | ceil }} сум
