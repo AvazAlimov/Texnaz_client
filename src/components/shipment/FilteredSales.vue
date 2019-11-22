@@ -261,11 +261,19 @@ export default {
           });
           break;
         case 4:
-          // commissionPrice
+          // commissionPriceUzs
           sale.items.forEach((item) => {
             const itemPrice = this.$price(item.price, this.officialRate, this.exchangeRate);
-            total += (itemPrice * item.quantity
-                              * (100 - item.discount) / 100);
+            total += (itemPrice.mixPriceNonCash * item.quantity
+                  * (100 - item.discount) / 100);
+          });
+          break;
+        case 5:
+          // commissionPriceUsd
+          sale.items.forEach((item) => {
+            const itemPrice = this.$price(item.price, this.officialRate, this.exchangeRate);
+            total += (itemPrice.mixPriceNonCash * item.quantity
+                  * (100 - item.discount) / 100);
           });
           break;
         default:

@@ -30,7 +30,7 @@
             v-validate="{\
                     required: true,\
                     decimal: true,\
-                    min_value: 1,\
+                    min_value: 0,\
                 }"
           )
 
