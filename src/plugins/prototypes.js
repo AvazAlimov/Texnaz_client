@@ -81,7 +81,7 @@ Vue.prototype.$getClients = (clients) => {
 Vue.prototype.$getTotalPrice = (sale, exchangeRate, officialRate) => {
   let total = 0;
   switch (sale.type) {
-    case 1:
+    case 1: // B2C
       sale.items.forEach((item) => {
         const itemPrice = price(item.price, officialRate, exchangeRate);
         total += (itemPrice.firstPrice * item.quantity
@@ -89,7 +89,7 @@ Vue.prototype.$getTotalPrice = (sale, exchangeRate, officialRate) => {
           / officialRate;
       });
       break;
-    case 2:
+    case 2: // B2B
       sale.items.forEach((item) => {
         const itemPrice = price(item.price, officialRate, exchangeRate);
         total += (itemPrice.mixPriceNonCash / officialRate
@@ -98,7 +98,7 @@ Vue.prototype.$getTotalPrice = (sale, exchangeRate, officialRate) => {
           * (100 - item.discount) / 100;
       });
       break;
-    case 3:
+    case 3: // NonCash
       sale.items.forEach((item) => {
         const itemPrice = price(item.price, officialRate, exchangeRate);
         total += itemPrice.secondPrice
@@ -106,17 +106,15 @@ Vue.prototype.$getTotalPrice = (sale, exchangeRate, officialRate) => {
                   * (100 - item.discount) / 100;
       });
       break;
-    case 4:
+    case 4: // ComissionPriceUZS
       sale.items.forEach((item) => {
         total += item.commissionPrice / officialRate
-                  * item.quantity
                   * (100 - item.discount) / 100;
       });
       break;
-    case 5:
+    case 5: // ComissionPriceUSD
       sale.items.forEach((item) => {
         total += item.commissionPriceUsd
-                  * item.quantity
                   * (100 - item.discount) / 100;
       });
       break;
