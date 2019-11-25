@@ -83,8 +83,8 @@
                 td {{ props.item.stock.expiry_date | moment('YYYY-MM-DD') }}
                 td {{ props.item.discount }}%
                 td {{ props.item.quantity }}
-                td {{ price(props.item)[0] || 0 | roundUp}}
-                td {{ price(props.item)[1] || 0 | roundUp}}
+                td {{ price(props.item)[0] || 0 }}
+                td {{ price(props.item)[1] || 0 }}
                 td {{ getTagName(props.item) }}
           v-divider
           v-layout(row v-if="($hasRole(1) || $hasRole(3)\
