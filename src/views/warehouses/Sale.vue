@@ -100,7 +100,7 @@
                     v-validate="'required'")
                   .subheading Баланс клиента: {{ balance | roundUp | readable }} $
                   .subheading Сумма в долларах: {{ getTotalPrice() | roundUp | readable }} $
-                  .subheading Сумма в сумах: {{ getTotalUzs() || 0 }} сум
+                  .subheading Сумма в сумах: {{ getTotalUzs() || 0 | roundUp | readable }} сум
                 v-divider
                 v-data-table(
                     :headers="headers"
@@ -211,20 +211,6 @@ export default {
     },
   },
   methods: {
-    getDebt(type, item) {
-      switch (type) {
-        case 1:
-          return (item.commissionPrice * item.sale) * ((100 - item.discount) / 100);
-        case 3:
-          return item.product.prices[0].secondPrice * item.sale * ((100 - item.discount) / 100);
-        case 4:
-          return item.commissionPrice * item.sale * ((100 - item.discount) / 100);
-        case 5:
-          return (item.commissionPriceUsd * item.sale) * ((100 - item.discount) / 100);
-        default:
-          return 0;
-      }
-    },
     getAll() {
       this.loading = true;
       Promise.all([
@@ -249,6 +235,7 @@ export default {
               stock.sale = item.quantity;
               stock.discount = item.discount;
               stock.commissionPrice = item.commissionPrice;
+              stock.commissionPriceUsd = item.commissionPriceUsd;
               stock.booked = 0;
               stock.bookings.forEach((booking) => {
                 stock.booked += booking.quantity;
@@ -271,7 +258,7 @@ export default {
       const sale = {
         number: this.number,
         type: this.type.id,
-        currentClientBalance: this.client.balance,
+        currentClientBalance: parseFloat(this.client.balance).toFixed(8),
         form: this.payment,
         provinceId: this.client.provinceId,
         clientId: this.client.id,
@@ -284,7 +271,7 @@ export default {
         sale.items.push({
           stockId: item.id,
           priceId: item.product.prices[0].id,
-          debtPrice: this.getDebt(this.type.id, item),
+          debtPrice: item[this.type.key],
           paidPrice: 0,
           quantity: item.sale,
           discount: item.discount,
@@ -315,7 +302,7 @@ export default {
       let price = 0;
       if (this.type) {
         this.selected.forEach((item) => {
-          price += this.type.key === 'firstPrice'
+          price += (this.type.key === 'firstPrice' || this.type.key === 'commissionPrice')
             ? (item[this.type.key] / this.officialRate)
             : item[this.type.key];
         });
@@ -323,7 +310,7 @@ export default {
       return price;
     },
     getTotalUzs() {
-      return this.selected.reduce((a, b) => a + (b.commissionPrice * b.sale), 0);
+      return this.selected.reduce((a, b) => a + b.commissionPrice, 0);
     },
   },
   watch: {

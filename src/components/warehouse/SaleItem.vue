@@ -118,22 +118,20 @@ export default {
     calculateSecondPrice() {
       this.item.secondPrice = this.item.product.prices[0].secondPrice
                       * parseFloat(this.item.sale)
-                      * parseFloat((100 - this.item.discount) / 100);
+                      * parseFloat((100 - this.item.discount) / 100) || 0;
     },
 
     calculateComissionPriceUsd() {
-      this.item.commissionPriceUsd = parseFloat(this.priceUSD) || 0;
-      this.item.price = this.item.commissionPriceUsd
+      this.item.price = parseFloat(this.priceUSD) || 0;
+      this.item.commissionPriceUsd = this.item.price
                       * parseFloat(this.item.sale)
                       * parseFloat((100 - this.item.discount) / 100);
     },
 
     calculateComissionPrice() {
-      this.item.commissionPrice = parseFloat(this.price) || 0;
-      this.item.price = this.item.commissionPrice
+      this.item.commissionPrice = (this.price
                       * parseFloat(this.item.sale)
-                      * parseFloat((100 - this.item.discount) / 100)
-                      / this.officialRate;
+                      * parseFloat((100 - this.item.discount) / 100));
     },
   },
   watch: {
@@ -162,6 +160,8 @@ export default {
   },
   created() {
     if (!this.item.sale) this.item.sale = 0;
+    if (!this.item.commissionPrice) this.item.commissionPrice = 0;
+    if (!this.item.commissionPriceUsd) this.item.commissionPriceUsd = 0;
     if (!this.item.discount) this.item.discount = this.item.product.discount;
     this.discount = this.item.discount;
     this.sale = this.item.sale;
@@ -170,6 +170,8 @@ export default {
     this.calculateMixPrice();
     this.price = this.$options.filters.ceil(this.productPrice.firstPrice);
     this.priceUSD = this.item.product.prices[0].secondPrice;
+    if (this.item.commissionPrice) this.price = this.item.commissionPrice / this.item.sale;
+    if (this.item.commissionPriceUsd) this.priceUSD = this.item.commissionPriceUsd / this.item.sale;
   },
   mounted() {
     this.$validator.validate();
