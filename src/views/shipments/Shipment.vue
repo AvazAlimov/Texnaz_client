@@ -243,9 +243,9 @@ export default {
         case 3:
           return itemPrice.secondPrice;
         case 4:
-          return item.commissionPrice / this.officialRate;
+          return (item.commissionPrice / this.officialRate) / item.quantity;
         case 5:
-          return item.commissionPriceUsd;
+          return item.commissionPriceUsd / item.quantity;
         default:
           return 0;
       }
@@ -285,11 +285,9 @@ export default {
                   * (100 - item.discount) / 100;
         case 4:
           return item.commissionPrice
-                  * item.quantity
                   * (100 - item.discount) / 100;
         case 5:
           return item.commissionPriceUsd
-                  * item.quantity
                   * (100 - item.discount) / 100;
         default:
           return 0;
