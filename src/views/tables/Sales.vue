@@ -49,7 +49,7 @@
           :items="filteredData"
         )
           template(v-slot:items="prop")
-            Sale(:items="prop.item")
+            Sale(:items="prop.item" :index="prop.index")
 </template>
 
 <script>
@@ -162,22 +162,23 @@ export default {
       ]).then((result) => {
         this.startDate = (new Date(result[0][0] ? result[0][0].createdAt : 0))
           .toISOString().substring(0, 10);
-        result[0].filter(el => el.approved).forEach((el) => {
-          this.items.push({
-            number: el.number ? el.number : '-',
-            territory: result[3].find(element => element.provinces
-              .map(item => item.id).includes(el.provinceId)).name,
-            province: el.province.name,
-            icc: el.client.icc,
-            name: el.client.name,
-            date: el.createdAt,
-            sum: this.$getTotalPrice(el, result[1].value, result[2].value),
-            duration: el.days,
-            userId: el.userId,
-            manager: el.manager.name,
-            warehouse: el.warehouse.name,
+        result[0].filter(el => el.shipped === 1 && el.approved === 1)
+          .forEach((el) => {
+            this.items.push({
+              number: el.number ? el.number : '-',
+              territory: result[3].find(element => element.provinces
+                .map(item => item.id).includes(el.provinceId)).name,
+              province: el.province.name,
+              icc: el.client.icc,
+              name: el.client.name,
+              date: el.createdAt,
+              sum: this.$getTotalPrice(el, result[1].value, result[2].value),
+              duration: el.days,
+              userId: el.userId,
+              manager: el.manager.name,
+              warehouse: el.warehouse.name,
+            });
           });
-        });
       }).catch(err => this.$commit('setMessage', err.message));
     },
   },
