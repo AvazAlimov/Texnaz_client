@@ -159,14 +159,19 @@ export default {
       switch (type) {
         case 1:
           return item.debtPrice
-              / Number.parseFloat(officialRate);
+              / Number.parseFloat(officialRate)
+              * ((100 - item.discount) / 100);
         case 2:
           return item.debtPrice
-              / Number.parseFloat(officialRate);
+              / Number.parseFloat(officialRate)
+              * ((100 - item.discount) / 100);
         case 3:
-          return item.price.secondPrice * item.quantity;
+          return item.price.secondPrice * item.quantity * ((100 - item.discount) / 100);
+        case 4:
+          return (item.commissionPrice / Number.parseFloat(officialRate))
+            * ((100 - item.discount) / 100);
         case 5:
-          return item.commissionPriceUsd * item.quantity;
+          return item.commissionPriceUsd * ((100 - item.discount) / 100);
         default:
           return 0;
       }
@@ -180,7 +185,7 @@ export default {
         sale.totalPrice = sale.items.map(item => this
           .getUsdPrice(sale.type, item, sale.officialRate));
       });
-      return sales.filter(sale => !sale.isClosed && sale.shipped);
+      return sales.filter(sale => !sale.isClosed && sale.shipped === 1 && sale.approved === 1);
     },
     sort(array) {
       array.push({
