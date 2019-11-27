@@ -230,7 +230,6 @@ export default {
       const position = this.indexOf(stock.id);
       if (position == null) {
         this.items.push(stock);
-        console.log(stock);
       } else {
         this.items.splice(position, 1);
       }

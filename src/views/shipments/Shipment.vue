@@ -214,9 +214,23 @@ export default {
         this.getPrice(item),
       ];
     },
-    getPriceUzs(sale) {
-      return sale.items
-        .reduce((a, { quantity, commissionPrice }) => a + (commissionPrice * quantity), 0);
+    getPriceUzs({
+      type, approved, items, officialRate,
+    }) {
+      switch (type) {
+        case 1:
+          return items.reduce((a, b) => a + (b.price.firstPrice * b.quantity), 0);
+        case 2:
+          return items.reduce((a, b) => a + (b.price.secondPrice * b.quantity
+            * (approved ? officialRate : this.officialRate)), 0);
+        case 4:
+          return items.reduce((a, b) => a + b.commissionPrice, 0);
+        case 5:
+          return items.reduce((a, b) => a + (b.commissionPriceUsd
+            * (approved ? officialRate : this.officialRate)), 0);
+        default:
+          return 0;
+      }
     },
     getAll() {
       this.loading = true;

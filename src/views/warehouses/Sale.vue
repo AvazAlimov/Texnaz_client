@@ -29,6 +29,7 @@
                     return-object)
 
                   v-combobox(
+                    name="clients"
                     v-model="client"
                     :items="filteredClients"
                     item-text="name"
@@ -111,7 +112,17 @@
                         :type="type"
                         :item="props.item"
                         :exchangeRate="exchangeRate"
-                        :officialRate="officialRate")
+                        :officialRate="officialRate"
+                        :productPrice="productPrice"
+                        :getB2C="getB2C"
+                        :calculateFirstPrice="calculateFirstPrice"
+                        :calculateMixPrice="calculateMixPrice"
+                        :calculateSecondPrice="calculateSecondPrice"
+                        :calculateComissionPriceUsd="calculateComissionPriceUsd"
+                        :calculateComissionPrice="calculateComissionPrice"
+                        :priceUzs="value => price = value"
+                        :priceUsd="value => priceUSD = value"
+                        )
 </template>
 
 <script>
@@ -145,6 +156,8 @@ export default {
     configurations: [],
     exchangeRate: 1,
     officialRate: 1,
+    priceUSD: 0,
+    price: 0,
   }),
   computed: {
     hasRole() {
@@ -303,14 +316,65 @@ export default {
       if (this.type) {
         this.selected.forEach((item) => {
           price += (this.type.key === 'firstPrice' || this.type.key === 'commissionPrice')
-            ? (item[this.type.key] / this.officialRate)
+            ? ((item[this.type.key]) / this.officialRate)
             : item[this.type.key];
         });
       }
       return price;
     },
     getTotalUzs() {
-      return this.selected.reduce((a, b) => a + b.commissionPrice, 0);
+      let price = 0;
+      if (this.type) {
+        this.selected.forEach((item) => {
+          price += (this.type.key === 'firstPrice' || this.type.key === 'commissionPrice')
+            ? (item[this.type.key])
+            : (item[this.type.key] * this.officialRate);
+        });
+      }
+      return price;
+    },
+    productPrice(item) {
+      return this.$price(item.product.prices[0],
+        this.officialRate || 1, this.exchangeRate || 1);
+    },
+    getB2C(item) {
+      return this.$options.filters.ceil(this
+        .$b2c(item.product.prices[0], this.officialRate, this.exchangeRate));
+    },
+    calculateFirstPrice(item) {
+      // eslint-disable-next-line no-param-reassign
+      item.firstPrice = this.getB2C(item)
+                      * parseFloat(item.sale)
+                      * parseFloat((100 - item.discount) / 100);
+    },
+    calculateMixPrice(item) {
+      // eslint-disable-next-line no-param-reassign
+      item.mixPrice = this.$options.filters.ceil(this.productPrice(item).mixPriceNonCash)
+                      / this.officialRate
+                      * parseFloat(item.sale)
+                      + this.$options.filters.roundUp(this.productPrice(item).mixPriceCash)
+                      * parseFloat(item.sale)
+                      * parseFloat((100 - item.discount) / 100);
+    },
+    calculateSecondPrice(item) {
+      // eslint-disable-next-line no-param-reassign
+      item.secondPrice = item.product.prices[0].secondPrice
+                      * parseFloat(item.sale)
+                      * parseFloat((100 - item.discount) / 100) || 0;
+    },
+    calculateComissionPriceUsd(item) {
+      // eslint-disable-next-line no-param-reassign
+      item.price = parseFloat(this.priceUSD) || 0;
+      // eslint-disable-next-line no-param-reassign
+      item.commissionPriceUsd = item.price
+                      * parseFloat(item.sale)
+                      * parseFloat((100 - item.discount) / 100);
+    },
+    calculateComissionPrice(item) {
+      // eslint-disable-next-line no-param-reassign
+      item.commissionPrice = (this.price
+                      * parseFloat(item.sale)
+                      * parseFloat((100 - item.discount) / 100));
     },
   },
   watch: {
@@ -324,6 +388,27 @@ export default {
     },
     client({ manager }) {
       this.manager = manager;
+    },
+    selected(value) {
+      value.forEach((item) => {
+        // eslint-disable-next-line no-param-reassign
+        if (item.sale) item.sale = 0;
+        // eslint-disable-next-line no-param-reassign
+        if (!item.commissionPrice) item.commissionPrice = 0;
+        // eslint-disable-next-line no-param-reassign
+        if (!item.commissionPriceUsd) item.commissionPriceUsd = 0;
+        // eslint-disable-next-line no-param-reassign
+        if (!item.discount) item.discount = item.product.discount;
+        this.calculateFirstPrice(item);
+        this.calculateSecondPrice(item);
+        this.calculateMixPrice(item);
+        this.calculateComissionPrice(item);
+        this.calculateComissionPriceUsd(item);
+        this.price = this.$options.filters.ceil(this.productPrice(item).firstPrice);
+        this.priceUSD = item.product.prices[0].secondPrice;
+        if (item.commissionPrice) this.price = item.commissionPrice / item.sale;
+        if (item.commissionPriceUsd) this.priceUSD = item.commissionPriceUsd / item.sale;
+      });
     },
   },
   created() {
