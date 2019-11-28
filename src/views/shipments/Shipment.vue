@@ -66,7 +66,7 @@
                 .title Сумма отгрузки
                 v-spacer
                   v-divider.mx-4
-                .subheading {{ getPriceUzs(sale) || 0}}
+                .subheading {{ getPriceUzs || 0}}
           v-divider
           v-data-table(
               :loading="loading"
@@ -131,7 +131,9 @@ export default {
       warehouse: {},
       manager: {},
       type: 1,
+      approved: false,
       form: 1,
+      officialRate: '1',
       createdAt: new Date(),
     },
     payments: shipmentPayments,
@@ -198,6 +200,29 @@ export default {
         },
       ];
     },
+    // Configure this method
+    getPriceUzs() {
+      switch (this.sale.type) {
+        case 1:
+          return this.sale.items.reduce((a, item) => {
+            const itemPrice = this.$price(item.price, this.officialRate, this.exchangeRate);
+            return a + (itemPrice.firstPrice * item.quantity);
+          }, 0);
+        case 2:
+          return this.items.reduce((a, item) => {
+            const itemPrice = this.$price(item.price, this.officialRate, this.exchangeRate);
+            return a + (itemPrice.secondPrice * item.quantity
+              * (this.sale.approved ? this.sale.officialRate : this.officialRate));
+          }, 0);
+        case 4:
+          return this.items.reduce((a, b) => a + b.commissionPrice, 0);
+        case 5:
+          return this.items.reduce((a, b) => a + (b.commissionPriceUsd
+            * (this.approved ? this.officialRate : this.officialRate)), 0);
+        default:
+          return 0;
+      }
+    },
   },
   methods: {
     print() {
@@ -213,24 +238,6 @@ export default {
         this.getAPrice(item),
         this.getPrice(item),
       ];
-    },
-    getPriceUzs({
-      type, approved, items, officialRate,
-    }) {
-      switch (type) {
-        case 1:
-          return items.reduce((a, b) => a + (b.price.firstPrice * b.quantity), 0);
-        case 2:
-          return items.reduce((a, b) => a + (b.price.secondPrice * b.quantity
-            * (approved ? officialRate : this.officialRate)), 0);
-        case 4:
-          return items.reduce((a, b) => a + b.commissionPrice, 0);
-        case 5:
-          return items.reduce((a, b) => a + (b.commissionPriceUsd
-            * (approved ? officialRate : this.officialRate)), 0);
-        default:
-          return 0;
-      }
     },
     getAll() {
       this.loading = true;

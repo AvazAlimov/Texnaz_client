@@ -229,6 +229,18 @@ export default {
     select(stock) {
       const position = this.indexOf(stock.id);
       if (position == null) {
+        // eslint-disable-next-line no-param-reassign
+        stock.sale = 0;
+        // eslint-disable-next-line no-param-reassign
+        stock.commissionPrice = 0;
+        // eslint-disable-next-line no-param-reassign
+        stock.commissionPriceUsd = 0;
+        // eslint-disable-next-line no-param-reassign
+        stock.secondPrice = 0;
+        // eslint-disable-next-line no-param-reassign
+        stock.firstPrice = 0;
+        // eslint-disable-next-line no-param-reassign
+        stock.discount = 0;
         this.items.push(stock);
       } else {
         this.items.splice(position, 1);

@@ -7,10 +7,10 @@
         td {{ item.quantity - item.booked - item.sold }}
         td {{ item.product.typeUnit ? item.product.typeUnit.name : '-' }}
         td
-          span(v-if="type.id == 1") {{ productPrice(item).firstPrice | ceil }} сум
-          span(v-if="type.id == 2") {{ productPrice(item).mixPriceNonCash | ceil }} сум
-            |  - {{ productPrice(item).mixPriceCash | roundUp }}$
-          span(v-if="type.id == 3") {{ productPrice(item).secondPrice | roundUp }}$
+          span(v-if="type.id == 1") {{ productPrice.firstPrice | ceil }} сум
+          span(v-if="type.id == 2") {{ productPrice.mixPriceNonCash | ceil }} сум
+            |  - {{ productPrice.mixPriceCash | roundUp }}$
+          span(v-if="type.id == 3") {{ productPrice.secondPrice | roundUp }}$
           v-text-field(
             v-if="type.id == 4"
             v-model="price"
@@ -77,40 +77,13 @@ export default {
     type: {
       required: true,
     },
-    productPrice: {
-      required: true,
-    },
-    getB2C: {
-      required: true,
-    },
-    calculateFirstPrice: {
-      required: true,
-    },
-    calculateMixPrice: {
-      required: true,
-    },
-    calculateSecondPrice: {
-      required: true,
-    },
-    calculateComissionPriceUsd: {
-      required: true,
-    },
-    calculateComissionPrice: {
-      required: true,
-    },
-    priceUzs: {
-      required: true,
-    },
-    priceUsd: {
-      required: true,
-    },
   },
   data: () => ({
     discount: 0,
     sale: 0,
     price: 0,
     priceUSD: 0,
-  }), /*
+  }),
   computed: {
     productPrice() {
       return this.$price(this.item.product.prices[0],
@@ -155,47 +128,49 @@ export default {
                       * parseFloat(this.item.sale)
                       * parseFloat((100 - this.item.discount) / 100));
     },
-  }, */
+  },
   watch: {
     discount(value) {
       this.item.discount = parseFloat(value) || 0;
-      this.calculateFirstPrice(this.item);
-      this.calculateSecondPrice(this.item);
-      this.calculateMixPrice(this.item);
-      this.calculateComissionPrice(this.item);
-      this.calculateComissionPriceUsd(this.item);
+      this.calculateFirstPrice();
+      this.calculateSecondPrice();
+      this.calculateMixPrice();
+      this.calculateComissionPrice();
+      this.calculateComissionPriceUsd();
     },
     sale(value) {
       this.item.sale = parseFloat(value) || 0;
-      this.calculateFirstPrice(this.item);
-      this.calculateSecondPrice(this.item);
-      this.calculateMixPrice(this.item);
-      this.calculateComissionPrice(this.item);
-      this.calculateComissionPriceUsd(this.item);
+      this.calculateFirstPrice();
+      this.calculateSecondPrice();
+      this.calculateMixPrice();
+      this.calculateComissionPrice();
+      this.calculateComissionPriceUsd();
     },
-    price(value) {
-      this.calculateComissionPrice(this.item);
-      this.priceUzs(value);
+    price() {
+      this.calculateComissionPrice();
     },
-    priceUSD(value) {
-      this.calculateComissionPriceUsd(this.item);
-      this.priceUsd(value);
+    priceUSD() {
+      this.calculateComissionPriceUsd();
     },
   },
   created() {
     if (!this.item.sale) this.item.sale = 0;
     if (!this.item.commissionPrice) this.item.commissionPrice = 0;
     if (!this.item.commissionPriceUsd) this.item.commissionPriceUsd = 0;
-    if (!this.item.discount) this.item.discount = this.item.product.discount;
+    if (!this.item.secondPrice) this.item.secondPrice = 0;
+    if (!this.item.firstPrice) this.item.firstPrice = 0;
+    if (!this.item.discount) this.item.discount = 0;
     this.discount = this.item.discount;
     this.sale = this.item.sale;
-    this.calculateFirstPrice(this.item);
-    this.calculateSecondPrice(this.item);
-    this.calculateMixPrice(this.item);
     this.price = this.$options.filters.ceil(this.productPrice.firstPrice);
     this.priceUSD = this.item.product.prices[0].secondPrice;
     if (this.item.commissionPrice) this.price = this.item.commissionPrice / this.item.sale;
     if (this.item.commissionPriceUsd) this.priceUSD = this.item.commissionPriceUsd / this.item.sale;
+    this.calculateFirstPrice();
+    this.calculateMixPrice();
+    this.calculateSecondPrice();
+    this.calculateComissionPrice();
+    this.calculateComissionPriceUsd();
   },
   mounted() {
     this.$validator.validate();

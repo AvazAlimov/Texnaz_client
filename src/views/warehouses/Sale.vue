@@ -113,15 +113,6 @@
                         :item="props.item"
                         :exchangeRate="exchangeRate"
                         :officialRate="officialRate"
-                        :productPrice="productPrice"
-                        :getB2C="getB2C"
-                        :calculateFirstPrice="calculateFirstPrice"
-                        :calculateMixPrice="calculateMixPrice"
-                        :calculateSecondPrice="calculateSecondPrice"
-                        :calculateComissionPriceUsd="calculateComissionPriceUsd"
-                        :calculateComissionPrice="calculateComissionPrice"
-                        :priceUzs="value => price = value"
-                        :priceUsd="value => priceUSD = value"
                         )
 </template>
 
@@ -234,7 +225,7 @@ export default {
         [this.clients, this.configurations, this.sales] = results;
         this.exchangeRate = (this.configurations.find(conf => conf.id === 4)).value;
         this.officialRate = (this.configurations.find(conf => conf.id === 5)).value;
-        this.number = `${this.sales.length ? this.sales[this.sales.length - 1].id + 1 : 1}`;
+        this.number = `${Math.max(...this.sales.map(({id}) => id)) + 1}`;
         if (this.$route.params.saleId) {
           Sale.get(this.$route.params.saleId).then((sale) => {
             this.oldNumber = sale.number;
@@ -249,6 +240,8 @@ export default {
               stock.discount = item.discount;
               stock.commissionPrice = item.commissionPrice;
               stock.commissionPriceUsd = item.commissionPriceUsd;
+              stock.firstPrice = this.calculateFirstPrice(item, stock);
+              stock.secondPrice = this.calculateSecondPrice(item, stock);
               stock.booked = 0;
               stock.bookings.forEach((booking) => {
                 stock.booked += booking.quantity;
@@ -265,6 +258,10 @@ export default {
       })
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });
+    },
+    getB2C({ price }) {
+      return this.$options.filters.ceil(this
+        .$b2c(price, this.officialRate, this.exchangeRate));
     },
     submit() {
       this.loading = true;
@@ -313,6 +310,7 @@ export default {
     },
     getTotalPrice() {
       let price = 0;
+      console.log(this.selected);
       if (this.type) {
         this.selected.forEach((item) => {
           price += (this.type.key === 'firstPrice' || this.type.key === 'commissionPrice')
@@ -333,48 +331,15 @@ export default {
       }
       return price;
     },
-    productPrice(item) {
-      return this.$price(item.product.prices[0],
-        this.officialRate || 1, this.exchangeRate || 1);
+    calculateFirstPrice(product, { sale, discount }) {
+      return this.getB2C(product)
+                      * parseFloat(sale)
+                      * parseFloat((100 - discount) / 100);
     },
-    getB2C(item) {
-      return this.$options.filters.ceil(this
-        .$b2c(item.product.prices[0], this.officialRate, this.exchangeRate));
-    },
-    calculateFirstPrice(item) {
-      // eslint-disable-next-line no-param-reassign
-      item.firstPrice = this.getB2C(item)
-                      * parseFloat(item.sale)
-                      * parseFloat((100 - item.discount) / 100);
-    },
-    calculateMixPrice(item) {
-      // eslint-disable-next-line no-param-reassign
-      item.mixPrice = this.$options.filters.ceil(this.productPrice(item).mixPriceNonCash)
-                      / this.officialRate
-                      * parseFloat(item.sale)
-                      + this.$options.filters.roundUp(this.productPrice(item).mixPriceCash)
-                      * parseFloat(item.sale)
-                      * parseFloat((100 - item.discount) / 100);
-    },
-    calculateSecondPrice(item) {
-      // eslint-disable-next-line no-param-reassign
-      item.secondPrice = item.product.prices[0].secondPrice
-                      * parseFloat(item.sale)
-                      * parseFloat((100 - item.discount) / 100) || 0;
-    },
-    calculateComissionPriceUsd(item) {
-      // eslint-disable-next-line no-param-reassign
-      item.price = parseFloat(this.priceUSD) || 0;
-      // eslint-disable-next-line no-param-reassign
-      item.commissionPriceUsd = item.price
-                      * parseFloat(item.sale)
-                      * parseFloat((100 - item.discount) / 100);
-    },
-    calculateComissionPrice(item) {
-      // eslint-disable-next-line no-param-reassign
-      item.commissionPrice = (this.price
-                      * parseFloat(item.sale)
-                      * parseFloat((100 - item.discount) / 100));
+    calculateSecondPrice({ price }, { sale, discount }) {
+      return price.secondPrice
+                      * parseFloat(sale)
+                      * parseFloat((100 - discount) / 100) || 0;
     },
   },
   watch: {
@@ -388,27 +353,6 @@ export default {
     },
     client({ manager }) {
       this.manager = manager;
-    },
-    selected(value) {
-      value.forEach((item) => {
-        // eslint-disable-next-line no-param-reassign
-        if (item.sale) item.sale = 0;
-        // eslint-disable-next-line no-param-reassign
-        if (!item.commissionPrice) item.commissionPrice = 0;
-        // eslint-disable-next-line no-param-reassign
-        if (!item.commissionPriceUsd) item.commissionPriceUsd = 0;
-        // eslint-disable-next-line no-param-reassign
-        if (!item.discount) item.discount = item.product.discount;
-        this.calculateFirstPrice(item);
-        this.calculateSecondPrice(item);
-        this.calculateMixPrice(item);
-        this.calculateComissionPrice(item);
-        this.calculateComissionPriceUsd(item);
-        this.price = this.$options.filters.ceil(this.productPrice(item).firstPrice);
-        this.priceUSD = item.product.prices[0].secondPrice;
-        if (item.commissionPrice) this.price = item.commissionPrice / item.sale;
-        if (item.commissionPriceUsd) this.priceUSD = item.commissionPriceUsd / item.sale;
-      });
     },
   },
   created() {
