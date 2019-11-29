@@ -225,7 +225,7 @@ export default {
         [this.clients, this.configurations, this.sales] = results;
         this.exchangeRate = (this.configurations.find(conf => conf.id === 4)).value;
         this.officialRate = (this.configurations.find(conf => conf.id === 5)).value;
-        this.number = `${Math.max(...this.sales.map(({id}) => id)) + 1}`;
+        this.number = `${Math.max(...this.sales.map(({ id }) => id)) + 1}`;
         if (this.$route.params.saleId) {
           Sale.get(this.$route.params.saleId).then((sale) => {
             this.oldNumber = sale.number;

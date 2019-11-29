@@ -209,15 +209,15 @@ export default {
             return a + (itemPrice.firstPrice * item.quantity);
           }, 0);
         case 2:
-          return this.items.reduce((a, item) => {
+          return this.sale.items.reduce((a, item) => {
             const itemPrice = this.$price(item.price, this.officialRate, this.exchangeRate);
             return a + (itemPrice.secondPrice * item.quantity
               * (this.sale.approved ? this.sale.officialRate : this.officialRate));
           }, 0);
         case 4:
-          return this.items.reduce((a, b) => a + b.commissionPrice, 0);
+          return this.sale.items.reduce((a, b) => a + b.commissionPrice, 0);
         case 5:
-          return this.items.reduce((a, b) => a + (b.commissionPriceUsd
+          return this.sale.items.reduce((a, b) => a + (b.commissionPriceUsd
             * (this.approved ? this.officialRate : this.officialRate)), 0);
         default:
           return 0;
