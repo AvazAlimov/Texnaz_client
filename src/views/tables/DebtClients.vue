@@ -166,7 +166,7 @@ export default {
       ]).then((result) => {
         this.items = [];
         const [sales, payments, returns] = result;
-        sales.filter(sale => sale.approved).forEach(sale => this.items.push({
+        sales.filter(sale => sale.approved === 1 && sale.shipped === 1).forEach(sale => this.items.push({
           saleDate: sale.createdAt,
           salePrice: this.$getTotalPrice(sale, sale.exchangeRate, sale.officialRate),
           paymentDate: '-',
@@ -179,6 +179,7 @@ export default {
           clientname: sale.client.name,
           clientbalance: sale.client.balance || 0,
           managername: sale.manager.name,
+          manager: sale.manager,
           territory: result[3].find(element => element.provinces
             .map(item => item.id).includes(sale.provinceId)).name,
           province: sale.province.name,
@@ -197,6 +198,7 @@ export default {
           clientname: payment.client.name,
           clientbalance: payment.client.balance || 0,
           managername: payment.manager.name,
+          manager: payment.manager,
           territory: result[3].find(element => element.provinces
             .map(item => item.id).includes(payment.provinceId)).name,
           province: payment.province.name,
@@ -215,6 +217,7 @@ export default {
           clientname: returnItem.client.name,
           clientbalance: returnItem.client.balance || 0,
           managername: returnItem.manager.name,
+          manager: returnItem.manager,
           territory: result[3].find(element => element.provinces
             .map(item => item.id).includes(returnItem.provinceId)).name,
           province: returnItem.province.name,
