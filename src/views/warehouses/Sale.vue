@@ -112,8 +112,7 @@
                         :type="type"
                         :item="props.item"
                         :exchangeRate="exchangeRate"
-                        :officialRate="officialRate"
-                        )
+                        :officialRate="officialRate")
 </template>
 
 <script>
@@ -310,7 +309,6 @@ export default {
     },
     getTotalPrice() {
       let price = 0;
-      console.log(this.selected);
       if (this.type) {
         this.selected.forEach((item) => {
           price += (this.type.key === 'firstPrice' || this.type.key === 'commissionPrice')

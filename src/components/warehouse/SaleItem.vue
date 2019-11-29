@@ -81,13 +81,29 @@ export default {
   data: () => ({
     discount: 0,
     sale: 0,
-    price: 0,
-    priceUSD: 0,
   }),
   computed: {
     productPrice() {
       return this.$price(this.item.product.prices[0],
         this.officialRate || 1, this.exchangeRate || 1);
+    },
+    price: {
+      get() {
+        return this.item.product.prices[0].firstPrice;
+      },
+      set(newValue) {
+        this.item.product.prices[0].firstPrice = newValue;
+        this.calculateComissionPrice();
+      },
+    },
+    priceUSD: {
+      get() {
+        return this.item.product.prices[0].secondPrice;
+      },
+      set(newValue) {
+        this.item.product.prices[0].secondPrice = newValue;
+        this.calculateComissionPriceUsd();
+      },
     },
   },
   methods: {
@@ -146,12 +162,6 @@ export default {
       this.calculateComissionPrice();
       this.calculateComissionPriceUsd();
     },
-    price() {
-      this.calculateComissionPrice();
-    },
-    priceUSD() {
-      this.calculateComissionPriceUsd();
-    },
   },
   created() {
     if (!this.item.sale) this.item.sale = 0;
@@ -162,15 +172,8 @@ export default {
     if (!this.item.discount) this.item.discount = 0;
     this.discount = this.item.discount;
     this.sale = this.item.sale;
-    this.price = this.$options.filters.ceil(this.productPrice.firstPrice);
-    this.priceUSD = this.item.product.prices[0].secondPrice;
     if (this.item.commissionPrice) this.price = this.item.commissionPrice / this.item.sale;
     if (this.item.commissionPriceUsd) this.priceUSD = this.item.commissionPriceUsd / this.item.sale;
-    this.calculateFirstPrice();
-    this.calculateMixPrice();
-    this.calculateSecondPrice();
-    this.calculateComissionPrice();
-    this.calculateComissionPriceUsd();
   },
   mounted() {
     this.$validator.validate();
