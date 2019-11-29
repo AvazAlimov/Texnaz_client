@@ -166,25 +166,26 @@ export default {
       ]).then((result) => {
         this.items = [];
         const [sales, payments, returns] = result;
-        sales.filter(sale => sale.approved === 1 && sale.shipped === 1).forEach(sale => this.items.push({
-          saleDate: sale.createdAt,
-          salePrice: this.$getTotalPrice(sale, sale.exchangeRate, sale.officialRate),
-          paymentDate: '-',
-          paymentPrice: '-',
-          returnDate: '-',
-          returnQuantity: '-',
-          date: sale.createdAt,
-          currentClientBalance: sale.currentClientBalance,
-          clienticc: sale.client.icc,
-          clientname: sale.client.name,
-          clientbalance: sale.client.balance || 0,
-          managername: sale.manager.name,
-          manager: sale.manager,
-          territory: result[3].find(element => element.provinces
-            .map(item => item.id).includes(sale.provinceId)).name,
-          province: sale.province.name,
-          userId: sale.userId,
-        }));
+        sales.filter(sale => sale.approved === 1 && sale.shipped === 1)
+          .forEach(sale => this.items.push({
+            saleDate: sale.createdAt,
+            salePrice: this.$getTotalPrice(sale, sale.exchangeRate, sale.officialRate),
+            paymentDate: '-',
+            paymentPrice: '-',
+            returnDate: '-',
+            returnQuantity: '-',
+            date: sale.createdAt,
+            currentClientBalance: sale.currentClientBalance,
+            clienticc: sale.client.icc,
+            clientname: sale.client.name,
+            clientbalance: sale.client.balance || 0,
+            managername: sale.manager.name,
+            manager: sale.manager,
+            territory: result[3].find(element => element.provinces
+              .map(item => item.id).includes(sale.provinceId)).name,
+            province: sale.province.name,
+            userId: sale.userId,
+          }));
         payments.forEach(payment => this.items.push({
           saleDate: '-',
           salePrice: '-',

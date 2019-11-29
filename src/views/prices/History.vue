@@ -19,6 +19,7 @@
                     template(v-slot:items="{ item, index }")
                         tr
                             td {{ index+1 }}
+                            td {{ item.code || '-' }}
                             td {{ item.date | moment("HH:mm DD-MM-YYYY")}}
                             td {{ item.brand }}
                             td {{ item.manufacturer }}
@@ -47,6 +48,11 @@ export default {
           width: 1,
           invisible: true,
           sortable: false,
+        },
+        {
+          text: 'Код',
+          sortable: false,
+          value: 'code',
         },
         {
           text: 'Дата',
@@ -134,6 +140,7 @@ export default {
         this.items = data.map(priceLog => ({
           id: priceLog.id,
           brand: priceLog.product.Brand.name,
+          code: priceLog.product.code,
           manufacturer: priceLog.product.Brand.manufacturer,
           name: priceLog.product.name,
           color: priceLog.product.color,
