@@ -170,10 +170,14 @@ export default {
     if (!this.item.secondPrice) this.item.secondPrice = 0;
     if (!this.item.firstPrice) this.item.firstPrice = 0;
     if (!this.item.discount) this.item.discount = 0;
-    this.discount = this.item.discount;
-    this.sale = this.item.sale;
     if (this.item.commissionPrice) this.price = this.item.commissionPrice / this.item.sale;
     if (this.item.commissionPriceUsd) this.priceUSD = this.item.commissionPriceUsd / this.item.sale;
+    this.discount = this.item.discount;
+    this.sale = this.item.sale;
+    this.item.product.prices[0].firstPrice = this.$price(this.item.product.prices[0],
+      this.officialRate || 1, this.exchangeRate || 1).firstPrice;
+    this.item.product.prices[0].secondPrice = this.$price(this.item.product.prices[0],
+      this.officialRate || 1, this.exchangeRate || 1).secondPrice;
   },
   mounted() {
     this.$validator.validate();
