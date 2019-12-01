@@ -19,7 +19,7 @@
             v-text-field.mx-1(
               v-model="value"
               color="secondary"
-              label="Сумма"
+              label="Сумма($)"
               style="min-width: 250px"
               name="value"
               v-validate="{\
