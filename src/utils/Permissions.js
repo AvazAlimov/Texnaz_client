@@ -224,3 +224,8 @@ module.exports.SHOW_SHIPMENTS_PRODUCT_ACCOUNTING = {
   name: 'Show shipment product accounting',
   id: 49,
 };
+
+module.exports.SHOW_SHIPMENTS_PRODUCT_INFO = {
+  name: 'Show shipment product account page',
+  id: 50,
+};

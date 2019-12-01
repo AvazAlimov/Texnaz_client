@@ -26,7 +26,7 @@
       v-toolbar-title.tertiary--text {{ user.name }}
       v-spacer
       v-toolbar-title.tertiary--text {{ user.province? user.province.name : '' }}
-      v-menu(offset-y :close-on-content-click="false" v-if="$hasRole(1)")
+      v-menu(offset-y :close-on-content-click="false" v-if="$hasRole(1) || $hasRole(3)")
         template(v-slot:activator="{ on }")
           v-btn(flat icon v-on="on").dashboardTertiary--text
             v-icon settings

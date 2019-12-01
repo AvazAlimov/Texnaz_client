@@ -54,7 +54,7 @@
           td
             v-layout
               v-btn.ma-0(
-                v-if="$hasRole(1)"
+                v-if="$hasRole(1) || $hasRole(3)"
                 flat color="secondary" icon
                 :to="{name: 'editprice', params: {id: props.item.id}}")
                 v-icon(small) edit

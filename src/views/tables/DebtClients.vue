@@ -131,6 +131,7 @@ export default {
       end.setHours(23, 59, 59, 59);
       return this.items
         // .filter(({ userId }) => userId === this.$getUserId())
+        .filter(({ user }) => this.filterUser(user))
         .filter(el => new Date(el.date).getTime() >= start.getTime()
           && new Date(el.date).getTime() <= end.getTime())
         .filter(el => (
@@ -150,6 +151,18 @@ export default {
     },
   },
   methods: {
+    filterUser({ id, controllerId, territoryId }) {
+      if (this.$hasRole(8)) {
+        return territoryId === this.$getUserTerritory();
+      }
+      if (this.$hasRole(7)) {
+        return (controllerId === this.$getUserId()) || (id === this.$getUserId());
+      }
+      if (this.$hasRole(2)) {
+        return id === this.$getUserId();
+      }
+      return true;
+    },
     readable(value) {
       return this.$options.filters.readable(this.$options.filters.roundUp(value));
     },
@@ -174,6 +187,7 @@ export default {
             paymentPrice: '-',
             returnDate: '-',
             returnQuantity: '-',
+            user: sale.user,
             date: sale.createdAt,
             currentClientBalance: sale.currentClientBalance,
             clienticc: sale.client.icc,
@@ -192,6 +206,7 @@ export default {
           paymentDate: payment.createdAt,
           paymentPrice: payment.ratio === 1 ? payment.sum : (payment.sum / payment.ratio),
           returnDate: '-',
+          user: payment.user,
           returnQuantity: '-',
           date: payment.createdAt,
           currentClientBalance: payment.currentClientBalance,
@@ -210,6 +225,7 @@ export default {
           salePrice: '-',
           paymentDate: '-',
           paymentPrice: '-',
+          user: returnItem.user,
           returnDate: returnItem.createdAt,
           returnQuantity: this
             .$getTotalPrice(returnItem, returnItem.exchangeRate, returnItem.officialRate),
@@ -220,8 +236,8 @@ export default {
           managername: returnItem.manager.name,
           manager: returnItem.manager,
           territory: result[3].find(element => element.provinces
-            .map(item => item.id).includes(returnItem.provinceId)).name,
-          province: returnItem.province.name,
+            .map(item => item.id).includes(returnItem.client.provinceId)).name,
+          province: returnItem.client.province.name,
           userId: returnItem.userId,
         }));
         this.items.sort((a, b) => (a.date > b.date ? 1 : -1));

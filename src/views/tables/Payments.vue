@@ -143,6 +143,7 @@ export default {
       end.setHours(23, 59, 59, 59);
       return this.items
         // .filter(({ userId }) => userId === this.$getUserId())
+        .filter(({ user }) => this.filterUser(user))
         .filter(el => new Date(el.date).getTime() >= start.getTime()
         && new Date(el.date).getTime() <= end.getTime()
         && ((el.number.toString()).includes(this.search.toLowerCase())
@@ -163,6 +164,18 @@ export default {
     },
   },
   methods: {
+    filterUser({ id, controllerId, territoryId }) {
+      if (this.$hasRole(8)) {
+        return territoryId === this.$getUserTerritory();
+      }
+      if (this.$hasRole(7)) {
+        return (controllerId === this.$getUserId()) || (id === this.$getUserId());
+      }
+      if (this.$hasRole(2)) {
+        return id === this.$getUserId();
+      }
+      return true;
+    },
     readable(value) {
       return this.$options.filters.readable(this.$options.filters.roundUp(value));
     },
@@ -185,6 +198,7 @@ export default {
             name: el.client.name,
             comment: el.comment,
             manager: el.manager.name,
+            user: el.user,
             date: el.createdAt,
             ratioPrice: el.currency === 0 ? el.sum : '-',
             sum: el.currency === 1 ? el.sum : '-',

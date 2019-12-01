@@ -18,7 +18,6 @@
             v-date-picker(
               v-model="startDate"
               @input="start = false"
-              :max="maximum"
             )
           v-menu(
             v-model="end"
@@ -36,7 +35,6 @@
             v-date-picker(
               v-model="endDate"
               @input="end = false"
-              :max="maximum"
             )
           v-spacer
           v-text-field(
@@ -134,6 +132,7 @@ export default {
       end.setHours(23, 59, 59, 59);
       return this.items
         // .filter(({ userId }) => userId === this.$getUserId())
+        .filter(({ user }) => this.filterUser(user))
         .filter(el => new Date(el.date).getTime() >= start.getTime()
           && new Date(el.date).getTime() <= end.getTime()
           && ((el.number.toString().toLowerCase()).includes(this.search.toLowerCase())
@@ -149,6 +148,18 @@ export default {
     },
   },
   methods: {
+    filterUser({ id, controllerId, territoryId }) {
+      if (this.$hasRole(8)) {
+        return territoryId === this.$getUserTerritory();
+      }
+      if (this.$hasRole(7)) {
+        return (controllerId === this.$getUserId()) || (id === this.$getUserId());
+      }
+      if (this.$hasRole(2)) {
+        return id === this.$getUserId();
+      }
+      return true;
+    },
     readable(value) {
       return this.$options.filters.readable(this.$options.filters.roundUp(value));
     },
@@ -172,6 +183,7 @@ export default {
               icc: el.client.icc,
               name: el.client.name,
               date: el.createdAt,
+              user: el.user,
               sum: this.$getTotalPrice(el, result[1].value, result[2].value),
               duration: el.days,
               userId: el.userId,

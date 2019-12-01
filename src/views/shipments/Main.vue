@@ -45,7 +45,7 @@ export default {
         {
           to: { name: 'productaccounting' },
           name: 'Учет товара',
-          permission: this.$permissions.SHOW_SHIPMENTS_ACCOUNTING.name,
+          permission: this.$permissions.SHOW_SHIPMENTS_PRODUCT_INFO.name,
           // permission: this.$permissions.SHOW_SHIPMENTS_PRODUCT_ACCOUNTING.name,
         },
       ],
