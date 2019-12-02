@@ -7,7 +7,7 @@ export function execute(promise) {
     })
       .catch((error) => {
         if (error.response) {
-          reject(new Error(error.response.status));
+          if (error.response.status !== 401) { reject(new Error(error.response.status)); }
         } else if (error.request) {
           reject(new Error('No response was received'));
         } else {

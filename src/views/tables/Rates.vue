@@ -116,7 +116,7 @@ export default {
           data.forEach((el) => {
             this.items.push({
               date: el.createdAt,
-              name: el.user ? el.name : '-',
+              name: el.user ? el.user.name : '-',
               exchangeRate: el.exchangeRate,
               officialRate: el.officialRate,
             });
