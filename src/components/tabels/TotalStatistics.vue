@@ -224,19 +224,19 @@ export default {
     managerBrands(idManager, collection, province) {
       const managerBrands = [];
       const holder = collection
-        .filter(({ shipped, managerId, provinceId }) => shipped
+        .filter(({ shipped, managerId, provinceId }) => shipped === 1
           && managerId === idManager && provinceId === province)
         .map(({ type, items, officialRate }) => ((type === 3 || type === 5)
           ? items.map(({
-            paidPrice, quantity, commissionPriceUsd, stock,
+            paidPrice, commissionPriceUsd, stock,
           }) => ({
-            total: this.type === 0 ? paidPrice : (commissionPriceUsd * quantity),
+            total: this.type === 0 ? paidPrice : commissionPriceUsd,
             id: stock.product.brand,
           }))
           : items.map(({
-            paidPrice, quantity, commissionPrice, stock,
+            paidPrice, commissionPrice, stock,
           }) => ({
-            total: (this.type === 0 ? paidPrice : (commissionPrice * quantity)) / officialRate,
+            total: (this.type === 0 ? paidPrice : commissionPrice) / officialRate,
             id: stock.product.brand,
           }))));
       holder.forEach((brand) => { brand.forEach(item => managerBrands.push(item)); });

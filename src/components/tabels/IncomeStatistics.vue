@@ -275,9 +275,9 @@ export default {
                       .map(({
                         type,
                         officialRate,
-                        item: { quantity, commissionPrice, commissionPriceUsd },
+                        item: { commissionPrice, commissionPriceUsd },
                       }) => (((type === 3 || type === 5) ? commissionPriceUsd
-                        : commissionPrice) * quantity)
+                        : commissionPrice))
                     / ((type === 3 || type === 5) ? 1 : officialRate))
                       .reduce((a, b) => a + b, 0),
                   })),
