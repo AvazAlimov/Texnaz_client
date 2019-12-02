@@ -208,7 +208,7 @@ export default {
             const itemPrice = this.$price(item.price, this.officialRate, this.exchangeRate);
             return a + (itemPrice.firstPrice * item.quantity);
           }, 0);
-        case 2:
+        case 3:
           return this.sale.items.reduce((a, item) => {
             const itemPrice = this.$price(item.price, this.officialRate, this.exchangeRate);
             return a + (itemPrice.secondPrice * item.quantity
