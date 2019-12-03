@@ -143,7 +143,7 @@ export default {
       end.setHours(23, 59, 59, 59);
       return this.items
         // .filter(({ userId }) => userId === this.$getUserId())
-        .filter(({ user }) => this.filterUser(user))
+        .filter(({ managerPerson }) => this.filterUser(managerPerson))
         .filter(el => new Date(el.date).getTime() >= start.getTime()
         && new Date(el.date).getTime() <= end.getTime()
         && ((el.number.toString()).includes(this.search.toLowerCase())
@@ -197,6 +197,7 @@ export default {
             icc: el.client.icc,
             name: el.client.name,
             comment: el.comment,
+            managerPerson: el.manager,
             manager: el.manager.name,
             user: el.user,
             date: el.createdAt,

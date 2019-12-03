@@ -131,7 +131,7 @@ export default {
       end.setHours(23, 59, 59, 59);
       return this.items
         // .filter(({ userId }) => userId === this.$getUserId())
-        .filter(({ user }) => this.filterUser(user))
+        .filter(({ managerPerson }) => this.filterUser(managerPerson))
         .filter(el => new Date(el.date).getTime() >= start.getTime()
           && new Date(el.date).getTime() <= end.getTime())
         .filter(el => (
@@ -194,6 +194,7 @@ export default {
             clienticc: sale.client.icc,
             clientname: sale.client.name,
             clientbalance: sale.client.balance || 0,
+            managerPerson: sale.manager,
             managername: sale.manager.name,
             manager: sale.manager,
             territory: result[3].find(element => element.provinces
@@ -215,6 +216,7 @@ export default {
           clienticc: payment.client.icc,
           clientname: payment.client.name,
           clientbalance: payment.client.balance || 0,
+          managerPerson: payment.manager,
           managername: payment.manager.name,
           manager: payment.manager,
           territory: result[3].find(element => element.provinces
@@ -235,6 +237,7 @@ export default {
           clienticc: returnItem.client.icc,
           clientname: returnItem.client.name,
           clientbalance: returnItem.client.balance || 0,
+          managerPerson: returnItem.manager,
           managername: returnItem.manager.name,
           manager: returnItem.manager,
           territory: result[3].find(element => element.provinces
