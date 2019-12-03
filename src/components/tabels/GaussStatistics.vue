@@ -294,10 +294,24 @@ export default {
       const byProvince = array => array.filter(({ provinceId }) => provinceId === province.id);
       const byClient = (array, clientId) => array.filter(({ client }) => client.id === clientId);
       const parseUSD = ({ type, officialRate }, {
+        quantity,
         commissionPrice,
         commissionPriceUsd,
-      }) => ((type === 3 || type === 5) ? commissionPriceUsd : (commissionPrice / officialRate));
-
+        price,
+      }) => {
+        switch (type) {
+          case 1:
+            return (price.firstPrice / officialRate) * quantity;
+          case 3:
+            return price.secondPrice * quantity;
+          case 4:
+            return commissionPrice / officialRate;
+          case 5:
+            return commissionPriceUsd;
+          default:
+            return 0;
+        }
+      };
       if (province.territory) {
         this.items.push({
           id: province.id,
@@ -319,7 +333,7 @@ export default {
                 packing: item.stock.product.packing,
                 color: item.stock.product.color,
                 quantity: item.quantity,
-                price: parseUSD(sale, item) * item.quantity,
+                price: parseUSD(sale, item),
               }))).reduce((a, b) => a.concat(b), []),
             ),
           })),
