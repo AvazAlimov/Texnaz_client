@@ -189,7 +189,8 @@ export default {
             returnQuantity: '-',
             user: sale.user,
             date: sale.createdAt,
-            currentClientBalance: sale.currentClientBalance,
+            currentClientBalance: sale.currentClientBalance
+              - this.$getTotalPrice(sale, sale.exchangeRate, sale.officialRate),
             clienticc: sale.client.icc,
             clientname: sale.client.name,
             clientbalance: sale.client.balance || 0,
@@ -209,7 +210,8 @@ export default {
           user: payment.user,
           returnQuantity: '-',
           date: payment.createdAt,
-          currentClientBalance: payment.currentClientBalance,
+          currentClientBalance: payment.currentClientBalance
+            - payment.ratio === 1 ? payment.sum : (payment.sum / payment.ratio),
           clienticc: payment.client.icc,
           clientname: payment.client.name,
           clientbalance: payment.client.balance || 0,
