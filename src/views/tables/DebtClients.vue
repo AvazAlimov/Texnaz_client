@@ -158,7 +158,7 @@ export default {
       if (this.$hasRole(7)) {
         return (controllerId === this.$getUserId()) || (id === this.$getUserId());
       }
-      if (this.$hasRole(2)) {
+      if (this.$hasRole(2) && (!this.$hasRole(1))) {
         return id === this.$getUserId();
       }
       return true;
