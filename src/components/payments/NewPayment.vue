@@ -59,18 +59,9 @@
               v-model="comment"
             )
         v-flex(xs6)
-            v-select(
-                color="secondary"
-                v-model="provinceId"
-                label="Область"
-                :items="provinces"
-                item-text="name"
-                item-value="id"
-                clearable
-            )
             v-combobox(
                 v-model="client"
-                :items="filteredClients"
+                :items="allClients"
                 auto-select-first
                 item-value="client"
                 item-text="name"
@@ -80,8 +71,18 @@
                 v-validate="'required'"
                 clearable
             )
+            v-select(
+                color="secondary"
+                v-model="provinceId"
+                label="Область"
+                disabled
+                :items="provinces"
+                item-text="name"
+                item-value="id"
+            )
             v-text-field(
                 color="secondary"
+                disabled
                 v-model="managerName"
                 label="Mенеджеры"
                 readonly
@@ -154,12 +155,16 @@ export default {
     exchangeRate: null,
   }),
   computed: {
+    // Not used, cause province and manager finds by client
     filteredClients() {
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       this.client = null;
       return this.provinceId ? this.clients
         .filter(({ provinceId }) => provinceId === this.provinceId)
         .map(item => ({ name: `${item.icc} - ${item.name}`, client: item })) : [];
+    },
+    allClients() {
+      return this.clients.map(item => ({ name: `${item.icc} - ${item.name}`, client: item }));
     },
     provinceManagers() {
       const territory = this.territories.find(item => item.provinces
@@ -243,8 +248,11 @@ export default {
   },
   watch: {
     client(value) {
+      try {
       this.managerName = value ? value.client.manager.name : '';
       this.managerId = value ? value.client.manager.id : null;
+      this.provinceId = value ? value.client.provinceId: null;
+      } catch(exeption) { this.client = null }
     },
     date(value) {
       const compared = new Date(value);
