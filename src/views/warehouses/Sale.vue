@@ -122,7 +122,6 @@ import Client from '@/services/Client';
 import Configuration from '@/services/Configuration';
 import shipmentTypes from '@/assets/shipment_types.json';
 import shipmentPayments from '@/assets/shipment_payments.json';
-import calculate from '@/utils/Sale';
 
 export default {
   name: 'Sale',
@@ -293,7 +292,10 @@ export default {
         : Sale.create(sale)
       )
         .then(() => {
-          calculate(
+          this.$router.push({ name: 'information' });
+          window.location.reload();
+          // Client balance should effect when warehouse owner approves the shipment
+          /* calculate(
             this.client.id,
             sale.items.reduce((a, b) => a + b.debtPrice, 0),
             sale.type,
@@ -303,7 +305,7 @@ export default {
               this.$router.push({ name: 'information' });
               window.location.reload();
             }).catch(err => this.$commit('setMessage', err.message));
-        })
+        */ })
         .catch(error => this.$store.commit('setMessage', error.message))
         .finally(() => { this.loading = false; });
     },

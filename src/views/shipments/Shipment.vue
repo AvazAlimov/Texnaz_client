@@ -61,7 +61,7 @@
                 .title Сумма отгрузки
                 v-spacer
                   v-divider.mx-4
-                .subheading {{ getSalePrice || 0 | roundUp | readable}} $
+                .subheading {{ getSalePrice || 0 | readable}} $
               v-layout.mb-2(align-center v-if="!$route.query.accounting")
                 .title Сумма отгрузки
                 v-spacer

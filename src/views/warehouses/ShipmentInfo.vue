@@ -26,6 +26,7 @@
 
 <script>
 import Sale from '@/services/Sale';
+import calculate from '@/utils/Sale';
 
 export default {
   name: 'ShippingSales',
@@ -64,7 +65,17 @@ export default {
     },
     approve(saleId) {
       this.loading = true;
-      Sale.approveShipment(saleId).then(() => this.getAll())
+      Sale.approveShipment(saleId).then((sale) => {
+        calculate(
+          sale.clientId,
+          sale.items.reduce((a, b) => a + b.debtPrice, 0),
+          sale.type,
+          sale.officialRate,
+        )
+          .then(() => {
+            this.getAll();
+          }).catch(err => this.$commit('setMessage', err.message));
+      })
         .catch(error => this.$emit('setMessage', error.message))
         .finally(() => { this.loading = false; });
     },
