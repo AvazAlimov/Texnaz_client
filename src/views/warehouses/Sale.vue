@@ -266,7 +266,7 @@ export default {
       const sale = {
         number: this.number,
         type: this.type.id,
-        currentClientBalance: parseFloat(this.client.balance).toFixed(8),
+        currentClientBalance: 0,
         form: this.payment,
         provinceId: this.client.provinceId,
         clientId: this.client.id,
