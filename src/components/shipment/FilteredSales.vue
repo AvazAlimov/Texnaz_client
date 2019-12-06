@@ -1,8 +1,8 @@
 <template lang="pug">
   .white.border
-    v-layout(v-if="status" align-center).px-4.py-2
+    v-layout(align-center).px-4.py-2
       v-flex(xs6)
-        v-layout
+        v-layout(v-if="status")
           v-menu(
                   v-model="startMenu"
                   full-width
