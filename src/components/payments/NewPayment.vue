@@ -249,10 +249,10 @@ export default {
   watch: {
     client(value) {
       try {
-      this.managerName = value ? value.client.manager.name : '';
-      this.managerId = value ? value.client.manager.id : null;
-      this.provinceId = value ? value.client.provinceId: null;
-      } catch(exeption) { this.client = null }
+        this.managerName = value ? value.client.manager.name : '';
+        this.managerId = value ? value.client.manager.id : null;
+        this.provinceId = value ? value.client.provinceId : null;
+      } catch (exeption) { this.client = null; }
     },
     date(value) {
       const compared = new Date(value);

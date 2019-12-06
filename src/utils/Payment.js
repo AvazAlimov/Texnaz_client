@@ -4,11 +4,20 @@ import Client from '@/services/Client';
 
 export function paymentRespectCurrency(payment, paymentType, saleType, rate) {
   switch (saleType) {
-    // if sale product price type is B2C
+    // B2C
     case 1:
       // if payment is $ then return respect converted SUM, else return itself
       return paymentType === 0 ? payment * rate : payment;
+    // B2B
     case 3:
+      // if payment is $ then return itself, else convert it to respect $ value
+      return paymentType === 0 ? payment : payment / rate;
+    // ComissionUZS
+    case 4:
+      // if payment is $ then return respect converted SUM, else return itself
+      return paymentType === 0 ? payment * rate : payment;
+    // ComissionUSD
+    case 5:
       // if payment is $ then return itself, else convert it to respect $ value
       return paymentType === 0 ? payment : payment / rate;
     default:
@@ -18,10 +27,18 @@ export function paymentRespectCurrency(payment, paymentType, saleType, rate) {
 
 export function currencyRespectPayment(payment, paymentType, saleType, rate) {
   switch (saleType) {
-    // if sale product price type is B2C
+    // B2C
     case 1:
       return paymentType === 0 ? payment / rate : payment;
+    // B2B
     case 3:
+      // if payment is $ then return itself, else convert it to respect $ value
+      return paymentType === 0 ? payment : payment * rate;
+    // ComissionUZS
+    case 4:
+      return paymentType === 0 ? payment / rate : payment;
+    // ComissionUSD
+    case 5:
       // if payment is $ then return itself, else convert it to respect $ value
       return paymentType === 0 ? payment : payment * rate;
     default:
