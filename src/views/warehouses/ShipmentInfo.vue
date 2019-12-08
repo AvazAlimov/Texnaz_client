@@ -18,7 +18,8 @@
                 v-btn.ma-0(flat icon color="secondary"
                   :to="{ name: 'shipping_details', params: { itemId: props.item.id } }")
                   v-icon(small) visibility
-                v-btn.ma-0(flat icon color="green" @click="approve(props.item.id)")
+                v-btn.ma-0(flat :loading="btnLoading"
+                  :disabled="btnLoading" icon color="green" @click="approve(props.item.id)")
                   v-icon(small) check
                 v-btn.ma-0(flat icon color="red" @click="reject(props.item.id)")
                   v-icon(small) close
@@ -33,6 +34,7 @@ export default {
   data: () => ({
     loading: false,
     sales: [],
+    btnLoading: false,
     headers: [
       {
         text: 'Номер',
@@ -61,9 +63,10 @@ export default {
       Sale.getByShipped(this.$route.params.id, 0)
         .then((sales) => { this.sales = sales; })
         .catch(error => this.$emit('setMessage', error.message))
-        .finally(() => { this.loading = false; });
+        .finally(() => { this.loading = false; this.btnLoading = false; });
     },
     approve(saleId) {
+      this.btnLoading = true;
       this.loading = true;
       Sale.approveShipment(saleId).then((sale) => {
         calculate(
@@ -76,8 +79,7 @@ export default {
             this.getAll();
           }).catch(err => this.$commit('setMessage', err.message));
       })
-        .catch(error => this.$emit('setMessage', error.message))
-        .finally(() => { this.loading = false; });
+        .catch(error => this.$emit('setMessage', error.message));
     },
     reject(saleId) {
       this.loading = true;
