@@ -56,6 +56,8 @@
                   )
                 v-btn(icon @click="getItems()").secondary--text
                     v-icon table_chart
+                v-btn(icon :disabled="!items.length" @click="print()").secondary--text
+                    v-icon print
         v-flex(xs12)
             v-data-table(
                 :headers="headers"
@@ -94,6 +96,7 @@ import Territory from '@/services/Territory';
 import Client from '@/services/Client';
 import User from '@/services/User';
 import Sale from '@/services/Sale';
+import Export from '@/utils/Export';
 
 
 export default {
@@ -290,6 +293,18 @@ export default {
           this.$store.commit('setMessage', err.message);
         })
         .finally(() => { this.loading = false; });
+    },
+    print() {
+      const headers = [
+        'Область',
+        'Руководитель',
+        'Кол-во супервайзеров',
+        'Кол-во менеджеров',
+        'Кол-во клиентов',
+        'АКБ',
+        'Всего сумма',
+      ];
+      Export.statisticsIncomeToExcel(this.items, headers, 'IncomeStatistics');
     },
   },
   created() {

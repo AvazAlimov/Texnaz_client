@@ -49,6 +49,8 @@
                     )
                 v-btn(icon :disabled="errors.items.length > 0" @click="generate").ma-2
                     v-icon table_chart
+                v-btn(icon :disabled="!items.length" @click="print()").secondary--text
+                    v-icon print
         v-flex(xs12)
             v-data-table(
                 :headers="headers"
@@ -93,6 +95,7 @@ import Territory from '@/services/Territory';
 import Province from '@/services/Province';
 import User from '@/services/User';
 import Payment from '@/services/Payment';
+import Export from '@/utils/Export';
 
 export default {
   data() {
@@ -206,6 +209,29 @@ export default {
         sum: this.getExpandItem(province).reduce((a, b) => a + b.sum, 0),
         expandedItems: this.getExpandItem(province),
       }));
+    },
+    print() {
+      const items = [];
+      const headers = [
+        'Территории',
+        'Область',
+        'Имя',
+        'Роль',
+        'Всего сумма',
+      ];
+      console.log(this.items);
+      this.items.forEach((item) => {
+        item.expandedItems.forEach((expanded) => {
+          items.push({
+            territory: item.territory,
+            province: item.province,
+            name: expanded.name,
+            role: `${expanded.roles.map((role, index) => `${role.name}${((index === expanded.roles.length - 1) ? '' : ',')}`)}`,
+            sum: item.sum,
+          });
+        });
+      });
+      Export.statisticsManyToExcel(items, headers, 'ManyStatistics');
     },
   },
   watch: {

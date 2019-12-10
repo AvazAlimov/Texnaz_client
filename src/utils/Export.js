@@ -66,4 +66,66 @@ export default {
     const file = xlsx.write(workbook, { bookType: 'xlsx', bookSST: true, type: 'binary' });
     FileSaver.saveAs(new Blob([toOctet(file)], { type: 'application/octet-stream' }), `${filename}.xlsx`);
   },
+  statisticsTotalToExcel(jsonData, headers, filename) {
+    const workbook = xlsx.utils.book_new();
+    const rows = [headers];
+    jsonData.forEach((element) => {
+      const columns = [
+        element.province,
+        element.ceo,
+        element.controller,
+        element.manager,
+        element.clients,
+      ];
+      headers.forEach((header) => {
+        const found = Object.keys(element).find(key => key === header);
+        if (found) {
+          columns.push(element[header]);
+        }
+      });
+      rows.push(columns);
+    });
+    const sheet = xlsx.utils.aoa_to_sheet(rows);
+    xlsx.utils.book_append_sheet(workbook, sheet, filename);
+    const file = xlsx.write(workbook, { bookType: 'xlsx', bookSST: true, type: 'binary' });
+    FileSaver.saveAs(new Blob([toOctet(file)], { type: 'application/octet-stream' }), `${filename}.xlsx`);
+  },
+  statisticsIncomeToExcel(jsonData, headers, filename) {
+    const workbook = xlsx.utils.book_new();
+    const rows = [headers];
+    jsonData.forEach((element) => {
+      const columns = [
+        element.province,
+        element.ceo,
+        element.numSupervisors,
+        element.numManagers,
+        element.numClients,
+        element.numActiveClients,
+        element.totalAmount,
+      ];
+      rows.push(columns);
+    });
+    const sheet = xlsx.utils.aoa_to_sheet(rows);
+    xlsx.utils.book_append_sheet(workbook, sheet, filename);
+    const file = xlsx.write(workbook, { bookType: 'xlsx', bookSST: true, type: 'binary' });
+    FileSaver.saveAs(new Blob([toOctet(file)], { type: 'application/octet-stream' }), `${filename}.xlsx`);
+  },
+  statisticsManyToExcel(jsonData, headers, filename) {
+    const workbook = xlsx.utils.book_new();
+    const rows = [headers];
+    jsonData.forEach((element) => {
+      const columns = [
+        element.territory,
+        element.province,
+        element.name,
+        element.role,
+        element.sum,
+      ];
+      rows.push(columns);
+    });
+    const sheet = xlsx.utils.aoa_to_sheet(rows);
+    xlsx.utils.book_append_sheet(workbook, sheet, filename);
+    const file = xlsx.write(workbook, { bookType: 'xlsx', bookSST: true, type: 'binary' });
+    FileSaver.saveAs(new Blob([toOctet(file)], { type: 'application/octet-stream' }), `${filename}.xlsx`);
+  },
 };

@@ -64,7 +64,8 @@
                   )
                 v-btn(icon @click="getItems()").secondary--text
                     v-icon table_chart
-
+                v-btn(icon :disabled="!items.length" @click="print()").secondary--text
+                    v-icon print
         v-flex(xs12)
             v-data-table(
                 :loading="loading"
@@ -109,6 +110,7 @@ import User from '@/services/User';
 import Client from '@/services/Client';
 import Territory from '@/services/Territory';
 import Sale from '@/services/Sale';
+import Export from '@/utils/Export';
 
 export default {
   data() {
@@ -361,6 +363,37 @@ export default {
           this.$store.commit('setMessage', err.message);
         })
         .finally(() => { this.loading = false; });
+    },
+    print() {
+      const items = [];
+      const headers = ['Область', 'Руководитель', 'Подчинение', 'Имя', 'Кол-во клиентов'];
+      const eheaders = this.brand.includes(0) ? this.brands
+        : this.brand.map(brandId => this.brands.find(({ id }) => id === brandId));
+
+      eheaders.forEach(({ name }) => headers.push(name));
+      eheaders.map(el => ({ text: el.name, value: el.name }));
+
+      this.items.forEach((item) => {
+        item.expandedItems.forEach((expanded) => {
+          const customObject = {
+            province: item.province,
+            ceo: item.ceo,
+            controller: expanded.controller,
+            manager: expanded.name,
+            clients: expanded.clients,
+          };
+          expanded.brands.map(brand => ({
+            [brand.name ? brand.name : eheaders
+              .find(({ id }) => id === brand.id).name]: brand.total || 0,
+          })).forEach((element) => {
+            Object.keys(element).forEach((key) => {
+              customObject[key] = element[key];
+            });
+          });
+          items.push(customObject);
+        });
+      });
+      Export.statisticsTotalToExcel(items, headers, this.type === 0 ? 'TotalPayment' : 'TotalSales');
     },
   },
   created() {
