@@ -56,6 +56,8 @@
               )
           v-btn(icon @click="getItems")
             v-icon table_chart
+          v-btn(icon :disabled="!items.length" @click="print()").secondary--text
+              v-icon print
       v-flex(xs12)
         v-data-table(
           :headers="headers"
@@ -109,6 +111,7 @@ import Province from '@/services/Province';
 import Brand from '@/services/Brand';
 import Territory from '@/services/Territory';
 import Sale from '@/services/Sale';
+import Export from '@/utils/Export';
 
 export default {
   data: () => ({
@@ -355,6 +358,40 @@ export default {
             this.createItem(this.provinces.find(({ id }) => this.province === id), clients, data);
           }
         });
+    },
+    print() {
+      console.log(this.items);
+      const items = [];
+      const headers = [
+        'Tерритория',
+        'Область',
+        'Имя клиента',
+        'Код',
+        'Наименование товара',
+        'Фасовка',
+        'Цвет',
+        'Количество',
+        'Цена',
+      ];
+
+      this.items.forEach((item) => {
+        item.expandedItems.forEach((expanded) => {
+          expanded.productItems.forEach((product) => {
+            items.push({
+              territory: item.territory,
+              province: item.province,
+              clientName: expanded.clientname,
+              code: product.code,
+              productName: product.name,
+              packing: product.packing,
+              color: product.color || 'нет',
+              quantity: product.quantity,
+              price: product.price,
+            });
+          });
+        });
+      });
+      Export.statisticsGaussToExcel(items, headers, 'GaussTabel');
     },
   },
   created() {

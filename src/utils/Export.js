@@ -128,4 +128,26 @@ export default {
     const file = xlsx.write(workbook, { bookType: 'xlsx', bookSST: true, type: 'binary' });
     FileSaver.saveAs(new Blob([toOctet(file)], { type: 'application/octet-stream' }), `${filename}.xlsx`);
   },
+  statisticsGaussToExcel(jsonData, headers, filename) {
+    const workbook = xlsx.utils.book_new();
+    const rows = [headers];
+    jsonData.forEach((element) => {
+      const columns = [
+        element.territory,
+        element.province,
+        element.clientName,
+        element.code,
+        element.productName,
+        element.packing,
+        element.color,
+        element.quantity,
+        element.price,
+      ];
+      rows.push(columns);
+    });
+    const sheet = xlsx.utils.aoa_to_sheet(rows);
+    xlsx.utils.book_append_sheet(workbook, sheet, filename);
+    const file = xlsx.write(workbook, { bookType: 'xlsx', bookSST: true, type: 'binary' });
+    FileSaver.saveAs(new Blob([toOctet(file)], { type: 'application/octet-stream' }), `${filename}.xlsx`);
+  },
 };
