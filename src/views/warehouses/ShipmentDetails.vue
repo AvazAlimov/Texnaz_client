@@ -109,6 +109,7 @@ import Configuration from '@/services/Configuration';
 import shipmentTypes from '@/assets/shipment_types.json';
 import shipmentPayments from '@/assets/shipment_payments.json';
 import Print from '@/utils/Print';
+import calculate from '@/utils/Sale';
 
 export default {
   name: 'Shipment',
@@ -261,10 +262,25 @@ export default {
     },
     submit(saleId, state) {
       this.loading = true;
-      (state ? Sale.approveShipment(saleId) : Sale.rejectShipment(saleId))
-        .then(() => { this.$router.push({ name: 'shipping_info' }); })
-        .catch(error => this.$emit('setMessage', error.message))
-        .finally(() => { this.loading = false; });
+      if (state) {
+        Sale.approveShipment(saleId).then((sale) => {
+          calculate(
+            sale.clientId,
+            sale.items.reduce((a, b) => a + b.debtPrice, 0),
+            sale.type,
+            sale.officialRate,
+          )
+            .then(() => {
+              this.$router.push({ name: 'shipping_info' });
+            }).catch(err => this.$commit('setMessage', err.message));
+        })
+          .catch(error => this.$emit('setMessage', error.message));
+      } else {
+        Sale.rejectShipment(saleId)
+          .then(() => { this.$router.push({ name: 'shipping_info' }); })
+          .catch(error => this.$emit('setMessage', error.message))
+          .finally(() => { this.loading = false; });
+      }
     },
   },
   created() {
