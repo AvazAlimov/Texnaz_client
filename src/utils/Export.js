@@ -97,12 +97,14 @@ export default {
       const columns = [
         element.province,
         element.ceo,
-        element.numSupervisors,
-        element.numManagers,
-        element.numClients,
-        element.numActiveClients,
-        element.totalAmount,
+        element.clientName,
       ];
+      headers.forEach((header) => {
+        const found = Object.keys(element).find(key => key === header);
+        if (found) {
+          columns.push(element[header]);
+        }
+      });
       rows.push(columns);
     });
     const sheet = xlsx.utils.aoa_to_sheet(rows);

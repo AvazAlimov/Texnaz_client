@@ -273,6 +273,8 @@ export default {
                   id: client.id,
                   name: client.name,
                   brands: eheaders.map(brand => ({
+                    id: brand.id,
+                    name: brand.name,
                     price: clientItems.filter(({ item }) => (item
                       ? item.stock.product.brand === brand.id : false))
                       .map(({
@@ -295,16 +297,37 @@ export default {
         .finally(() => { this.loading = false; });
     },
     print() {
+      const items = [];
       const headers = [
         'Область',
         'Руководитель',
-        'Кол-во супервайзеров',
-        'Кол-во менеджеров',
-        'Кол-во клиентов',
-        'АКБ',
-        'Всего сумма',
+        'Имя',
       ];
-      Export.statisticsIncomeToExcel(this.items, headers, 'IncomeStatistics');
+
+      const eheaders = this.brand.includes(0) ? this.brands
+        : this.brand.map(brandId => this.brands.find(({ id }) => id === brandId));
+
+      eheaders.forEach(({ name }) => headers.push(name));
+      eheaders.map(el => ({ text: el.name, value: el.name }));
+
+      this.items.forEach((item) => {
+        item.expandedItems.forEach((expanded) => {
+          const customObject = {
+            province: item.province,
+            ceo: item.ceo,
+            clientName: expanded.name,
+          };
+          expanded.brands.map(brand => ({
+            [brand.name]: brand.price || 0,
+          })).forEach((element) => {
+            Object.keys(element).forEach((key) => {
+              customObject[key] = element[key];
+            });
+          });
+          items.push(customObject);
+        });
+      });
+      Export.statisticsIncomeToExcel(items, headers, 'IncomeStatistics');
     },
   },
   created() {
