@@ -212,7 +212,7 @@ export default {
           returnQuantity: '-',
           date: payment.createdAt,
           currentClientBalance: payment.currentClientBalance
-            - payment.ratio === 1 ? payment.sum : (payment.sum / payment.ratio),
+            + (payment.ratio === 1 ? payment.sum : (payment.sum / payment.ratio)),
           clienticc: payment.client.icc,
           clientname: payment.client.name,
           clientbalance: payment.client.balance || 0,
