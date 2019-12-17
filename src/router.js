@@ -553,6 +553,13 @@ const router = new Router({
               path: 'returnclient',
               name: 'returnclient',
               component: () => import('./views/tables/ReturnClient.vue'),
+              children: [
+                {
+                  path: ':id',
+                  name: 'tablereturns',
+                  component: () => import('./views/tables/TableReturns.vue'),
+                },
+              ],
             },
             {
               path: 'rates',

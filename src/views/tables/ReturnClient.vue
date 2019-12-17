@@ -1,5 +1,6 @@
 <template lang="pug">
-    v-layout(row wrap)
+  div
+    v-layout(row wrap v-if="$route.name==='returnclient'")
         v-flex(xs12)
             .border.white
                 v-layout(wrap).pa-3
@@ -60,7 +61,10 @@
                         td {{ forms.find(el => el.id === item.form).name }}
                         td {{ item.returnPrice | roundUp | readable }}
                         td {{ item.balance | roundUp | readable}}
-
+                        td
+                          v-btn(icon flat color="secondary" :to="{ name: 'tablereturns', params: { id: item.id } }")
+                            v-icon(small) visibility
+    router-view
 </template>
 
 <script>
@@ -133,6 +137,10 @@ export default {
           text: 'Баланс клиента',
           value: 'balance',
         },
+        {
+          text: '',
+          value: 'balance',
+        },
       ];
     },
     filteredData() {
@@ -168,6 +176,7 @@ export default {
       ])
         .then((result) => {
           this.items.push(...result[0].map(item => ({
+            id: item.id,
             date: item.createdAt,
             number: item.number,
             warehouse: item.warehouse.name,
