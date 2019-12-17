@@ -13,7 +13,7 @@
       td
         v-text-field(
           type="number"
-          v-model="quantity"
+          v-model="item.returnQuantity"
           :name="item.id"
           color="secondary"
           v-validate="{\
@@ -62,7 +62,6 @@ export default {
   watch: {
     quantity(value) {
       this.item.quantity = this.item.initial - value;
-      this.listener(value);
     },
   },
   methods: {

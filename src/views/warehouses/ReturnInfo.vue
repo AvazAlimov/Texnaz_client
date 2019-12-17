@@ -180,6 +180,8 @@ export default {
             item.initial = sales
               .find(el => el.id === this.$route.params.returnId)
               .items[index].quantity;
+            // eslint-disable-next-line no-param-reassign
+            item.returnQuantity = 0;
           });
         })
         .catch((err) => { this.$store.commit('setMessage', err.messages); })
@@ -203,7 +205,7 @@ export default {
       this.sale.items.forEach((item) => {
         returnItem.items.push({
           id: item.id,
-          returnQuantity: this.quantity,
+          returnQuantity: item.returnQuantity,
           returnClientId: 1,
           stockId: item.stockId,
           priceId: item.priceId,
