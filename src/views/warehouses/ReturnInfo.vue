@@ -57,12 +57,12 @@
                         .title Баланс клиента
                         v-spacer
                           v-divider.mx-4
-                        .subheading {{ sale.client.balance | roundUp }} $
+                        .subheading {{ sale.client.balance | readable }} $
                       v-layout.mb-2(align-center v-if="!$route.query.accounting")
                         .title Сумма отгрузки
                         v-spacer
                           v-divider.mx-4
-                        .subheading {{ salePrice  | roundUp | readable}} $
+                        .subheading {{ salePrice | readable}} $
                     v-flex(xs12)
                       v-data-table(
                         :headers="headers"
