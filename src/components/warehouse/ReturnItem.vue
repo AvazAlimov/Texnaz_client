@@ -8,12 +8,12 @@
       td {{ item.stock.arrival_date | moment('YYYY-MM-DD') }}
       td {{ item.stock.expiry_date | moment('YYYY-MM-DD') }}
       td {{ item.stock.product.discount }}
-      td {{ getPrice(item) | roundUp | readable }}
-      td {{ item.initial - (quantity > item.initial ? 0 : quantity) }}
+      td {{ getUsdPrice | roundUp | readable }}
+      td {{ total }}
       td
         v-text-field(
           type="number"
-          v-model="item.returnQuantity"
+          v-model="quantity"
           :name="item.id"
           color="secondary"
           v-validate="{\
@@ -24,7 +24,6 @@
           }"
         )
 </template>
-
 <script>
 export default {
   name: 'ReturnItem',
@@ -49,7 +48,7 @@ export default {
       type: String,
       required: true,
     },
-    listener: {
+    quantityFromChild: {
       type: Function,
       required: true,
     },
@@ -57,38 +56,46 @@ export default {
   data() {
     return {
       quantity: 0,
+      total: 0,
     };
   },
   watch: {
     quantity(value) {
-      this.item.quantity = this.item.initial - value;
+      this.item.returnQuantity = value;
+      this.total = this.item.initial - (value > this.item.initial
+        ? 0 : value);
     },
   },
-  methods: {
-    getPrice(item) {
+  computed: {
+    getUsdPrice() {
       switch (this.type) {
         case 1:
-          return (this.$b2c(item.price, this.officialRate, this.exchangeRate)
-                      * item.quantity
-                      * (100 - item.discount) / 100)
-                      / this.officialRate;
+          return this.item.debtPrice
+              / Number.parseFloat(this.officialRate)
+              / this.item.quantity
+              * ((100 - this.item.discount) / 100);
         case 2:
-          return (item.price.mixPriceNonCash / this.exchangeRate
-                      + item.price.mixPriceCash)
-                      * item.quantity
-                      * (100 - item.discount) / 100;
+          return this.item.debtPrice
+              / Number.parseFloat(this.officialRate)
+              / this.item.quantity
+              * ((100 - this.item.discount) / 100);
         case 3:
-          return item.price.secondPrice
-                      * item.quantity
-                      * (100 - item.discount) / 100;
+          return this.item.price.secondPrice * ((100 - this.item.discount) / 100);
         case 4:
-          return item.commissionPrice / this.exchangeRate
-                  * item.quantity
-                  * (100 - item.discount) / 100;
+          return ((this.item.commissionPrice / Number.parseFloat(this.officialRate))
+            / this.item.quantity)
+            * ((100 - this.item.discount) / 100);
+        case 5:
+          return (this.item.commissionPriceUsd / this.item.quantity)
+            * ((100 - this.item.discount) / 100);
         default:
           return 0;
       }
     },
+  },
+  created() {
+    this.total = this.item.initial;
+    this.quantity = this.item.returnQuantity;
   },
 };
 </script>
