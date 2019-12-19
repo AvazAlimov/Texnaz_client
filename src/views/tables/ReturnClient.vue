@@ -19,7 +19,6 @@
                     v-date-picker(
                       v-model="startDate"
                       @input="start = !start"
-                      :max="maximum"
                     )
                   v-menu(
                     v-model="end"
@@ -36,7 +35,6 @@
                     v-date-picker(
                       v-model="endDate"
                       @input="end = !end"
-                      :max="maximum"
                     )
                   v-spacer
                   v-text-field(
@@ -62,7 +60,10 @@
                         td {{ item.returnPrice | roundUp | readable }}
                         td {{ item.balance | roundUp | readable}}
                         td
-                          v-btn(icon flat color="secondary" :to="{ name: 'tablereturns', params: { id: item.id } }")
+                          v-btn(icon
+                            flat
+                            color="secondary"
+                            :to="{ name: 'tablereturns', params: { id: item.id } }")
                             v-icon(small) visibility
     router-view
 </template>
@@ -80,7 +81,6 @@ export default {
     end: false,
     startDate: (new Date()).toISOString().substring(0, 10),
     endDate: (new Date()).toISOString().substring(0, 10),
-    maximum: (new Date()).toISOString().substring(0, 10),
     search: '',
     items: [],
     types: ShipmentTypes,
@@ -148,8 +148,8 @@ export default {
       start.setHours(0, 0, 0, 0);
       const end = new Date(this.endDate);
       end.setHours(23, 59, 59, 59);
-      return this.items
-        // .filter(({ userId }) => userId === this.$getUserId())
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      return this.items.sort((a, b) => (((new Date(a.date)) > (new Date(b.date))) ? -1 : 1))
         .filter(el => new Date(el.date).getTime() >= start.getTime()
         && new Date(el.date).getTime() <= end.getTime()
         && ((el.number.toString().toLowerCase()).includes(this.search.toLowerCase())
