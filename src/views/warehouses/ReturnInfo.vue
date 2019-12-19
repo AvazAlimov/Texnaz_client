@@ -62,7 +62,7 @@
                         .title Сумма отгрузки
                         v-spacer
                           v-divider.mx-4
-                        .subheading {{ salePrice | readable}} $
+                        .subheading {{ totalPrice | readable}} $
                     v-flex(xs12)
                       v-data-table(
                         :headers="headers"
@@ -75,8 +75,7 @@
                           :item="item"
                           :type="sale.type"
                           :form="sale.form"
-                          :quantity="quantity"
-                          :listener="(value) => { quantity = value }"
+                          :quantityFromChild="(item) => quantityFromChild(item)"
                           :officialRate="sale.officialRate"
                           :exchangeRate="sale.exchangeRate")
                     v-flex(xs12)
@@ -102,7 +101,9 @@ export default {
       types: shipmentTypes,
       payments: shipmentPayments,
       sales: [],
-      quantity: 0,
+      totalPrice: 0,
+      priceHolder: 0,
+      itemsHolder: [],
       sale: {
         items: [],
         client: {
@@ -162,33 +163,34 @@ export default {
       ],
     };
   },
-  computed: {
-    salePrice() {
-      return this.$getTotalPrice(this.sale, this.sale.exchangeRate, this.sale.officialRate);
-    },
-  },
   methods: {
     getAll() {
       this.loading = true;
       Sale.getAll()
         .then((sales) => {
+          this.totalPrice = 0;
           this.sales = sales;
           this.sale = { ...this.sales.find(el => el.id === this.$route.params.returnId) };
-
           this.sale.items.forEach((item, index) => {
-          // eslint-disable-next-line no-param-reassign
+            this.totalPrice += this.getUsdPrice(this.sale.type, item, this.sale.officialRate);
+            // eslint-disable-next-line no-param-reassign
             item.initial = sales
               .find(el => el.id === this.$route.params.returnId)
               .items[index].quantity;
             // eslint-disable-next-line no-param-reassign
             item.returnQuantity = 0;
           });
+          this.priceHolder = this.totalPrice;
+          this.itemsHolder = this.sale.items;
         })
         .catch((err) => { this.$store.commit('setMessage', err.messages); })
         .finally(() => { this.loading = false; });
     },
     submit() {
+      this.quantityFromChild();
       const returnItem = {
+        saleId: this.$route.params.returnId,
+        totalPrice: this.priceHolder - this.totalPrice,
         number: this.sale.number,
         days: this.sale.days,
         clientId: this.sale.clientId,
@@ -209,15 +211,61 @@ export default {
           returnClientId: 1,
           stockId: item.stockId,
           priceId: item.priceId,
-          quantity: item.quantity,
+          quantity: item.initial,
           discount: item.discount,
           commissionPrice: item.commissionPrice,
           commissionPriceUsd: item.commissionPriceUsd,
+          SaleCommissionPrice: item.SaleCommissionPrice || 0,
+          SaleCommissionPriceUsd: item.SaleCommissionPriceUsd || 0,
+          price: item.price,
         });
       });
       ReturnClient.create(returnItem)
         .then(() => { this.$router.push({ name: 'returns' }); })
         .catch((err) => { this.$store.commit('setMessage', err.message); });
+    },
+    quantityFromChild() {
+      this.totalPrice = 0;
+      this.sale.items.forEach((item) => {
+        this.totalPrice += (
+          (this.getUsdPrice(this.sale.type, item, this.sale.officialRate)
+            / item.quantity) * item.returnQuantity
+        );
+        if (this.sale.type === 4 || this.sale.type === 5) {
+          // eslint-disable-next-line max-len
+          const { commissionPrice, commissionPriceUsd, quantity } = this.itemsHolder.find(({ id }) => id === item.id);
+          // eslint-disable-next-line max-len, no-param-reassign
+          item.SaleCommissionPrice = commissionPrice - (item.returnQuantity * (commissionPrice / quantity)); // oldC - ( quantity * singleC )
+          // eslint-disable-next-line no-param-reassign, max-len
+          item.SaleCommissionPriceUsd = commissionPriceUsd - (item.returnQuantity * (commissionPriceUsd / quantity));
+          // eslint-disable-next-line no-param-reassign
+          item.commissionPrice = item.returnQuantity * (commissionPrice / quantity);
+          // eslint-disable-next-line no-param-reassign
+          item.commissionPriceUsd = item.returnQuantity * (commissionPriceUsd / quantity);
+        }
+      });
+      this.totalPrice = this.priceHolder - this.totalPrice;
+    },
+    getUsdPrice(type, item, officialRate) {
+      switch (type) {
+        case 1:
+          return item.debtPrice
+              / Number.parseFloat(officialRate)
+              * ((100 - item.discount) / 100);
+        case 2:
+          return item.debtPrice
+              / Number.parseFloat(officialRate)
+              * ((100 - item.discount) / 100);
+        case 3:
+          return item.price.secondPrice * item.quantity * ((100 - item.discount) / 100);
+        case 4:
+          return (item.commissionPrice / Number.parseFloat(officialRate))
+            * ((100 - item.discount) / 100);
+        case 5:
+          return item.commissionPriceUsd * ((100 - item.discount) / 100);
+        default:
+          return 0;
+      }
     },
   },
   created() {

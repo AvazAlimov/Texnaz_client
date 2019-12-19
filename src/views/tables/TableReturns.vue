@@ -65,11 +65,11 @@
                         td {{ item.stock.arrival_date | moment('YYYY-MM-DD') }}
                         td {{ item.stock.expiry_date | moment('YYYY-MM-DD') }}
                         td {{ item.stock.product.discount }}
-                        td {{ getPrice(item) | roundUp | readable }}
+                        td {{ getPrice(item) | readable }}
                         td {{ item.quantity }}
 </template>
 <script>
-import ReturnClients from '@/services/ReturnClient.js';
+import ReturnClients from '@/services/ReturnClient';
 
 export default {
   name: 'TableReturns',
@@ -133,6 +133,8 @@ export default {
       ReturnClients.get(this.$route.params.id)
         .then((data) => {
           this.sale = data;
+          this.returnPrice = this.$getTotalPrice(this.sale,
+            this.sale.exchangeRate, this.sale.officialRate);
         })
         .catch(err => this.$store.commit('setMessage', err))
         .finally(() => { this.loading = false; });
@@ -154,11 +156,14 @@ export default {
                       * item.quantity
                       * (100 - item.discount) / 100;
         case 4:
-          return item.commissionPrice / this.sale.exchangeRate
-                  * item.quantity
+          return (item.commissionPrice / this.sale.exchangeRate)
+                  / item.quantity
+                  * (100 - item.discount) / 100;
+        case 5:
+          return item.commissionPriceUsd / item.quantity
                   * (100 - item.discount) / 100;
         default:
-          return 0;
+          return 1;
       }
     },
   },
