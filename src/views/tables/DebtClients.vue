@@ -61,9 +61,9 @@ export default {
   data() {
     return {
       search: '',
-      startDate: null,
+      startDate: new Date(),
       start: false,
-      endDate: null,
+      endDate: new Date(),
       end: false,
       items: [],
     };
@@ -151,6 +151,14 @@ export default {
     },
   },
   methods: {
+    setDates() {
+      this.startDate.setDate(1);
+      this.startDate = this.startDate.toISOString().substring(0, 10);
+      this.endDate.setDate(1);
+      this.endDate.setMonth(this.endDate.getMonth() + 1);
+      this.endDate.setDate(this.endDate.getDate() - 1);
+      this.endDate = this.endDate.toISOString().substring(0, 10);
+    },
     filterUser({ id, controllerId, territoryId }) {
       if (this.$hasRole(8)) {
         return territoryId === this.$getUserTerritory();
@@ -170,6 +178,7 @@ export default {
       return (new Date(dateA)).getTime() > (new Date(dateB)).getTime() ? dateB : dateA;
     },
     getAll() {
+      this.setDates();
       this.users = [];
       Promise.all([
         Sale.getAll(),

@@ -18,7 +18,6 @@
               v-date-picker(
                 v-model="startDate"
                 @input="start = !start"
-                :max="maximum"
               )
             v-menu(
               v-model="end"
@@ -62,11 +61,10 @@ import Rate from '@/services/Rate';
 export default {
   data() {
     return {
-      startDate: (new Date()).toISOString().substring(0, 10),
+      startDate: new Date(),
       start: false,
-      endDate: (new Date()).toISOString().substring(0, 10),
+      endDate: new Date(),
       end: false,
-      maximum: (new Date()).toISOString().substring(0, 10),
       search: '',
       headers: [
         {
@@ -109,7 +107,16 @@ export default {
     },
   },
   methods: {
+    setDates() {
+      this.startDate.setDate(1);
+      this.startDate = this.startDate.toISOString().substring(0, 10);
+      this.endDate.setDate(1);
+      this.endDate.setMonth(this.endDate.getMonth() + 1);
+      this.endDate.setDate(this.endDate.getDate() - 1);
+      this.endDate = this.endDate.toISOString().substring(0, 10);
+    },
     getAll() {
+      this.setDates();
       this.items = [];
       Rate.getAll()
         .then((data) => {

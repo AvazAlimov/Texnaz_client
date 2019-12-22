@@ -79,8 +79,8 @@ export default {
   data: () => ({
     start: false,
     end: false,
-    startDate: (new Date()).toISOString().substring(0, 10),
-    endDate: (new Date()).toISOString().substring(0, 10),
+    startDate: new Date(),
+    endDate: new Date(),
     search: '',
     items: [],
     types: ShipmentTypes,
@@ -165,10 +165,19 @@ export default {
     },
   },
   methods: {
+    setDates() {
+      this.startDate.setDate(1);
+      this.startDate = this.startDate.toISOString().substring(0, 10);
+      this.endDate.setDate(1);
+      this.endDate.setMonth(this.endDate.getMonth() + 1);
+      this.endDate.setDate(this.endDate.getDate() - 1);
+      this.endDate = this.endDate.toISOString().substring(0, 10);
+    },
     readable(value) {
       return this.$options.filters.readable(this.$options.filters.roundUp(value));
     },
     getAll() {
+      this.setDates();
       Promise.all([
         ReturnClient.getAll(),
         Sale.getAll(),

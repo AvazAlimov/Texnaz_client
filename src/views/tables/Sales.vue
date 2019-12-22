@@ -59,9 +59,9 @@ export default {
   data() {
     return {
       search: '',
-      startDate: (new Date()).toISOString().substring(0, 10),
+      startDate: new Date(),
+      endDate: new Date(),
       start: false,
-      endDate: (new Date()).toISOString().substring(0, 10),
       end: false,
       items: [
         {
@@ -148,6 +148,14 @@ export default {
     },
   },
   methods: {
+    setDates() {
+      this.startDate.setDate(1);
+      this.startDate = this.startDate.toISOString().substring(0, 10);
+      this.endDate.setDate(1);
+      this.endDate.setMonth(this.endDate.getMonth() + 1);
+      this.endDate.setDate(this.endDate.getDate() - 1);
+      this.endDate = this.endDate.toISOString().substring(0, 10);
+    },
     filterUser({ id, controllerId, territoryId }) {
       if (this.$hasRole(8)) {
         return territoryId === this.$getUserTerritory();
@@ -165,14 +173,13 @@ export default {
     },
     getAll() {
       this.items = [];
+      this.setDates();
       Promise.all([
         Sales.getAll(),
         Configuration.getExchangeRate(),
         Configuration.getOfficialRate(),
         Territory.getAll(),
       ]).then((result) => {
-        this.startDate = (new Date(result[0][0] ? result[0][0].createdAt : 0))
-          .toISOString().substring(0, 10);
         result[0].filter(el => el.shipped === 1 && el.approved === 1)
           .forEach((el) => {
             this.items.push({
