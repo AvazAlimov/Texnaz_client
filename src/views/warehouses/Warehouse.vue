@@ -129,7 +129,8 @@ export default {
           id: 'returnHistory',
           title: 'История возвратов',
           to: { name: 'returnHistory' },
-          permission: this.$permissions.SHOW_WAREHOUSE_SHIPMENTS.name, // this.$permissions.SHOW_WAREHOUSE_RETURN_HISTORY.name,
+          permission: this.$permissions.SHOW_WAREHOUSE_SHIPMENTS.name,
+          // this.$permissions.SHOW_WAREHOUSE_RETURN_HISTORY.name,
         },
       ],
       warehouse: {
