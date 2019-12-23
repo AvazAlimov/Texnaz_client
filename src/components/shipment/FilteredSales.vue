@@ -51,12 +51,13 @@
         label="Поиск"
       )
     v-data-table(
-      :hide-actions="!status"
+      :hide-actions="!status && !accounting"
       :headers="headers"
       :items="filteredSales"
       :loading="loading"
       :search="search"
-      disable-initial-sort)
+      disable-initial-sort
+      )
       template(v-slot:items="props")
         td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
         td {{ props.item.number }}
