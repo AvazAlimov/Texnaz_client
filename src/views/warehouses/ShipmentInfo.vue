@@ -28,6 +28,7 @@
 <script>
 import Sale from '@/services/Sale';
 import calculate from '@/utils/Sale';
+import Configuration from '@/services/Configuration';
 
 export default {
   name: 'ShippingSales',
@@ -35,6 +36,8 @@ export default {
     loading: false,
     sales: [],
     btnLoading: false,
+    officialRate: 0,
+    exchangeRate: 0,
     headers: [
       {
         text: 'Номер',
@@ -60,19 +63,30 @@ export default {
   methods: {
     getAll() {
       this.loading = true;
-      Sale.getByShipped(this.$route.params.id, 0)
-        .then((sales) => { this.sales = sales; })
+      Promise.all([
+        Sale.getByShipped(this.$route.params.id, 0),
+        Configuration.getAll(),
+      ])
+        .then((result) => {
+          const [sales, configs] = result;
+          this.sales = sales;
+          this.exchangeRate = (configs.find(conf => conf.id === 4)).value;
+          this.officialRate = (configs.find(conf => conf.id === 5)).value;
+        })
         .catch(error => this.$emit('setMessage', error.message))
         .finally(() => { this.loading = false; this.btnLoading = false; });
     },
     approve(saleId) {
       this.btnLoading = true;
       this.loading = true;
-      Sale.approveShipment(saleId).then((sale) => {
+      Sale.approveShipment(saleId, this.officialRate, this.exchangeRate).then((sale) => {
+        console.log(sale);
+        const price = sale.items.reduce((a, b) => a + b.debtPrice, 0);
+        const priceUSD = ((sale.type === 1 || sale.type === 4)
+          ? (price / this.officialRate) : price);
         calculate(
           sale.clientId,
-          sale.items.reduce((a, b) => a + b.debtPrice, 0),
-          sale.type,
+          priceUSD,
           sale.officialRate,
         )
           .then(() => {

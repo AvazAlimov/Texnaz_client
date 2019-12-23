@@ -2,10 +2,10 @@ import { calculate } from './Payment';
 import Sale from '@/services/Sale';
 import Client from '@/services/Client';
 
-export default (clientId, salePrice, type, rate) => new Promise((res, rej) => {
+export default (clientId, price, rate) => new Promise((res, rej) => {
   Client.get(clientId)
     .then((client) => {
-      Client.addBalance(clientId, 0 - ((type === 1 || type === 4) ? (salePrice / rate) : salePrice))
+      Client.addBalance(clientId, 0 - price)
         .then(() => {
           calculate(clientId, 0, client.balance, rate)
             .then(() => Sale.check(clientId)
