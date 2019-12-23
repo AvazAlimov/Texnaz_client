@@ -13,7 +13,7 @@ export default {
       shipped != null ? `shipped=${shipped}` : ''
     }`)),
 
-  approveShipment: id => execute(Api().post(`sales/shipment/approve/${id}`)),
+  approveShipment: (id, officialRate, exchangeRate) => execute(Api().post(`sales/shipment/approve/${id}`, { officialRate, exchangeRate })),
   rejectShipment: id => execute(Api().post(`sales/shipment/reject/${id}`)),
   return: items => execute(Api().put('sales', { items })),
 
