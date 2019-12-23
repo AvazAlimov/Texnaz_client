@@ -60,7 +60,7 @@ function paymentUpdateBalance(paymentId, clientId, value) {
  * @param {Rate for converting} rate
  */
 // eslint-disable-next-line max-len
-export const calculate = (clientId, type, value, rate, paymentId = 0) => new Promise((resolve, reject) => {
+export const calculate = (clientId, type, value, rate, paymentId = false) => new Promise((resolve, reject) => {
   // UPDATE client balance
   Promise.all([
     Sale.getByClient(clientId),
