@@ -229,3 +229,8 @@ module.exports.SHOW_SHIPMENTS_PRODUCT_INFO = {
   name: 'Show shipment product account page',
   id: 50,
 };
+
+module.exports.SHOW_WAREHOUSE_RETURN_HISTORY = {
+  name: 'Show warehouse return history',
+  id: 51,
+};
