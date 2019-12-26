@@ -497,7 +497,11 @@ const router = new Router({
                     },
                   ],
                 },
-
+                {
+                  path: 'history',
+                  name: 'returnHistory',
+                  component: () => import('./views/warehouses/SalesHistory.vue'),
+                }
               ],
             },
             {
