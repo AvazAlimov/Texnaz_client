@@ -314,12 +314,10 @@ export default {
             return 0;
         }
       };
-      const filterItemByClient = provinceClient => {
-        return !!byClient(data, provinceClient.id)
-          .map(sale => this.filterItems(sale.items))
-          .reduce((a, b) => a.concat(b), [])
-          .length
-      }
+      const filterItemByClient = provinceClient => !!byClient(data, provinceClient.id)
+        .map(sale => this.filterItems(sale.items))
+        .reduce((a, b) => a.concat(b), [])
+        .length;
       if (province.territory) {
         this.items.push({
           id: province.id,

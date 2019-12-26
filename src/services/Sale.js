@@ -2,6 +2,7 @@ import Api, { execute } from './Api';
 
 export default {
   getAll: () => execute(Api().get('sales')),
+  getAllSaleItems: () => execute(Api().get('sales/items')),
   get: id => execute(Api().get(`sales/${id}`)),
 
   getByProperty: ({ approved, managerId, shipped }) => execute(Api()
