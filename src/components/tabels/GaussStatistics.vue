@@ -104,7 +104,6 @@
                       td {{ item.quantity }}
                       td {{ item.price || 0 |roundUp | readable }}
 
-
 </template>
 <script>
 import Province from '@/services/Province';
@@ -315,6 +314,12 @@ export default {
             return 0;
         }
       };
+      const filterItemByClient = provinceClient => {
+        return !!byClient(data, provinceClient.id)
+          .map(sale => this.filterItems(sale.items))
+          .reduce((a, b) => a.concat(b), [])
+          .length
+      }
       if (province.territory) {
         this.items.push({
           id: province.id,
@@ -323,22 +328,22 @@ export default {
           quantity: byProvince(data).reduce((a, b) => a + b.quantity, 0),
           weight: byProvince(data).reduce((a, b) => a + b.weight, 0),
           sum: byProvince(data).reduce((a, b) => a + b.sum, 0),
-          expandedItems: byProvince(clients).map(provinceClient => ({
+          expandedItems: byProvince(clients).filter(filterItemByClient).map(provinceClient => ({
             id: provinceClient.id,
             clientname: provinceClient.name,
             totalWeight: byClient(data, provinceClient.id).reduce((a, b) => a + b.weight, 0),
             totalQuantity: byClient(data, provinceClient.id).reduce((a, b) => a + b.quantity, 0),
             sum: byClient(data, provinceClient.id).reduce((a, b) => a + b.sum, 0),
-            productItems: this.makeSingle(
-              byClient(data, provinceClient.id).map(sale => sale.items.map(item => ({
-                code: item.stock.product.code,
-                name: item.stock.product.name,
-                packing: item.stock.product.packing,
-                color: item.stock.product.color,
-                quantity: item.quantity,
-                price: parseUSD(sale, item),
-              }))).reduce((a, b) => a.concat(b), []),
-            ),
+            productItems: // this.makeSingle(
+              byClient(data, provinceClient.id)
+                .map(sale => this.filterItems(sale.items).map(item => ({
+                  code: item.stock.product.code,
+                  name: item.stock.product.name,
+                  packing: item.stock.product.packing,
+                  color: item.stock.product.color,
+                  quantity: item.quantity,
+                  price: parseUSD(sale, item),
+                }))).reduce((a, b) => a.concat(b), []),
           })),
         });
       }
