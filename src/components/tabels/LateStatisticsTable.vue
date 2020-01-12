@@ -43,7 +43,7 @@
                             hide-actions
                           )
                             template(v-slot:items="client")
-                              tr.green.lighten-5
+                              tr(v-if="client.item.name !== '-'").green.lighten-5
                                 td {{ client.item.name }}
                                 td {{ getPrice(0, 30,   client.item) | roundUp | readable}}
                                 td {{ getPrice(30, 60,  client.item) | roundUp | readable}}
