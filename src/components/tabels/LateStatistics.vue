@@ -278,11 +278,11 @@ export default {
               province: item.province,
               managerName: expanded.name,
               clientName: client.name,
-              lessThirty: this.getPrice(0, 30, expanded),
-              lessSixth: this.getPrice(30, 60, expanded),
-              lessNinety: this.getPrice(60, 90, expanded),
-              lessHundreds: this.getPrice(90, 180, expanded),
-              moreHundreds: this.getPrice(180, -1, expanded),
+              lessThirty: this.getPrice(0, 30, client),
+              lessSixth: this.getPrice(30, 60, client),
+              lessNinety: this.getPrice(60, 90, client),
+              lessHundreds: this.getPrice(90, 180, client),
+              moreHundreds: this.getPrice(180, -1, client),
             });
           });
         });
