@@ -53,7 +53,8 @@
                 :name="item.id"
                 v-validate="{\
                     required: true,\
-                    decimal: true,\
+                    decimal: isValied,\
+                    numeric: !isValied,\
                     min_value: 0,\
                     excluded: '0',\
                     max_value: item.quantity - item.booked - item.sold\
@@ -86,6 +87,9 @@ export default {
     productPrice() {
       return this.$price(this.item.product.prices[0],
         this.officialRate || 1, this.exchangeRate || 1);
+    },
+    isValied() {
+      return this.item.product.typeUnit ? this.item.product.typeUnit.name !== 'Шт' : true;
     },
     price: {
       get() {
