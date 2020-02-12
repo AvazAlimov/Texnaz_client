@@ -5,6 +5,8 @@ export default {
 
   getByProvince: id => execute(Api().get(`clients?provinceId=${id}`)),
 
+  getDetails: (icc, from, to) => execute(Api().post('clients/details', { icc, from, to })),
+
   addBalance: (id, balance) => execute(Api().post(`clients/balance/${id}`, { balance })),
 
   getByIcc: icc => execute(Api().get(`clients?icc=${icc}`)),
