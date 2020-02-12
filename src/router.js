@@ -549,6 +549,11 @@ const router = new Router({
               component: () => import('./views/tables/DebtClients.vue'),
             },
             {
+              path: 'clientdetails',
+              name: 'clientdetails',
+              component: () => import('./views/tables/ClientDetails.vue'),
+            },
+            {
               path: 'latedebts',
               name: 'latedebts',
               component: () => import('./views/tables/LateDebts.vue'),
