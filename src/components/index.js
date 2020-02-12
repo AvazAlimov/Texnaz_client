@@ -23,6 +23,7 @@ import GaussStatistics from './tabels/GaussStatistics.vue';
 import IncomeStatistics from './tabels/IncomeStatistics.vue';
 import LateStatisticsTable from './tabels/LateStatisticsTable.vue';
 import LateDebtStatistics from './tabels/LateStatistics.vue';
+import ClientDetails from './tabels/ClientDetails.vue';
 
 // WAREHOUSE
 import SearchStock from './warehouse/SearchStock.vue';
@@ -70,6 +71,7 @@ const Components = {
   SecondCostItem,
 
   DebtClient,
+  ClientDetails,
   LateDebt,
   Sale,
   Payment,

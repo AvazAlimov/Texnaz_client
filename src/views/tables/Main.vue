@@ -36,10 +36,11 @@ export default {
           name: 'Баланс клиентов',
           permission: this.$permissions.SHOW_TABELS.name,
         },
-        /* {
-        to: { name: 'latedebts' },
-        name: 'ПДЗ',
-      }, */
+        {
+          to: { name: 'clientdetails' },
+          name: 'Данные клиента',
+          permission: this.$permissions.SHOW_TABELS.name,
+        },
         {
           to: { name: 'returnclient' },
           name: 'Возврат',
@@ -50,6 +51,10 @@ export default {
           name: 'Курсы',
           permission: this.$permissions.SHOW_TABEL_RATES.name,
         },
+        /* {
+        to: { name: 'latedebts' },
+        name: 'ПДЗ',
+      }, */
       ],
     };
   },
