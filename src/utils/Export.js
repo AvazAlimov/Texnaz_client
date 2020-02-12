@@ -152,4 +152,27 @@ export default {
     const file = xlsx.write(workbook, { bookType: 'xlsx', bookSST: true, type: 'binary' });
     FileSaver.saveAs(new Blob([toOctet(file)], { type: 'application/octet-stream' }), `${filename}.xlsx`);
   },
+  tableClientDetails(jsonData, filename) {
+    const workbook = xlsx.utils.book_new();
+    const rows = [
+      ['Дата', 'Клиент', 'ИКК', 'Менеджер', 'Территория', 'Отгрузка', 'Возврат', 'Оплата'],
+    ];
+    jsonData.forEach((data) => {
+      const columns = [
+        data.date,
+        data.clientName,
+        data.icc,
+        data.managerName,
+        data.territoryName,
+        data.salePrice,
+        data.returnPrice,
+        data.paymentPrice,
+      ];
+      rows.push(columns);
+    });
+    const sheet = xlsx.utils.aoa_to_sheet(rows);
+    xlsx.utils.book_append_sheet(workbook, sheet, filename);
+    const file = xlsx.write(workbook, { bookType: 'xlsx', bookSST: true, type: 'binary' });
+    FileSaver.saveAs(new Blob([toOctet(file)], { type: 'application/octet-stream' }), `${filename}.xlsx`);
+  },
 };
