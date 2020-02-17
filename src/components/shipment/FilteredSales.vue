@@ -53,9 +53,8 @@
     v-data-table(
       :hide-actions="!status && !accounting"
       :headers="headers"
-      :items="filteredSales"
+      :items="filteredData"
       :loading="loading"
-      :search="search"
       disable-initial-sort
       )
       template(v-slot:items="props")
@@ -156,6 +155,16 @@ export default {
     filteredSales() {
       return this.filterDate(this.selectedstatus);
     },
+    filteredData() {
+      return this.filteredSales.filter((sale) => {
+        const items = sale.items.map(({ stock }) => stock.product);
+        const mappedByKeys = items.map((item) => {
+          const values = Object.keys(item).map(key => (item[key] ? item[key].toString() : ''));
+          return values.filter(value => !!value.match(this.search)); // ["", "", ""]
+        });
+        return !!mappedByKeys.filter(item => !!item.length).length;
+      });
+    },
     headers() {
       return [
         {
@@ -209,6 +218,13 @@ export default {
     },
   },
   methods: {
+    getAnArray(array) {
+      return array.reduce((a, b) => a.concat(b), []);
+    },
+    saleItems() {
+      const productArray = this.sales.map(({ items }) => items.map(({ stock }) => stock.product));
+      return this.getAnArray(productArray);
+    },
     filterDate(status) {
       return this.sales.filter((sale) => {
         const dateSale = new Date(sale.createdAt);
