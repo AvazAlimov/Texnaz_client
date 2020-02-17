@@ -19,6 +19,7 @@
                 template(v-slot:items="{ item, index }")
                     tr
                       td {{ item.date | moment("HH:mm DD-MM-YYYY")}}
+                      td {{ item.client }}
                       td {{ item.code }}
                       td {{ item.name }}
                       td {{ item.brand }}
@@ -41,6 +42,10 @@ export default {
         {
           text: 'Дата',
           value: 'date',
+        },
+        {
+          text: 'Клиент',
+          value: 'client',
         },
         {
           text: 'Код',
@@ -87,6 +92,7 @@ export default {
       Sale.getAllSaleItems().then((saleItems) => {
         saleItems.forEach((item) => {
           this.items.push({
+            client: item.sale.client.icc,
             date: item.sale.createdAt,
             code: item.stock.product.code,
             name: item.stock.product.name,
