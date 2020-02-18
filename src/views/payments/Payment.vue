@@ -49,8 +49,8 @@
                           .subheading {{ (payment.sum / payment.ratio).toFixed(2) }} $
                 v-layout(row)
                   v-spacer
-                  v-btn.ma-0(flat color="secondary" @click="approve()") Утвердить
-                  v-btn.ma-0(flat color="secondary" @click="remove()") Отменить
+                  v-btn.ma-0(flat color="secondary" :disabled="loading" :loading="loading" @click="approve()") Утвердить
+                  v-btn.ma-0(flat color="secondary" :disabled="loading" @click="remove()") Отменить
 </template>
 
 <script>
@@ -90,7 +90,6 @@ export default {
     },
     async approve() {
       this.loading = true;
-
       calculate(this.payment.client.id,
         this.payment.currency,
         this.payment.sum,

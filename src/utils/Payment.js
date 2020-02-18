@@ -64,7 +64,7 @@ export const calculate = (clientId, type, value, rate, paymentId = false) => new
   // UPDATE client balance
   Promise.all([
     Sale.getByClient(clientId),
-    paymentId ? paymentUpdateBalance(paymentId, clientId, type === 0 ? value : value / rate)
+    paymentId ? paymentUpdateBalance(paymentId, clientId, type === 0 ? value : (value / rate))
       : Client.addBalance(clientId, 0),
   ])
     .then((result) => {
