@@ -46,15 +46,21 @@
           ).ma-2
       v-spacer
       v-text-field(
+        v-model="tableSearching"
+        append-icon="search"
+        label="Поиск по таблице"
+      ).ma-2
+      v-text-field(
         v-model="search"
         append-icon="search"
-        label="Поиск"
-      )
+        label="Поиск по продукту"
+      ).ma-2
     v-data-table(
       :hide-actions="!status && !accounting"
       :headers="headers"
       :items="filteredData"
       :loading="loading"
+      :search="tableSearching"
       disable-initial-sort
       )
       template(v-slot:items="props")
@@ -128,6 +134,7 @@ export default {
   data: () => ({
     loading: false,
     search: '',
+    tableSearching: '',
     payments: shipmentPayments,
     types: shipmentTypes,
     finished: false,
