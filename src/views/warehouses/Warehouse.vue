@@ -127,7 +127,7 @@ export default {
         {
           counter: 0,
           id: 'returnHistory',
-          title: 'История',
+          title: 'История отгрузок',
           to: { name: 'returnHistory' },
           permission: this.$permissions.SHOW_WAREHOUSE_SHIPMENTS.name,
           // this.$permissions.SHOW_WAREHOUSE_RETURN_HISTORY.name,
