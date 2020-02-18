@@ -41,11 +41,6 @@
                         label="ИКК"
                     )
                     v-spacer
-                    v-text-field(
-                        v-model="search"
-                        append-icon="search"
-                        label="Поиск"
-                    )
                     v-btn(icon @click="() => getAll()")
                       v-icon table_chart
                     v-btn(icon :disabled="!items.length" @click="print()").secondary--text
