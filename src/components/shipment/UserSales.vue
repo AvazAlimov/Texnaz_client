@@ -6,7 +6,6 @@
       .subheading.mx-4.my-3 Общая сумма: {{ totalPrice | roundUp | readable }}
     v-divider
     v-data-table(
-      hide-actions
       :headers="headers"
       :items="sales"
       :loading="loading"
