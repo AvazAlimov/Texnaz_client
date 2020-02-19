@@ -163,14 +163,23 @@ export default {
       return this.filterDate(this.selectedstatus);
     },
     filteredData() {
-      return this.filteredSales.filter((sale) => {
-        const items = sale.items.map(({ stock }) => stock.product);
-        const mappedByKeys = items.map((item) => {
-          const values = Object.keys(item).map(key => (item[key] ? item[key].toString() : ''));
-          return values.filter(value => !!value.match(this.search)); // ["", "", ""]
+      return this.filteredSales
+        .filter((sale) => {
+          if (this.$hasRole(8)) {
+            // Territory manager
+            return sale.manager.territoryId === this.$getUserTerritory();
+          } if (this.$hasRole(7)) {
+            return sale.controllerId === this.$getUserId();
+          }
+          return true;
+        }).filter((sale) => {
+          const items = sale.items.map(({ stock }) => stock.product);
+          const mappedByKeys = items.map((item) => {
+            const values = Object.keys(item).map(key => (item[key] ? item[key].toString() : ''));
+            return values.filter(value => !!value.match(this.search)); // ["", "", ""]
+          });
+          return !!mappedByKeys.filter(item => !!item.length).length;
         });
-        return !!mappedByKeys.filter(item => !!item.length).length;
-      });
     },
     headers() {
       return [
