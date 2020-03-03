@@ -219,7 +219,7 @@ export default {
         'Роль',
         'Всего сумма',
       ];
-      console.log(this.items);
+
       this.items.forEach((item) => {
         item.expandedItems.forEach((expanded) => {
           items.push({
@@ -227,7 +227,7 @@ export default {
             province: item.province,
             name: expanded.name,
             role: `${expanded.roles.map((role, index) => `${role.name}${((index === expanded.roles.length - 1) ? '' : ',')}`)}`,
-            sum: item.sum,
+            sum: expanded.sum,
           });
         });
       });
