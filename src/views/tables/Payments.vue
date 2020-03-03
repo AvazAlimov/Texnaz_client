@@ -195,7 +195,7 @@ export default {
         Payment.getAll(),
       ]).then((result) => {
         const [territories, payments] = result;
-        payments.forEach((el) => {
+        payments.filter(el => el.approved).forEach((el) => {
           this.items.push({
             number: el.number ? el.number : '-',
             territory: territories.find(element => element.provinces
