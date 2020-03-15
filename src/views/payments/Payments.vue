@@ -14,7 +14,11 @@
           v-divider
           v-data-table(
             :headers="headers"
-            :items="pending"
+            :pagination.sync="pendingPagination"
+            :rows-per-page-items="pendingPagination.rowsPerPageItems"
+            :total-items="totalPendingsNumber"
+            :loading="loading"
+            :items="pendings"
           )
             template(v-slot:items="props")
               td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
@@ -45,7 +49,11 @@
           v-divider
           v-data-table(
             :headers="headers"
-            :items="approved"
+            :pagination.sync="approvedPagination"
+            :rows-per-page-items="approvedPagination.rowsPerPageItems"
+            :total-items="totalApprovedsNumber"
+            :loading="loading"
+            :items="approveds"
           )
             template(v-slot:items="props")
               td {{ props.item.createdAt | moment('YYYY-MM-DD HH:mm') }}
@@ -73,6 +81,7 @@ import Payment from '@/services/Payment';
 export default {
   name: 'Payments',
   data: () => ({
+    loading: false,
     headers: [
       {
         text: 'Дата',
@@ -115,16 +124,38 @@ export default {
         sortable: false,
       },
     ],
-    payments: [],
     totalPending: 0,
     totalApproved: 0,
-  }),
-  computed: {
-    pending() {
-      return this.payments.filter(payment => !payment.approved);
+    pendingPagination: {
+      descending: false,
+      page: 1,
+      rowsPerPage: 5,
+      rowsPerPageItems: [5, 10, 25, { text: 'Все', value: -1 }],
     },
-    approved() {
-      return this.payments.filter(payment => payment.approved);
+    approvedPagination: {
+      descending: false,
+      page: 1,
+      rowsPerPage: 5,
+      sortBy: 'Дата',
+      rowsPerPageItems: [5, 10, 25, { text: 'Все', value: -1 }],
+    },
+    totalPendingsNumber: 0,
+    totalApprovedsNumber: 0,
+    pendings: [],
+    approveds: [],
+  }),
+  watch: {
+    pendingPagination: {
+      handler(pagination) {
+        this.getSync(pagination, 0);
+      },
+      deep: true,
+    },
+    approvedPagination: {
+      handler(pagination) {
+        this.getSync(pagination, 1);
+      },
+      deep: true,
     },
   },
   methods: {
@@ -133,15 +164,27 @@ export default {
         this.$options.filters.roundUp(value || 0),
       );
     },
+    getSync(pagination, approved) {
+      this.loading = true;
+      Payment.getPagined(
+        pagination.page,
+        pagination.rowsPerPage === -1 ? 'null' : pagination.rowsPerPage,
+        approved,
+      )
+        .then(({ total, data }) => {
+          this[approved ? 'totalApprovedsNumber' : 'totalPendingsNumber'] = total;
+          this[approved ? 'approveds' : 'pendings'] = data;
+          this.loading = false;
+        });
+    },
     getAll() {
       this.loading = true;
       Payment.getAll()
         .then((payments) => {
-          this.payments = payments;
-          this.totalPending = this.pending
+          this.totalPending = payments.filter(payment => !payment.approved)
             .map(el => (el.sum / el.ratio).toFixed(2))
             .reduce((a, b) => Number(a) + Number(b), 0);
-          this.totalApproved = this.approved
+          this.totalApproved = payments.filter(payment => payment.approved)
             .map(el => (el.sum / el.ratio).toFixed(2))
             .reduce((a, b) => Number(a) + Number(b), 0);
         })
