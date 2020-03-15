@@ -8,6 +8,7 @@ export default {
   get: id => execute(Api().get(`payments/${id}`)),
   getByNumber: number => execute(Api().get(`payments/?number=${number}`)),
   getByUser: userId => execute(Api().get(`payments?userId=${userId}`)),
+  getPagined: (page, pageSize, approved) => execute(Api().get(`payments/paginate?approved=${approved}&page=${page}&pageSize=${pageSize}`)),
   approve: id => execute(Api().post(`payments/approve/${id}`)),
   delete: id => execute(Api().delete(`payments/${id}`)),
 };
