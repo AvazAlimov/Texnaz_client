@@ -167,7 +167,7 @@ export default {
     getSync(pagination, approved) {
       this.loading = true;
       Payment.getPagined(
-        pagination.page,
+        pagination.page - 1,
         pagination.rowsPerPage === -1 ? 'null' : pagination.rowsPerPage,
         approved,
       )

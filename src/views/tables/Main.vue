@@ -31,11 +31,13 @@ export default {
           name: 'Оплаты',
           permission: this.$permissions.SHOW_TABELS.name,
         },
+        /*
         {
           to: { name: 'debtclients' },
           name: 'Баланс клиентов',
           permission: this.$permissions.SHOW_TABELS.name,
         },
+        */
         {
           to: { name: 'clientdetails' },
           name: 'Данные клиента',

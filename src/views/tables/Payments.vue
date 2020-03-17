@@ -45,6 +45,10 @@
           )
         v-data-table(
           :headers="headers"
+          :pagination.sync="pagination"
+          :rows-per-page-items="pagination.rowsPerPageItems"
+          :total-items="totalNumbers"
+          :loading="loading"
           :items="filteredData"
         )
           template(v-slot:items="props")
@@ -58,12 +62,21 @@ import Territory from '@/services/Territory';
 export default {
   data() {
     return {
+      loading: false,
       search: '',
       startDate: new Date(),
       start: false,
       endDate: new Date(),
       end: false,
       maximum: (new Date()).toISOString().substring(0, 10),
+      totalNumbers: 0,
+      territories: [],
+      pagination: {
+        descending: false,
+        page: 1,
+        rowsPerPage: 5,
+        rowsPerPageItems: [5, 10, 25, { text: 'Все', value: -1 }],
+      },
       items: [
         {
           number: 1,
@@ -163,7 +176,50 @@ export default {
         || (el.country.toString().toLowerCase()).includes(this.search.toLowerCase())));
     },
   },
+  watch: {
+    pagination: {
+      handler(pagination) {
+        this.getSync(pagination);
+      },
+      deep: true,
+    },
+  },
   methods: {
+    getSync(pagination) {
+      this.loading = true;
+      Payment.getPagined(
+        pagination.page - 1,
+        pagination.rowsPerPage === -1 ? 'null' : pagination.rowsPerPage,
+        1,
+      )
+        .then(({ total, data }) => {
+          this.items = [];
+          this.totalNumbers = total;
+          data.forEach((el) => {
+            this.items.push({
+              number: el.number ? el.number : '-',
+              territory: this.territories ? this.territories.find(element => element.provinces
+                .map(item => item.id).includes(el.provinceId)).name : '-',
+              province: el.province.name,
+              icc: el.client.icc,
+              name: el.client.name,
+              comment: el.comment,
+              managerPerson: el.manager,
+              manager: el.manager.name,
+              user: el.user,
+              date: el.createdAt,
+              ratioPrice: el.currency === 0 ? el.sum : '-',
+              sum: el.currency === 1 ? el.sum : '-',
+              sumbn: el.currency === 2 ? el.sum : '-',
+              usd: el.ratio === 1 ? el.sum : el.sum / el.ratio,
+              exchangeRate: el.exchangeRate,
+              brand: el.brand ? el.brand.name : '-',
+              country: el.brand ? el.brand.country : '-',
+            });
+          });
+          this.loading = false;
+        }).catch(err => this.$store.commit('setMessage', err.message));
+    },
     setDates() {
       this.startDate.setDate(1);
       this.startDate = this.startDate.toISOString().substring(0, 10);
@@ -192,31 +248,8 @@ export default {
       this.setDates();
       Promise.all([
         Territory.getAll(),
-        Payment.getAll(),
       ]).then((result) => {
-        const [territories, payments] = result;
-        payments.filter(el => el.approved).forEach((el) => {
-          this.items.push({
-            number: el.number ? el.number : '-',
-            territory: territories.find(element => element.provinces
-              .map(item => item.id).includes(el.provinceId)).name,
-            province: el.province.name,
-            icc: el.client.icc,
-            name: el.client.name,
-            comment: el.comment,
-            managerPerson: el.manager,
-            manager: el.manager.name,
-            user: el.user,
-            date: el.createdAt,
-            ratioPrice: el.currency === 0 ? el.sum : '-',
-            sum: el.currency === 1 ? el.sum : '-',
-            sumbn: el.currency === 2 ? el.sum : '-',
-            usd: el.ratio === 1 ? el.sum : el.sum / el.ratio,
-            exchangeRate: el.exchangeRate,
-            brand: el.brand ? el.brand.name : '-',
-            country: el.brand ? el.brand.country : '-',
-          });
-        });
+        [this.territories] = result;
       }).catch(err => this.$commit('setMessage', err.message));
     },
   },

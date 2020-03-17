@@ -44,6 +44,10 @@
           )
         v-data-table(
           :headers="headers"
+          :pagination.sync="pagination"
+          :rows-per-page-items="pagination.rowsPerPageItems"
+          :total-items="totalNumbers"
+          :loading="loading"
           :items="filteredData"
         )
           template(v-slot:items="prop")
@@ -59,10 +63,21 @@ export default {
   data() {
     return {
       search: '',
+      loading: false,
       startDate: new Date(),
       endDate: new Date(),
       start: false,
       end: false,
+      totalNumbers: 0,
+      exchangeRate: 0,
+      officialRate: 0,
+      territories: [],
+      pagination: {
+        descending: false,
+        page: 1,
+        rowsPerPage: 5,
+        rowsPerPageItems: [5, 10, 25, { text: 'Все', value: -1 }],
+      },
       items: [
         {
           number: 1,
@@ -147,7 +162,47 @@ export default {
             || (el.warehouse.toString().toLowerCase()).includes(this.search.toLowerCase())));
     },
   },
+  watch: {
+    pagination: {
+      handler(pagination) {
+        this.getSync(pagination);
+      },
+      deep: true,
+    },
+  },
   methods: {
+    getSync(pagination) {
+      this.loading = true;
+      Sales.getPagined({
+        page: pagination.page - 1,
+        pageSize: pagination.rowsPerPage === -1 ? 'null' : pagination.rowsPerPage,
+        approved: 1,
+        shipped: 1,
+      })
+        .then(({ total, data }) => {
+          this.items = [];
+          this.totalNumbers = total;
+          data.forEach((el) => {
+            this.items.push({
+              number: el.number ? el.number : '-',
+              territory: this.territories ? this.territories.find(element => element.provinces
+                .map(item => item.id).includes(el.provinceId)).name : '-',
+              province: el.province.name,
+              icc: el.client.icc,
+              name: el.client.name,
+              date: el.createdAt,
+              user: el.user,
+              sum: this.$getTotalPrice(el, this.exchangeRate, this.officialRate),
+              duration: el.days,
+              userId: el.userId,
+              managerPerson: el.manager,
+              manager: el.manager.name,
+              warehouse: el.warehouse.name,
+            });
+          });
+          this.loading = false;
+        }).catch(err => this.$store.commit('setMessage', err.message));
+    },
     setDates() {
       this.startDate.setDate(1);
       this.startDate = this.startDate.toISOString().substring(0, 10);
@@ -175,31 +230,15 @@ export default {
       this.items = [];
       this.setDates();
       Promise.all([
-        Sales.getAll(),
         Configuration.getExchangeRate(),
         Configuration.getOfficialRate(),
         Territory.getAll(),
       ]).then((result) => {
-        result[0].filter(el => el.shipped === 1 && el.approved === 1)
-          .forEach((el) => {
-            this.items.push({
-              number: el.number ? el.number : '-',
-              territory: result[3].find(element => element.provinces
-                .map(item => item.id).includes(el.provinceId)).name,
-              province: el.province.name,
-              icc: el.client.icc,
-              name: el.client.name,
-              date: el.createdAt,
-              user: el.user,
-              sum: this.$getTotalPrice(el, result[1].value, result[2].value),
-              duration: el.days,
-              userId: el.userId,
-              managerPerson: el.manager,
-              manager: el.manager.name,
-              warehouse: el.warehouse.name,
-            });
-          });
-      }).catch(err => this.$commit('setMessage', err.message));
+        const [exchange, official, territories] = [result];
+        this.exchangeRate = exchange ? exchange.value : 0;
+        this.officialRate = official ? official.value : 0;
+        this.territories = territories;
+      }).catch(err => this.$store.commit('setMessage', err.message));
     },
   },
   created() {
