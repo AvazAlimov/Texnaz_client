@@ -1,6 +1,7 @@
 import Api, { execute } from './Api';
 
 export default {
+  getPagined: where => execute(Api().get(`sales/paginate?${Object.keys(where).map(key => `${key}=${where[key]}`).join('&')}}`)),
   getAll: () => execute(Api().get('sales')),
   getAllSaleItems: () => execute(Api().get('sales/items')),
   get: id => execute(Api().get(`sales/${id}`)),
